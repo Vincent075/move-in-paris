@@ -127,7 +127,7 @@ export default function LatestApartments() {
           animate={{ x: ["0%", "-50%"] }}
           transition={{
             x: {
-              duration: 40,
+              duration: 20,
               repeat: Infinity,
               ease: "linear",
             },
