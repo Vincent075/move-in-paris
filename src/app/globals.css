@@ -1,26 +1,59 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --gold: #B88B58;
+  --gold-light: #D4AF7A;
+  --gold-dark: #9A7345;
+  --noir: #1A1A1A;
+  --noir-deep: #0D0D0D;
+  --blanc: #FAFAF8;
+  --blanc-chaud: #F5F0EB;
+  --gris: #6B6B6B;
+  --gris-clair: #E8E4DF;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-gold-dark: var(--gold-dark);
+  --color-noir: var(--noir);
+  --color-noir-deep: var(--noir-deep);
+  --color-blanc: var(--blanc);
+  --color-blanc-chaud: var(--blanc-chaud);
+  --color-gris: var(--gris);
+  --color-gris-clair: var(--gris-clair);
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-playfair);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--blanc);
+  color: var(--noir);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-playfair), Georgia, serif;
+}
+
+::selection {
+  background: var(--gold);
+  color: white;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--blanc-chaud);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--gold);
+  border-radius: 4px;
 }
