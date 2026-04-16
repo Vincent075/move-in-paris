@@ -27,17 +27,6 @@ export default function Hero() {
 
       {/* Content */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.3 }}
-          className="mb-6"
-        >
-          <span className="inline-block px-5 py-2 border border-gold/40 text-gold text-xs tracking-[0.3em] uppercase">
-            Depuis 2005 a Paris
-          </span>
-        </motion.div>
-
         <motion.h1
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
