@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import apartmentsData from "@/data/apartments.json";
 
 const locations = [
   "Tous",
@@ -21,135 +22,13 @@ const locations = [
 
 const types = ["Tous", "Studio", "2 pièces", "3 pièces", "4 pièces+"];
 
-const apartments = [
-  {
-    id: 1,
-    slug: "boulevard-malesherbes-paris-17",
-    title: "Appartement Haussmannien",
-    address: "Boulevard Malesherbes, Paris 17e",
-    surface: 85,
-    rooms: 3,
-    bedrooms: 2,
-    bathrooms: 1,
-    price: "Sur demande",
-    image: "/apartments/salon-haussmann.jpg",
-    status: "Disponible",
-    features: ["Balcon", "Parquet", "Cave"],
-  },
-  {
-    id: 2,
-    slug: "rue-de-bassano-paris-16",
-    title: "Studio design Étoile",
-    address: "Rue de l'Étoile, Paris 17e",
-    surface: 32,
-    rooms: 1,
-    bedrooms: 0,
-    bathrooms: 1,
-    price: "Sur demande",
-    image: "/apartments/salon-orange.jpg",
-    status: "Disponible",
-    features: ["Meublé", "Wifi", "Ascenseur"],
-  },
-  {
-    id: 3,
-    title: "Grand 4 pièces familial",
-    address: "Avenue Foch, Paris 16e",
-    surface: 120,
-    rooms: 4,
-    bedrooms: 3,
-    bathrooms: 2,
-    price: "Sur demande",
-    image: "/apartments/salon-bibliotheque.jpg",
-    status: "Loué",
-    features: ["Terrasse", "Parking", "Gardien"],
-  },
-  {
-    id: 4,
-    title: "2 pièces moderne",
-    address: "Rue du Faubourg Saint-Honoré, Paris 8e",
-    surface: 52,
-    rooms: 2,
-    bedrooms: 1,
-    bathrooms: 1,
-    price: "Sur demande",
-    image: "/apartments/chambre.jpg",
-    status: "Disponible",
-    features: ["Climatisation", "Digicode", "Fibre"],
-  },
-  {
-    id: 5,
-    title: "Loft contemporain",
-    address: "Rue de Lévis, Paris 17e",
-    surface: 75,
-    rooms: 3,
-    bedrooms: 2,
-    bathrooms: 1,
-    price: "Sur demande",
-    image: "/apartments/cuisine-entree.jpg",
-    status: "Disponible",
-    features: ["Lumineux", "Cuisine équipée", "Cave"],
-  },
-  {
-    id: 6,
-    title: "Studio rénové Neuilly",
-    address: "Boulevard d'Inkermann, Neuilly-sur-Seine",
-    surface: 28,
-    rooms: 1,
-    bedrooms: 0,
-    bathrooms: 1,
-    price: "Sur demande",
-    image: "/apartments/salle-de-bain.jpg",
-    status: "Disponible",
-    features: ["Calme", "Jardin", "Parking"],
-  },
-  {
-    id: 7,
-    title: "3 pièces vue parisienne",
-    address: "Boulevard Saint-Germain, Paris 5e",
-    surface: 68,
-    rooms: 3,
-    bedrooms: 2,
-    bathrooms: 1,
-    price: "Sur demande",
-    image: "/apartments/vue-paris.jpg",
-    status: "Disponible",
-    features: ["Vue dégagée", "Balcon", "Gardien"],
-  },
-  {
-    id: 8,
-    title: "Duplex Champs-Élysées",
-    address: "Rue de Ponthieu, Paris 8e",
-    surface: 95,
-    rooms: 4,
-    bedrooms: 2,
-    bathrooms: 2,
-    price: "Sur demande",
-    image: "/apartments/cuisine.jpg",
-    status: "Loué",
-    features: ["Duplex", "Terrasse", "Prestige"],
-  },
-  {
-    id: 9,
-    title: "2 pièces Levallois",
-    address: "Rue Rivay, Levallois-Perret",
-    surface: 45,
-    rooms: 2,
-    bedrooms: 1,
-    bathrooms: 1,
-    price: "Sur demande",
-    image: "/apartments/salon-orange.jpg",
-    status: "Disponible",
-    features: ["Métro", "Commerces", "Lumineux"],
-  },
-];
-
 export default function ApartmentsList() {
   const [selectedLocation, setSelectedLocation] = useState("Tous");
   const [selectedType, setSelectedType] = useState("Tous");
   const [surfaceMin, setSurfaceMin] = useState("");
   const [surfaceMax, setSurfaceMax] = useState("");
 
-  const filtered = apartments.filter((apt) => {
+  const filtered = apartmentsData.filter((apt) => {
     if (selectedType !== "Tous") {
       if (selectedType === "Studio" && apt.rooms !== 1) return false;
       if (selectedType === "2 pièces" && apt.rooms !== 2) return false;
@@ -235,7 +114,7 @@ export default function ApartmentsList() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {filtered.map((apt, i) => (
             <motion.article
-              key={apt.id}
+              key={apt.slug}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -243,29 +122,36 @@ export default function ApartmentsList() {
               className="group border border-gris-clair/50 hover:border-gold/30 transition-all duration-500 bg-blanc"
             >
               {/* Image */}
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <div
-                  className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-700"
-                  style={{ backgroundImage: `url('${apt.image}')` }}
-                />
-                <div className="absolute top-4 left-4">
-                  <span
-                    className={`px-3 py-1 text-xs uppercase tracking-wider ${
-                      apt.status === "Disponible"
-                        ? "bg-gold text-noir-deep"
-                        : "bg-gris text-blanc"
-                    }`}
-                  >
-                    {apt.status}
-                  </span>
+              <Link href={`/appartement/${apt.slug}`}>
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <div
+                    className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-700"
+                    style={{ backgroundImage: `url('${apt.images[0]}')` }}
+                  />
+                  <div className="absolute top-4 left-4">
+                    <span
+                      className={`px-3 py-1 text-xs uppercase tracking-wider ${
+                        apt.status === "Loué"
+                          ? "bg-gris text-blanc"
+                          : "bg-gold text-noir-deep"
+                      }`}
+                    >
+                      {apt.status}
+                    </span>
+                  </div>
+                  <div className="absolute bottom-4 right-4 bg-noir-deep/60 text-blanc text-xs px-2 py-1">
+                    {apt.images.length} photos
+                  </div>
                 </div>
-              </div>
+              </Link>
 
               {/* Content */}
               <div className="p-6">
-                <h3 className="font-serif text-xl text-noir mb-1 group-hover:text-gold transition-colors">
-                  {apt.title}
-                </h3>
+                <Link href={`/appartement/${apt.slug}`}>
+                  <h3 className="font-serif text-xl text-noir mb-1 group-hover:text-gold transition-colors">
+                    {apt.title}
+                  </h3>
+                </Link>
                 <p className="text-sm text-gris mb-4">{apt.address}</p>
 
                 <div className="grid grid-cols-3 gap-3 mb-4 py-4 border-t border-b border-gris-clair/50">
@@ -284,7 +170,7 @@ export default function ApartmentsList() {
                 </div>
 
                 <div className="flex flex-wrap gap-2 mb-5">
-                  {apt.features.map((f) => (
+                  {apt.features.slice(0, 3).map((f) => (
                     <span key={f} className="px-2 py-1 text-[10px] uppercase tracking-wider border border-gris-clair text-gris">
                       {f}
                     </span>
@@ -292,9 +178,9 @@ export default function ApartmentsList() {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-gold font-serif text-lg">{apt.price}</span>
+                  <span className="text-gold font-serif text-lg">Sur demande</span>
                   <Link
-                    href={apt.slug ? `/appartement/${apt.slug}` : "/contact"}
+                    href={`/appartement/${apt.slug}`}
                     className="text-xs uppercase tracking-wider text-noir hover:text-gold transition-colors"
                   >
                     En savoir plus →

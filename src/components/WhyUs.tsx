@@ -108,11 +108,6 @@ export default function WhyUs() {
                 }}
               />
               <div className="absolute -bottom-6 -right-6 w-48 h-48 border-2 border-gold" />
-              <div className="absolute top-8 -left-4 bg-gold px-8 py-4">
-                <span className="font-serif text-noir-deep text-lg font-bold">
-                  Depuis 2005
-                </span>
-              </div>
             </motion.div>
 
             {/* Right - Content */}
