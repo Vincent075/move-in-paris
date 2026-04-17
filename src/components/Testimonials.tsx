@@ -3,8 +3,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-const GOOGLE_REVIEWS_URL =
-  "https://www.google.com/maps/search/?api=1&query=Move%20in%20Paris%20148%20rue%20de%20la%20Pompe%2075116%20Paris";
+const GOOGLE_REVIEWS_URL = "https://share.google/AJndA57leSyYd6NET";
 
 type Review = {
   author: string;
