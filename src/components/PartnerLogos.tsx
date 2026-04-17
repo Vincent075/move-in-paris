@@ -52,7 +52,7 @@ export default function PartnerLogos() {
           100% { transform: translateX(-50%); }
         }
         .logos-track {
-          animation: logos-scroll-left 30s linear infinite;
+          animation: logos-scroll-left 18s linear infinite;
           width: max-content;
         }
         .logos-track:hover { animation-play-state: paused; }
@@ -62,15 +62,10 @@ export default function PartnerLogos() {
           scrollbar-width: none;
         }
         .logos-container::-webkit-scrollbar { display: none; }
-        @media (pointer: coarse) {
-          .logos-track { animation: none; }
-          .logos-container { scroll-snap-type: x proximity; }
-          .logos-item { scroll-snap-align: center; }
-        }
       `}</style>
 
       <div className="relative logos-container">
-        <div className="flex gap-14 md:gap-20 items-center logos-track px-6">
+        <div className="flex gap-8 md:gap-12 items-center logos-track px-4">
           {doubled.map((p, i) => (
             <div
               key={`${p.name}-${i}`}
