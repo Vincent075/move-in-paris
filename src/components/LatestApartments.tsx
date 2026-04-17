@@ -120,31 +120,37 @@ export default function LatestApartments() {
         </div>
       </div>
 
-      {/* Scrolling carousel — touch swipe + auto scroll */}
-      <div
-        className="relative overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
-      >
-        <motion.div
-          className="flex gap-6"
-          drag="x"
-          dragConstraints={{ left: -2000, right: 0 }}
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{
-            x: {
-              duration: 10,
-              repeat: Infinity,
-              ease: "linear",
-            },
-          }}
-          whileDrag={{ animationPlayState: "paused" }}
-          style={{ touchAction: "pan-x" }}
-        >
+      {/* Scrolling carousel — CSS auto-scroll + native touch swipe */}
+      <style>{`
+        @keyframes scroll-left {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .carousel-track {
+          animation: scroll-left 12s linear infinite;
+        }
+        .carousel-track:hover {
+          animation-play-state: paused;
+        }
+        .carousel-container {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+        }
+        .carousel-container::-webkit-scrollbar { display: none; }
+        @media (pointer: coarse) {
+          .carousel-track { animation: none; }
+          .carousel-container { scroll-snap-type: x mandatory; }
+          .carousel-item { scroll-snap-align: start; }
+        }
+      `}</style>
+      <div className="relative carousel-container">
+        <div className="flex gap-6 carousel-track">
           {doubled.map((apt, i) => (
             <Link
               key={i}
               href={apt.slug ? `/appartement/${apt.slug}` : "/nos-appartements"}
-              className="flex-shrink-0 w-[320px] group"
+              className="flex-shrink-0 w-[280px] md:w-[320px] group carousel-item"
             >
               {/* Image */}
               <div className="relative aspect-[4/3] overflow-hidden mb-4">
@@ -178,7 +184,7 @@ export default function LatestApartments() {
               </div>
             </Link>
           ))}
-        </motion.div>
+        </div>
 
         {/* Fade edges */}
         <div className="absolute top-0 left-0 w-24 h-full bg-gradient-to-r from-blanc to-transparent pointer-events-none z-10" />
