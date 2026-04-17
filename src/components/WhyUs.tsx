@@ -52,7 +52,7 @@ const reasons = [
   },
   {
     title: "Rentabilité supérieure",
-    text: "En moyenne +27% de revenus supplémentaires par rapport à une location classique. Jusqu'à 55€/m² en bail corporate.",
+    text: "En moyenne +30% de revenus supplémentaires par rapport à une location classique. Jusqu'à 55€/m² en bail corporate.",
   },
   {
     title: "Interlocuteur unique et responsable",

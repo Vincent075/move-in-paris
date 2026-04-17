@@ -12,7 +12,7 @@ const avantages = [
   {
     num: "02",
     title: "Rentabilité supérieure",
-    desc: "En moyenne +27% de revenus supplémentaires vs location classique. Jusqu'à 55€/m² en bail corporate, avec un régime fiscal avantageux (LMNP).",
+    desc: "En moyenne +30% de revenus supplémentaires vs location classique. Jusqu'à 55€/m² en bail corporate, avec un régime fiscal avantageux (LMNP).",
   },
   {
     num: "03",
@@ -61,7 +61,7 @@ export default function ProprietairesContent() {
                 </p>
                 <p>
                   Notre clientèle exclusive — grandes entreprises, institutions internationales — garantit des loyers
-                  payés par l&apos;employeur. Résultat : <strong className="text-noir font-medium">zéro impayé</strong> et en moyenne <strong className="text-noir font-medium">+27% de revenus</strong> par rapport à une location classique.
+                  payés par l&apos;employeur. Résultat : <strong className="text-noir font-medium">zéro impayé</strong> et en moyenne <strong className="text-noir font-medium">+30% de revenus</strong> par rapport à une location classique.
                 </p>
               </div>
               <Link

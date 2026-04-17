@@ -15,7 +15,7 @@ export default function Footer() {
               alt="Move in Paris"
               width={420}
               height={156}
-              className="h-20 w-auto mb-4"
+              className="h-40 w-auto mb-4"
             />
             <p className="text-blanc/40 text-sm font-light leading-relaxed max-w-xs">
               Agence parisienne spécialisée dans la location meublée corporate
