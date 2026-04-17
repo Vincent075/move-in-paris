@@ -35,6 +35,7 @@ export default function Footer() {
                 { href: "/a-propos", label: "À propos" },
                 { href: "/proprietaires", label: "Propriétaires" },
                 { href: "/proposer-mon-appartement", label: "Proposer un bien" },
+                { href: "/blog", label: "Blog" },
                 { href: "/contact", label: "Contact" },
                 { href: "/faq", label: "FAQ" },
               ].map((link) => (
