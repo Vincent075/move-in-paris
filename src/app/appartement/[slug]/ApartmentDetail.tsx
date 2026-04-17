@@ -257,21 +257,29 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
               </div>
             </div>
 
-            {/* Thumbnails */}
-            <div className="grid grid-cols-3 lg:grid-cols-2 gap-2">
-              {apt.images.map((img, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrentImage(i)}
-                  className={`aspect-square bg-cover bg-center transition-all duration-300 ${
-                    currentImage === i
-                      ? "ring-2 ring-gold opacity-100"
-                      : "opacity-60 hover:opacity-100"
-                  }`}
-                  style={{ backgroundImage: `url('${img}')` }}
-                />
-              ))}
+            {/* Thumbnails — bounded to main image height on desktop, scrollable if overflow */}
+            <div className="lg:relative">
+              <div className="grid grid-cols-3 lg:grid-cols-2 gap-2 lg:absolute lg:inset-0 lg:overflow-y-auto lg:pr-1 thumbs-scroll">
+                {apt.images.map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentImage(i)}
+                    className={`aspect-square bg-cover bg-center transition-all duration-300 ${
+                      currentImage === i
+                        ? "ring-2 ring-gold opacity-100"
+                        : "opacity-60 hover:opacity-100"
+                    }`}
+                    style={{ backgroundImage: `url('${img}')` }}
+                  />
+                ))}
+              </div>
             </div>
+            <style>{`
+              .thumbs-scroll::-webkit-scrollbar { width: 4px; }
+              .thumbs-scroll::-webkit-scrollbar-thumb { background: rgba(197,160,89,0.4); border-radius: 2px; }
+              .thumbs-scroll::-webkit-scrollbar-track { background: transparent; }
+              .thumbs-scroll { scrollbar-width: thin; scrollbar-color: rgba(197,160,89,0.4) transparent; }
+            `}</style>
           </div>
         </div>
       </section>
