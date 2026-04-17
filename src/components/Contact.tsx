@@ -3,7 +3,16 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-const contactInfo = [
+type ContactItem = {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  href?: string;
+  cta?: string;
+  external?: boolean;
+};
+
+const contactInfo: ContactItem[] = [
   {
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -13,6 +22,9 @@ const contactInfo = [
     ),
     label: "Adresse",
     value: "26 rue de l'Étoile, 75017 Paris",
+    href: "https://www.google.com/maps/search/?api=1&query=26+rue+de+l%27Etoile+75017+Paris",
+    cta: "Voir sur la carte",
+    external: true,
   },
   {
     icon: (
@@ -22,6 +34,8 @@ const contactInfo = [
     ),
     label: "Téléphone",
     value: "+33 1 45 20 06 03",
+    href: "tel:+33145200603",
+    cta: "Appeler maintenant",
   },
   {
     icon: (
@@ -31,6 +45,8 @@ const contactInfo = [
     ),
     label: "Email",
     value: "contact@move-in-paris.com",
+    href: "mailto:contact@move-in-paris.com",
+    cta: "Envoyer un email",
   },
 ];
 
@@ -72,17 +88,38 @@ export default function Contact() {
               transition={{ delay: 0.2 }} className="text-gris font-light leading-relaxed mb-12 max-w-md">
               Que vous soyez propriétaire ou à la recherche d&apos;un logement pour vos collaborateurs, notre équipe est à votre écoute.
             </motion.p>
-            <div className="space-y-6">
-              {contactInfo.map((info, i) => (
-                <motion.div key={info.label} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }} transition={{ delay: 0.3 + i * 0.1 }} className="flex items-center gap-4">
-                  <div className="w-10 h-10 flex items-center justify-center border border-gold/30 text-gold">{info.icon}</div>
-                  <div>
-                    <div className="text-xs text-gris uppercase tracking-wider">{info.label}</div>
-                    <div className="text-noir">{info.value}</div>
-                  </div>
-                </motion.div>
-              ))}
+            <div className="space-y-4">
+              {contactInfo.map((info, i) => {
+                const externalProps = info.external
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {};
+                return (
+                  <motion.a
+                    key={info.label}
+                    href={info.href}
+                    {...externalProps}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.3 + i * 0.1 }}
+                    className="group flex items-center gap-4 p-4 bg-blanc border border-gris-clair/50 hover:border-gold hover:shadow-lg hover:shadow-noir-deep/5 transition-all duration-300"
+                    style={{ borderRadius: 10 }}
+                  >
+                    <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-gold/10 text-gold group-hover:bg-gold group-hover:text-noir-deep transition-all duration-300" style={{ borderRadius: 10 }}>
+                      {info.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-[10px] text-gris uppercase tracking-[0.15em] font-semibold">{info.label}</div>
+                      <div className="text-noir font-medium truncate">{info.value}</div>
+                      {info.cta && (
+                        <div className="text-[11px] text-gold mt-0.5 uppercase tracking-wider font-medium group-hover:underline">
+                          {info.cta} →
+                        </div>
+                      )}
+                    </div>
+                  </motion.a>
+                );
+              })}
             </div>
             <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
               transition={{ delay: 0.5 }} className="mt-12 aspect-[16/9] bg-gris-clair overflow-hidden">
