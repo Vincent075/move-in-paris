@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import LogoLink from "./LogoLink";
 
 export default function Footer() {
   return (
@@ -10,13 +11,15 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div>
-            <Image
-              src="/Logo-gold.png"
-              alt="Move in Paris"
-              width={420}
-              height={156}
-              className="h-40 w-auto mb-4"
-            />
+            <LogoLink className="inline-block mb-4">
+              <Image
+                src="/Logo-gold.png"
+                alt="Move in Paris"
+                width={420}
+                height={156}
+                className="h-40 w-auto"
+              />
+            </LogoLink>
             <p className="text-blanc/40 text-sm font-light leading-relaxed max-w-xs">
               Agence parisienne spécialisée dans la location meublée corporate
               et l&apos;accompagnement d&apos;expatriés.

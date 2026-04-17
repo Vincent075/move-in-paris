@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import LogoLink from "./LogoLink";
 
 const navLinks = [
   { href: "/nos-appartements", label: "Nos appartements" },
@@ -41,7 +42,7 @@ export default function Header() {
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="flex items-center justify-between h-24">
-            <Link href="/" className="flex items-center group">
+            <LogoLink className="flex items-center group">
               <Image
                 src="/Logo-gold.png"
                 alt="Move in Paris"
@@ -50,7 +51,7 @@ export default function Header() {
                 className="h-[130px] w-auto transition-transform duration-300 group-hover:scale-105"
                 priority
               />
-            </Link>
+            </LogoLink>
 
             {/* Desktop Nav */}
             <nav className="hidden lg:flex items-center">
@@ -106,7 +107,9 @@ export default function Header() {
           >
             {/* Close button */}
             <div className="flex justify-between items-center px-6 py-6">
-              <Image src="/Logo-gold.png" alt="Move in Paris" width={200} height={200} className="h-16 w-auto" />
+              <LogoLink onNavigate={() => setMobileOpen(false)}>
+                <Image src="/Logo-gold.png" alt="Move in Paris" width={200} height={200} className="h-16 w-auto" />
+              </LogoLink>
               <button
                 onClick={() => setMobileOpen(false)}
                 className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 border border-white/10 text-gold text-xl"
