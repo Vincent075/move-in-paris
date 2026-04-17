@@ -11,10 +11,33 @@ export default function SubmitForm() {
 
   function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files || []);
-    setPhotoFiles((prev) => [...prev, ...files]);
     files.forEach((file) => {
       const reader = new FileReader();
-      reader.onload = () => setPhotoPreviews((prev) => [...prev, reader.result as string]);
+      reader.onload = () => {
+        const img = new window.Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const maxSize = 800;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxSize || h > maxSize) {
+            if (w > h) { h = (h * maxSize) / w; w = maxSize; }
+            else { w = (w * maxSize) / h; h = maxSize; }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d")!;
+          ctx.drawImage(img, 0, 0, w, h);
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const compressed = new File([blob], file.name, { type: "image/jpeg" });
+              setPhotoFiles((prev) => [...prev, compressed]);
+              setPhotoPreviews((prev) => [...prev, canvas.toDataURL("image/jpeg", 0.7)]);
+            }
+          }, "image/jpeg", 0.7);
+        };
+        img.src = reader.result as string;
+      };
       reader.readAsDataURL(file);
     });
     e.target.value = "";
@@ -169,12 +192,18 @@ export default function SubmitForm() {
                 </div>
                 {/* Photos */}
                 <div>
-                  <label className="block text-xs text-gris uppercase tracking-wider mb-2">Photos de votre bien (optionnel)</label>
-                  <label className="block w-full border-2 border-dashed border-gris-clair hover:border-gold transition-colors p-6 text-center cursor-pointer">
-                    <input type="file" accept="image/*" multiple onChange={handlePhotoUpload} className="hidden" />
-                    <div className="text-gold text-2xl mb-1">+</div>
-                    <div className="text-xs text-gris">Cliquez pour ajouter des photos</div>
-                  </label>
+                  <label className="block text-xs text-gris uppercase tracking-wider mb-2">Photos de votre bien (optionnel — 5 max)</label>
+                  {photoFiles.length >= 5 ? (
+                    <div className="w-full border-2 border-dashed border-gris-clair p-6 text-center">
+                      <div className="text-xs text-gris">Maximum 5 photos atteint</div>
+                    </div>
+                  ) : (
+                    <label className="block w-full border-2 border-dashed border-gris-clair hover:border-gold transition-colors p-6 text-center cursor-pointer">
+                      <input type="file" accept="image/*" multiple onChange={handlePhotoUpload} className="hidden" />
+                      <div className="text-gold text-2xl mb-1">+</div>
+                      <div className="text-xs text-gris">Cliquez pour ajouter des photos ({photoFiles.length}/5)</div>
+                    </label>
+                  )}
                   {photoPreviews.length > 0 && (
                     <div className="grid grid-cols-4 gap-2 mt-3">
                       {photoPreviews.map((src, i) => (

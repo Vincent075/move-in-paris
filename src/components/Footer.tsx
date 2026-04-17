@@ -74,9 +74,9 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} Move in Paris. Tous droits réservés.
           </p>
           <div className="flex gap-6 text-blanc/30 text-xs">
-            <a href="#" className="hover:text-gold transition-colors">Mentions légales</a>
-            <a href="#" className="hover:text-gold transition-colors">CGU</a>
-            <a href="#" className="hover:text-gold transition-colors">Politique de confidentialité</a>
+            <Link href="/mentions-legales" className="hover:text-gold transition-colors">Mentions légales</Link>
+            <Link href="/cgu" className="hover:text-gold transition-colors">CGU</Link>
+            <Link href="/politique-de-confidentialite" className="hover:text-gold transition-colors">Politique de confidentialité</Link>
           </div>
         </div>
       </div>
