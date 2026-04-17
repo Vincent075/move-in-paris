@@ -144,7 +144,7 @@ function propositionEmail(fields: Record<string, string>) {
       <td width="48%" style="background:#111;border-radius:10px;padding:20px;text-align:center;vertical-align:top;">
         <p style="font-size:11px;color:#c8a84b;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;">Move In Paris</p>
         <p style="font-size:22px;font-weight:700;color:#fff;margin:0;line-height:1.2;">${formatEuro(loyerMIPMin)} €<br/><span style="font-size:14px;color:#888;">à</span><br/>${formatEuro(loyerMIPMax)} €</p>
-        <p style="font-size:12px;color:#aaa;margin:8px 0 0;">/ mois, charges comprises</p>
+        <p style="font-size:12px;color:#aaa;margin:8px 0 0;">/ mois, hors charges</p>
         <p style="font-size:11px;color:#888;margin:8px 0 0;">Service 100 % gratuit<br/>Zéro frais de gestion</p>
       </td>
     </tr></table>
@@ -173,7 +173,7 @@ function propositionEmail(fields: Record<string, string>) {
     <p style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#888;margin:0 0 14px;">Ce qui est inclus</p>
     <table width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;color:#444;">
       <tr><td style="padding:5px 0;"><span style="color:#c8a84b;margin-right:8px;">&#9670;</span><strong style="color:#111;">Service 100 % gratuit</strong> — zéro frais de gestion, zéro commission prélevée</td></tr>
-      <tr><td style="padding:5px 0;"><span style="color:#c8a84b;margin-right:8px;">&#9670;</span><strong style="color:#111;">Loyer tout inclus</strong> — électricité, gaz, internet + TV, charges d'immeuble, entretien chaudière, TEOM</td></tr>
+      <tr><td style="padding:5px 0;"><span style="color:#c8a84b;margin-right:8px;">&#9670;</span><strong style="color:#111;">Loyer exprimé hors charges</strong> — comme l'encadrement. Charges et utilities (électricité, gaz, internet, copro) refacturées en sus au locataire</td></tr>
       <tr><td style="padding:5px 0;"><span style="color:#c8a84b;margin-right:8px;">&#9670;</span><strong style="color:#111;">Gestion opérationnelle complète</strong> — entrées/sorties, comptabilité, reporting trimestriel</td></tr>
       <tr><td style="padding:5px 0;"><span style="color:#c8a84b;margin-right:8px;">&#9670;</span><strong style="color:#111;">Ménage hebdomadaire</strong> — personnel qualifié et salarié</td></tr>
       <tr><td style="padding:5px 0;"><span style="color:#c8a84b;margin-right:8px;">&#9670;</span><strong style="color:#111;">Assistance technique 7j/7</strong> — chaque problème traité immédiatement</td></tr>

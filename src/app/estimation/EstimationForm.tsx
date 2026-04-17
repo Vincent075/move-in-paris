@@ -650,7 +650,7 @@ export default function EstimationForm() {
                   style={{ borderRadius: 10 }}
                 >
                   <div className="text-[10px] uppercase tracking-[0.15em] text-gold mb-2">
-                    Fourchette de loyer mensuel charges comprises
+                    Fourchette de loyer mensuel (hors charges)
                   </div>
                   <div className="font-serif text-4xl md:text-5xl text-gold font-bold leading-tight">
                     {formatEuro(computation.loyerMIPMin)} €
@@ -662,7 +662,7 @@ export default function EstimationForm() {
                     {formatEuro(Math.round(computation.loyerMIPMin / parseFloat(surface)))} €/m²
                     à{" "}
                     {formatEuro(Math.round(computation.loyerMIPMax / parseFloat(surface)))} €/m² —
-                    tout compris
+                    hors charges et utilities
                   </div>
                 </div>
 
@@ -702,10 +702,11 @@ export default function EstimationForm() {
                   style={{ borderRadius: 10 }}
                 >
                   <div className="text-blanc font-medium mb-1">Et ce n&apos;est pas tout :</div>
-                  Ce loyer est <strong className="text-gold">entièrement net pour vous</strong>.
-                  Service Move in Paris 100 % gratuit — <strong>aucun frais de gestion</strong>,
-                  aucune commission. Le loyer inclut également l&apos;ensemble des charges :
-                  électricité, gaz, internet, charges d&apos;immeuble, entretien chaudière, TEOM.
+                  Ce loyer est exprimé <strong className="text-gold">hors charges et hors utilities</strong>,
+                  comme le loyer de l&apos;encadrement. Service Move in Paris 100 % gratuit —{" "}
+                  <strong>aucun frais de gestion</strong>, aucune commission. Les charges et utilities
+                  (électricité, gaz, internet, charges d&apos;immeuble, entretien chaudière, TEOM) sont
+                  refacturées en sus à la charge du locataire corporate.
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4">
