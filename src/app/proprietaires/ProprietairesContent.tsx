@@ -31,8 +31,8 @@ const avantages = [
   },
   {
     num: "06",
-    title: "Reporting transparent",
-    desc: "Chaque mois, recevez un reporting détaillé : revenus, charges, interventions. Visibilité totale sur la performance de votre bien.",
+    title: "Reporting trimestriel",
+    desc: "Chaque trimestre, recevez un reporting détaillé : revenus, charges, interventions. Visibilité totale sur la performance de votre bien.",
   },
 ];
 
