@@ -99,9 +99,9 @@ function propositionEmail(fields: Record<string, string>) {
 <table width="620" cellpadding="0" cellspacing="0" border="0" style="max-width:620px;width:100%;">
 
   <!-- Header -->
-  <tr><td style="background:#111;border-radius:12px 12px 0 0;padding:14px 40px 12px;">
+  <tr><td style="background:#111;border-radius:12px 12px 0 0;padding:0 40px;line-height:0;">
     <table width="100%" cellpadding="0" cellspacing="0"><tr>
-      <td valign="middle"><img src="https://move-in-paris.vercel.app/Logo-gold.png" alt="Move In Paris" height="80" style="display:block;height:80px;border:0;"/></td>
+      <td valign="middle"><img src="https://move-in-paris.vercel.app/Logo-gold.png" alt="Move In Paris" height="160" style="display:block;height:160px;border:0;margin:-28px 0;"/></td>
       <td align="right" valign="middle">
         <span style="color:#aaa;font-size:12px;letter-spacing:.06em;text-transform:uppercase;display:block;">Proposition commerciale</span>
         <span style="color:#666;font-size:11px;display:block;margin-top:4px;">${monthCap}</span>
