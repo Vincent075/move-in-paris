@@ -46,44 +46,9 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Rounded corners 10px global */
-img,
-button,
-input,
-textarea,
-select,
-iframe,
-article,
-form,
-[class*="border"],
-[class*="bg-blanc-chaud"],
-[class*="bg-noir-deep"],
-[class*="bg-gold"],
-[class*="bg-blanc"],
-[class*="bg-white"],
-[class*="bg-gris"],
-[class*="overflow-hidden"],
-[class*="shadow"],
-[class*="backdrop-blur"] {
+/* Rounded corners 10px — TOUT le site */
+*:not(body):not(html):not(main):not(header):not(footer):not(nav):not(section):not(head):not(script):not(style):not(link):not(meta):not(title):not(tr):not(td):not(th):not(table):not(thead):not(tbody):not(span):not(a):not(p):not(h1):not(h2):not(h3):not(h4):not(h5):not(h6):not(ul):not(ol):not(li):not(br):not(hr):not(label):not(option):not(svg):not(path):not(strong):not(em) {
   border-radius: 10px !important;
-}
-
-/* Exceptions - pas d'arrondi sur le body/header/footer/sections plein largeur */
-body,
-html,
-main,
-header,
-footer,
-nav,
-section,
-[class*="fixed"],
-[class*="sticky"],
-[class*="border-t"],
-[class*="border-b"],
-[class*="border-l"],
-[class*="border-r"],
-hr {
-  border-radius: 0 !important;
 }
 
 /* Custom scrollbar */
