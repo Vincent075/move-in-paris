@@ -94,6 +94,9 @@ export default function AdminPage() {
       if (data.places && data.places.length > 0) {
         setNearbyRows(data.places);
       }
+      if (data.district) {
+        setDistrict(data.district);
+      }
     } catch { /* ignore */ }
     setNearbyLoading(false);
   }

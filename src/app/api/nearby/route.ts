@@ -17,10 +17,31 @@ export async function GET(req: NextRequest) {
       { headers: { "User-Agent": "MoveInParis/1.0" } }
     );
     const geoData = await geoRes.json();
-    if (!geoData.length) return NextResponse.json({ places: [] });
+    if (!geoData.length) return NextResponse.json({ places: [], district: "" });
 
     const lat = parseFloat(geoData[0].lat);
     const lon = parseFloat(geoData[0].lon);
+
+    // Reverse geocode to get district/city
+    let district = "";
+    try {
+      const reverseRes = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&zoom=16`,
+        { headers: { "User-Agent": "MoveInParis/1.0" } }
+      );
+      const reverseData = await reverseRes.json();
+      const addr = reverseData.address || {};
+      // Paris: use suburb (arrondissement name) or postcode
+      if (addr.postcode && addr.postcode.startsWith("75")) {
+        const arrNum = parseInt(addr.postcode.slice(-2));
+        const suffix = arrNum === 1 ? "er" : "e";
+        district = `Paris ${arrNum}${suffix}`;
+      } else if (addr.city || addr.town || addr.municipality) {
+        district = addr.city || addr.town || addr.municipality;
+      } else if (addr.suburb) {
+        district = addr.suburb;
+      }
+    } catch { /* ignore */ }
 
     // Step 2: Query Overpass API for nearby amenities (500m radius)
     const overpassQuery = `
@@ -83,7 +104,7 @@ export async function GET(req: NextRequest) {
     const commerces = places.filter((p) => p.type === "Commerce").slice(0, 2);
     const parcs = places.filter((p) => p.type === "Parc").slice(0, 1);
 
-    return NextResponse.json({ places: [...metros, ...commerces, ...parcs] });
+    return NextResponse.json({ places: [...metros, ...commerces, ...parcs], district });
   } catch (error) {
     console.error("Nearby API error:", error);
     return NextResponse.json({ places: [] });
