@@ -20,7 +20,6 @@ export default function Header() {
     { href: "/nos-appartements", label: t("nav.apartments") },
     { href: "/a-propos", label: t("nav.about") },
     { href: "/proprietaires", label: t("nav.owners") },
-    { href: "/proposer-mon-appartement", label: t("nav.proposeProperty") },
     { href: "/estimation", label: t("nav.estimation") },
     { href: "/blog", label: t("nav.blog") },
     { href: "/contact", label: t("nav.contact") },
@@ -64,10 +63,7 @@ export default function Header() {
 
   return (
     <>
-      <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+      <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${headerBg}`}
         style={{ borderRadius: 0 }}
       >
@@ -79,7 +75,7 @@ export default function Header() {
                 alt="Move in Paris"
                 width={640}
                 height={640}
-                className="h-[130px] w-auto transition-transform duration-300 group-hover:scale-105"
+                className="h-16 w-auto transition-transform duration-300 group-hover:scale-105"
                 priority
               />
             </LogoLink>
@@ -125,7 +121,7 @@ export default function Header() {
             </button>
           </div>
         </div>
-      </motion.header>
+      </header>
 
       {/* Mobile Menu - Full Screen Overlay */}
       <AnimatePresence>
