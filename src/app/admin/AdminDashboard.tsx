@@ -46,6 +46,8 @@ export default function AdminDashboard() {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({ done: 0, total: 0 });
   const [message, setMessage] = useState({ type: "", text: "" });
+  const [dragIdx, setDragIdx] = useState<number | null>(null);
+  const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
 
   async function fetchApartments() {
     setLoading(true);
@@ -113,6 +115,36 @@ export default function AdminDashboard() {
     const [m] = imgs.splice(from, 1);
     imgs.splice(to, 0, m);
     setEditData({ ...editData, images: imgs });
+  }
+
+  function reorderImage(from: number, to: number) {
+    if (from === to) return;
+    const imgs = [...(editData.images || [])];
+    const [m] = imgs.splice(from, 1);
+    // Adjust insertion position when moving forward (account for removed item)
+    const insertAt = from < to ? to - 1 : to;
+    imgs.splice(insertAt, 0, m);
+    setEditData({ ...editData, images: imgs });
+  }
+
+  function handleDragStart(i: number) {
+    setDragIdx(i);
+  }
+  function handleDragOver(e: React.DragEvent, i: number) {
+    e.preventDefault();
+    if (dragIdx === null) return;
+    setDragOverIdx(i);
+  }
+  function handleDrop(e: React.DragEvent, i: number) {
+    e.preventDefault();
+    if (dragIdx === null) return;
+    reorderImage(dragIdx, i);
+    setDragIdx(null);
+    setDragOverIdx(null);
+  }
+  function handleDragEnd() {
+    setDragIdx(null);
+    setDragOverIdx(null);
   }
 
   function setCoverImage(idx: number) {
@@ -326,26 +358,50 @@ export default function AdminDashboard() {
                           {(editData.images || []).length === 0 ? (
                             <p className="text-sm text-[#6B6B6B] italic p-4 border border-dashed border-[#E8E4DF]">Aucune photo.</p>
                           ) : (
-                            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
-                              {(editData.images || []).map((img, i) => (
-                                <div key={`${img}-${i}`} className={`relative group border-2 ${i === 0 ? "border-[#B88B58]" : "border-transparent"}`}>
-                                  <div className="aspect-square bg-cover bg-center" style={{ backgroundImage: `url('${img}')` }} />
-                                  {i === 0 && (
-                                    <div className="absolute top-1 left-1 px-2 py-0.5 bg-[#B88B58] text-[#0D0D0D] text-[9px] uppercase tracking-wider font-semibold">Couverture</div>
-                                  )}
-                                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100">
-                                    <button type="button" onClick={() => moveImage(i, i - 1)} disabled={i === 0} title="Monter"
-                                      className="w-7 h-7 flex items-center justify-center bg-white/90 text-[#1A1A1A] text-xs disabled:opacity-30 hover:bg-[#B88B58] hover:text-white">↑</button>
-                                    <button type="button" onClick={() => moveImage(i, i + 1)} disabled={i === (editData.images || []).length - 1} title="Descendre"
-                                      className="w-7 h-7 flex items-center justify-center bg-white/90 text-[#1A1A1A] text-xs disabled:opacity-30 hover:bg-[#B88B58] hover:text-white">↓</button>
-                                    <button type="button" onClick={() => setCoverImage(i)} disabled={i === 0} title="Définir comme couverture"
-                                      className="w-7 h-7 flex items-center justify-center bg-white/90 text-[#B88B58] text-xs disabled:opacity-30 hover:bg-[#B88B58] hover:text-white">⭐</button>
-                                    <button type="button" onClick={() => removeImage(i)} title="Retirer"
-                                      className="w-7 h-7 flex items-center justify-center bg-white/90 text-red-500 text-xs hover:bg-red-500 hover:text-white">✕</button>
+                            <div
+                              className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3"
+                              onDragOver={(e) => e.preventDefault()}
+                              onDrop={(e) => { e.preventDefault(); if (dragIdx !== null) { reorderImage(dragIdx, (editData.images || []).length); setDragIdx(null); setDragOverIdx(null); } }}
+                            >
+                              {(editData.images || []).map((img, i) => {
+                                const isDragging = dragIdx === i;
+                                const isDragOver = dragOverIdx === i && dragIdx !== null && dragIdx !== i;
+                                const showLeftIndicator = isDragOver && (dragIdx ?? 0) > i;
+                                const showRightIndicator = isDragOver && (dragIdx ?? 0) < i;
+                                return (
+                                  <div
+                                    key={`${img}-${i}`}
+                                    draggable
+                                    onDragStart={() => handleDragStart(i)}
+                                    onDragOver={(e) => handleDragOver(e, i)}
+                                    onDragLeave={() => setDragOverIdx(null)}
+                                    onDrop={(e) => handleDrop(e, i)}
+                                    onDragEnd={handleDragEnd}
+                                    className={`relative group border-2 transition-all ${
+                                      i === 0 ? "border-[#B88B58]" : "border-transparent"
+                                    } ${isDragging ? "opacity-40" : ""} cursor-grab active:cursor-grabbing`}
+                                  >
+                                    {showLeftIndicator && (
+                                      <div className="absolute -left-[8px] top-0 bottom-0 w-1 bg-[#B88B58] z-10 rounded-full" />
+                                    )}
+                                    {showRightIndicator && (
+                                      <div className="absolute -right-[8px] top-0 bottom-0 w-1 bg-[#B88B58] z-10 rounded-full" />
+                                    )}
+                                    <div className="aspect-square bg-cover bg-center pointer-events-none" style={{ backgroundImage: `url('${img}')` }} />
+                                    {i === 0 && (
+                                      <div className="absolute top-1 left-1 px-2 py-0.5 bg-[#B88B58] text-[#0D0D0D] text-[9px] uppercase tracking-wider font-semibold pointer-events-none">Couverture</div>
+                                    )}
+                                    <div className="absolute top-1 right-1 w-5 h-5 flex items-center justify-center bg-black/50 text-white text-xs pointer-events-none">⋮⋮</div>
+                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100">
+                                      <button type="button" onClick={() => setCoverImage(i)} disabled={i === 0} title="Définir comme couverture"
+                                        className="w-7 h-7 flex items-center justify-center bg-white/90 text-[#B88B58] text-xs disabled:opacity-30 hover:bg-[#B88B58] hover:text-white">⭐</button>
+                                      <button type="button" onClick={() => removeImage(i)} title="Retirer"
+                                        className="w-7 h-7 flex items-center justify-center bg-white/90 text-red-500 text-xs hover:bg-red-500 hover:text-white">✕</button>
+                                    </div>
+                                    <div className="absolute bottom-1 right-1 bg-black/60 text-white text-[9px] px-1.5 py-0.5 pointer-events-none">{i + 1}</div>
                                   </div>
-                                  <div className="absolute bottom-1 right-1 bg-black/60 text-white text-[9px] px-1.5 py-0.5">{i + 1}</div>
-                                </div>
-                              ))}
+                                );
+                              })}
                             </div>
                           )}
                         </section>
