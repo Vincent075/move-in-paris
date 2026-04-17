@@ -143,7 +143,7 @@ export default function ApartmentsList() {
                 </Link>
                 <p className="text-sm text-gris mb-4">{apt.address}</p>
 
-                <div className="grid grid-cols-3 gap-3 mb-4 py-4 border-t border-b border-gris-clair/50">
+                <div className="grid grid-cols-3 gap-3 mb-4 py-4 border-t border-b border-gris-clair/50 [&>div+div]:relative [&>div+div]:before:content-[''] [&>div+div]:before:absolute [&>div+div]:before:left-0 [&>div+div]:before:top-1/2 [&>div+div]:before:-translate-y-1/2 [&>div+div]:before:h-8 [&>div+div]:before:w-px [&>div+div]:before:bg-gris-clair">
                   <div className="text-center">
                     <div className="text-noir font-medium">{apt.surface} m²</div>
                     <div className="text-xs text-gris">Surface</div>
