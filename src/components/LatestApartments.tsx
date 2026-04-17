@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useT } from "@/i18n/LocaleProvider";
 
 const latestApartments = [
   {
@@ -82,6 +83,7 @@ const latestApartments = [
 const doubled = [...latestApartments, ...latestApartments];
 
 export default function LatestApartments() {
+  const t = useT();
   return (
     <section className="pt-20 pb-6 bg-blanc overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 lg:px-12 mb-12">
@@ -93,7 +95,7 @@ export default function LatestApartments() {
               viewport={{ once: true }}
               className="text-gold text-xs tracking-[0.3em] uppercase"
             >
-              Nouveautés
+              {t("latestApartments.eyebrow")}
             </motion.span>
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
@@ -102,7 +104,7 @@ export default function LatestApartments() {
               transition={{ delay: 0.1 }}
               className="font-serif text-4xl md:text-5xl text-noir mt-3"
             >
-              Derniers appartements
+              {t("latestApartments.title")}
             </motion.h2>
           </div>
           <motion.div
@@ -114,7 +116,7 @@ export default function LatestApartments() {
               href="/nos-appartements"
               className="hidden md:inline-block px-8 py-3 border border-gold text-gold text-sm tracking-wider uppercase hover:bg-gold hover:text-noir-deep transition-all duration-300"
             >
-              Voir tout
+              {t("latestApartments.viewAll")}
             </Link>
           </motion.div>
         </div>
@@ -169,7 +171,7 @@ export default function LatestApartments() {
               <div className="flex items-center gap-4 mt-2 text-xs text-gris">
                 <span>{apt.surface} m²</span>
                 <span className="w-1 h-1 bg-gold rounded-full" />
-                <span>{apt.rooms} pièce{apt.rooms > 1 ? "s" : ""}</span>
+                <span>{apt.rooms} {(apt.rooms > 1 ? t("apartment.rooms") : t("apartment.room")).toLowerCase()}</span>
               </div>
             </Link>
           ))}
@@ -186,7 +188,7 @@ export default function LatestApartments() {
           href="/nos-appartements"
           className="inline-block px-8 py-3 border border-gold text-gold text-sm tracking-wider uppercase hover:bg-gold hover:text-noir-deep transition-all duration-300"
         >
-          Voir tous les appartements
+          {t("latestApartments.viewAll")}
         </Link>
       </div>
     </section>

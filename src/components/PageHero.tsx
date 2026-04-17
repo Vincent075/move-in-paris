@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useT } from "@/i18n/LocaleProvider";
 
 interface PageHeroProps {
   title: string;
@@ -9,6 +10,7 @@ interface PageHeroProps {
 }
 
 export default function PageHero({ title, subtitle, breadcrumb }: PageHeroProps) {
+  const t = useT();
   return (
     <section className="relative pt-32 pb-20 bg-noir-deep overflow-hidden">
       <div className="absolute inset-0 opacity-10">
@@ -27,7 +29,7 @@ export default function PageHero({ title, subtitle, breadcrumb }: PageHeroProps)
             animate={{ opacity: 1 }}
             className="flex items-center gap-2 text-xs text-blanc/40 mb-6"
           >
-            <a href="/" className="hover:text-gold transition-colors">Accueil</a>
+            <a href="/" className="hover:text-gold transition-colors">{t("apartmentsPage.breadcrumbHome")}</a>
             <span>/</span>
             <span className="text-gold">{breadcrumb}</span>
           </motion.div>

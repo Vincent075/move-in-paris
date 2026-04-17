@@ -3,6 +3,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 import PartnerLogos from "./PartnerLogos";
+import { useT, useTArray } from "@/i18n/LocaleProvider";
 
 function AnimatedCounter({
   target,
@@ -39,29 +40,13 @@ function AnimatedCounter({
   );
 }
 
-const stats = [
-  { value: 117, suffix: "K+", label: "Nuits d'hébergement" },
-  { value: 95, suffix: "%+", label: "Taux d'occupation" },
-  { value: 3, suffix: " mois", label: "Durée moyenne de séjour" },
-  { value: 1300, suffix: "+", label: "Collaborateurs accueillis" },
-];
-
-const reasons = [
-  {
-    title: "Loyers garantis par l'employeur",
-    text: "Notre clientèle est exclusivement corporate : grandes entreprises, institutions internationales. Les loyers sont garantis par l'employeur — zéro impayé.",
-  },
-  {
-    title: "Rentabilité supérieure",
-    text: "En moyenne +30% de revenus supplémentaires par rapport à une location classique. Jusqu'à 55€/m² en bail corporate.",
-  },
-  {
-    title: "Interlocuteur unique et responsable",
-    text: "Move in Paris est votre seul contact et assume l'entière responsabilité de l'état de votre bien. Assistance technique 7j/7.",
-  },
-];
+type Stat = { value: number; suffix: string; label: string };
+type Reason = { title: string; text: string };
 
 export default function WhyUs() {
+  const t = useT();
+  const stats = useTArray<Stat>("whyUs.stats");
+  const reasons = useTArray<Reason>("whyUs.reasons");
   return (
     <section id="pourquoi" className="relative overflow-hidden">
       {/* Stats banner */}
@@ -122,7 +107,7 @@ export default function WhyUs() {
                 viewport={{ once: true }}
                 className="text-gold text-xs tracking-[0.3em] uppercase"
               >
-                Pourquoi Move in Paris
+                {t("whyUs.eyebrow")}
               </motion.span>
               <motion.h2
                 initial={{ opacity: 0, y: 20 }}
@@ -131,9 +116,9 @@ export default function WhyUs() {
                 transition={{ delay: 0.1 }}
                 className="font-serif text-4xl md:text-5xl text-noir mt-4 mb-12"
               >
-                L&apos;excellence au service
+                {t("whyUs.titleLine1")}
                 <br />
-                <span className="text-gold">de votre projet</span>
+                <span className="text-gold">{t("whyUs.titleLine2")}</span>
               </motion.h2>
 
               <div className="space-y-8">

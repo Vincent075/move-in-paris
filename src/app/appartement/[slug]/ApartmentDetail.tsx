@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { useT } from "@/i18n/LocaleProvider";
 
 // Official RATP metro line colors
 const METRO_LINE_COLORS: Record<string, { bg: string; text: string }> = {
@@ -75,6 +76,7 @@ function MetroLineBadge({ line }: { line: string }) {
 }
 
 function VisitForm({ title }: { title: string }) {
+  const t = useT();
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
 
@@ -100,29 +102,29 @@ function VisitForm({ title }: { title: string }) {
   if (sent) {
     return (
       <>
-        <h3 className="font-serif text-xl text-noir mb-4">Demande envoyée !</h3>
-        <p className="text-gris text-sm font-light">Nous vous recontacterons rapidement.</p>
-        <button onClick={() => setSent(false)} className="mt-4 text-gold text-sm">Nouvelle demande</button>
+        <h3 className="font-serif text-xl text-noir mb-4">{t("apartment.requestSent")}</h3>
+        <p className="text-gris text-sm font-light">{t("apartment.requestSentDetail")}</p>
+        <button onClick={() => setSent(false)} className="mt-4 text-gold text-sm">{t("apartment.newRequest")}</button>
       </>
     );
   }
 
   return (
     <>
-      <h3 className="font-serif text-xl text-noir mb-6">Demander une visite</h3>
+      <h3 className="font-serif text-xl text-noir mb-6">{t("apartment.requestVisit")}</h3>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input name="nom" type="text" required placeholder="Votre nom"
+        <input name="nom" type="text" required placeholder={t("apartment.formName")}
           className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors" />
-        <input name="email" type="email" required placeholder="Votre email"
+        <input name="email" type="email" required placeholder={t("apartment.formEmail")}
           className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors" />
-        <input name="telephone" type="tel" placeholder="Votre téléphone"
+        <input name="telephone" type="tel" placeholder={t("apartment.formPhone")}
           className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors" />
         <textarea name="message" rows={3}
-          defaultValue={`Bonjour, je suis intéressé(e) par l'appartement "${title}". Pourriez-vous me recontacter ?`}
+          defaultValue={t("apartment.defaultMessage").replace("{title}", title)}
           className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors resize-none" />
         <button type="submit" disabled={loading}
           className={`w-full py-4 font-medium tracking-wider uppercase text-sm transition-all duration-300 ${loading ? "bg-gris text-blanc" : "bg-gold text-noir-deep hover:bg-gold-light"}`}>
-          {loading ? "Envoi..." : "Envoyer ma demande"}
+          {loading ? t("apartment.sending") : t("apartment.sendRequest")}
         </button>
       </form>
     </>
@@ -148,6 +150,7 @@ interface ApartmentProps {
 }
 
 export default function ApartmentDetail({ apartment }: ApartmentProps) {
+  const t = useT();
   const [currentImage, setCurrentImage] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const apt = apartment;
@@ -206,9 +209,9 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
       <div className="pt-24 pb-2 bg-blanc-chaud">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="flex items-center gap-2 text-xs text-gris">
-            <Link href="/" className="hover:text-gold transition-colors">Accueil</Link>
+            <Link href="/" className="hover:text-gold transition-colors">{t("apartment.breadcrumbHome")}</Link>
             <span>/</span>
-            <Link href="/nos-appartements" className="hover:text-gold transition-colors">Nos appartements</Link>
+            <Link href="/nos-appartements" className="hover:text-gold transition-colors">{t("apartment.breadcrumbApartments")}</Link>
             <span>/</span>
             <span className="text-gold">{apt.title}</span>
           </div>
@@ -304,19 +307,19 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
               >
                 <div className="text-center">
                   <div className="text-2xl font-serif text-gold font-bold">{apt.surface} m²</div>
-                  <div className="text-xs text-gris uppercase tracking-wider mt-1">Surface</div>
+                  <div className="text-xs text-gris uppercase tracking-wider mt-1">{t("apartment.surface")}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-serif text-gold font-bold">{apt.rooms}</div>
-                  <div className="text-xs text-gris uppercase tracking-wider mt-1">Pièces</div>
+                  <div className="text-xs text-gris uppercase tracking-wider mt-1">{t("apartment.rooms")}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-serif text-gold font-bold">{apt.bedrooms}</div>
-                  <div className="text-xs text-gris uppercase tracking-wider mt-1">Chambre{apt.bedrooms > 1 ? "s" : ""}</div>
+                  <div className="text-xs text-gris uppercase tracking-wider mt-1">{apt.bedrooms > 1 ? t("apartment.bedrooms") : t("apartment.bedroom")}</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-serif text-gold font-bold">{apt.bathrooms}</div>
-                  <div className="text-xs text-gris uppercase tracking-wider mt-1">Salle{apt.bathrooms > 1 ? "s" : ""} de bain</div>
+                  <div className="text-xs text-gris uppercase tracking-wider mt-1">{apt.bathrooms > 1 ? t("apartment.bathrooms") : t("apartment.bathroom")}</div>
                 </div>
               </motion.div>
 
@@ -327,7 +330,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                 transition={{ delay: 0.2 }}
                 className="mb-10"
               >
-                <h2 className="font-serif text-2xl text-noir mb-4">Description</h2>
+                <h2 className="font-serif text-2xl text-noir mb-4">{t("apartment.description")}</h2>
                 <div className="h-px w-12 bg-gold mb-6" />
                 <p className="text-gris font-light leading-relaxed">{apt.description}</p>
                 <div className="mt-4 inline-flex items-center gap-2 text-sm text-noir">
@@ -345,7 +348,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                 transition={{ delay: 0.3 }}
                 className="mb-10"
               >
-                <h2 className="font-serif text-2xl text-noir mb-4">Équipements</h2>
+                <h2 className="font-serif text-2xl text-noir mb-4">{t("apartment.equipment")}</h2>
                 <div className="h-px w-12 bg-gold mb-6" />
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {apt.features.map((f) => (
@@ -366,7 +369,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                 transition={{ delay: 0.4 }}
                 className="mb-10"
               >
-                <h2 className="font-serif text-2xl text-noir mb-4">Localisation</h2>
+                <h2 className="font-serif text-2xl text-noir mb-4">{t("apartment.location")}</h2>
                 <div className="h-px w-12 bg-gold mb-6" />
                 <div className="aspect-[16/9] bg-gris-clair overflow-hidden">
                   <iframe
@@ -377,7 +380,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                     allowFullScreen
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
-                    title={`Localisation - ${apt.title}`}
+                    title={t("apartment.mapTitle").replace("{title}", apt.title)}
                   />
                 </div>
               </motion.div>
@@ -388,7 +391,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
               >
-                <h2 className="font-serif text-2xl text-noir mb-4">À proximité</h2>
+                <h2 className="font-serif text-2xl text-noir mb-4">{t("apartment.nearby")}</h2>
                 <div className="h-px w-12 bg-gold mb-6" />
                 <div className="space-y-3">
                   {apt.nearby.map((n, i) => {
@@ -432,26 +435,26 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                   className="bg-noir-deep p-8 mb-6"
                 >
                   <div className="text-center mb-6">
-                    <span className="text-gold text-xs tracking-[0.3em] uppercase">Loyer mensuel</span>
-                    <div className="font-serif text-3xl text-blanc mt-2">Sur demande</div>
-                    <p className="text-blanc/40 text-xs mt-2">Charges comprises</p>
+                    <span className="text-gold text-xs tracking-[0.3em] uppercase">{t("apartment.monthlyRent")}</span>
+                    <div className="font-serif text-3xl text-blanc mt-2">{t("common.onRequest")}</div>
+                    <p className="text-blanc/40 text-xs mt-2">{t("common.chargesIncluded")}</p>
                   </div>
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between text-blanc/60">
-                      <span>Surface</span>
+                      <span>{t("apartment.surface")}</span>
                       <span className="text-blanc">{apt.surface} m²</span>
                     </div>
                     <div className="flex justify-between text-blanc/60">
-                      <span>Type</span>
-                      <span className="text-blanc">{apt.rooms} pièces</span>
+                      <span>{t("apartment.type")}</span>
+                      <span className="text-blanc">{apt.rooms} {(apt.rooms > 1 ? t("apartment.rooms") : t("apartment.room")).toLowerCase()}</span>
                     </div>
                     <div className="flex justify-between text-blanc/60">
-                      <span>Étage</span>
+                      <span>{t("apartment.floor")}</span>
                       <span className="text-blanc">{apt.floor}</span>
                     </div>
                     <div className="flex justify-between text-blanc/60">
-                      <span>Bail</span>
-                      <span className="text-blanc">Corporate</span>
+                      <span>{t("apartment.lease")}</span>
+                      <span className="text-blanc">{t("apartment.leaseValue")}</span>
                     </div>
                   </div>
                 </motion.div>
@@ -465,7 +468,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                 >
                   <VisitForm title={apt.title} />
                   <div className="mt-6 pt-6 border-t border-gris-clair/50 text-center">
-                    <p className="text-xs text-gris mb-2">Ou appelez-nous directement</p>
+                    <p className="text-xs text-gris mb-2">{t("apartment.orCall")}</p>
                     <a href="tel:+33145200603" className="text-gold font-serif text-lg hover:text-gold-dark transition-colors">
                       +33 1 45 20 06 03
                     </a>

@@ -1,8 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useT } from "@/i18n/LocaleProvider";
 
 export default function Hero() {
+  const t = useT();
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background */}
@@ -22,11 +24,11 @@ export default function Hero() {
           transition={{ duration: 1, delay: 0.3 }}
           className="font-serif text-5xl md:text-7xl lg:text-8xl font-bold text-blanc leading-[1.1] mb-8"
         >
-          Votre partenaire
+          {t("hero.titlePart1")}
           <br />
-          <span className="text-gold">location meublée</span>
+          <span className="text-gold">{t("hero.titleHighlight")}</span>
           <br />
-          à Paris
+          {t("hero.titlePart2")}
         </motion.h1>
 
         <motion.p
@@ -35,8 +37,7 @@ export default function Hero() {
           transition={{ duration: 1, delay: 0.5 }}
           className="text-lg md:text-xl text-blanc/70 max-w-2xl mx-auto mb-14 leading-relaxed font-light"
         >
-          Appartements meublés haut de gamme au coeur de Paris, dédiés
-          exclusivement aux entreprises et à leurs collaborateurs internationaux.
+          {t("hero.subtitle")}
         </motion.p>
       </div>
     </section>

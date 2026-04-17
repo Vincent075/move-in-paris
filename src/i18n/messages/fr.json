@@ -1,0 +1,184 @@
+{
+  "meta": {
+    "title": "Move in Paris — Location meublée corporate & expatriés",
+    "description": "Agence parisienne spécialisée dans la location meublée haut de gamme pour entreprises et expatriés. Gestion opérationnelle, accompagnement sur-mesure."
+  },
+  "common": {
+    "readMore": "En savoir plus",
+    "contact": "Contact",
+    "loading": "Chargement…",
+    "onRequest": "Sur demande",
+    "chargesIncluded": "Charges comprises",
+    "photos": "photos",
+    "photo": "photo"
+  },
+  "nav": {
+    "apartments": "Nos appartements",
+    "about": "À propos",
+    "owners": "Propriétaires",
+    "proposeProperty": "Proposer un bien",
+    "estimation": "Estimation gratuite",
+    "blog": "Blog",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "proposeCta": "Proposer mon bien",
+    "menu": "Menu"
+  },
+  "hero": {
+    "titlePart1": "Votre partenaire",
+    "titleHighlight": "location meublée",
+    "titlePart2": "à Paris",
+    "subtitle": "Appartements meublés haut de gamme au coeur de Paris, dédiés exclusivement aux entreprises et à leurs collaborateurs internationaux."
+  },
+  "searchBar": {
+    "location": "Localisation",
+    "type": "Type",
+    "surfaceMin": "Surface min",
+    "surfaceMax": "Surface max",
+    "search": "Rechercher",
+    "allCities": "Toutes les villes",
+    "allTypes": "Tous",
+    "studio": "Studio",
+    "twoRooms": "2 pièces",
+    "threeRooms": "3 pièces",
+    "fourRoomsPlus": "4 pièces+"
+  },
+  "latestApartments": {
+    "eyebrow": "Nouveautés",
+    "title": "Derniers appartements",
+    "viewAll": "Voir tous les appartements"
+  },
+  "partners": {
+    "eyebrow": "Ils nous font confiance",
+    "title": "Nos partenaires corporate"
+  },
+  "services": {
+    "eyebrow": "Ce que nous faisons",
+    "title": "Nos services",
+    "items": {
+      "corporate": {
+        "title": "Location corporate",
+        "description": "Appartements meublés haut de gamme pour vos collaborateurs en mobilité. Du studio au 4 pièces, dans les meilleurs quartiers de Paris."
+      },
+      "management": {
+        "title": "Gestion opérationnelle",
+        "description": "Propriétaires, notre service est 100 % gratuit : zéro frais de gestion, zéro commission. Nous gérons locataires, entretien, administratif, comptabilité — vous percevez 100 % du loyer convenu."
+      },
+      "legal": {
+        "title": "Conformité & juridique",
+        "description": "Baux Code Civil sécurisés (articles 1714-1762), diagnostics à jour, assurance multirisques habitation incluse. Chaque aspect de la location juridiquement protégé."
+      },
+      "technical": {
+        "title": "Assistance technique",
+        "description": "Plomberie, électricité, serrurerie, électroménager : notre équipe intervient via un réseau d'artisans de confiance. Du lundi au vendredi 9h-19h, astreinte 24/7 en cas d'urgence."
+      }
+    }
+  },
+  "whyUs": {
+    "eyebrow": "Pourquoi Move in Paris",
+    "titleLine1": "L'excellence au service",
+    "titleLine2": "de votre projet",
+    "stats": [
+      { "value": 117, "suffix": "K+", "label": "Nuits d'hébergement" },
+      { "value": 95, "suffix": "%+", "label": "Taux d'occupation" },
+      { "value": 3, "suffix": " mois", "label": "Durée moyenne de séjour" },
+      { "value": 1300, "suffix": "+", "label": "Collaborateurs accueillis" }
+    ],
+    "reasons": [
+      { "title": "Loyers garantis par l'employeur", "text": "Notre clientèle est exclusivement corporate : grandes entreprises, institutions internationales. Les loyers sont garantis par l'employeur — zéro impayé." },
+      { "title": "Rentabilité supérieure", "text": "En moyenne +30% de revenus supplémentaires par rapport à une location classique. Jusqu'à 55€/m² en bail corporate." },
+      { "title": "Interlocuteur unique et responsable", "text": "Move in Paris est votre seul contact et assume l'entière responsabilité de l'état de votre bien. Assistance technique 7j/7." }
+    ]
+  },
+  "testimonials": {
+    "eyebrow": "Ils nous font confiance",
+    "title": "Témoignages",
+    "ratingLabel": "Avis Google vérifiés",
+    "ratingAria": "Voir nos avis Google — note 4,8 sur 5",
+    "cta": "Voir tous nos avis Google"
+  },
+  "contact": {
+    "eyebrow": "Parlons de votre projet",
+    "title": "Contactez-nous",
+    "intro": "Que vous soyez propriétaire ou à la recherche d'un logement pour vos collaborateurs, notre équipe est à votre écoute.",
+    "address": "Adresse",
+    "viewMap": "Voir sur la carte",
+    "phone": "Téléphone",
+    "callNow": "Appeler maintenant",
+    "email": "Email",
+    "sendEmail": "Envoyer un email",
+    "formTitle": "Envoyez-nous un message",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "profile": "Vous êtes",
+    "selectPrompt": "Sélectionnez…",
+    "profileCompany": "Entreprise / RH",
+    "profileExpat": "Expatrié",
+    "profileOwner": "Propriétaire",
+    "profileOther": "Autre",
+    "message": "Message",
+    "sendMessage": "Envoyer le message",
+    "sending": "Envoi en cours…",
+    "success": "Message envoyé !",
+    "successDetail": "Nous vous répondrons dans les plus brefs délais.",
+    "sendAnother": "Envoyer un autre message"
+  },
+  "footer": {
+    "tagline": "Agence parisienne spécialisée dans la location meublée corporate et l'accompagnement d'expatriés.",
+    "navigation": "Navigation",
+    "contact": "Contact",
+    "hours": "Horaires",
+    "hoursWeek": "Lundi - Vendredi : 9h - 19h",
+    "hoursSat": "Samedi : sur rendez-vous",
+    "hoursSun": "Dimanche : fermé",
+    "copyright": "Move in Paris. Tous droits réservés.",
+    "legal": "Mentions légales",
+    "cgu": "CGU",
+    "privacy": "Politique de confidentialité"
+  },
+  "apartment": {
+    "surface": "Surface",
+    "rooms": "Pièces",
+    "room": "Pièce",
+    "bedroom": "Chambre",
+    "bedrooms": "Chambres",
+    "bathroom": "Salle de bain",
+    "bathrooms": "Salles de bain",
+    "sdb": "SdB",
+    "floor": "Étage",
+    "type": "Type",
+    "lease": "Bail",
+    "leaseValue": "Corporate",
+    "monthlyRent": "Loyer mensuel",
+    "description": "Description",
+    "equipment": "Équipements",
+    "location": "Localisation",
+    "nearby": "À proximité",
+    "breadcrumbApartments": "Nos appartements",
+    "breadcrumbHome": "Accueil",
+    "requestVisit": "Demander une visite",
+    "requestSent": "Demande envoyée !",
+    "requestSentDetail": "Nous vous recontacterons rapidement.",
+    "newRequest": "Nouvelle demande",
+    "formName": "Votre nom",
+    "formEmail": "Votre email",
+    "formPhone": "Votre téléphone",
+    "defaultMessage": "Bonjour, je suis intéressé(e) par l'appartement \"{title}\". Pourriez-vous me recontacter ?",
+    "sending": "Envoi…",
+    "sendRequest": "Envoyer ma demande",
+    "orCall": "Ou appelez-nous directement",
+    "mapTitle": "Localisation - {title}"
+  },
+  "apartmentsPage": {
+    "breadcrumbHome": "Accueil",
+    "breadcrumbCurrent": "Nos appartements",
+    "title": "Nos appartements",
+    "subtitle": "Découvrez notre sélection d'appartements meublés haut de gamme dans les meilleurs quartiers de Paris et sa proche banlieue.",
+    "searchTitle": "Rechercher un appartement",
+    "reset": "Réinitialiser",
+    "foundSingular": "appartement trouvé",
+    "foundPlural": "appartements trouvés",
+    "noResults": "Vous ne trouvez pas votre bonheur ? Contactez-nous pour une recherche personnalisée.",
+    "contactUs": "Contactez-nous"
+  }
+}

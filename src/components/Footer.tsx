@@ -3,8 +3,20 @@
 import Link from "next/link";
 import Image from "next/image";
 import LogoLink from "./LogoLink";
+import { useT } from "@/i18n/LocaleProvider";
 
 export default function Footer() {
+  const t = useT();
+  const navLinks = [
+    { href: "/nos-appartements", label: t("nav.apartments") },
+    { href: "/a-propos", label: t("nav.about") },
+    { href: "/proprietaires", label: t("nav.owners") },
+    { href: "/proposer-mon-appartement", label: t("nav.proposeProperty") },
+    { href: "/estimation", label: t("nav.estimation") },
+    { href: "/blog", label: t("nav.blog") },
+    { href: "/contact", label: t("nav.contact") },
+    { href: "/faq", label: t("nav.faq") },
+  ];
   return (
     <footer className="bg-noir-deep py-16">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
@@ -21,25 +33,15 @@ export default function Footer() {
               />
             </LogoLink>
             <p className="text-blanc/40 text-sm font-light leading-relaxed max-w-xs">
-              Agence parisienne spécialisée dans la location meublée corporate
-              et l&apos;accompagnement d&apos;expatriés.
+              {t("footer.tagline")}
             </p>
           </div>
 
           {/* Navigation */}
           <div>
-            <h4 className="text-blanc text-xs tracking-[0.2em] uppercase mb-6">Navigation</h4>
+            <h4 className="text-blanc text-xs tracking-[0.2em] uppercase mb-6">{t("footer.navigation")}</h4>
             <div className="space-y-3">
-              {[
-                { href: "/nos-appartements", label: "Nos appartements" },
-                { href: "/a-propos", label: "À propos" },
-                { href: "/proprietaires", label: "Propriétaires" },
-                { href: "/proposer-mon-appartement", label: "Proposer un bien" },
-                { href: "/estimation", label: "Estimation gratuite" },
-                { href: "/blog", label: "Blog" },
-                { href: "/contact", label: "Contact" },
-                { href: "/faq", label: "FAQ" },
-              ].map((link) => (
+              {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
@@ -53,7 +55,7 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="text-blanc text-xs tracking-[0.2em] uppercase mb-6">Contact</h4>
+            <h4 className="text-blanc text-xs tracking-[0.2em] uppercase mb-6">{t("footer.contact")}</h4>
             <div className="space-y-3 text-sm text-blanc/50">
               <p>26, rue de l&apos;Étoile</p>
               <p>75017 Paris</p>
@@ -64,11 +66,11 @@ export default function Footer() {
 
           {/* Hours */}
           <div>
-            <h4 className="text-blanc text-xs tracking-[0.2em] uppercase mb-6">Horaires</h4>
+            <h4 className="text-blanc text-xs tracking-[0.2em] uppercase mb-6">{t("footer.hours")}</h4>
             <div className="space-y-2 text-sm text-blanc/50">
-              <p>Lundi - Vendredi : 9h - 19h</p>
-              <p>Samedi : sur rendez-vous</p>
-              <p>Dimanche : fermé</p>
+              <p>{t("footer.hoursWeek")}</p>
+              <p>{t("footer.hoursSat")}</p>
+              <p>{t("footer.hoursSun")}</p>
             </div>
           </div>
         </div>
@@ -76,12 +78,12 @@ export default function Footer() {
         {/* Bottom */}
         <div className="pt-8 border-t border-blanc/10 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-blanc/30 text-xs">
-            &copy; {new Date().getFullYear()} Move in Paris. Tous droits réservés.
+            &copy; {new Date().getFullYear()} {t("footer.copyright")}
           </p>
           <div className="flex gap-6 text-blanc/30 text-xs">
-            <Link href="/mentions-legales" className="hover:text-gold transition-colors">Mentions légales</Link>
-            <Link href="/cgu" className="hover:text-gold transition-colors">CGU</Link>
-            <Link href="/politique-de-confidentialite" className="hover:text-gold transition-colors">Politique de confidentialité</Link>
+            <Link href="/mentions-legales" className="hover:text-gold transition-colors">{t("footer.legal")}</Link>
+            <Link href="/cgu" className="hover:text-gold transition-colors">{t("footer.cgu")}</Link>
+            <Link href="/politique-de-confidentialite" className="hover:text-gold transition-colors">{t("footer.privacy")}</Link>
           </div>
         </div>
       </div>

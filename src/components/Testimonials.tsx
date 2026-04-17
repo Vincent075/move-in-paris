@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useLocale, useT } from "@/i18n/LocaleProvider";
 
 const GOOGLE_REVIEWS_URL = "https://share.google/AJndA57leSyYd6NET";
 
@@ -166,6 +167,9 @@ function GoogleG({ className = "w-5 h-5" }: { className?: string }) {
 }
 
 export default function Testimonials() {
+  const t = useT();
+  const { locale } = useLocale();
+  const ratingDisplay = locale === "en" ? "4.8" : "4,8";
   const [reviews, setReviews] = useState<Review[]>(fiveStarReviews);
   const [mounted, setMounted] = useState(false);
 
@@ -193,36 +197,40 @@ export default function Testimonials() {
       <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 mb-14">
         {/* Header */}
         <div className="text-center">
-          <motion.span
+          <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             className="text-gold text-xs tracking-[0.3em] uppercase"
           >
-            Ils nous font confiance
-          </motion.span>
-          <motion.h2
+            {t("testimonials.eyebrow")}
+          </motion.div>
+          <motion.a
+            href={GOOGLE_REVIEWS_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="font-serif text-4xl md:text-5xl text-blanc mt-4 mb-4"
+            aria-label={t("testimonials.ratingAria")}
+            className="group mt-5 inline-flex items-center gap-5 px-7 py-4 bg-blanc/[0.04] border border-blanc/10 hover:border-gold/50 hover:bg-blanc/[0.06] transition-all duration-300"
+            style={{ borderRadius: 12 }}
           >
-            Avis Google
-          </motion.h2>
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="flex items-center justify-center gap-3 text-blanc/70 text-sm"
-          >
-            <GoogleG className="w-5 h-5" />
-            <Stars />
-            <span className="font-light">
-              Tous nos avis clients sont vérifiés sur Google
-            </span>
-          </motion.div>
+            <GoogleG className="w-8 h-8" />
+            <div className="flex flex-col items-start">
+              <div className="flex items-baseline gap-2">
+                <span className="font-serif text-5xl md:text-6xl text-gold font-bold leading-none">{ratingDisplay}</span>
+                <span className="text-blanc/60 text-lg font-light">/ 5</span>
+              </div>
+              <div className="flex items-center gap-2 mt-1.5">
+                <Stars />
+                <span className="text-blanc/70 text-xs tracking-wider uppercase group-hover:text-gold transition-colors">
+                  {t("testimonials.ratingLabel")}
+                </span>
+              </div>
+            </div>
+          </motion.a>
         </div>
       </div>
 
@@ -293,7 +301,7 @@ export default function Testimonials() {
           style={{ borderRadius: 10 }}
         >
           <GoogleG className="w-5 h-5" />
-          Voir tous nos avis Google
+          {t("testimonials.cta")}
         </a>
       </motion.div>
     </section>

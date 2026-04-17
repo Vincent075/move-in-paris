@@ -3,27 +3,33 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import ApartmentsList from "./ApartmentsList";
+import { getMessages } from "@/i18n/server";
 
-export const metadata: Metadata = {
-  title: "Nos Appartements Meublés à Paris | Move in Paris",
-  description:
-    "Découvrez notre sélection d'appartements meublés haut de gamme à Paris. Location corporate et expatriés, du studio au 4 pièces dans les meilleurs quartiers parisiens.",
-  keywords: "appartement meublé paris, location meublée corporate, location expatrié paris, studio meublé paris, appartement meublé 75017",
-  openGraph: {
+export async function generateMetadata(): Promise<Metadata> {
+  const { messages, locale } = await getMessages();
+  if (locale === "en") {
+    return {
+      title: "Our furnished apartments in Paris | Move in Paris",
+      description: "Discover our selection of high-end furnished apartments in Paris. Corporate and expat rentals, from studios to 3-bedroom flats in the finest Paris neighborhoods.",
+    };
+  }
+  return {
     title: "Nos Appartements Meublés à Paris | Move in Paris",
-    description: "Sélection d'appartements meublés haut de gamme pour entreprises et expatriés à Paris.",
-  },
-};
+    description: messages.apartmentsPage.subtitle,
+    keywords: "appartement meublé paris, location meublée corporate, location expatrié paris, studio meublé paris, appartement meublé 75017",
+  };
+}
 
-export default function NosAppartements() {
+export default async function NosAppartements() {
+  const { messages } = await getMessages();
   return (
     <>
       <Header />
       <main>
         <PageHero
-          title="Nos appartements"
-          subtitle="Découvrez notre sélection d'appartements meublés haut de gamme dans les meilleurs quartiers de Paris et sa proche banlieue."
-          breadcrumb="Nos appartements"
+          title={messages.apartmentsPage.title}
+          subtitle={messages.apartmentsPage.subtitle}
+          breadcrumb={messages.apartmentsPage.breadcrumbCurrent}
         />
         <ApartmentsList />
       </main>

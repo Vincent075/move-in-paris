@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
+import { LocaleProvider } from "@/i18n/LocaleProvider";
+import { getMessages } from "@/i18n/server";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -14,23 +16,30 @@ const inter = Inter({
   weight: ["300", "400", "500", "600"],
 });
 
-export const metadata: Metadata = {
-  title: "Move in Paris — Location meublée corporate & expatriés",
-  description:
-    "Agence parisienne spécialisée dans la location meublée haut de gamme pour entreprises et expatriés. Gestion opérationnelle, accompagnement sur-mesure.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { messages } = await getMessages();
+  return {
+    title: messages.meta.title,
+    description: messages.meta.description,
+  };
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { locale, messages } = await getMessages();
   return (
     <html
-      lang="fr"
+      lang={locale}
       className={`${playfair.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        <LocaleProvider locale={locale} messages={messages}>
+          {children}
+        </LocaleProvider>
+      </body>
     </html>
   );
 }

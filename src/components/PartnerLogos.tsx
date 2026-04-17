@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useT } from "@/i18n/LocaleProvider";
 
 const partners = [
   { name: "AXA", file: "/logos/Axa-logo.png" },
@@ -24,6 +25,7 @@ const partners = [
 const doubled = [...partners, ...partners];
 
 export default function PartnerLogos() {
+  const t = useT();
   return (
     <section className="py-16 bg-blanc-chaud overflow-hidden border-t border-b border-noir/5">
       <div className="max-w-7xl mx-auto px-6 lg:px-12 mb-10 text-center">
@@ -33,7 +35,7 @@ export default function PartnerLogos() {
           viewport={{ once: true }}
           className="text-gold text-xs tracking-[0.3em] uppercase"
         >
-          Ils nous font confiance
+          {t("partners.eyebrow")}
         </motion.span>
         <motion.h3
           initial={{ opacity: 0, y: 10 }}
@@ -42,7 +44,7 @@ export default function PartnerLogos() {
           transition={{ delay: 0.1 }}
           className="font-serif text-2xl md:text-3xl text-noir mt-3"
         >
-          Nos partenaires corporate
+          {t("partners.title")}
         </motion.h3>
       </div>
 

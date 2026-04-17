@@ -6,22 +6,25 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import LogoLink from "./LogoLink";
-
-const navLinks = [
-  { href: "/nos-appartements", label: "Nos appartements" },
-  { href: "/a-propos", label: "À propos" },
-  { href: "/proprietaires", label: "Propriétaires" },
-  { href: "/proposer-mon-appartement", label: "Proposer un bien" },
-  { href: "/estimation", label: "Estimation" },
-  { href: "/blog", label: "Blog" },
-  { href: "/contact", label: "Contact" },
-];
+import { useLocale, useT } from "@/i18n/LocaleProvider";
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const t = useT();
+  const { locale, setLocale } = useLocale();
+
+  const navLinks = [
+    { href: "/nos-appartements", label: t("nav.apartments") },
+    { href: "/a-propos", label: t("nav.about") },
+    { href: "/proprietaires", label: t("nav.owners") },
+    { href: "/proposer-mon-appartement", label: t("nav.proposeProperty") },
+    { href: "/estimation", label: t("nav.estimation") },
+    { href: "/blog", label: t("nav.blog") },
+    { href: "/contact", label: t("nav.contact") },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -32,6 +35,32 @@ export default function Header() {
   const headerBg = isHome && !scrolled
     ? "bg-transparent"
     : "bg-noir-deep/95 backdrop-blur-xl shadow-2xl shadow-black/20";
+
+  const LocaleSwitcher = ({ dark = false }: { dark?: boolean }) => {
+    const baseCls = dark
+      ? "text-blanc/60 hover:text-gold"
+      : "text-blanc/70 hover:text-white";
+    const activeCls = "text-gold font-semibold";
+    return (
+      <div className={`flex items-center gap-1.5 text-xs tracking-wider uppercase ${dark ? "" : "ml-3"}`}>
+        <button
+          onClick={() => locale !== "fr" && setLocale("fr")}
+          className={locale === "fr" ? activeCls : baseCls}
+          aria-label="Français"
+        >
+          FR
+        </button>
+        <span className="text-blanc/20">|</span>
+        <button
+          onClick={() => locale !== "en" && setLocale("en")}
+          className={locale === "en" ? activeCls : baseCls}
+          aria-label="English"
+        >
+          EN
+        </button>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -76,15 +105,16 @@ export default function Header() {
                 href="/proposer-mon-appartement"
                 className="ml-4 px-6 py-2.5 bg-gradient-to-r from-gold to-gold-light text-noir-deep text-sm tracking-wider uppercase font-semibold rounded-full hover:shadow-lg hover:shadow-gold/25 transition-all duration-300 hover:scale-105"
               >
-                Proposer mon bien
+                {t("nav.proposeCta")}
               </Link>
+              <LocaleSwitcher />
             </nav>
 
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className="lg:hidden relative w-10 h-10 flex items-center justify-center rounded-full bg-white/10 border border-white/10"
-              aria-label="Menu"
+              aria-label={t("nav.menu")}
               style={{ borderRadius: '50%' }}
             >
               <div className="flex flex-col gap-1.5">
@@ -112,13 +142,16 @@ export default function Header() {
               <LogoLink onNavigate={() => setMobileOpen(false)}>
                 <Image src="/Logo-gold.png" alt="Move in Paris" width={200} height={200} className="h-16 w-auto" />
               </LogoLink>
-              <button
-                onClick={() => setMobileOpen(false)}
-                className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 border border-white/10 text-gold text-xl"
-                style={{ borderRadius: '50%' }}
-              >
-                ✕
-              </button>
+              <div className="flex items-center gap-4">
+                <LocaleSwitcher dark />
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 border border-white/10 text-gold text-xl"
+                  style={{ borderRadius: '50%' }}
+                >
+                  ✕
+                </button>
+              </div>
             </div>
 
             {/* Links */}
@@ -153,7 +186,7 @@ export default function Header() {
                 onClick={() => setMobileOpen(false)}
                 className="block w-full py-4 bg-gradient-to-r from-gold to-gold-light text-noir-deep text-center font-semibold tracking-wider uppercase rounded-2xl"
               >
-                Proposer mon bien
+                {t("nav.proposeCta")}
               </Link>
               <div className="flex items-center justify-center gap-6 mt-6 text-blanc/30 text-xs">
                 <a href="tel:+33145200603" className="hover:text-gold transition-colors">+33 1 45 20 06 03</a>
