@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ApartmentDetail from "./ApartmentDetail";
-import apartmentsData from "@/data/apartments.json";
+import apartmentsDataRaw from "@/data/apartments.json";
+import type { ApartmentRecord } from "@/data/apartment-types";
+
+const apartmentsData = apartmentsDataRaw as ApartmentRecord[];
 
 export async function generateStaticParams() {
   return apartmentsData.map((apt) => ({ slug: apt.slug }));

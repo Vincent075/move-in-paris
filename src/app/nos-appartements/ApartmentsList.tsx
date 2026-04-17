@@ -3,8 +3,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import apartmentsData from "@/data/apartments.json";
+import apartmentsDataRaw from "@/data/apartments.json";
+import type { ApartmentRecord } from "@/data/apartment-types";
 import { usePickField, useT } from "@/i18n/LocaleProvider";
+
+const apartmentsData = apartmentsDataRaw as ApartmentRecord[];
 
 export default function ApartmentsList() {
   const t = useT();

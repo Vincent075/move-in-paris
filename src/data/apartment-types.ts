@@ -1,0 +1,22 @@
+export type ApartmentRecord = {
+  slug: string;
+  title: string;
+  title_en?: string;
+  address: string;
+  address_en?: string;
+  district: string;
+  surface: number;
+  rooms: number;
+  bedrooms: number;
+  bathrooms: number;
+  floor: string;
+  floor_en?: string;
+  status: string;
+  description: string;
+  description_en?: string;
+  features: string[];
+  features_en?: string[];
+  images: string[];
+  photos?: string;
+  nearby: { type: string; name: string; distance: string; lines?: string[] }[];
+};
