@@ -27,69 +27,36 @@ async function githubAPI(path: string, method = "GET", body?: unknown) {
 
 export async function POST(req: NextRequest) {
   try {
-    const formData = await req.formData();
-    const password = formData.get("password") as string;
+    const data = await req.json();
 
-    if (password !== process.env.ADMIN_PASSWORD) {
+    if (data.password !== process.env.ADMIN_PASSWORD) {
       return NextResponse.json({ error: "Mot de passe incorrect" }, { status: 401 });
     }
 
-    const slug = formData.get("slug") as string;
-    if (!slug) {
-      return NextResponse.json({ error: "Le titre est requis" }, { status: 400 });
-    }
-
-    // Extract apartment data
     const apartment = {
-      slug,
-      title: formData.get("title") as string,
-      address: formData.get("address") as string,
-      district: formData.get("district") as string,
-      surface: parseInt(formData.get("surface") as string) || 0,
-      rooms: parseInt(formData.get("rooms") as string) || 0,
-      bedrooms: parseInt(formData.get("bedrooms") as string) || 0,
-      bathrooms: parseInt(formData.get("bathrooms") as string) || 0,
-      floor: formData.get("floor") as string || "",
-      status: formData.get("status") as string || "À louer",
-      description: formData.get("description") as string || "",
-      features: ((formData.get("features") as string) || "").split("\n").map((f) => f.trim()).filter(Boolean),
-      photos: slug,
-      images: [] as string[],
-      nearby: JSON.parse((formData.get("nearby") as string) || "[]"),
+      slug: data.slug,
+      title: data.title,
+      address: data.address,
+      district: data.district,
+      surface: data.surface || 0,
+      rooms: data.rooms || 0,
+      bedrooms: data.bedrooms || 0,
+      bathrooms: data.bathrooms || 0,
+      floor: data.floor || "",
+      status: data.status || "À louer",
+      description: data.description || "",
+      features: data.features || [],
+      photos: data.slug,
+      images: data.images || [],
+      nearby: data.nearby || [],
     };
 
-    // Upload photos one by one
-    const photos = formData.getAll("photos") as File[];
-    let photoIndex = 0;
-
-    for (let i = 0; i < photos.length; i++) {
-      const photo = photos[i];
-      if (!photo.size || photo.size < 100) continue;
-
-      photoIndex++;
-      const ext = photo.name.split(".").pop()?.toLowerCase() || "jpg";
-      const fileName = `photo-${photoIndex}.${ext}`;
-      const path = `public/${slug}/${fileName}`;
-
-      try {
-        const buffer = await photo.arrayBuffer();
-        const base64 = Buffer.from(buffer).toString("base64");
-
-        await githubAPI(`contents/${path}`, "PUT", {
-          message: `Photo ${fileName} - ${apartment.title}`,
-          content: base64,
-        });
-
-        apartment.images.push(`/${slug}/${fileName}`);
-      } catch (photoErr) {
-        console.error(`Erreur upload photo ${fileName}:`, photoErr);
-        // Continue with other photos
-      }
+    if (!apartment.slug) {
+      return NextResponse.json({ error: "Le titre est requis" }, { status: 400 });
     }
 
     // Get current apartments.json
     const currentFile = await githubAPI("contents/src/data/apartments.json");
-
     if (!currentFile.content) {
       return NextResponse.json({ error: "Impossible de lire apartments.json" }, { status: 500 });
     }
@@ -97,15 +64,12 @@ export async function POST(req: NextRequest) {
     const currentContent = Buffer.from(currentFile.content, "base64").toString("utf-8");
     const apartments = JSON.parse(currentContent);
 
-    // Check if slug already exists
-    if (apartments.find((a: { slug: string }) => a.slug === slug)) {
+    if (apartments.find((a: { slug: string }) => a.slug === apartment.slug)) {
       return NextResponse.json({ error: "Un appartement avec ce nom existe déjà" }, { status: 400 });
     }
 
-    // Add new apartment
     apartments.push(apartment);
 
-    // Update apartments.json
     const newContent = Buffer.from(JSON.stringify(apartments, null, 2)).toString("base64");
     await githubAPI("contents/src/data/apartments.json", "PUT", {
       message: `Ajout appartement ${apartment.title}`,

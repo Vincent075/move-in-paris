@@ -129,17 +129,69 @@ export default function AdminPage() {
 
   function handlePhotos(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files || []);
-    setPhotos((prev) => [...prev, ...files]);
     files.forEach((file) => {
+      // Compress image before adding
       const reader = new FileReader();
-      reader.onload = () => setPreviews((prev) => [...prev, reader.result as string]);
+      reader.onload = () => {
+        const img = new window.Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const maxSize = 1600;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxSize || h > maxSize) {
+            if (w > h) { h = (h * maxSize) / w; w = maxSize; }
+            else { w = (w * maxSize) / h; h = maxSize; }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d")!;
+          ctx.drawImage(img, 0, 0, w, h);
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const compressed = new File([blob], file.name, { type: "image/jpeg" });
+              setPhotos((prev) => [...prev, compressed]);
+              setPreviews((prev) => [...prev, canvas.toDataURL("image/jpeg", 0.85)]);
+            }
+          }, "image/jpeg", 0.85);
+        };
+        img.src = reader.result as string;
+      };
       reader.readAsDataURL(file);
     });
+    // Reset input so same files can be selected again
+    e.target.value = "";
   }
 
   function removePhoto(index: number) {
     setPhotos((prev) => prev.filter((_, i) => i !== index));
     setPreviews((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  // Drag & drop reorder
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+
+  function handleDragStart(index: number) {
+    setDragIndex(index);
+  }
+
+  function handleDragOver(e: React.DragEvent, index: number) {
+    e.preventDefault();
+    if (dragIndex === null || dragIndex === index) return;
+    // Reorder
+    const newPhotos = [...photos];
+    const newPreviews = [...previews];
+    const [movedPhoto] = newPhotos.splice(dragIndex, 1);
+    const [movedPreview] = newPreviews.splice(dragIndex, 1);
+    newPhotos.splice(index, 0, movedPhoto);
+    newPreviews.splice(index, 0, movedPreview);
+    setPhotos(newPhotos);
+    setPreviews(newPreviews);
+    setDragIndex(index);
+  }
+
+  function handleDragEnd() {
+    setDragIndex(null);
   }
 
   function addNearbyRow() {
@@ -156,45 +208,72 @@ export default function AdminPage() {
     setNearbyRows((prev) => prev.filter((_, i) => i !== index));
   }
 
+  const [uploadProgress, setUploadProgress] = useState("");
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError("");
     setSuccess("");
 
-    const formData = new FormData();
-    formData.append("password", password);
-    formData.append("slug", slug);
-    formData.append("title", title);
-    formData.append("address", streetOnly + (district ? ", " + district : ""));
-    formData.append("district", district);
-    formData.append("surface", surface);
-    formData.append("rooms", rooms);
-    formData.append("bedrooms", bedrooms);
-    formData.append("bathrooms", bathrooms);
-    formData.append("floor", floor);
-    formData.append("status", status);
-    formData.append("description", description);
-    formData.append("features", selectedFeatures.join("\n"));
-    formData.append("nearby", JSON.stringify(nearbyRows.filter((r) => r.name)));
-    photos.forEach((photo) => formData.append("photos", photo));
-
     try {
-      const res = await fetch("/api/apartment", { method: "POST", body: formData });
+      // Step 1: Upload photos one by one
+      const uploadedImages: string[] = [];
+      for (let i = 0; i < photos.length; i++) {
+        setUploadProgress(`Upload photo ${i + 1}/${photos.length}...`);
+        const photoForm = new FormData();
+        photoForm.append("password", password);
+        photoForm.append("photo", photos[i]);
+        photoForm.append("slug", slug);
+        photoForm.append("fileName", `photo-${i + 1}.jpg`);
+
+        const res = await fetch("/api/upload-photo", { method: "POST", body: photoForm });
+        const data = await res.json();
+        if (data.success) {
+          uploadedImages.push(data.path);
+        } else {
+          console.error(`Erreur photo ${i + 1}:`, data.error);
+        }
+      }
+
+      // Step 2: Create apartment entry
+      setUploadProgress("Création de l'annonce...");
+      const res = await fetch("/api/apartment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          password,
+          slug,
+          title,
+          address: streetOnly + (district ? ", " + district : ""),
+          district,
+          surface: parseInt(surface) || 0,
+          rooms: parseInt(rooms) || 0,
+          bedrooms: parseInt(bedrooms) || 0,
+          bathrooms: parseInt(bathrooms) || 0,
+          floor,
+          status,
+          description,
+          features: selectedFeatures,
+          images: uploadedImages,
+          nearby: nearbyRows.filter((r) => r.name),
+        }),
+      });
       const data = await res.json();
       if (data.success) {
-        setSuccess(`Appartement "${title}" ajouté avec succès ! Il sera en ligne dans ~2 minutes.`);
+        setSuccess(`Appartement "${title}" ajouté avec ${uploadedImages.length} photos ! Il sera en ligne dans ~2 minutes.`);
         setTitle(""); setFullAddress(""); setStreetOnly(""); setDistrict("");
         setSurface(""); setRooms(""); setBedrooms(""); setBathrooms("");
         setFloor(""); setDescription(""); setSelectedFeatures([]);
         setPhotos([]); setPreviews([]);
-        setNearbyRows([{ type: "Métro", name: "", distance: "" }]);
+        setNearbyRows([]);
       } else {
         setError(data.error || "Erreur lors de l'ajout");
       }
     } catch {
       setError("Erreur de connexion au serveur");
     }
+    setUploadProgress("");
     setLoading(false);
   }
 
@@ -354,15 +433,32 @@ export default function AdminPage() {
             <div className="text-xs text-[#6B6B6B]/60 mt-1">JPG, PNG — plusieurs fichiers possibles</div>
           </label>
           {previews.length > 0 && (
+            <p className="text-xs text-[#6B6B6B] mb-3">Glissez-déposez pour réorganiser l&apos;ordre des photos. La première photo sera la photo principale.</p>
             <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3">
               {previews.map((src, i) => (
-                <div key={i} className="relative aspect-square group">
+                <div
+                  key={i}
+                  draggable
+                  onDragStart={() => handleDragStart(i)}
+                  onDragOver={(e) => handleDragOver(e, i)}
+                  onDragEnd={handleDragEnd}
+                  className={`relative aspect-square group cursor-grab active:cursor-grabbing transition-all ${
+                    dragIndex === i ? "opacity-50 scale-95" : ""
+                  } ${i === 0 ? "ring-2 ring-[#B88B58]" : ""}`}
+                >
                   <div className="absolute inset-0 bg-cover bg-center rounded" style={{ backgroundImage: `url('${src}')` }} />
                   <button type="button" onClick={() => removePhoto(i)}
                     className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white text-xs rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     ✕
                   </button>
-                  <div className="absolute bottom-1 left-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">{i + 1}</div>
+                  <div className="absolute bottom-1 left-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">
+                    {i === 0 ? "★ 1" : i + 1}
+                  </div>
+                  <div className="absolute top-1 left-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <svg className="w-4 h-4 text-white drop-shadow" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M3 15h18v2H3v-2zm0-4h18v2H3v-2zm0-4h18v2H3V7z"/>
+                    </svg>
+                  </div>
                 </div>
               ))}
             </div>
@@ -454,7 +550,7 @@ export default function AdminPage() {
           className={`w-full py-4 font-medium tracking-wider uppercase text-sm transition-all ${
             loading ? "bg-[#6B6B6B] text-white cursor-wait" : "bg-[#B88B58] text-[#0D0D0D] hover:bg-[#D4AF7A]"
           }`}>
-          {loading ? "Publication en cours... (peut prendre 1-2 min)" : "Publier l'appartement"}
+          {loading ? (uploadProgress || "Publication en cours...") : "Publier l'appartement"}
         </button>
         <p className="text-center text-xs text-[#6B6B6B] mt-3">
           L&apos;appartement sera en ligne dans ~2 minutes après publication.
