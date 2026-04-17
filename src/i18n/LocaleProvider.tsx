@@ -67,3 +67,20 @@ export function useTArray<T = unknown>(path: Path): T[] {
   }, messages);
   return Array.isArray(value) ? (value as T[]) : [];
 }
+
+/**
+ * Picks a bilingual field from an apartment object based on current locale.
+ * Falls back to the FR field when the _en variant is missing.
+ * Example: pickField(apt, "title") → apt.title_en in EN, apt.title in FR.
+ */
+export function usePickField() {
+  const { locale } = useLocale();
+  return function pick<T>(obj: Record<string, unknown>, key: string, fallback?: T): T {
+    if (locale === "en") {
+      const enKey = `${key}_en`;
+      const v = obj[enKey];
+      if (v !== undefined && v !== null && v !== "") return v as T;
+    }
+    return (obj[key] ?? fallback) as T;
+  };
+}

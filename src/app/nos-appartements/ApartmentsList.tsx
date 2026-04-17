@@ -4,10 +4,11 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import apartmentsData from "@/data/apartments.json";
-import { useT } from "@/i18n/LocaleProvider";
+import { usePickField, useT } from "@/i18n/LocaleProvider";
 
 export default function ApartmentsList() {
   const t = useT();
+  const pick = usePickField();
   const ALL = t("searchBar.allTypes");
   const locations = [
     ALL,
@@ -145,10 +146,10 @@ export default function ApartmentsList() {
               <div className="p-6">
                 <Link href={`/appartement/${apt.slug}`}>
                   <h3 className="font-serif text-xl text-noir mb-1 group-hover:text-gold transition-colors">
-                    {apt.title}
+                    {pick<string>(apt, "title")}
                   </h3>
                 </Link>
-                <p className="text-sm text-gris mb-4">{apt.address}</p>
+                <p className="text-sm text-gris mb-4">{pick<string>(apt, "address")}</p>
 
                 <div className="grid grid-cols-3 gap-3 mb-4 py-4 border-t border-b border-gris-clair/50 [&>div+div]:relative [&>div+div]:before:content-[''] [&>div+div]:before:absolute [&>div+div]:before:left-0 [&>div+div]:before:top-1/2 [&>div+div]:before:-translate-y-1/2 [&>div+div]:before:h-8 [&>div+div]:before:w-px [&>div+div]:before:bg-gris-clair">
                   <div className="text-center">
@@ -166,7 +167,7 @@ export default function ApartmentsList() {
                 </div>
 
                 <div className="flex flex-wrap gap-2 mb-5">
-                  {apt.features.slice(0, 3).map((f) => (
+                  {pick<string[]>(apt, "features", []).slice(0, 3).map((f) => (
                     <span key={f} className="px-2 py-1 text-[10px] uppercase tracking-wider border border-gris-clair text-gris">
                       {f}
                     </span>

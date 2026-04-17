@@ -2,88 +2,30 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useT } from "@/i18n/LocaleProvider";
+import { usePickField, useT } from "@/i18n/LocaleProvider";
+import apartmentsData from "@/data/apartments.json";
 
-const latestApartments = [
-  {
-    slug: "rue-de-bassano-paris-16",
-    title: "Rue de Bassano",
-    district: "Paris 16e",
-    surface: 62,
-    rooms: 2,
-    image: "/apartments/salon-orange.jpg",
-    status: "À louer",
-  },
-  {
-    slug: "boulevard-malesherbes-paris-17",
-    title: "Bd Malesherbes",
-    district: "Paris 17e",
-    surface: 85,
-    rooms: 3,
-    image: "/apartments/salon-haussmann.jpg",
-    status: "Disponible",
-  },
-  {
-    slug: "",
-    title: "Avenue Foch",
-    district: "Paris 16e",
-    surface: 120,
-    rooms: 4,
-    image: "/apartments/salon-bibliotheque.jpg",
-    status: "Loué",
-  },
-  {
-    slug: "",
-    title: "Rue de Lévis",
-    district: "Paris 17e",
-    surface: 75,
-    rooms: 3,
-    image: "/apartments/cuisine-entree.jpg",
-    status: "Disponible",
-  },
-  {
-    slug: "",
-    title: "Rue du Fbg St-Honoré",
-    district: "Paris 8e",
-    surface: 52,
-    rooms: 2,
-    image: "/apartments/chambre.jpg",
-    status: "À louer",
-  },
-  {
-    slug: "",
-    title: "Bd d'Inkermann",
-    district: "Neuilly-sur-Seine",
-    surface: 28,
-    rooms: 1,
-    image: "/apartments/salle-de-bain.jpg",
-    status: "Disponible",
-  },
-  {
-    slug: "",
-    title: "Bd Saint-Germain",
-    district: "Paris 5e",
-    surface: 68,
-    rooms: 3,
-    image: "/apartments/vue-paris.jpg",
-    status: "À louer",
-  },
-  {
-    slug: "",
-    title: "Rue de Ponthieu",
-    district: "Paris 8e",
-    surface: 95,
-    rooms: 4,
-    image: "/apartments/cuisine.jpg",
-    status: "Loué",
-  },
-];
+type ApartmentLite = {
+  slug: string;
+  title: string;
+  title_en?: string;
+  district: string;
+  surface: number;
+  rooms: number;
+  images: string[];
+};
 
-// Double the array for seamless infinite scroll
-const doubled = [...latestApartments, ...latestApartments];
+// Show up to 8 apartments; repeat at least twice so the carousel track is wide enough
+const source = (apartmentsData as ApartmentLite[]).slice(0, 8);
+const latestApartments = source.length > 0 ? source : [];
+const doubled = latestApartments.length >= 4
+  ? [...latestApartments, ...latestApartments]
+  : [...latestApartments, ...latestApartments, ...latestApartments, ...latestApartments];
 
 export default function LatestApartments() {
   const t = useT();
+  const pick = usePickField();
+  if (doubled.length === 0) return null;
   return (
     <section className="pt-20 pb-6 bg-blanc overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 lg:px-12 mb-12">
@@ -158,14 +100,14 @@ export default function LatestApartments() {
               <div className="relative aspect-[4/3] overflow-hidden mb-4">
                 <div
                   className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-700"
-                  style={{ backgroundImage: `url('${apt.image}')` }}
+                  style={{ backgroundImage: `url('${apt.images[0] ?? ""}')` }}
                 />
                 <div className="absolute inset-0 bg-noir-deep/0 group-hover:bg-noir-deep/20 transition-all duration-500" />
               </div>
 
               {/* Info */}
               <h3 className="font-serif text-lg text-noir group-hover:text-gold transition-colors">
-                {apt.title}
+                {pick<string>(apt as unknown as Record<string, unknown>, "title")}
               </h3>
               <p className="text-sm text-gris font-light">{apt.district}</p>
               <div className="flex items-center gap-4 mt-2 text-xs text-gris">

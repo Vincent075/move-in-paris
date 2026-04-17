@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { useT } from "@/i18n/LocaleProvider";
+import { usePickField, useT } from "@/i18n/LocaleProvider";
 
 // Official RATP metro line colors
 const METRO_LINE_COLORS: Record<string, { bg: string; text: string }> = {
@@ -134,16 +134,21 @@ function VisitForm({ title }: { title: string }) {
 interface ApartmentProps {
   apartment: {
     title: string;
+    title_en?: string;
     address: string;
+    address_en?: string;
     district: string;
     surface: number;
     rooms: number;
     bedrooms: number;
     bathrooms: number;
     floor: string;
+    floor_en?: string;
     status: string;
     description: string;
+    description_en?: string;
     features: string[];
+    features_en?: string[];
     images: string[];
     nearby: { type: string; name: string; distance: string; lines?: string[] }[];
   };
@@ -151,9 +156,15 @@ interface ApartmentProps {
 
 export default function ApartmentDetail({ apartment }: ApartmentProps) {
   const t = useT();
+  const pick = usePickField();
   const [currentImage, setCurrentImage] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const apt = apartment;
+  const title = pick<string>(apt, "title");
+  const address = pick<string>(apt, "address");
+  const floor = pick<string>(apt, "floor");
+  const description = pick<string>(apt, "description");
+  const features = pick<string[]>(apt, "features", []);
 
   return (
     <>
@@ -213,7 +224,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
             <span>/</span>
             <Link href="/nos-appartements" className="hover:text-gold transition-colors">{t("apartment.breadcrumbApartments")}</Link>
             <span>/</span>
-            <span className="text-gold">{apt.title}</span>
+            <span className="text-gold">{title}</span>
           </div>
         </div>
       </div>
@@ -293,9 +304,9 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                 animate={{ opacity: 1, y: 0 }}
               >
                 <h1 className="font-serif text-4xl md:text-5xl text-noir mb-2">
-                  {apt.title}
+                  {title}
                 </h1>
-                <p className="text-gris text-lg font-light mb-8">{apt.address}</p>
+                <p className="text-gris text-lg font-light mb-8">{address}</p>
               </motion.div>
 
               {/* Key stats */}
@@ -332,12 +343,12 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
               >
                 <h2 className="font-serif text-2xl text-noir mb-4">{t("apartment.description")}</h2>
                 <div className="h-px w-12 bg-gold mb-6" />
-                <p className="text-gris font-light leading-relaxed">{apt.description}</p>
+                <p className="text-gris font-light leading-relaxed">{description}</p>
                 <div className="mt-4 inline-flex items-center gap-2 text-sm text-noir">
                   <svg className="w-4 h-4 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
                   </svg>
-                  {apt.floor}
+                  {floor}
                 </div>
               </motion.div>
 
@@ -351,7 +362,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                 <h2 className="font-serif text-2xl text-noir mb-4">{t("apartment.equipment")}</h2>
                 <div className="h-px w-12 bg-gold mb-6" />
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {apt.features.map((f) => (
+                  {features.map((f) => (
                     <div key={f} className="flex items-center gap-3 py-2">
                       <svg className="w-4 h-4 text-gold flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
@@ -373,7 +384,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                 <div className="h-px w-12 bg-gold mb-6" />
                 <div className="aspect-[16/9] bg-gris-clair overflow-hidden">
                   <iframe
-                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(apt.address + ", France")}&zoom=15`}
+                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(address + ", France")}&zoom=15`}
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
@@ -450,7 +461,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                     </div>
                     <div className="flex justify-between text-blanc/60">
                       <span>{t("apartment.floor")}</span>
-                      <span className="text-blanc">{apt.floor}</span>
+                      <span className="text-blanc">{floor}</span>
                     </div>
                     <div className="flex justify-between text-blanc/60">
                       <span>{t("apartment.lease")}</span>
@@ -466,7 +477,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                   transition={{ delay: 0.3 }}
                   className="bg-blanc-chaud border border-gris-clair/50 p-8"
                 >
-                  <VisitForm title={apt.title} />
+                  <VisitForm title={title} />
                   <div className="mt-6 pt-6 border-t border-gris-clair/50 text-center">
                     <p className="text-xs text-gris mb-2">{t("apartment.orCall")}</p>
                     <a href="tel:+33145200603" className="text-gold font-serif text-lg hover:text-gold-dark transition-colors">
