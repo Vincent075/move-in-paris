@@ -8,8 +8,8 @@ import { usePathname } from "next/navigation";
 
 const navLinks = [
   { href: "/nos-appartements", label: "Nos appartements" },
-  { href: "/a-propos", label: "A propos" },
-  { href: "/proprietaires", label: "Proprietaires" },
+  { href: "/a-propos", label: "À propos" },
+  { href: "/proprietaires", label: "Propriétaires" },
   { href: "/proposer-mon-appartement", label: "Proposer un bien" },
   { href: "/contact", label: "Contact" },
 ];

@@ -22,9 +22,9 @@ export default function Proprietaires() {
       <Header />
       <main>
         <PageHero
-          title="Proprietaires"
+          title="Propriétaires"
           subtitle="Confiez-nous votre bien et profitez d'une gestion locative complète, sans aucun souci."
-          breadcrumb="Proprietaires"
+          breadcrumb="Propriétaires"
         />
         <ProprietairesContent />
         <CTABanner

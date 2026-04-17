@@ -176,18 +176,13 @@ export default function AboutContent() {
             <span className="text-gold text-xs tracking-[0.3em] uppercase">Nos bureaux</span>
             <h2 className="font-serif text-3xl text-noir mt-3">Où nous trouver</h2>
           </div>
-          <div className="grid md:grid-cols-2 gap-8">
-            {[
-              { name: "Agence principale", address: "26, rue de l'Étoile", city: "75017 Paris", tel: "+33 1 45 20 06 03" },
-              { name: "Siège administratif", address: "35, rue Davioud", city: "75016 Paris", tel: "+33 1 45 20 06 03" },
-            ].map((office) => (
-              <div key={office.name} className="p-8 border border-gris-clair/50 hover:border-gold/30 transition-all">
-                <h3 className="font-serif text-xl text-noir mb-2">{office.name}</h3>
-                <p className="text-gris font-light">{office.address}</p>
-                <p className="text-gris font-light">{office.city}</p>
-                <p className="text-gold mt-3">{office.tel}</p>
-              </div>
-            ))}
+          <div className="max-w-sm">
+            <div className="p-8 border border-gris-clair/50 hover:border-gold/30 transition-all">
+              <h3 className="font-serif text-xl text-noir mb-2">Agence principale</h3>
+              <p className="text-gris font-light">26, rue de l&apos;Étoile</p>
+              <p className="text-gris font-light">75017 Paris</p>
+              <p className="text-gold mt-3">+33 1 45 20 06 03</p>
+            </div>
           </div>
         </div>
       </section>

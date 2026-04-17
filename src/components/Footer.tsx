@@ -11,7 +11,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <Image
-              src="/logo-white.png"
+              src="/Logo-gold.png"
               alt="Move in Paris"
               width={420}
               height={156}
@@ -29,7 +29,7 @@ export default function Footer() {
             <div className="space-y-3">
               {[
                 { href: "/nos-appartements", label: "Nos appartements" },
-                { href: "/a-propos", label: "A propos" },
+                { href: "/a-propos", label: "À propos" },
                 { href: "/proprietaires", label: "Propriétaires" },
                 { href: "/proposer-mon-appartement", label: "Proposer un bien" },
                 { href: "/contact", label: "Contact" },

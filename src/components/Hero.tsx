@@ -35,9 +35,9 @@ export default function Hero() {
         >
           Votre partenaire
           <br />
-          <span className="text-gold">location meublee</span>
+          <span className="text-gold">location meublée</span>
           <br />
-          a Paris
+          à Paris
         </motion.h1>
 
         <motion.p
@@ -61,7 +61,7 @@ export default function Hero() {
             href="#services"
             className="px-10 py-4 bg-gold text-noir-deep font-medium tracking-wider uppercase text-sm hover:bg-gold-light transition-all duration-300"
           >
-            Decouvrir nos services
+            Découvrir nos services
           </a>
           <a
             href="#contact"

@@ -48,7 +48,7 @@ export default function ProprietairesContent() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <span className="text-gold text-xs tracking-[0.3em] uppercase">Pour les proprietaires</span>
+              <span className="text-gold text-xs tracking-[0.3em] uppercase">Pour les propriétaires</span>
               <h2 className="font-serif text-3xl md:text-4xl text-noir mt-3 mb-6">
                 Valorisez votre bien avec
                 <br />
@@ -122,7 +122,7 @@ export default function ProprietairesContent() {
       <section className="py-20 bg-blanc">
         <div className="max-w-4xl mx-auto px-6 lg:px-12">
           <div className="text-center mb-16">
-            <span className="text-gold text-xs tracking-[0.3em] uppercase">Comment ca marche</span>
+            <span className="text-gold text-xs tracking-[0.3em] uppercase">Comment ça marche</span>
             <h2 className="font-serif text-3xl text-noir mt-3">Un processus simple</h2>
           </div>
           <div className="space-y-12">

@@ -5,23 +5,23 @@ import { motion } from "framer-motion";
 const testimonials = [
   {
     quote:
-      "Move in Paris a trouve un appartement pour notre directeur financier en moins de 48h. Professionnalisme et reactivite remarquables.",
+      "Move in Paris a trouvé un appartement pour notre directeur financier en moins de 48h. Professionnalisme et réactivité remarquables.",
     author: "Marie D.",
     role: "DRH, Groupe international",
     initials: "MD",
   },
   {
     quote:
-      "En tant qu'expatrie, j'avais besoin d'un accompagnement complet. L'equipe a gere chaque detail avec une efficacite impressionnante.",
+      "En tant qu'expatrié, j'avais besoin d'un accompagnement complet. L'équipe a géré chaque détail avec une efficacité impressionnante.",
     author: "James W.",
-    role: "Expatrie, Secteur financier",
+    role: "Expatrié, Secteur financier",
     initials: "JW",
   },
   {
     quote:
-      "Proprietaire depuis 8 ans chez Move in Paris, je n'ai jamais eu a me soucier de la gestion de mon bien. Taux d'occupation optimal.",
+      "Propriétaire depuis 8 ans chez Move in Paris, je n'ai jamais eu à me soucier de la gestion de mon bien. Taux d'occupation optimal.",
     author: "Philippe R.",
-    role: "Proprietaire, Paris 16e",
+    role: "Propriétaire, Paris 16e",
     initials: "PR",
   },
 ];
@@ -59,7 +59,7 @@ export default function Testimonials() {
             transition={{ delay: 0.1 }}
             className="font-serif text-4xl md:text-5xl text-blanc mt-4 mb-6"
           >
-            Temoignages
+            Témoignages
           </motion.h2>
           <motion.div
             initial={{ width: 0 }}
