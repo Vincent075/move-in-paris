@@ -77,11 +77,15 @@ function propositionEmail(fields: Record<string, string>) {
     pieces === "3" ? "3 pièces" :
     pieces === "4+" ? "4 pièces et plus" : pieces;
   const loyerMajore = parseFloat(fields.loyerMajore || "0") || 0;
-  const loyerMIP = parseFloat(fields.loyerMoveInParis || "0") || 0;
+  const loyerMIPMin = parseFloat(fields.loyerMIPMin || "0") || 0;
+  const loyerMIPMax = parseFloat(fields.loyerMIPMax || "0") || 0;
   const pricePerM2 = parseFloat(fields.pricePerM2 || "0") || 0;
-  const gainMensuel = Math.max(loyerMIP - loyerMajore, 0);
-  const gain2ans = gainMensuel * 24;
-  const gain3ans = gainMensuel * 36;
+  const gainMin = Math.max(loyerMIPMin - loyerMajore, 0);
+  const gainMax = Math.max(loyerMIPMax - loyerMajore, 0);
+  const gainMin2ans = gainMin * 24;
+  const gainMax2ans = gainMax * 24;
+  const gainMin3ans = gainMin * 36;
+  const gainMax3ans = gainMax * 36;
 
   const now = new Date();
   const monthName = now.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
@@ -97,7 +101,7 @@ function propositionEmail(fields: Record<string, string>) {
   <!-- Header -->
   <tr><td style="background:#111;border-radius:12px 12px 0 0;padding:28px 40px 24px;">
     <table width="100%" cellpadding="0" cellspacing="0"><tr>
-      <td valign="middle"><img src="https://move-in-paris.vercel.app/Logo-gold.png" alt="Move In Paris" height="48" style="display:block;height:48px;border:0;"/></td>
+      <td valign="middle"><img src="https://move-in-paris.vercel.app/Logo-gold.png" alt="Move In Paris" height="120" style="display:block;height:120px;border:0;"/></td>
       <td align="right" valign="middle">
         <span style="color:#aaa;font-size:12px;letter-spacing:.06em;text-transform:uppercase;display:block;">Proposition commerciale</span>
         <span style="color:#666;font-size:11px;display:block;margin-top:4px;">${monthCap}</span>
@@ -139,26 +143,26 @@ function propositionEmail(fields: Record<string, string>) {
       <td width="4%"></td>
       <td width="48%" style="background:#111;border-radius:10px;padding:20px;text-align:center;vertical-align:top;">
         <p style="font-size:11px;color:#c8a84b;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;">Move In Paris</p>
-        <p style="font-size:28px;font-weight:700;color:#fff;margin:0;">${formatEuro(loyerMIP)} €</p>
-        <p style="font-size:12px;color:#aaa;margin:4px 0 0;">/ mois, charges comprises</p>
+        <p style="font-size:22px;font-weight:700;color:#fff;margin:0;line-height:1.2;">${formatEuro(loyerMIPMin)} €<br/><span style="font-size:14px;color:#888;">à</span><br/>${formatEuro(loyerMIPMax)} €</p>
+        <p style="font-size:12px;color:#aaa;margin:8px 0 0;">/ mois, charges comprises</p>
         <p style="font-size:11px;color:#888;margin:8px 0 0;">Service 100 % gratuit<br/>Zéro frais de gestion</p>
       </td>
     </tr></table>
 
-    <p style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#888;margin:0 0 12px;">Ce que vous gagnez en plus</p>
+    <p style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#888;margin:0 0 12px;">Ce que vous gagnez en plus (+25 % à +36 %)</p>
     <table width="100%" cellpadding="0" cellspacing="0"><tr>
       <td width="31%" style="text-align:center;padding:16px 8px;background:#e8f5e0;border-radius:10px;">
-        <p style="color:#2d6a0f;font-size:22px;font-weight:700;margin:0;">+${formatEuro(gainMensuel)} €</p>
+        <p style="color:#2d6a0f;font-size:18px;font-weight:700;margin:0;line-height:1.3;">+${formatEuro(gainMin)} €<br/>à +${formatEuro(gainMax)} €</p>
         <p style="color:#5a9a3a;font-size:12px;font-weight:500;margin:5px 0 0;">par mois</p>
       </td>
       <td width="3%"></td>
       <td width="31%" style="text-align:center;padding:16px 8px;background:#e8f5e0;border-radius:10px;">
-        <p style="color:#2d6a0f;font-size:22px;font-weight:700;margin:0;">+${formatEuro(gain2ans)} €</p>
+        <p style="color:#2d6a0f;font-size:18px;font-weight:700;margin:0;line-height:1.3;">+${formatEuro(gainMin2ans)} €<br/>à +${formatEuro(gainMax2ans)} €</p>
         <p style="color:#5a9a3a;font-size:12px;font-weight:500;margin:5px 0 0;">sur 2 ans</p>
       </td>
       <td width="3%"></td>
       <td width="31%" style="text-align:center;padding:16px 8px;background:#e8f5e0;border-radius:10px;">
-        <p style="color:#2d6a0f;font-size:22px;font-weight:700;margin:0;">+${formatEuro(gain3ans)} €</p>
+        <p style="color:#2d6a0f;font-size:18px;font-weight:700;margin:0;line-height:1.3;">+${formatEuro(gainMin3ans)} €<br/>à +${formatEuro(gainMax3ans)} €</p>
         <p style="color:#5a9a3a;font-size:12px;font-weight:500;margin:5px 0 0;">sur 3 ans</p>
       </td>
     </tr></table>
@@ -190,7 +194,7 @@ function propositionEmail(fields: Record<string, string>) {
     <p style="font-size:15px;color:#444;line-height:1.7;margin:0 0 20px;">Nous restons disponibles pour échanger sur cette proposition à votre convenance et pouvons vous faire parvenir notre contrat type ainsi que toute documentation complémentaire.</p>
     <table cellpadding="0" cellspacing="0"><tr>
       <td style="padding-right:20px;vertical-align:top;">
-        <img src="https://move-in-paris.vercel.app/Logo-gold.png" alt="Move In Paris" height="36" style="display:block;height:36px;border:0;margin-bottom:10px;"/>
+        <img src="https://move-in-paris.vercel.app/Logo-gold.png" alt="Move In Paris" height="90" style="display:block;height:90px;border:0;margin-bottom:10px;"/>
       </td>
       <td style="border-left:1px solid #eee;padding-left:20px;vertical-align:top;">
         <p style="font-size:13px;color:#444;font-weight:500;margin:0 0 6px;">Move In Paris</p>

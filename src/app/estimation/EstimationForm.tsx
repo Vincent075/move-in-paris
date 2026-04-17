@@ -42,7 +42,8 @@ const FALLBACK_PER_M2: Record<string, { 1: number; 2: number; 3: number; 4: numb
   "Boulogne-Billancourt": { 1: 33, 2: 29, 3: 26, 4: 24 },
 };
 
-const MOVE_IN_PARIS_PREMIUM = 1.35;
+const MIP_PREMIUM_MIN = 1.25; // +25%
+const MIP_PREMIUM_MAX = 1.36; // +36%
 
 function formatEuro(value: number) {
   return value.toLocaleString("fr-FR", { maximumFractionDigits: 0 });
@@ -193,12 +194,15 @@ export default function EstimationForm() {
     if (pricePerM2 == null) return null;
 
     const loyerMajore = Math.round(pricePerM2 * s);
-    const loyerMoveInParis = Math.round(loyerMajore * MOVE_IN_PARIS_PREMIUM);
+    const loyerMIPMin = Math.round(loyerMajore * MIP_PREMIUM_MIN);
+    const loyerMIPMax = Math.round(loyerMajore * MIP_PREMIUM_MAX);
     return {
       pricePerM2: Math.round(pricePerM2 * 100) / 100,
       loyerMajore,
-      loyerMoveInParis,
-      bonus: loyerMoveInParis - loyerMajore,
+      loyerMIPMin,
+      loyerMIPMax,
+      bonusMin: loyerMIPMin - loyerMajore,
+      bonusMax: loyerMIPMax - loyerMajore,
     };
   }, [quartier, fallbackCity, rooms, surface, epoch]);
 
@@ -237,7 +241,8 @@ export default function EstimationForm() {
           surface,
           epoch,
           loyerMajore: computation?.loyerMajore,
-          loyerMoveInParis: computation?.loyerMoveInParis,
+          loyerMIPMin: computation?.loyerMIPMin,
+          loyerMIPMax: computation?.loyerMIPMax,
           pricePerM2: computation?.pricePerM2,
         }),
       });
@@ -645,14 +650,19 @@ export default function EstimationForm() {
                   style={{ borderRadius: 10 }}
                 >
                   <div className="text-[10px] uppercase tracking-[0.15em] text-gold mb-2">
-                    Loyer mensuel charges comprises
+                    Fourchette de loyer mensuel charges comprises
                   </div>
-                  <div className="font-serif text-5xl md:text-6xl text-gold font-bold">
-                    {formatEuro(computation.loyerMoveInParis)} €
+                  <div className="font-serif text-4xl md:text-5xl text-gold font-bold leading-tight">
+                    {formatEuro(computation.loyerMIPMin)} €
+                    <span className="text-blanc/60 mx-3">–</span>
+                    {formatEuro(computation.loyerMIPMax)} €
                   </div>
-                  <div className="text-blanc/70 text-sm mt-2">
+                  <div className="text-blanc/70 text-sm mt-3">
                     soit environ{" "}
-                    {formatEuro(Math.round(computation.loyerMoveInParis / parseFloat(surface)))} €/m² — tout compris
+                    {formatEuro(Math.round(computation.loyerMIPMin / parseFloat(surface)))} €/m²
+                    à{" "}
+                    {formatEuro(Math.round(computation.loyerMIPMax / parseFloat(surface)))} €/m² —
+                    tout compris
                   </div>
                 </div>
 
@@ -679,10 +689,10 @@ export default function EstimationForm() {
                       Marge corporate Move in Paris
                     </div>
                     <div className="font-serif text-2xl text-gold">
-                      + {formatEuro(computation.bonus)} €
+                      + {formatEuro(computation.bonusMin)} € à + {formatEuro(computation.bonusMax)} €
                     </div>
                     <div className="text-blanc/40 text-xs mt-1">
-                      soit +35 % grâce à notre clientèle corporate
+                      soit +25 % à +36 % grâce à notre clientèle corporate
                     </div>
                   </div>
                 </div>
