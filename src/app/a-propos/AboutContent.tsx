@@ -46,7 +46,7 @@ const engagements = [
         <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75" />
       </svg>
     ),
-    title: "Clientèle corporate exclusive",
+    title: "Clientèle corporate premium",
     desc: "Grandes entreprises, institutions internationales et leurs collaborateurs expatriés. Les loyers sont garantis par l'employeur — zéro impayé.",
   },
   {
