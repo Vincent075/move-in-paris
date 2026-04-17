@@ -43,6 +43,8 @@ export default function AdminDashboard() {
   const [editingSlug, setEditingSlug] = useState<string | null>(null);
   const [editData, setEditData] = useState<Partial<Apartment>>({});
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState({ done: 0, total: 0 });
   const [message, setMessage] = useState({ type: "", text: "" });
 
   async function fetchApartments() {
@@ -125,6 +127,52 @@ export default function AdminDashboard() {
     const imgs = [...(editData.images || [])];
     imgs.splice(idx, 1);
     setEditData({ ...editData, images: imgs });
+  }
+
+  async function uploadPhotos(files: FileList | null) {
+    if (!files || files.length === 0 || !editData.slug) return;
+    setUploading(true);
+    setUploadProgress({ done: 0, total: files.length });
+    setMessage({ type: "", text: "" });
+
+    const existing = [...(editData.images || [])];
+    // Determine next index by scanning existing filenames like "01.jpg"
+    let nextIdx = 1;
+    for (const img of existing) {
+      const m = img.match(/(\d+)\.[a-z]+$/i);
+      if (m) nextIdx = Math.max(nextIdx, parseInt(m[1]) + 1);
+    }
+
+    const uploaded: string[] = [];
+    let i = 0;
+    for (const file of Array.from(files)) {
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+      const fileName = `${String(nextIdx + i).padStart(2, "0")}.${ext}`;
+      const fd = new FormData();
+      fd.append("password", password);
+      fd.append("photo", file);
+      fd.append("slug", editData.slug);
+      fd.append("fileName", fileName);
+      try {
+        const res = await fetch("/api/upload-photo", { method: "POST", body: fd });
+        const data = await res.json();
+        if (data.success && data.path) {
+          uploaded.push(data.path);
+        } else {
+          setMessage({ type: "error", text: `Erreur upload ${file.name}: ${data.error || "inconnue"}` });
+        }
+      } catch {
+        setMessage({ type: "error", text: `Erreur upload ${file.name}` });
+      }
+      i += 1;
+      setUploadProgress({ done: i, total: files.length });
+    }
+
+    if (uploaded.length > 0) {
+      setEditData((prev) => ({ ...prev, images: [...(prev.images || []), ...uploaded] }));
+      setMessage({ type: "success", text: `${uploaded.length} photo${uploaded.length > 1 ? "s" : ""} ajoutée${uploaded.length > 1 ? "s" : ""}. N'oublie pas d'enregistrer les modifications.` });
+    }
+    setUploading(false);
   }
 
   function updateNearby(idx: number, field: keyof Nearby, value: string) {
@@ -261,11 +309,19 @@ export default function AdminDashboard() {
 
                         {/* ========== PHOTOS ========== */}
                         <section>
-                          <div className="flex items-end justify-between mb-3">
+                          <div className="flex items-end justify-between mb-3 flex-wrap gap-3">
                             <div>
                               <h4 className="font-serif text-sm text-[#1A1A1A] uppercase tracking-[0.15em]">Photos ({(editData.images || []).length})</h4>
-                              <p className="text-xs text-[#6B6B6B] mt-0.5">La première photo sert de couverture. Utilisez ↑↓ pour réordonner, ⭐ pour définir la couverture.</p>
+                              <p className="text-xs text-[#6B6B6B] mt-0.5">La première photo sert de couverture. Utilisez ↑↓ pour réordonner, ⭐ pour définir la couverture, ✕ pour retirer.</p>
                             </div>
+                            <label className={`inline-flex items-center gap-2 px-4 py-2 text-xs uppercase tracking-wider cursor-pointer transition-all ${uploading ? "bg-[#6B6B6B] text-white cursor-wait" : "bg-[#B88B58] text-[#0D0D0D] hover:bg-[#D4AF7A]"}`}>
+                              {uploading
+                                ? `Upload ${uploadProgress.done}/${uploadProgress.total}…`
+                                : "+ Ajouter des photos"}
+                              <input type="file" accept="image/jpeg,image/jpg,image/png,image/webp" multiple hidden
+                                disabled={uploading}
+                                onChange={(e) => { uploadPhotos(e.target.files); e.target.value = ""; }} />
+                            </label>
                           </div>
                           {(editData.images || []).length === 0 ? (
                             <p className="text-sm text-[#6B6B6B] italic p-4 border border-dashed border-[#E8E4DF]">Aucune photo.</p>

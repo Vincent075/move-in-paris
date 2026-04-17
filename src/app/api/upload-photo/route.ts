@@ -24,10 +24,10 @@ export async function POST(req: NextRequest) {
 
     const buffer = await photo.arrayBuffer();
     const base64 = Buffer.from(buffer).toString("base64");
-    const path = `public/${slug}/${fileName}`;
+    const path = `public/apartments/${slug}/${fileName}`;
 
     const res = await fetch(
-      `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`,
+      `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${encodeURI(path)}`,
       {
         method: "PUT",
         headers: {
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: err }, { status: res.status });
     }
 
-    return NextResponse.json({ success: true, path: `/${slug}/${fileName}` });
+    return NextResponse.json({ success: true, path: `/apartments/${slug}/${fileName}` });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Erreur upload" }, { status: 500 });
