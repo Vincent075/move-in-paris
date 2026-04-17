@@ -4,6 +4,55 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import AddApartment, { FLOOR_OPTIONS, ROOM_OPTIONS, BEDROOM_OPTIONS, BATHROOM_OPTIONS } from "./AddApartment";
 
+const AMENITIES: { fr: string; en: string }[] = [
+  { fr: "Wifi", en: "Wifi" },
+  { fr: "Télévision", en: "TV" },
+  { fr: "Télévision 4K", en: "4K TV" },
+  { fr: "Canal+", en: "Canal+" },
+  { fr: "Lave-vaisselle", en: "Dishwasher" },
+  { fr: "Lave-linge", en: "Washing machine" },
+  { fr: "Lave-linge séchant", en: "Washer-dryer" },
+  { fr: "Sèche-linge", en: "Dryer" },
+  { fr: "Four", en: "Oven" },
+  { fr: "Micro-ondes", en: "Microwave" },
+  { fr: "Plaques de cuisson", en: "Cooktop" },
+  { fr: "Réfrigérateur", en: "Refrigerator" },
+  { fr: "Congélateur", en: "Freezer" },
+  { fr: "Machine Nespresso", en: "Nespresso machine" },
+  { fr: "Bouilloire", en: "Kettle" },
+  { fr: "Grille-pain", en: "Toaster" },
+  { fr: "Hotte aspirante", en: "Range hood" },
+  { fr: "Cuisine équipée", en: "Fully equipped kitchen" },
+  { fr: "Cuisine américaine", en: "Open kitchen" },
+  { fr: "Ascenseur", en: "Elevator" },
+  { fr: "Digicode", en: "Keypad access" },
+  { fr: "Interphone", en: "Intercom" },
+  { fr: "Gardien", en: "Caretaker" },
+  { fr: "Balcon", en: "Balcony" },
+  { fr: "Terrasse", en: "Terrace" },
+  { fr: "Jardin", en: "Garden" },
+  { fr: "Cheminée", en: "Fireplace" },
+  { fr: "Parquet", en: "Hardwood floor" },
+  { fr: "Moquette", en: "Carpet" },
+  { fr: "Double vitrage", en: "Double glazing" },
+  { fr: "Climatisation", en: "Air conditioning" },
+  { fr: "Chauffage électrique", en: "Electric heating" },
+  { fr: "Chauffage gaz", en: "Gas heating" },
+  { fr: "Chauffage collectif", en: "Collective heating" },
+  { fr: "Chauffage au sol", en: "Floor heating" },
+  { fr: "Toilettes séparées", en: "Separate toilet" },
+  { fr: "Baignoire", en: "Bathtub" },
+  { fr: "Douche", en: "Shower" },
+  { fr: "Sèche-cheveux", en: "Hair dryer" },
+  { fr: "Fer à repasser", en: "Iron" },
+  { fr: "Aspirateur", en: "Vacuum cleaner" },
+  { fr: "Linge de lit fourni", en: "Bed linen provided" },
+  { fr: "Serviettes fournies", en: "Towels provided" },
+  { fr: "Ménage hebdomadaire", en: "Weekly cleaning" },
+  { fr: "Parking", en: "Parking" },
+  { fr: "Cave", en: "Cellar" },
+];
+
 interface Nearby {
   type: string;
   name: string;
@@ -117,26 +166,37 @@ export default function AdminDashboard() {
     setEditData({ ...editData, images: imgs });
   }
 
-  function reorderImage(from: number, to: number) {
-    if (from === to) return;
+  /**
+   * Move `from` to land AT visual position `targetIdx` (i.e. the dragged item
+   * becomes the item at index `targetIdx` in the new array).
+   */
+  function reorderImage(from: number, targetIdx: number) {
+    if (from === targetIdx) return;
     const imgs = [...(editData.images || [])];
     const [m] = imgs.splice(from, 1);
-    // Adjust insertion position when moving forward (account for removed item)
-    const insertAt = from < to ? to - 1 : to;
-    imgs.splice(insertAt, 0, m);
+    // After removal, if target was after the removed item, it shifts down by 1.
+    const insertAt = from < targetIdx ? targetIdx : targetIdx;
+    const clamped = Math.max(0, Math.min(insertAt, imgs.length));
+    imgs.splice(clamped, 0, m);
     setEditData({ ...editData, images: imgs });
   }
 
-  function handleDragStart(i: number) {
+  function handleDragStart(e: React.DragEvent, i: number) {
     setDragIdx(i);
+    // Firefox needs data to be set to initiate drag
+    try { e.dataTransfer.setData("text/plain", String(i)); } catch {}
+    e.dataTransfer.effectAllowed = "move";
   }
   function handleDragOver(e: React.DragEvent, i: number) {
     e.preventDefault();
-    if (dragIdx === null) return;
+    e.stopPropagation();
+    e.dataTransfer.dropEffect = "move";
+    if (dragIdx === null || dragIdx === i) return;
     setDragOverIdx(i);
   }
   function handleDrop(e: React.DragEvent, i: number) {
     e.preventDefault();
+    e.stopPropagation();
     if (dragIdx === null) return;
     reorderImage(dragIdx, i);
     setDragIdx(null);
@@ -145,6 +205,38 @@ export default function AdminDashboard() {
   function handleDragEnd() {
     setDragIdx(null);
     setDragOverIdx(null);
+  }
+
+  function toggleAmenity(am: { fr: string; en: string }, checked: boolean) {
+    const fr = new Set(editData.features || []);
+    const en = new Set(editData.features_en || []);
+    if (checked) {
+      fr.add(am.fr);
+      en.add(am.en);
+    } else {
+      fr.delete(am.fr);
+      en.delete(am.en);
+    }
+    setEditData({ ...editData, features: Array.from(fr), features_en: Array.from(en) });
+  }
+
+  /** Features from apartments.json that aren't in the AMENITIES dictionary. */
+  function customFeaturesFr(): string[] {
+    const known = new Set(AMENITIES.map((a) => a.fr));
+    return (editData.features || []).filter((f) => !known.has(f));
+  }
+  function setCustomFeaturesFr(text: string) {
+    const customFr = text.split("\n").map((s) => s.trim()).filter(Boolean);
+    const customEn = text.split("\n").map((s) => s.trim()).filter(Boolean);
+    const known = new Set(AMENITIES.map((a) => a.fr));
+    const knownEn = new Set(AMENITIES.map((a) => a.en));
+    const keptFr = (editData.features || []).filter((f) => known.has(f));
+    const keptEn = (editData.features_en || []).filter((f) => knownEn.has(f));
+    setEditData({
+      ...editData,
+      features: [...keptFr, ...customFr],
+      features_en: [...keptEn, ...customEn],
+    });
   }
 
   function setCoverImage(idx: number) {
@@ -372,7 +464,7 @@ export default function AdminDashboard() {
                                   <div
                                     key={`${img}-${i}`}
                                     draggable
-                                    onDragStart={() => handleDragStart(i)}
+                                    onDragStart={(e) => handleDragStart(e, i)}
                                     onDragOver={(e) => handleDragOver(e, i)}
                                     onDragLeave={() => setDragOverIdx(null)}
                                     onDrop={(e) => handleDrop(e, i)}
@@ -527,23 +619,38 @@ export default function AdminDashboard() {
                           </div>
                         </section>
 
-                        {/* ========== Features FR / EN ========== */}
+                        {/* ========== Features (checkboxes) ========== */}
                         <section className="border-t border-[#E8E4DF] pt-6">
-                          <h4 className="font-serif text-sm text-[#1A1A1A] uppercase tracking-[0.15em] mb-3">Équipements (un par ligne)</h4>
-                          <div className="grid md:grid-cols-2 gap-4">
+                          <div className="flex items-end justify-between mb-3 flex-wrap gap-3">
                             <div>
-                              <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Équipements (FR)</label>
-                              <textarea rows={6} value={(editData.features || []).join("\n")}
-                                onChange={(e) => setEditData({ ...editData, features: e.target.value.split("\n").map(s => s.trim()).filter(Boolean) })}
-                                className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none resize-y font-mono" />
+                              <h4 className="font-serif text-sm text-[#1A1A1A] uppercase tracking-[0.15em]">Équipements</h4>
+                              <p className="text-xs text-[#6B6B6B] mt-0.5">Cochez les équipements présents. Les traductions FR/EN sont gérées automatiquement.</p>
                             </div>
-                            <div>
-                              <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Équipements (EN)</label>
-                              <textarea rows={6} value={(editData.features_en || []).join("\n")}
-                                onChange={(e) => setEditData({ ...editData, features_en: e.target.value.split("\n").map(s => s.trim()).filter(Boolean) })}
-                                placeholder="Leave empty to fall back to FR"
-                                className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none resize-y font-mono" />
-                            </div>
+                            <span className="text-xs text-[#6B6B6B]">{(editData.features || []).length} sélectionné{(editData.features || []).length > 1 ? "s" : ""}</span>
+                          </div>
+                          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+                            {AMENITIES.map((am) => {
+                              const checked = (editData.features || []).includes(am.fr);
+                              return (
+                                <label key={am.fr} className={`flex items-center gap-2 px-3 py-2 border text-xs cursor-pointer transition-all ${checked ? "border-[#B88B58] bg-[#B88B58]/10 text-[#1A1A1A]" : "border-[#E8E4DF] text-[#6B6B6B] hover:border-[#B88B58]/50"}`}>
+                                  <input type="checkbox" checked={checked}
+                                    onChange={(e) => toggleAmenity(am, e.target.checked)}
+                                    className="accent-[#B88B58] w-4 h-4 flex-shrink-0" />
+                                  <span className="leading-tight">
+                                    {am.fr}
+                                    <span className="block text-[10px] text-[#6B6B6B]/70">{am.en}</span>
+                                  </span>
+                                </label>
+                              );
+                            })}
+                          </div>
+                          <div className="mt-4">
+                            <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Équipements personnalisés (un par ligne)</label>
+                            <textarea rows={3}
+                              value={customFeaturesFr().join("\n")}
+                              onChange={(e) => setCustomFeaturesFr(e.target.value)}
+                              placeholder="Ex: Piano à queue, Vue Tour Eiffel…"
+                              className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none resize-y font-mono" />
                           </div>
                         </section>
 
