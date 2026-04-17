@@ -169,6 +169,35 @@ export async function POST(req: NextRequest) {
           </div>`;
         break;
 
+      case "estimation":
+        subject = `💰 Lead estimation — ${fields.prenom} ${fields.nom} (${fields.zone})`;
+        content = `
+          <div style="font-family:Georgia,serif;font-size:16px;color:#B88B58;margin-bottom:12px;">Contact</div>
+          <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
+            ${row("Civilité", fields.civilite)}
+            ${row("Prénom", fields.prenom)}
+            ${row("Nom", fields.nom)}
+            ${row("Email", `<a href="mailto:${fields.email}" style="color:#B88B58;">${fields.email}</a>`)}
+            ${row("Téléphone", fields.telephone ? `<a href="tel:${fields.telephone}" style="color:#B88B58;">${fields.telephone}</a>` : "")}
+          </table>
+          <div style="font-family:Georgia,serif;font-size:16px;color:#B88B58;margin-bottom:12px;">Bien</div>
+          <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
+            ${row("Adresse", fields.adresse)}
+            ${row("Zone", fields.zone)}
+            ${row("Surface", fields.surface ? fields.surface + " m²" : "")}
+            ${row("Pièces", fields.pieces)}
+            ${row("Époque", fields.epoch)}
+          </table>
+          <div style="background-color:#0D0D0D;padding:20px;border-radius:4px;margin-bottom:16px;">
+            <div style="font-size:11px;color:#B88B58;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Estimation communiquée</div>
+            <div style="font-family:Georgia,serif;font-size:28px;color:#B88B58;font-weight:bold;">${fields.loyerMoveInParis ? Number(fields.loyerMoveInParis).toLocaleString("fr-FR") + " €/mois" : "—"}</div>
+            <div style="font-size:12px;color:#ffffff80;margin-top:4px;">
+              Loyer majoré (encadrement) : ${fields.loyerMajore ? Number(fields.loyerMajore).toLocaleString("fr-FR") + " €" : "—"}
+              — ${fields.pricePerM2 ? fields.pricePerM2 + " €/m²" : ""}
+            </div>
+          </div>`;
+        break;
+
       default:
         subject = "Nouveau message — Move in Paris";
         content = `<pre style="font-size:13px;">${JSON.stringify(fields, null, 2)}</pre>`;
@@ -178,6 +207,7 @@ export async function POST(req: NextRequest) {
       contact: "Nouveau message de contact",
       proposer: "Nouvelle proposition de bien",
       visite: "Demande de visite",
+      estimation: "Nouveau lead — Estimation de loyer",
     };
 
     const result = await resend.emails.send({
