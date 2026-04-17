@@ -120,18 +120,25 @@ export default function LatestApartments() {
         </div>
       </div>
 
-      {/* Scrolling carousel */}
-      <div className="relative">
+      {/* Scrolling carousel — touch swipe + auto scroll */}
+      <div
+        className="relative overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
+      >
         <motion.div
           className="flex gap-6"
+          drag="x"
+          dragConstraints={{ left: -2000, right: 0 }}
           animate={{ x: ["0%", "-50%"] }}
           transition={{
             x: {
-              duration: 20,
+              duration: 10,
               repeat: Infinity,
               ease: "linear",
             },
           }}
+          whileDrag={{ animationPlayState: "paused" }}
+          style={{ touchAction: "pan-x" }}
         >
           {doubled.map((apt, i) => (
             <Link
