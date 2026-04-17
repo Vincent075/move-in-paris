@@ -1,8 +1,40 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+
+type BanFeature = {
+  properties: {
+    label: string;
+    postcode?: string;
+    city?: string;
+    citycode?: string;
+    context?: string;
+    name?: string;
+  };
+};
+
+function mapPostcodeToZone(postcode?: string, city?: string): string | null {
+  if (!postcode) return null;
+  if (postcode === "75116") return "Paris 16e";
+  if (/^7500[1-9]$/.test(postcode)) return `Paris ${parseInt(postcode.slice(3), 10)}er`.replace("Paris 1er", "Paris 1er");
+  if (/^750(0[1-9]|1\d|20)$/.test(postcode)) {
+    const n = parseInt(postcode.slice(3), 10);
+    return n === 1 ? "Paris 1er" : `Paris ${n}e`;
+  }
+  if (postcode === "92200") return "Neuilly-sur-Seine";
+  if (postcode === "92300") return "Levallois-Perret";
+  if (postcode === "92100") return "Boulogne-Billancourt";
+  // fallback via city name
+  if (city) {
+    const c = city.toLowerCase();
+    if (c.includes("neuilly")) return "Neuilly-sur-Seine";
+    if (c.includes("levallois")) return "Levallois-Perret";
+    if (c.includes("boulogne-billancourt")) return "Boulogne-Billancourt";
+  }
+  return null;
+}
 
 /**
  * Approximation loyer majoré MEUBLÉ €/m² — Paris & proche banlieue ouest 2025.
@@ -63,6 +95,58 @@ export default function EstimationForm() {
   const [surface, setSurface] = useState("");
   const [epoch, setEpoch] = useState<string>("apres-1990");
   const [address, setAddress] = useState("");
+
+  // Address autocomplete
+  const [suggestions, setSuggestions] = useState<BanFeature[]>([]);
+  const [suggestOpen, setSuggestOpen] = useState(false);
+  const [suggestLoading, setSuggestLoading] = useState(false);
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function onClickOutside(e: MouseEvent) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+        setSuggestOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, []);
+
+  function handleAddressInput(value: string) {
+    setAddress(value);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (value.trim().length < 3) {
+      setSuggestions([]);
+      setSuggestOpen(false);
+      return;
+    }
+    setSuggestOpen(true);
+    setSuggestLoading(true);
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(value)}&limit=6&type=housenumber`
+        );
+        const data = await res.json();
+        setSuggestions((data.features || []) as BanFeature[]);
+      } catch {
+        setSuggestions([]);
+      }
+      setSuggestLoading(false);
+    }, 220);
+  }
+
+  function pickSuggestion(f: BanFeature) {
+    const p = f.properties;
+    setAddress(p.label);
+    const detected = mapPostcodeToZone(p.postcode, p.city);
+    if (detected && LOYER_MAJORE[detected]) {
+      setZone(detected);
+    }
+    setSuggestOpen(false);
+    setSuggestions([]);
+  }
 
   // Contact fields
   const [civilite, setCivilite] = useState("");
@@ -183,17 +267,57 @@ export default function EstimationForm() {
               </h2>
 
               <div className="space-y-5">
-                <div>
+                <div ref={wrapperRef} className="relative">
                   <label className="block text-xs text-gris uppercase tracking-wider mb-2">
-                    Adresse (ou ville) — optionnel
+                    Adresse du bien
                   </label>
                   <input
                     type="text"
                     value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    placeholder="12 rue Pergolèse, Paris 16e"
+                    onChange={(e) => handleAddressInput(e.target.value)}
+                    onFocus={() => {
+                      if (suggestions.length > 0) setSuggestOpen(true);
+                    }}
+                    placeholder="Commencez à taper : 12 rue Pergolèse…"
+                    autoComplete="off"
                     className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none"
                   />
+                  {suggestOpen && (suggestLoading || suggestions.length > 0) && (
+                    <div
+                      className="absolute left-0 right-0 top-full mt-1 bg-blanc border border-gris-clair/60 shadow-xl shadow-noir-deep/10 z-20 max-h-72 overflow-y-auto"
+                      style={{ borderRadius: 10 }}
+                    >
+                      {suggestLoading && suggestions.length === 0 && (
+                        <div className="px-4 py-3 text-sm text-gris italic">Recherche…</div>
+                      )}
+                      {suggestions.map((f, i) => {
+                        const p = f.properties;
+                        const detected = mapPostcodeToZone(p.postcode, p.city);
+                        const supported = detected && LOYER_MAJORE[detected];
+                        return (
+                          <button
+                            type="button"
+                            key={`${p.label}-${i}`}
+                            onClick={() => pickSuggestion(f)}
+                            className="w-full text-left px-4 py-3 text-sm hover:bg-blanc-chaud transition-colors border-b border-gris-clair/30 last:border-b-0"
+                          >
+                            <div className="text-noir">{p.label}</div>
+                            <div className="text-xs text-gris mt-0.5 flex items-center gap-2">
+                              <span>{p.postcode} {p.city}</span>
+                              {supported && (
+                                <span className="text-gold text-[10px] uppercase tracking-wider">
+                                  • Zone détectée : {detected}
+                                </span>
+                              )}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                  <p className="text-xs text-gris mt-1.5 italic">
+                    Sélectionnez une suggestion : la zone se remplit automatiquement.
+                  </p>
                 </div>
 
                 <div>
