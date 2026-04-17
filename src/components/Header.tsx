@@ -75,7 +75,7 @@ export default function Header() {
                 alt="Move in Paris"
                 width={640}
                 height={640}
-                className="h-16 w-auto transition-transform duration-300 group-hover:scale-105"
+                className="h-32 w-auto transition-transform duration-300 group-hover:scale-105"
                 priority
               />
             </LogoLink>
