@@ -22,7 +22,7 @@ const avantages = [
   {
     num: "04",
     title: "Taux d'occupation optimal",
-    desc: "Grâce à notre réseau d'entreprises et de relocation agencies, nous maintenons un taux d'occupation supérieur à 95% sur l'ensemble de notre parc.",
+    desc: "Grâce à notre réseau d'entreprises et de agences de relocation, nous maintenons un taux d'occupation supérieur à 95% sur l'ensemble de notre parc.",
   },
   {
     num: "05",
