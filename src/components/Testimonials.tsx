@@ -233,7 +233,7 @@ export default function Testimonials() {
           100% { transform: translateX(-50%); }
         }
         .reviews-track {
-          animation: reviews-scroll-left 80s linear infinite;
+          animation: reviews-scroll-left 45s linear infinite;
           width: max-content;
         }
         .reviews-track:hover { animation-play-state: paused; }
@@ -243,11 +243,6 @@ export default function Testimonials() {
           scrollbar-width: none;
         }
         .reviews-container::-webkit-scrollbar { display: none; }
-        @media (pointer: coarse) {
-          .reviews-track { animation: none; }
-          .reviews-container { scroll-snap-type: x proximity; }
-          .reviews-item { scroll-snap-align: start; }
-        }
       `}</style>
 
       <div className="relative reviews-container" suppressHydrationWarning>
