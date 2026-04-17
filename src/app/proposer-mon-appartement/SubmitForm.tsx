@@ -66,7 +66,10 @@ export default function SubmitForm() {
     formData.append("adresse", (form.elements.namedItem("adresse") as HTMLInputElement).value);
     formData.append("surface", (form.elements.namedItem("surface") as HTMLInputElement).value);
     formData.append("pieces", (form.elements.namedItem("pieces") as HTMLSelectElement).value);
-    formData.append("etage", (form.elements.namedItem("etage") as HTMLInputElement).value);
+    formData.append("etage", (form.elements.namedItem("etage") as HTMLSelectElement).value);
+    formData.append("chambres", (form.elements.namedItem("chambres") as HTMLSelectElement).value);
+    formData.append("sdb", (form.elements.namedItem("sdb") as HTMLSelectElement).value);
+    formData.append("ascenseur", (form.elements.namedItem("ascenseur") as HTMLSelectElement).value);
     formData.append("etat", (form.elements.namedItem("etat") as HTMLSelectElement).value);
     formData.append("disponibilite", (form.elements.namedItem("disponibilite") as HTMLInputElement).value);
     formData.append("description", (form.elements.namedItem("description") as HTMLTextAreaElement).value);
@@ -86,6 +89,26 @@ export default function SubmitForm() {
           <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="lg:col-span-2">
             <span className="text-gold text-xs tracking-[0.3em] uppercase">Formulaire propriétaire</span>
             <h2 className="font-serif text-3xl text-noir mt-3 mb-6">Louez votre <span className="text-gold">appartement</span></h2>
+
+            {/* Banner Service 100% gratuit */}
+            <div
+              className="mb-6 p-5 bg-gradient-to-r from-gold/10 to-gold/5 border-l-4 border-gold"
+              style={{ borderRadius: 10 }}
+            >
+              <div className="flex items-start gap-3">
+                <svg className="w-6 h-6 text-gold flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <div>
+                  <div className="font-serif text-lg text-noir mb-1">Service 100 % gratuit pour le propriétaire</div>
+                  <p className="text-sm text-gris font-light leading-relaxed">
+                    Zéro frais de mise en location, zéro honoraire de gestion, zéro commission prélevée sur votre loyer.
+                    Vous percevez l&apos;intégralité du loyer convenu — <strong className="text-noir font-medium">charges comprises</strong>.
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <div className="space-y-4 text-gris font-light leading-relaxed text-sm">
               <p>Vous souhaitez mettre votre bien en location meublée corporate ? Complétez le formulaire ci-contre et notre équipe vous recontactera rapidement.</p>
               <p><strong className="text-noir font-medium">Critères requis :</strong></p>
@@ -165,12 +188,57 @@ export default function SubmitForm() {
                       <option value="2">2 pièces</option>
                       <option value="3">3 pièces</option>
                       <option value="4">4 pièces</option>
-                      <option value="5">5 pièces+</option>
+                      <option value="5">5 pièces</option>
+                      <option value="6+">6 pièces et plus</option>
                     </select>
                   </div>
                   <div>
                     <label className="block text-xs text-gris uppercase tracking-wider mb-2">Étage</label>
-                    <input name="etage" type="text" className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors" />
+                    <select name="etage" className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors">
+                      <option value="">Sélectionnez</option>
+                      <option value="Rez-de-chaussée">Rez-de-chaussée</option>
+                      <option value="1er étage">1er étage</option>
+                      <option value="2e étage">2e étage</option>
+                      <option value="3e étage">3e étage</option>
+                      <option value="4e étage">4e étage</option>
+                      <option value="5e étage">5e étage</option>
+                      <option value="6e étage">6e étage</option>
+                      <option value="7e étage">7e étage</option>
+                      <option value="8e étage">8e étage</option>
+                      <option value="9e étage">9e étage</option>
+                      <option value="10e étage et plus">10e étage et plus</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="grid sm:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-xs text-gris uppercase tracking-wider mb-2">Chambres</label>
+                    <select name="chambres" className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors">
+                      <option value="">Sélectionnez</option>
+                      <option value="0">Studio (0)</option>
+                      <option value="1">1 chambre</option>
+                      <option value="2">2 chambres</option>
+                      <option value="3">3 chambres</option>
+                      <option value="4">4 chambres</option>
+                      <option value="5+">5 chambres et plus</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gris uppercase tracking-wider mb-2">Salle(s) de bain</label>
+                    <select name="sdb" className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors">
+                      <option value="">Sélectionnez</option>
+                      <option value="1">1 salle de bain</option>
+                      <option value="2">2 salles de bain</option>
+                      <option value="3+">3 salles de bain et plus</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gris uppercase tracking-wider mb-2">Ascenseur</label>
+                    <select name="ascenseur" className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors">
+                      <option value="">Sélectionnez</option>
+                      <option value="oui">Oui</option>
+                      <option value="non">Non</option>
+                    </select>
                   </div>
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">

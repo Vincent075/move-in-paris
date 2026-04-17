@@ -2,6 +2,44 @@
 
 import { useState } from "react";
 
+export const FLOOR_OPTIONS = [
+  "Rez-de-chaussée",
+  "1er étage",
+  "2e étage",
+  "3e étage",
+  "4e étage",
+  "5e étage",
+  "6e étage",
+  "7e étage",
+  "8e étage",
+  "9e étage",
+  "10e étage et plus",
+];
+
+export const ROOM_OPTIONS = [
+  { v: 1, label: "Studio" },
+  { v: 2, label: "2 pièces" },
+  { v: 3, label: "3 pièces" },
+  { v: 4, label: "4 pièces" },
+  { v: 5, label: "5 pièces" },
+  { v: 6, label: "6 pièces et plus" },
+];
+
+export const BEDROOM_OPTIONS = [
+  { v: 0, label: "0 chambre (studio)" },
+  { v: 1, label: "1 chambre" },
+  { v: 2, label: "2 chambres" },
+  { v: 3, label: "3 chambres" },
+  { v: 4, label: "4 chambres" },
+  { v: 5, label: "5 chambres et plus" },
+];
+
+export const BATHROOM_OPTIONS = [
+  { v: 1, label: "1 salle de bain" },
+  { v: 2, label: "2 salles de bain" },
+  { v: 3, label: "3 salles de bain et plus" },
+];
+
 const EQUIPMENT_OPTIONS = [
   "Wifi",
   "Smart TV",
@@ -63,6 +101,7 @@ export default function AddApartment({ password, onSuccess }: { password: string
   const [bedrooms, setBedrooms] = useState("");
   const [bathrooms, setBathrooms] = useState("");
   const [floor, setFloor] = useState("");
+  const [hasElevator, setHasElevator] = useState<boolean>(false);
   const [status, setStatus] = useState("À louer");
   const [description, setDescription] = useState("");
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
@@ -267,6 +306,11 @@ export default function AddApartment({ password, onSuccess }: { password: string
         }
       }
 
+      // Sync "Ascenseur" in features with the toggle
+      const featuresWithElevator = hasElevator
+        ? (selectedFeatures.includes("Ascenseur") ? selectedFeatures : [...selectedFeatures, "Ascenseur"])
+        : selectedFeatures.filter((f) => f !== "Ascenseur");
+
       // Step 2: Create apartment entry
       setUploadProgress("Création de l'annonce...");
       const res = await fetch("/api/apartment", {
@@ -283,9 +327,10 @@ export default function AddApartment({ password, onSuccess }: { password: string
           bedrooms: parseInt(bedrooms) || 0,
           bathrooms: parseInt(bathrooms) || 0,
           floor,
+          hasElevator,
           status,
           description,
-          features: selectedFeatures,
+          features: featuresWithElevator,
           images: uploadedImages,
           nearby: nearbyRows.filter((r) => r.name),
         }),
@@ -296,7 +341,7 @@ export default function AddApartment({ password, onSuccess }: { password: string
         setTimeout(() => onSuccess(), 2000);
         setTitle(""); setFullAddress(""); setStreetOnly(""); setDistrict("");
         setSurface(""); setRooms(""); setBedrooms(""); setBathrooms("");
-        setFloor(""); setDescription(""); setSelectedFeatures([]);
+        setFloor(""); setHasElevator(false); setDescription(""); setSelectedFeatures([]);
         setPhotos([]); setPreviews([]);
         setNearbyRows([]);
       } else {
@@ -370,20 +415,34 @@ export default function AddApartment({ password, onSuccess }: { password: string
           <div className="grid sm:grid-cols-3 gap-4 mb-4">
             <div>
               <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-2">Étage</label>
-              <input type="text" value={floor} onChange={(e) => setFloor(e.target.value)}
-                placeholder="3e étage avec ascenseur"
-                className="w-full px-4 py-3 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
+              <select value={floor} onChange={(e) => setFloor(e.target.value)}
+                className="w-full px-4 py-3 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none bg-white">
+                <option value="">Sélectionner…</option>
+                {FLOOR_OPTIONS.map((f) => <option key={f} value={f}>{f}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-2">Ascenseur</label>
+              <div className="flex gap-2">
+                <button type="button" onClick={() => setHasElevator(true)}
+                  className={`flex-1 py-3 text-sm border transition-all ${hasElevator ? "border-[#B88B58] bg-[#B88B58]/10 text-[#1A1A1A]" : "border-[#E8E4DF] text-[#6B6B6B] hover:border-[#B88B58]/50"}`}>
+                  Oui
+                </button>
+                <button type="button" onClick={() => setHasElevator(false)}
+                  className={`flex-1 py-3 text-sm border transition-all ${!hasElevator ? "border-[#B88B58] bg-[#B88B58]/10 text-[#1A1A1A]" : "border-[#E8E4DF] text-[#6B6B6B] hover:border-[#B88B58]/50"}`}>
+                  Non
+                </button>
+              </div>
             </div>
             <div>
               <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-2">Statut</label>
               <select value={status} onChange={(e) => setStatus(e.target.value)}
-                className="w-full px-4 py-3 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none">
+                className="w-full px-4 py-3 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none bg-white">
                 <option value="À louer">À louer</option>
                 <option value="Disponible">Disponible</option>
                 <option value="Loué">Loué</option>
               </select>
             </div>
-            <div />
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
@@ -394,18 +453,27 @@ export default function AddApartment({ password, onSuccess }: { password: string
             </div>
             <div>
               <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-2">Pièces *</label>
-              <input type="number" required value={rooms} onChange={(e) => setRooms(e.target.value)}
-                placeholder="2" className="w-full px-4 py-3 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
+              <select required value={rooms} onChange={(e) => setRooms(e.target.value)}
+                className="w-full px-4 py-3 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none bg-white">
+                <option value="">Sélectionner…</option>
+                {ROOM_OPTIONS.map((o) => <option key={o.v} value={o.v}>{o.label}</option>)}
+              </select>
             </div>
             <div>
               <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-2">Chambres *</label>
-              <input type="number" required value={bedrooms} onChange={(e) => setBedrooms(e.target.value)}
-                placeholder="1" className="w-full px-4 py-3 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
+              <select required value={bedrooms} onChange={(e) => setBedrooms(e.target.value)}
+                className="w-full px-4 py-3 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none bg-white">
+                <option value="">Sélectionner…</option>
+                {BEDROOM_OPTIONS.map((o) => <option key={o.v} value={o.v}>{o.label}</option>)}
+              </select>
             </div>
             <div>
               <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-2">Salle(s) de bain *</label>
-              <input type="number" required value={bathrooms} onChange={(e) => setBathrooms(e.target.value)}
-                placeholder="1" className="w-full px-4 py-3 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
+              <select required value={bathrooms} onChange={(e) => setBathrooms(e.target.value)}
+                className="w-full px-4 py-3 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none bg-white">
+                <option value="">Sélectionner…</option>
+                {BATHROOM_OPTIONS.map((o) => <option key={o.v} value={o.v}>{o.label}</option>)}
+              </select>
             </div>
           </div>
 

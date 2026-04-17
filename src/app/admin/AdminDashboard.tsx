@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import AddApartment from "./AddApartment";
+import AddApartment, { FLOOR_OPTIONS, ROOM_OPTIONS, BEDROOM_OPTIONS, BATHROOM_OPTIONS } from "./AddApartment";
 
 interface Apartment {
   slug: string;
@@ -14,6 +14,7 @@ interface Apartment {
   bedrooms: number;
   bathrooms: number;
   floor: string;
+  hasElevator?: boolean;
   status: string;
   description: string;
   features: string[];
@@ -88,7 +89,19 @@ export default function AdminDashboard() {
 
   function startEdit(apt: Apartment) {
     setEditingSlug(apt.slug);
-    setEditData({ ...apt });
+    // Infer hasElevator from features if not explicitly set
+    const inferredElevator = apt.hasElevator ?? (apt.features || []).includes("Ascenseur");
+    setEditData({ ...apt, hasElevator: inferredElevator });
+  }
+
+  function toggleEditElevator(value: boolean) {
+    setEditData((prev) => {
+      const features = prev.features || [];
+      const newFeatures = value
+        ? (features.includes("Ascenseur") ? features : [...features, "Ascenseur"])
+        : features.filter((f) => f !== "Ascenseur");
+      return { ...prev, hasElevator: value, features: newFeatures };
+    });
   }
 
   function handleStatusToggle(apt: Apartment) {
@@ -210,33 +223,60 @@ export default function AdminDashboard() {
                           </div>
                           <div>
                             <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Pièces</label>
-                            <input type="number" value={editData.rooms || ""} onChange={(e) => setEditData({ ...editData, rooms: parseInt(e.target.value) })}
-                              className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
+                            <select value={editData.rooms ?? ""} onChange={(e) => setEditData({ ...editData, rooms: parseInt(e.target.value) })}
+                              className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none bg-white">
+                              <option value="">—</option>
+                              {ROOM_OPTIONS.map((o) => <option key={o.v} value={o.v}>{o.label}</option>)}
+                            </select>
                           </div>
                           <div>
                             <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Chambres</label>
-                            <input type="number" value={editData.bedrooms || ""} onChange={(e) => setEditData({ ...editData, bedrooms: parseInt(e.target.value) })}
-                              className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
+                            <select value={editData.bedrooms ?? ""} onChange={(e) => setEditData({ ...editData, bedrooms: parseInt(e.target.value) })}
+                              className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none bg-white">
+                              <option value="">—</option>
+                              {BEDROOM_OPTIONS.map((o) => <option key={o.v} value={o.v}>{o.label}</option>)}
+                            </select>
                           </div>
                           <div>
                             <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">SdB</label>
-                            <input type="number" value={editData.bathrooms || ""} onChange={(e) => setEditData({ ...editData, bathrooms: parseInt(e.target.value) })}
-                              className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
+                            <select value={editData.bathrooms ?? ""} onChange={(e) => setEditData({ ...editData, bathrooms: parseInt(e.target.value) })}
+                              className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none bg-white">
+                              <option value="">—</option>
+                              {BATHROOM_OPTIONS.map((o) => <option key={o.v} value={o.v}>{o.label}</option>)}
+                            </select>
                           </div>
                           <div>
                             <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Statut</label>
                             <select value={editData.status || ""} onChange={(e) => setEditData({ ...editData, status: e.target.value })}
-                              className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none">
+                              className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none bg-white">
                               <option value="À louer">À louer</option>
                               <option value="Disponible">Disponible</option>
                               <option value="Loué">Loué</option>
                             </select>
                           </div>
                         </div>
-                        <div>
-                          <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Étage</label>
-                          <input value={editData.floor || ""} onChange={(e) => setEditData({ ...editData, floor: e.target.value })}
-                            className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
+                        <div className="grid sm:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Étage</label>
+                            <select value={editData.floor || ""} onChange={(e) => setEditData({ ...editData, floor: e.target.value })}
+                              className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none bg-white">
+                              <option value="">—</option>
+                              {FLOOR_OPTIONS.map((f) => <option key={f} value={f}>{f}</option>)}
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Ascenseur</label>
+                            <div className="flex gap-2">
+                              <button type="button" onClick={() => toggleEditElevator(true)}
+                                className={`flex-1 py-2 text-sm border transition-all ${editData.hasElevator ? "border-[#B88B58] bg-[#B88B58]/10 text-[#1A1A1A]" : "border-[#E8E4DF] text-[#6B6B6B] hover:border-[#B88B58]/50"}`}>
+                                Oui
+                              </button>
+                              <button type="button" onClick={() => toggleEditElevator(false)}
+                                className={`flex-1 py-2 text-sm border transition-all ${editData.hasElevator === false ? "border-[#B88B58] bg-[#B88B58]/10 text-[#1A1A1A]" : "border-[#E8E4DF] text-[#6B6B6B] hover:border-[#B88B58]/50"}`}>
+                                Non
+                              </button>
+                            </div>
+                          </div>
                         </div>
                         <div>
                           <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Description</label>
