@@ -2,35 +2,38 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
+import { getMessages } from "@/i18n/server";
 
-export const metadata: Metadata = {
-  title: "Mentions Légales | Move in Paris",
-  description:
-    "Mentions légales de Move in Paris, agence de location meublée corporate à Paris. Informations sur l'éditeur, l'hébergeur et les conditions d'utilisation du site.",
-  keywords: "mentions légales move in paris, éditeur site, hébergeur, propriété intellectuelle",
-  openGraph: {
-    title: "Mentions Légales — Move in Paris",
-    description: "Informations légales relatives au site www.move-in-paris.com.",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { messages } = await getMessages();
+  return {
+    title: messages.legal.mentionsTitle + " | Move in Paris",
+    description: messages.legal.contentNotice,
+    robots: { index: true, follow: true },
+  };
+}
 
-export default function MentionsLegales() {
+export default async function MentionsLegales() {
+  const { messages, locale } = await getMessages();
   return (
     <>
       <Header />
       <main>
         <PageHero
-          title="Mentions légales"
+          title={messages.legal.mentionsTitle}
           subtitle="Conformément aux dispositions de la loi n° 2004-575 du 21 juin 2004 pour la confiance en l'économie numérique."
-          breadcrumb="Mentions légales"
+          breadcrumb={messages.legal.mentionsBreadcrumb}
         />
 
         <section className="bg-blanc py-20">
           <div className="max-w-4xl mx-auto px-6 lg:px-12">
+            {locale === "en" && (
+              <div className="mb-10 p-6 border border-gris-clair/50 bg-blanc-chaud" style={{ borderRadius: 12 }}>
+                <p className="text-sm text-gris font-light leading-relaxed">
+                  {messages.legal.contentNotice}
+                </p>
+              </div>
+            )}
 
             {/* 1. Éditeur du site */}
             <div className="mb-14">

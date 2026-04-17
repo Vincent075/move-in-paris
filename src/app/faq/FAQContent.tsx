@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import { useLocale, useT } from "@/i18n/LocaleProvider";
 
 const faqs = [
   {
@@ -184,6 +186,31 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 }
 
 export default function FAQContent() {
+  const { locale } = useLocale();
+  const t = useT();
+
+  if (locale === "en") {
+    return (
+      <section className="py-20 bg-blanc">
+        <div className="max-w-3xl mx-auto px-6 lg:px-12 text-center">
+          <div className="p-10 border border-gris-clair/50 bg-blanc-chaud" style={{ borderRadius: 12 }}>
+            <div className="text-gold text-4xl mb-6">✦</div>
+            <h2 className="font-serif text-2xl text-noir mb-4">{t("faqPage.heroTitle")}</h2>
+            <p className="text-gris font-light leading-relaxed mb-8">
+              {t("faqPage.contentNotice")}
+            </p>
+            <Link
+              href="/contact"
+              className="inline-block px-8 py-3 bg-gold text-noir-deep font-medium tracking-wider uppercase text-sm hover:bg-gold-light transition-all duration-300"
+            >
+              {t("faqPage.ctaButton")}
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-20 bg-blanc">
       <div className="max-w-4xl mx-auto px-6 lg:px-12">

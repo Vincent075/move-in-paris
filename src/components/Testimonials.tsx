@@ -4,8 +4,6 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useLocale, useT } from "@/i18n/LocaleProvider";
 
-const GOOGLE_REVIEWS_URL = "https://share.google/AJndA57leSyYd6NET";
-
 type Review = {
   author: string;
   role: string;
@@ -205,32 +203,28 @@ export default function Testimonials() {
           >
             {t("testimonials.eyebrow")}
           </motion.div>
-          <motion.a
-            href={GOOGLE_REVIEWS_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
             aria-label={t("testimonials.ratingAria")}
-            className="group mt-5 inline-flex items-center gap-5 px-7 py-4 bg-blanc/[0.04] border border-blanc/10 hover:border-gold/50 hover:bg-blanc/[0.06] transition-all duration-300"
+            className="mt-5 inline-flex items-center gap-5 px-7 py-4 bg-blanc/[0.04] border border-blanc/10"
             style={{ borderRadius: 12 }}
           >
             <GoogleG className="w-8 h-8" />
             <div className="flex flex-col items-start">
               <div className="flex items-baseline gap-2">
                 <span className="font-serif text-5xl md:text-6xl text-gold font-bold leading-none">{ratingDisplay}</span>
-                <span className="text-blanc/60 text-lg font-light">/ 5</span>
               </div>
               <div className="flex items-center gap-2 mt-1.5">
                 <Stars />
-                <span className="text-blanc/70 text-xs tracking-wider uppercase group-hover:text-gold transition-colors">
+                <span className="text-blanc/70 text-xs tracking-wider uppercase">
                   {t("testimonials.ratingLabel")}
                 </span>
               </div>
             </div>
-          </motion.a>
+          </motion.div>
         </div>
       </div>
 
@@ -286,24 +280,6 @@ export default function Testimonials() {
         <div className="absolute top-0 right-0 w-16 md:w-24 h-full bg-gradient-to-l from-noir-deep to-transparent pointer-events-none z-10" />
       </div>
 
-      {/* Google Reviews CTA */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        className="mt-14 text-center relative z-10"
-      >
-        <a
-          href={GOOGLE_REVIEWS_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-3 px-8 py-3 border border-blanc/20 text-blanc text-sm tracking-wider uppercase hover:border-gold hover:text-gold transition-all duration-300"
-          style={{ borderRadius: 10 }}
-        >
-          <GoogleG className="w-5 h-5" />
-          {t("testimonials.cta")}
-        </a>
-      </motion.div>
     </section>
   );
 }

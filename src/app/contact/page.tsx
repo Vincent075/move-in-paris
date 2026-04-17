@@ -3,27 +3,26 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import Contact from "@/components/Contact";
+import { getMessages } from "@/i18n/server";
 
-export const metadata: Metadata = {
-  title: "Contact — Move in Paris | Agence Location Meublée Paris 17",
-  description:
-    "Contactez Move in Paris au 01 45 20 06 03 ou via notre formulaire. Agence située 26 rue de l'Étoile, Paris 17e. Location meublée corporate et expatriés.",
-  keywords: "contact move in paris, agence location meublée paris 17, téléphone move in paris",
-  openGraph: {
-    title: "Contactez Move in Paris",
-    description: "Agence de location meublée corporate, 26 rue de l'Étoile, Paris 17e.",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { messages } = await getMessages();
+  return {
+    title: messages.contactPage.metaTitle,
+    description: messages.contactPage.metaDescription,
+  };
+}
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const { messages } = await getMessages();
   return (
     <>
       <Header />
       <main>
         <PageHero
-          title="Contactez-nous"
-          subtitle="Notre équipe est à votre écoute pour répondre à toutes vos questions."
-          breadcrumb="Contact"
+          title={messages.contactPage.heroTitle}
+          subtitle={messages.contactPage.heroSubtitle}
+          breadcrumb={messages.contactPage.breadcrumb}
         />
         <Contact />
       </main>

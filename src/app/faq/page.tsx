@@ -4,33 +4,32 @@ import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import CTABanner from "@/components/CTABanner";
 import FAQContent from "./FAQContent";
+import { getMessages } from "@/i18n/server";
 
-export const metadata: Metadata = {
-  title: "FAQ — Questions Fréquentes | Move in Paris Location Meublée",
-  description:
-    "Retrouvez les réponses aux questions les plus fréquentes sur la location meublée corporate à Paris : durée de bail, services inclus, processus de réservation.",
-  keywords: "FAQ location meublée paris, questions location corporate, bail meublé durée, location expatrié questions",
-  openGraph: {
-    title: "FAQ — Move in Paris",
-    description: "Réponses aux questions fréquentes sur la location meublée corporate à Paris.",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { messages } = await getMessages();
+  return {
+    title: messages.faqPage.metaTitle,
+    description: messages.faqPage.metaDescription,
+  };
+}
 
-export default function FAQ() {
+export default async function FAQ() {
+  const { messages } = await getMessages();
   return (
     <>
       <Header />
       <main>
         <PageHero
-          title="Questions frequentes"
-          subtitle="Tout ce que vous devez savoir sur nos services de location meublée."
-          breadcrumb="FAQ"
+          title={messages.faqPage.heroTitle}
+          subtitle={messages.faqPage.heroSubtitle}
+          breadcrumb={messages.faqPage.breadcrumb}
         />
         <FAQContent />
         <CTABanner
-          title="Vous avez une autre question ?"
-          subtitle="Notre équipe est disponible pour répondre à toutes vos interrogations."
-          buttonText="Nous contacter"
+          title={messages.faqPage.ctaTitle}
+          subtitle={messages.faqPage.ctaSubtitle}
+          buttonText={messages.faqPage.ctaButton}
           buttonHref="/contact"
         />
       </main>

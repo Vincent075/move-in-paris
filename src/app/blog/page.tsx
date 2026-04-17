@@ -5,21 +5,16 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import articlesData from "@/data/articles.json";
+import { getMessages } from "@/i18n/server";
 
-export const metadata: Metadata = {
-  title: "Blog — Location meublée, LMNP & fiscalité | Move in Paris",
-  description:
-    "Toute l'actualité de la location meublée corporate, du statut LMNP et de la fiscalité immobilière à Paris. Conseils pratiques, réglementation, optimisation fiscale.",
-  keywords:
-    "blog location meublée, LMNP Paris, fiscalité immobilière, bail mobilité, encadrement loyers Paris, amortissement LMNP, propriétaires Paris",
-  openGraph: {
-    title: "Blog Move in Paris — Location meublée & fiscalité",
-    description:
-      "Articles d'experts sur la location meublée corporate à Paris, le régime LMNP et la fiscalité immobilière.",
-    type: "website",
-  },
-  alternates: { canonical: "/blog" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { messages } = await getMessages();
+  return {
+    title: messages.blogPage.metaTitle,
+    description: messages.blogPage.metaDescription,
+    alternates: { canonical: "/blog" },
+  };
+}
 
 type Article = {
   slug: string;
@@ -33,16 +28,17 @@ type Article = {
   tags: string[];
 };
 
-function formatDate(iso: string) {
+function formatDate(iso: string, locale: string) {
   const d = new Date(iso);
-  return d.toLocaleDateString("fr-FR", {
+  return d.toLocaleDateString(locale === "en" ? "en-US" : "fr-FR", {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
 }
 
-export default function BlogListPage() {
+export default async function BlogListPage() {
+  const { messages, locale } = await getMessages();
   const articles = (articlesData as Article[])
     .slice()
     .sort((a, b) => (a.date < b.date ? 1 : -1));
@@ -53,8 +49,7 @@ export default function BlogListPage() {
     "@context": "https://schema.org",
     "@type": "Blog",
     name: "Blog Move in Paris",
-    description:
-      "Articles d'experts sur la location meublée corporate, le statut LMNP et la fiscalité immobilière à Paris.",
+    description: messages.blogPage.metaDescription,
     publisher: {
       "@type": "Organization",
       name: "Move in Paris",
@@ -75,9 +70,9 @@ export default function BlogListPage() {
       <Header />
       <main>
         <PageHero
-          title="Le Blog Move in Paris"
-          subtitle="Location meublée, LMNP, fiscalité : décryptages, actualités et conseils d'experts pour propriétaires et entreprises."
-          breadcrumb="Blog"
+          title={messages.blogPage.heroTitle}
+          subtitle={messages.blogPage.heroSubtitle}
+          breadcrumb={messages.blogPage.breadcrumb}
         />
 
         <script
@@ -87,6 +82,14 @@ export default function BlogListPage() {
 
         <section className="py-20 bg-blanc">
           <div className="max-w-7xl mx-auto px-6 lg:px-12">
+            {locale === "en" && (
+              <div className="mb-12 p-6 border border-gris-clair/50 bg-blanc-chaud text-center" style={{ borderRadius: 12 }}>
+                <p className="text-sm text-gris font-light leading-relaxed">
+                  {messages.blogPage.contentNotice}
+                </p>
+              </div>
+            )}
+
             {/* Featured article */}
             {featured && (
               <Link
@@ -103,16 +106,16 @@ export default function BlogListPage() {
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute top-4 left-4 bg-gold text-noir-deep text-[10px] tracking-wider uppercase px-3 py-1 font-semibold">
-                    À la une
+                    {messages.blogPage.featured}
                   </div>
                 </div>
                 <div className="p-10 lg:p-12 flex flex-col justify-center">
                   <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.15em] text-gris mb-4">
                     <span className="text-gold">{featured.category}</span>
                     <span>•</span>
-                    <span>{formatDate(featured.date)}</span>
+                    <span>{formatDate(featured.date, locale)}</span>
                     <span>•</span>
-                    <span>{featured.readTime} min</span>
+                    <span>{featured.readTime} {messages.blogPage.readingTimeMin}</span>
                   </div>
                   <h2 className="font-serif text-3xl md:text-4xl text-noir mb-4 group-hover:text-gold transition-colors">
                     {featured.title}
@@ -121,7 +124,7 @@ export default function BlogListPage() {
                     {featured.excerpt}
                   </p>
                   <span className="text-gold text-sm uppercase tracking-wider font-medium group-hover:underline">
-                    Lire l&apos;article →
+                    {messages.blogPage.readArticle} →
                   </span>
                 </div>
               </Link>
@@ -149,9 +152,9 @@ export default function BlogListPage() {
                   </div>
                   <div className="p-6 flex-1 flex flex-col">
                     <div className="flex items-center gap-2 text-[11px] text-gris mb-3">
-                      <span>{formatDate(a.date)}</span>
+                      <span>{formatDate(a.date, locale)}</span>
                       <span>•</span>
-                      <span>{a.readTime} min</span>
+                      <span>{a.readTime} {messages.blogPage.readingTimeMin}</span>
                     </div>
                     <h3 className="font-serif text-xl text-noir mb-3 group-hover:text-gold transition-colors leading-snug">
                       {a.title}
@@ -160,7 +163,7 @@ export default function BlogListPage() {
                       {a.excerpt}
                     </p>
                     <div className="mt-5 text-gold text-xs uppercase tracking-wider font-medium group-hover:underline">
-                      Lire la suite →
+                      {messages.blogPage.readMore} →
                     </div>
                   </div>
                 </Link>

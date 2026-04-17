@@ -5,6 +5,7 @@ import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import articlesData from "@/data/articles.json";
+import { getMessages } from "@/i18n/server";
 
 type Block = { type: "p" | "h2" | "h3"; text: string };
 type Article = {
@@ -51,9 +52,9 @@ export async function generateMetadata({
   };
 }
 
-function formatDate(iso: string) {
+function formatDate(iso: string, locale: string) {
   const d = new Date(iso);
-  return d.toLocaleDateString("fr-FR", {
+  return d.toLocaleDateString(locale === "en" ? "en-US" : "fr-FR", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -68,6 +69,7 @@ export default async function ArticlePage({
   const { slug } = await params;
   const article = articles.find((a) => a.slug === slug);
   if (!article) notFound();
+  const { messages, locale } = await getMessages();
 
   const related = articles
     .filter((a) => a.slug !== article.slug)
@@ -121,19 +123,19 @@ export default async function ArticlePage({
             <div className="max-w-4xl mx-auto w-full px-6 lg:px-12">
               <nav className="text-blanc/70 text-xs tracking-wider uppercase mb-6">
                 <Link href="/" className="hover:text-gold transition-colors">
-                  Accueil
+                  {messages.apartment.breadcrumbHome}
                 </Link>
                 <span className="mx-2">/</span>
                 <Link href="/blog" className="hover:text-gold transition-colors">
-                  Blog
+                  {messages.blogPage.breadcrumb}
                 </Link>
               </nav>
               <div className="flex items-center gap-3 text-xs uppercase tracking-[0.15em] text-gold mb-4">
                 <span>{article.category}</span>
                 <span className="text-blanc/40">•</span>
-                <span className="text-blanc/70">{formatDate(article.date)}</span>
+                <span className="text-blanc/70">{formatDate(article.date, locale)}</span>
                 <span className="text-blanc/40">•</span>
-                <span className="text-blanc/70">{article.readTime} min de lecture</span>
+                <span className="text-blanc/70">{article.readTime} {messages.blogPage.readingTimeMin}</span>
               </div>
               <h1 className="font-serif text-3xl md:text-5xl lg:text-6xl text-blanc leading-tight max-w-3xl">
                 {article.title}

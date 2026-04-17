@@ -3,27 +3,26 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import SubmitForm from "./SubmitForm";
+import { getMessages } from "@/i18n/server";
 
-export const metadata: Metadata = {
-  title: "Proposer Mon Appartement | Move in Paris — Gestion Opérationnelle Paris",
-  description:
-    "Proposez votre appartement meublé à la location corporate avec Move in Paris. Formulaire simple, estimation gratuite, réponse sous 24h.",
-  keywords: "proposer appartement location meublée, gestion opérationnelle paris, louer appartement corporate paris",
-  openGraph: {
-    title: "Proposer Mon Appartement | Move in Paris",
-    description: "Confiez votre appartement à Move in Paris pour une gestion opérationnelle complète.",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { messages } = await getMessages();
+  return {
+    title: messages.submitPage.metaTitle,
+    description: messages.submitPage.metaDescription,
+  };
+}
 
-export default function ProposerAppartement() {
+export default async function ProposerAppartement() {
+  const { messages } = await getMessages();
   return (
     <>
       <Header />
       <main>
         <PageHero
-          title="Proposer votre appartement"
-          subtitle="Remplissez ce formulaire et nous vous recontactons sous 24h pour une estimation gratuite."
-          breadcrumb="Proposer mon appartement"
+          title={messages.submitPage.heroTitle}
+          subtitle={messages.submitPage.heroSubtitle}
+          breadcrumb={messages.submitPage.breadcrumb}
         />
         <SubmitForm />
       </main>

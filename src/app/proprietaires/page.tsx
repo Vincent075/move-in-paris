@@ -4,35 +4,34 @@ import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import CTABanner from "@/components/CTABanner";
 import ProprietairesContent from "./ProprietairesContent";
+import { getMessages } from "@/i18n/server";
 
-export const metadata: Metadata = {
-  title: "Propriétaires — Gestion Opérationnelle Meublée Paris | Move in Paris",
-  description:
-    "Confiez votre appartement à Move in Paris. Gestion opérationnelle complète, clientèle corporate sélectionnée, rentabilité optimisée. Service clés en main pour propriétaires parisiens.",
-  keywords: "gestion opérationnelle paris, gestion opérationnelle meublée, rentabilité location meublée, confier appartement gestion paris",
-  openGraph: {
-    title: "Propriétaires — Gestion Opérationnelle Meublée | Move in Paris",
-    description: "Gestion opérationnelle complète pour votre appartement meublé à Paris. Rentabilité optimisée.",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { messages } = await getMessages();
+  return {
+    title: messages.owners.metaTitle,
+    description: messages.owners.metaDescription,
+  };
+}
 
-export default function Proprietaires() {
+export default async function Proprietaires() {
+  const { messages } = await getMessages();
   return (
     <>
       <Header />
       <main>
         <PageHero
-          title="Propriétaires"
-          subtitle="Service 100 % gratuit pour le propriétaire. Confiez-nous votre bien et percevez un loyer charges comprises, sans la moindre commission."
-          breadcrumb="Propriétaires"
+          title={messages.owners.heroTitle}
+          subtitle={messages.owners.heroSubtitle}
+          breadcrumb={messages.owners.breadcrumb}
         />
         <ProprietairesContent />
         <CTABanner
-          title="Prêt à nous confier votre bien ?"
-          subtitle="Remplissez notre formulaire et nous vous recontactons sous 24h pour une estimation gratuite."
-          buttonText="Proposer mon appartement"
+          title={messages.owners.ctaTitle}
+          subtitle={messages.owners.ctaSubtitle}
+          buttonText={messages.owners.ctaButton}
           buttonHref="/proposer-mon-appartement"
-          secondaryText="Nous appeler"
+          secondaryText={messages.owners.ctaSecondary}
           secondaryHref="/contact"
         />
       </main>

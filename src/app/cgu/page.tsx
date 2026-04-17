@@ -2,35 +2,38 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
+import { getMessages } from "@/i18n/server";
 
-export const metadata: Metadata = {
-  title: "Conditions Générales d'Utilisation | Move in Paris",
-  description:
-    "Conditions Générales d'Utilisation du site www.move-in-paris.com. Accès au site, propriété intellectuelle, cookies, responsabilité et droit applicable.",
-  keywords: "CGU move in paris, conditions générales utilisation, règles utilisation site",
-  openGraph: {
-    title: "CGU — Move in Paris",
-    description: "Conditions Générales d'Utilisation du site www.move-in-paris.com.",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { messages } = await getMessages();
+  return {
+    title: messages.legal.cguTitle + " | Move in Paris",
+    description: messages.legal.contentNotice,
+    robots: { index: true, follow: true },
+  };
+}
 
-export default function CGU() {
+export default async function CGU() {
+  const { messages, locale } = await getMessages();
   return (
     <>
       <Header />
       <main>
         <PageHero
-          title="Conditions Générales d'Utilisation"
+          title={messages.legal.cguTitle}
           subtitle="Les présentes conditions définissent les modalités et conditions d'utilisation du site www.move-in-paris.com."
-          breadcrumb="CGU"
+          breadcrumb={messages.legal.cguBreadcrumb}
         />
 
         <section className="bg-blanc py-20">
           <div className="max-w-4xl mx-auto px-6 lg:px-12">
+            {locale === "en" && (
+              <div className="mb-10 p-6 border border-gris-clair/50 bg-blanc-chaud" style={{ borderRadius: 12 }}>
+                <p className="text-sm text-gris font-light leading-relaxed">
+                  {messages.legal.contentNotice}
+                </p>
+              </div>
+            )}
 
             {/* Préambule */}
             <div className="mb-14">
