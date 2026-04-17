@@ -10,8 +10,8 @@ function emailTemplate(title: string, content: string, replyEmail?: string) {
   <div style="max-width:600px;margin:0 auto;background-color:#ffffff;">
 
     <!-- Header -->
-    <div style="background-color:#0D0D0D;padding:30px 40px;text-align:center;">
-      <img src="https://move-in-paris.vercel.app/Logo-gold.png" alt="Move in Paris" width="60" height="60" style="display:block;margin:0 auto;" />
+    <div style="background-color:#0D0D0D;padding:12px 40px;text-align:center;">
+      <img src="https://move-in-paris.vercel.app/Logo-gold.png" alt="Move in Paris" width="120" height="120" style="display:block;margin:0 auto;" />
     </div>
 
     <!-- Title bar -->
