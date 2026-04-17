@@ -4,22 +4,34 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import AddApartment, { FLOOR_OPTIONS, ROOM_OPTIONS, BEDROOM_OPTIONS, BATHROOM_OPTIONS } from "./AddApartment";
 
+interface Nearby {
+  type: string;
+  name: string;
+  distance: string;
+  lines?: string[];
+}
+
 interface Apartment {
   slug: string;
   title: string;
+  title_en?: string;
   address: string;
+  address_en?: string;
   district: string;
   surface: number;
   rooms: number;
   bedrooms: number;
   bathrooms: number;
   floor: string;
+  floor_en?: string;
   hasElevator?: boolean;
   status: string;
   description: string;
+  description_en?: string;
   features: string[];
+  features_en?: string[];
   images: string[];
-  nearby: { type: string; name: string; distance: string }[];
+  nearby: Nearby[];
 }
 
 export default function AdminDashboard() {
@@ -89,9 +101,52 @@ export default function AdminDashboard() {
 
   function startEdit(apt: Apartment) {
     setEditingSlug(apt.slug);
-    // Infer hasElevator from features if not explicitly set
     const inferredElevator = apt.hasElevator ?? (apt.features || []).includes("Ascenseur");
     setEditData({ ...apt, hasElevator: inferredElevator });
+  }
+
+  function moveImage(from: number, to: number) {
+    const imgs = [...(editData.images || [])];
+    if (to < 0 || to >= imgs.length) return;
+    const [m] = imgs.splice(from, 1);
+    imgs.splice(to, 0, m);
+    setEditData({ ...editData, images: imgs });
+  }
+
+  function setCoverImage(idx: number) {
+    if (idx === 0) return;
+    const imgs = [...(editData.images || [])];
+    const [m] = imgs.splice(idx, 1);
+    imgs.unshift(m);
+    setEditData({ ...editData, images: imgs });
+  }
+
+  function removeImage(idx: number) {
+    const imgs = [...(editData.images || [])];
+    imgs.splice(idx, 1);
+    setEditData({ ...editData, images: imgs });
+  }
+
+  function updateNearby(idx: number, field: keyof Nearby, value: string) {
+    const list = [...(editData.nearby || [])];
+    if (field === "lines") {
+      list[idx] = { ...list[idx], lines: value.split(",").map((s) => s.trim()).filter(Boolean) };
+    } else {
+      list[idx] = { ...list[idx], [field]: value };
+    }
+    setEditData({ ...editData, nearby: list });
+  }
+
+  function addNearby() {
+    const list = [...(editData.nearby || [])];
+    list.push({ type: "Métro", name: "", distance: "5 min", lines: [] });
+    setEditData({ ...editData, nearby: list });
+  }
+
+  function removeNearby(idx: number) {
+    const list = [...(editData.nearby || [])];
+    list.splice(idx, 1);
+    setEditData({ ...editData, nearby: list });
   }
 
   function toggleEditElevator(value: boolean) {
@@ -196,103 +251,238 @@ export default function AdminDashboard() {
                   <div key={apt.slug} className="bg-white border border-[#E8E4DF] overflow-hidden">
                     {editingSlug === apt.slug ? (
                       /* EDIT MODE */
-                      <div className="p-6 space-y-4">
-                        <div className="flex items-center justify-between mb-2">
+                      <div className="p-6 space-y-6">
+                        <div className="flex items-center justify-between">
                           <h3 className="font-serif text-xl text-[#1A1A1A]">Modifier : {apt.title}</h3>
                           <button onClick={() => { setEditingSlug(null); setEditData({}); }} className="text-[#6B6B6B] text-sm hover:text-red-500">
                             Annuler
                           </button>
                         </div>
-                        <div className="grid sm:grid-cols-2 gap-4">
-                          <div>
-                            <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Titre</label>
-                            <input value={editData.title || ""} onChange={(e) => setEditData({ ...editData, title: e.target.value })}
-                              className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
-                          </div>
-                          <div>
-                            <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Adresse</label>
-                            <input value={editData.address || ""} onChange={(e) => setEditData({ ...editData, address: e.target.value })}
-                              className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
-                          <div>
-                            <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Surface</label>
-                            <input type="number" value={editData.surface || ""} onChange={(e) => setEditData({ ...editData, surface: parseInt(e.target.value) })}
-                              className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
-                          </div>
-                          <div>
-                            <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Pièces</label>
-                            <select value={editData.rooms ?? ""} onChange={(e) => setEditData({ ...editData, rooms: parseInt(e.target.value) })}
-                              className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none bg-white">
-                              <option value="">—</option>
-                              {ROOM_OPTIONS.map((o) => <option key={o.v} value={o.v}>{o.label}</option>)}
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Chambres</label>
-                            <select value={editData.bedrooms ?? ""} onChange={(e) => setEditData({ ...editData, bedrooms: parseInt(e.target.value) })}
-                              className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none bg-white">
-                              <option value="">—</option>
-                              {BEDROOM_OPTIONS.map((o) => <option key={o.v} value={o.v}>{o.label}</option>)}
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">SdB</label>
-                            <select value={editData.bathrooms ?? ""} onChange={(e) => setEditData({ ...editData, bathrooms: parseInt(e.target.value) })}
-                              className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none bg-white">
-                              <option value="">—</option>
-                              {BATHROOM_OPTIONS.map((o) => <option key={o.v} value={o.v}>{o.label}</option>)}
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Statut</label>
-                            <select value={editData.status || ""} onChange={(e) => setEditData({ ...editData, status: e.target.value })}
-                              className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none bg-white">
-                              <option value="À louer">À louer</option>
-                              <option value="Disponible">Disponible</option>
-                              <option value="Loué">Loué</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div className="grid sm:grid-cols-2 gap-4">
-                          <div>
-                            <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Étage</label>
-                            <select value={editData.floor || ""} onChange={(e) => setEditData({ ...editData, floor: e.target.value })}
-                              className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none bg-white">
-                              <option value="">—</option>
-                              {FLOOR_OPTIONS.map((f) => <option key={f} value={f}>{f}</option>)}
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Ascenseur</label>
-                            <div className="flex gap-2">
-                              <button type="button" onClick={() => toggleEditElevator(true)}
-                                className={`flex-1 py-2 text-sm border transition-all ${editData.hasElevator ? "border-[#B88B58] bg-[#B88B58]/10 text-[#1A1A1A]" : "border-[#E8E4DF] text-[#6B6B6B] hover:border-[#B88B58]/50"}`}>
-                                Oui
-                              </button>
-                              <button type="button" onClick={() => toggleEditElevator(false)}
-                                className={`flex-1 py-2 text-sm border transition-all ${editData.hasElevator === false ? "border-[#B88B58] bg-[#B88B58]/10 text-[#1A1A1A]" : "border-[#E8E4DF] text-[#6B6B6B] hover:border-[#B88B58]/50"}`}>
-                                Non
-                              </button>
+
+                        {/* ========== PHOTOS ========== */}
+                        <section>
+                          <div className="flex items-end justify-between mb-3">
+                            <div>
+                              <h4 className="font-serif text-sm text-[#1A1A1A] uppercase tracking-[0.15em]">Photos ({(editData.images || []).length})</h4>
+                              <p className="text-xs text-[#6B6B6B] mt-0.5">La première photo sert de couverture. Utilisez ↑↓ pour réordonner, ⭐ pour définir la couverture.</p>
                             </div>
                           </div>
+                          {(editData.images || []).length === 0 ? (
+                            <p className="text-sm text-[#6B6B6B] italic p-4 border border-dashed border-[#E8E4DF]">Aucune photo.</p>
+                          ) : (
+                            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                              {(editData.images || []).map((img, i) => (
+                                <div key={`${img}-${i}`} className={`relative group border-2 ${i === 0 ? "border-[#B88B58]" : "border-transparent"}`}>
+                                  <div className="aspect-square bg-cover bg-center" style={{ backgroundImage: `url('${img}')` }} />
+                                  {i === 0 && (
+                                    <div className="absolute top-1 left-1 px-2 py-0.5 bg-[#B88B58] text-[#0D0D0D] text-[9px] uppercase tracking-wider font-semibold">Couverture</div>
+                                  )}
+                                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100">
+                                    <button type="button" onClick={() => moveImage(i, i - 1)} disabled={i === 0} title="Monter"
+                                      className="w-7 h-7 flex items-center justify-center bg-white/90 text-[#1A1A1A] text-xs disabled:opacity-30 hover:bg-[#B88B58] hover:text-white">↑</button>
+                                    <button type="button" onClick={() => moveImage(i, i + 1)} disabled={i === (editData.images || []).length - 1} title="Descendre"
+                                      className="w-7 h-7 flex items-center justify-center bg-white/90 text-[#1A1A1A] text-xs disabled:opacity-30 hover:bg-[#B88B58] hover:text-white">↓</button>
+                                    <button type="button" onClick={() => setCoverImage(i)} disabled={i === 0} title="Définir comme couverture"
+                                      className="w-7 h-7 flex items-center justify-center bg-white/90 text-[#B88B58] text-xs disabled:opacity-30 hover:bg-[#B88B58] hover:text-white">⭐</button>
+                                    <button type="button" onClick={() => removeImage(i)} title="Retirer"
+                                      className="w-7 h-7 flex items-center justify-center bg-white/90 text-red-500 text-xs hover:bg-red-500 hover:text-white">✕</button>
+                                  </div>
+                                  <div className="absolute bottom-1 right-1 bg-black/60 text-white text-[9px] px-1.5 py-0.5">{i + 1}</div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </section>
+
+                        {/* ========== FR / EN titles + addresses ========== */}
+                        <section className="border-t border-[#E8E4DF] pt-6">
+                          <h4 className="font-serif text-sm text-[#1A1A1A] uppercase tracking-[0.15em] mb-3">Titre & Adresse</h4>
+                          <div className="grid sm:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Titre (FR)</label>
+                              <input value={editData.title || ""} onChange={(e) => setEditData({ ...editData, title: e.target.value })}
+                                className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
+                            </div>
+                            <div>
+                              <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Titre (EN)</label>
+                              <input value={editData.title_en || ""} onChange={(e) => setEditData({ ...editData, title_en: e.target.value })}
+                                placeholder={editData.title || ""}
+                                className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
+                            </div>
+                            <div>
+                              <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Adresse (FR)</label>
+                              <input value={editData.address || ""} onChange={(e) => setEditData({ ...editData, address: e.target.value })}
+                                className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
+                            </div>
+                            <div>
+                              <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Adresse (EN)</label>
+                              <input value={editData.address_en || ""} onChange={(e) => setEditData({ ...editData, address_en: e.target.value })}
+                                placeholder={editData.address || ""}
+                                className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
+                            </div>
+                          </div>
+                        </section>
+
+                        {/* ========== Specs ========== */}
+                        <section className="border-t border-[#E8E4DF] pt-6">
+                          <h4 className="font-serif text-sm text-[#1A1A1A] uppercase tracking-[0.15em] mb-3">Caractéristiques</h4>
+                          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+                            <div>
+                              <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Surface (m²)</label>
+                              <input type="number" value={editData.surface || ""} onChange={(e) => setEditData({ ...editData, surface: parseInt(e.target.value) })}
+                                className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
+                            </div>
+                            <div>
+                              <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Pièces</label>
+                              <select value={editData.rooms ?? ""} onChange={(e) => setEditData({ ...editData, rooms: parseInt(e.target.value) })}
+                                className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none bg-white">
+                                <option value="">—</option>
+                                {ROOM_OPTIONS.map((o) => <option key={o.v} value={o.v}>{o.label}</option>)}
+                              </select>
+                            </div>
+                            <div>
+                              <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Chambres</label>
+                              <select value={editData.bedrooms ?? ""} onChange={(e) => setEditData({ ...editData, bedrooms: parseInt(e.target.value) })}
+                                className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none bg-white">
+                                <option value="">—</option>
+                                {BEDROOM_OPTIONS.map((o) => <option key={o.v} value={o.v}>{o.label}</option>)}
+                              </select>
+                            </div>
+                            <div>
+                              <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">SdB</label>
+                              <select value={editData.bathrooms ?? ""} onChange={(e) => setEditData({ ...editData, bathrooms: parseInt(e.target.value) })}
+                                className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none bg-white">
+                                <option value="">—</option>
+                                {BATHROOM_OPTIONS.map((o) => <option key={o.v} value={o.v}>{o.label}</option>)}
+                              </select>
+                            </div>
+                            <div>
+                              <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Statut</label>
+                              <select value={editData.status || ""} onChange={(e) => setEditData({ ...editData, status: e.target.value })}
+                                className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none bg-white">
+                                <option value="À louer">À louer</option>
+                                <option value="Disponible">Disponible</option>
+                                <option value="Loué">Loué</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div className="grid sm:grid-cols-3 gap-4 mt-4">
+                            <div>
+                              <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Étage (FR)</label>
+                              <select value={editData.floor || ""} onChange={(e) => setEditData({ ...editData, floor: e.target.value })}
+                                className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none bg-white">
+                                <option value="">—</option>
+                                {FLOOR_OPTIONS.map((f) => <option key={f} value={f}>{f}</option>)}
+                              </select>
+                            </div>
+                            <div>
+                              <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Étage (EN)</label>
+                              <input value={editData.floor_en || ""} onChange={(e) => setEditData({ ...editData, floor_en: e.target.value })}
+                                placeholder="e.g. 3rd floor with elevator"
+                                className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
+                            </div>
+                            <div>
+                              <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Ascenseur</label>
+                              <div className="flex gap-2">
+                                <button type="button" onClick={() => toggleEditElevator(true)}
+                                  className={`flex-1 py-2 text-sm border transition-all ${editData.hasElevator ? "border-[#B88B58] bg-[#B88B58]/10 text-[#1A1A1A]" : "border-[#E8E4DF] text-[#6B6B6B] hover:border-[#B88B58]/50"}`}>
+                                  Oui
+                                </button>
+                                <button type="button" onClick={() => toggleEditElevator(false)}
+                                  className={`flex-1 py-2 text-sm border transition-all ${editData.hasElevator === false ? "border-[#B88B58] bg-[#B88B58]/10 text-[#1A1A1A]" : "border-[#E8E4DF] text-[#6B6B6B] hover:border-[#B88B58]/50"}`}>
+                                  Non
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </section>
+
+                        {/* ========== Descriptions FR / EN ========== */}
+                        <section className="border-t border-[#E8E4DF] pt-6">
+                          <h4 className="font-serif text-sm text-[#1A1A1A] uppercase tracking-[0.15em] mb-3">Descriptions</h4>
+                          <div className="grid md:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Description (FR)</label>
+                              <textarea rows={8} value={editData.description || ""} onChange={(e) => setEditData({ ...editData, description: e.target.value })}
+                                className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none resize-y" />
+                            </div>
+                            <div>
+                              <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Description (EN)</label>
+                              <textarea rows={8} value={editData.description_en || ""} onChange={(e) => setEditData({ ...editData, description_en: e.target.value })}
+                                placeholder="Leave empty to fall back to FR"
+                                className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none resize-y" />
+                            </div>
+                          </div>
+                        </section>
+
+                        {/* ========== Features FR / EN ========== */}
+                        <section className="border-t border-[#E8E4DF] pt-6">
+                          <h4 className="font-serif text-sm text-[#1A1A1A] uppercase tracking-[0.15em] mb-3">Équipements (un par ligne)</h4>
+                          <div className="grid md:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Équipements (FR)</label>
+                              <textarea rows={6} value={(editData.features || []).join("\n")}
+                                onChange={(e) => setEditData({ ...editData, features: e.target.value.split("\n").map(s => s.trim()).filter(Boolean) })}
+                                className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none resize-y font-mono" />
+                            </div>
+                            <div>
+                              <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Équipements (EN)</label>
+                              <textarea rows={6} value={(editData.features_en || []).join("\n")}
+                                onChange={(e) => setEditData({ ...editData, features_en: e.target.value.split("\n").map(s => s.trim()).filter(Boolean) })}
+                                placeholder="Leave empty to fall back to FR"
+                                className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none resize-y font-mono" />
+                            </div>
+                          </div>
+                        </section>
+
+                        {/* ========== Nearby (metros etc.) ========== */}
+                        <section className="border-t border-[#E8E4DF] pt-6">
+                          <div className="flex items-end justify-between mb-3">
+                            <div>
+                              <h4 className="font-serif text-sm text-[#1A1A1A] uppercase tracking-[0.15em]">À proximité</h4>
+                              <p className="text-xs text-[#6B6B6B] mt-0.5">Métros, RER, commerces. Lignes séparées par des virgules (ex: 1, 2, RER A).</p>
+                            </div>
+                            <button type="button" onClick={addNearby} className="text-xs text-[#B88B58] hover:text-[#9A7345] uppercase tracking-wider">+ Ajouter</button>
+                          </div>
+                          <div className="space-y-2">
+                            {(editData.nearby || []).map((n, i) => (
+                              <div key={i} className="grid grid-cols-12 gap-2 items-center">
+                                <select value={n.type} onChange={(e) => updateNearby(i, "type", e.target.value)}
+                                  className="col-span-3 px-2 py-1.5 border border-[#E8E4DF] text-xs focus:border-[#B88B58] focus:outline-none bg-white">
+                                  <option value="Métro">Métro</option>
+                                  <option value="RER">RER</option>
+                                  <option value="RER / Métro">RER / Métro</option>
+                                  <option value="Bus">Bus</option>
+                                  <option value="Tramway">Tramway</option>
+                                  <option value="Commerce">Commerce</option>
+                                  <option value="Restaurant">Restaurant</option>
+                                  <option value="Parc">Parc</option>
+                                </select>
+                                <input value={n.name} onChange={(e) => updateNearby(i, "name", e.target.value)} placeholder="Nom"
+                                  className="col-span-4 px-2 py-1.5 border border-[#E8E4DF] text-xs focus:border-[#B88B58] focus:outline-none" />
+                                <input value={(n.lines || []).join(", ")} onChange={(e) => updateNearby(i, "lines", e.target.value)} placeholder="Lignes (1, 2...)"
+                                  className="col-span-3 px-2 py-1.5 border border-[#E8E4DF] text-xs focus:border-[#B88B58] focus:outline-none" />
+                                <input value={n.distance} onChange={(e) => updateNearby(i, "distance", e.target.value)} placeholder="5 min"
+                                  className="col-span-1 px-2 py-1.5 border border-[#E8E4DF] text-xs focus:border-[#B88B58] focus:outline-none" />
+                                <button type="button" onClick={() => removeNearby(i)} className="col-span-1 text-red-500 hover:text-red-700 text-sm">✕</button>
+                              </div>
+                            ))}
+                            {(editData.nearby || []).length === 0 && (
+                              <p className="text-xs text-[#6B6B6B] italic">Aucune entrée.</p>
+                            )}
+                          </div>
+                        </section>
+
+                        {/* ========== Save ========== */}
+                        <div className="border-t border-[#E8E4DF] pt-6 flex items-center gap-4">
+                          <button onClick={() => handleSave(apt.slug)} disabled={saving}
+                            className={`px-8 py-3 font-medium tracking-wider uppercase text-sm transition-all ${saving ? "bg-[#6B6B6B] text-white" : "bg-[#B88B58] text-[#0D0D0D] hover:bg-[#D4AF7A]"}`}>
+                            {saving ? "Enregistrement..." : "Enregistrer les modifications"}
+                          </button>
+                          <button onClick={() => { setEditingSlug(null); setEditData({}); }} className="text-[#6B6B6B] text-sm hover:text-red-500">
+                            Annuler
+                          </button>
                         </div>
-                        <div>
-                          <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Description</label>
-                          <textarea rows={3} value={editData.description || ""} onChange={(e) => setEditData({ ...editData, description: e.target.value })}
-                            className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none resize-none" />
-                        </div>
-                        <div>
-                          <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Équipements (un par ligne)</label>
-                          <textarea rows={4} value={(editData.features || []).join("\n")}
-                            onChange={(e) => setEditData({ ...editData, features: e.target.value.split("\n").filter(Boolean) })}
-                            className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none resize-none font-mono" />
-                        </div>
-                        <button onClick={() => handleSave(apt.slug)} disabled={saving}
-                          className={`px-8 py-3 font-medium tracking-wider uppercase text-sm transition-all ${saving ? "bg-[#6B6B6B] text-white" : "bg-[#B88B58] text-[#0D0D0D] hover:bg-[#D4AF7A]"}`}>
-                          {saving ? "Enregistrement..." : "Enregistrer les modifications"}
-                        </button>
                       </div>
                     ) : (
                       /* VIEW MODE */
