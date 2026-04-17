@@ -178,5 +178,104 @@
         "distance": "3 min"
       }
     ]
+  },
+  {
+    "slug": "2-chambres-chaillot-paris-16e",
+    "title": "2 chambres Chaillot",
+    "address": "Rue de Chaillot, Paris 16e",
+    "district": "Paris 16e",
+    "surface": 105,
+    "rooms": 3,
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "floor": "2e étage",
+    "status": "À louer",
+    "description": "4 pièces d’une surface d’environ 105 m2, entièrement refait à neuf par architecte\nAu 2ème étage avec ascenseur sur rue d’un immeublehaussmannien. \nUn séjour avec canapé d’angle 4 places, une table basse et un Tv écran plat.\nCoin salle à manger 8 personnes. Une cuisine séparée toute équipée et aménagée.\nÉquipement : lave-vaisselle, four micro-onde, plaque, réfrigérateur, machine à café Nespresso, cave à vin Machine a laver/sèche-linge.\n1ère chambre avec un lit 160*200cm et dressing et salle d’eau attenante. \n2ème chambre avec lit 140*190cm avec rangement et salle de bain attenante. \nChauffage collectif et eau chaude individuelle.",
+    "features": [
+      "Wifi",
+      "Lave-linge",
+      "Four",
+      "Congélateur",
+      "Toaster",
+      "Lave-linge séchant",
+      "Digicode",
+      "Parquet point de Hongrie",
+      "Baignoire",
+      "Douche à l'italienne",
+      "Double vitrage",
+      "Balcon",
+      "Interphone",
+      "Chauffage collectif",
+      "Aspirateur",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Smart TV",
+      "Plaques de cuisson",
+      "Fer à repasser",
+      "Gardien",
+      "Sèche-cheveux",
+      "Fibre optique",
+      "Toilettes séparées",
+      "Parquet",
+      "Ascenseur",
+      "Table à repasser",
+      "Bouilloire",
+      "Réfrigérateur",
+      "Lave-vaisselle",
+      "Cuisine équipée"
+    ],
+    "photos": "2-chambres-chaillot-paris-16e",
+    "images": [
+      "/apartments/2-chambres-chaillot-paris-16e/photo-1.jpg",
+      "/apartments/2-chambres-chaillot-paris-16e/photo-2.jpg",
+      "/apartments/2-chambres-chaillot-paris-16e/photo-3.jpg",
+      "/apartments/2-chambres-chaillot-paris-16e/photo-4.jpg",
+      "/apartments/2-chambres-chaillot-paris-16e/photo-5.jpg",
+      "/apartments/2-chambres-chaillot-paris-16e/photo-6.jpg",
+      "/apartments/2-chambres-chaillot-paris-16e/photo-7.jpg",
+      "/apartments/2-chambres-chaillot-paris-16e/photo-8.jpg",
+      "/apartments/2-chambres-chaillot-paris-16e/photo-9.jpg",
+      "/apartments/2-chambres-chaillot-paris-16e/photo-10.jpg",
+      "/apartments/2-chambres-chaillot-paris-16e/photo-11.jpg",
+      "/apartments/2-chambres-chaillot-paris-16e/photo-12.jpg",
+      "/apartments/2-chambres-chaillot-paris-16e/photo-13.jpg",
+      "/apartments/2-chambres-chaillot-paris-16e/photo-14.jpg",
+      "/apartments/2-chambres-chaillot-paris-16e/photo-15.jpg",
+      "/apartments/2-chambres-chaillot-paris-16e/photo-16.jpg",
+      "/apartments/2-chambres-chaillot-paris-16e/photo-17.jpg",
+      "/apartments/2-chambres-chaillot-paris-16e/photo-18.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Iéna",
+        "distance": "4 min"
+      },
+      {
+        "type": "Métro",
+        "name": "Alma-Marceau",
+        "distance": "4 min"
+      },
+      {
+        "type": "Métro",
+        "name": "Boissière",
+        "distance": "6 min"
+      },
+      {
+        "type": "Commerce",
+        "name": "G20",
+        "distance": "1 min"
+      },
+      {
+        "type": "Commerce",
+        "name": "monop'",
+        "distance": "5 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Brignole-Galliera",
+        "distance": "2 min"
+      }
+    ]
   }
 ]
