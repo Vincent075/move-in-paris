@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Rue de Bassano — Move in Paris</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        gold: '#B88B58',
+        'gold-light': '#D4AF7A',
+        'gold-dark': '#9A7345',
+        noir: '#1A1A1A',
+        'noir-deep': '#0D0D0D',
+        blanc: '#FAFAF8',
+        'blanc-chaud': '#F5F0EB',
+        gris: '#6B6B6B',
+        'gris-clair': '#E8E4DF',
+      },
+      fontFamily: {
+        serif: ['Playfair Display', 'Georgia', 'serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+    },
+  },
+}
+</script>
+<style>
+.material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+.hero-gradient { background: linear-gradient(to bottom, rgba(13,13,13,0) 50%, rgba(13,13,13,0.6) 100%); }
+::selection { background: #B88B58; color: white; }
+html { scroll-behavior: smooth; }
+* { border-radius: 0 !important; }
+.r-10 { border-radius: 10px !important; }
+img, .gallery-item, .bento-card, .card, .form-field, .sidebar-card, iframe,
+section .grid > div, .bg-blanc-chaud, .bg-noir-deep, .bg-gold\/10,
+input, textarea, select, button { border-radius: 10px !important; }
+</style>
+</head>
+
+<body class="bg-blanc font-sans text-noir">
+
+<!-- Navigation -->
+<nav class="fixed top-0 w-full z-50 bg-noir-deep/90 backdrop-blur-md">
+  <div class="flex justify-between items-center px-8 py-4 max-w-screen-2xl mx-auto">
+    <a href="/">
+      <img src="/Logo-gold.png" alt="Move in Paris" class="h-16 w-auto" />
+    </a>
+    <div class="hidden md:flex items-center space-x-8">
+      <a class="text-white/60 hover:text-gold transition-colors text-sm tracking-wide uppercase" href="/nos-appartements">Nos appartements</a>
+      <a class="text-white/60 hover:text-gold transition-colors text-sm tracking-wide uppercase" href="/a-propos">À propos</a>
+      <a class="text-white/60 hover:text-gold transition-colors text-sm tracking-wide uppercase" href="/proprietaires">Propriétaires</a>
+      <a class="text-white/60 hover:text-gold transition-colors text-sm tracking-wide uppercase" href="/contact">Contact</a>
+      <a class="bg-gold text-noir-deep px-6 py-2 text-sm tracking-wider uppercase font-medium hover:bg-gold-light transition-all" href="/contact">Nous contacter</a>
+    </div>
+  </div>
+</nav>
+
+<main class="pt-20">
+
+  <!-- Gallery Grid - Asymétrique Éditorial -->
+  <section class="max-w-screen-2xl mx-auto px-4 md:px-8 mt-8">
+    <div class="grid grid-cols-12 gap-3 h-[550px]">
+      <!-- Grande image principale -->
+      <div class="col-span-12 md:col-span-8 overflow-hidden relative group cursor-pointer">
+        <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="/bassano/salon-1.jpg" alt="Salon Rue de Bassano"/>
+        <div class="hero-gradient absolute inset-0"></div>
+        <div class="absolute bottom-6 left-6">
+          <span class="bg-gold/20 backdrop-blur-md border border-white/20 px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-white inline-block">À louer</span>
+        </div>
+        <div class="absolute bottom-6 right-6 bg-noir-deep/60 backdrop-blur-sm text-white text-xs px-3 py-1.5 flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">photo_camera</span>
+          12 photos
+        </div>
+      </div>
+      <!-- Colonne droite -->
+      <div class="hidden md:flex md:col-span-4 flex-col gap-3">
+        <div class="h-1/3 overflow-hidden cursor-pointer group">
+          <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="/bassano/cuisine-1.jpg" alt="Cuisine"/>
+        </div>
+        <div class="h-1/3 overflow-hidden cursor-pointer group">
+          <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="/bassano/chambre-1.jpg" alt="Chambre"/>
+        </div>
+        <div class="h-1/3 overflow-hidden cursor-pointer group relative">
+          <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="/bassano/sdb.jpg" alt="Salle de bain"/>
+          <div class="absolute inset-0 bg-noir-deep/40 flex items-center justify-center">
+            <span class="text-white text-sm font-medium tracking-wider">+ 8 photos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content & Sidebar -->
+  <div class="max-w-screen-2xl mx-auto px-4 md:px-8 grid grid-cols-12 gap-12 mt-10 relative">
+
+    <!-- Contenu Principal -->
+    <div class="col-span-12 lg:col-span-8">
+
+      <!-- Header Info -->
+      <div class="mb-10">
+        <div class="flex items-center gap-2 text-xs text-gris mb-4">
+          <a href="/" class="hover:text-gold transition-colors">Accueil</a>
+          <span>/</span>
+          <a href="/nos-appartements" class="hover:text-gold transition-colors">Nos appartements</a>
+          <span>/</span>
+          <span class="text-gold">Rue de Bassano</span>
+        </div>
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <h1 class="font-serif text-5xl md:text-6xl font-bold tracking-tight text-noir mb-2">Rue de Bassano</h1>
+            <div class="flex items-center text-gris">
+              <span class="material-symbols-outlined mr-1 text-gold text-xl">location_on</span>
+              Paris 16e arrondissement
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-3xl font-bold text-gold tracking-tight font-serif">Sur demande</div>
+            <div class="text-sm text-gris italic">Charges comprises</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Features Bento -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-14">
+        <div class="bg-blanc-chaud p-6 flex flex-col items-center text-center border border-gris-clair/50 hover:border-gold/30 transition-all">
+          <span class="material-symbols-outlined text-gold text-3xl mb-2">square_foot</span>
+          <span class="text-[10px] text-gris uppercase tracking-[0.2em] font-medium">Surface</span>
+          <span class="text-xl font-bold font-serif mt-1">62 m²</span>
+        </div>
+        <div class="bg-blanc-chaud p-6 flex flex-col items-center text-center border border-gris-clair/50 hover:border-gold/30 transition-all">
+          <span class="material-symbols-outlined text-gold text-3xl mb-2">bed</span>
+          <span class="text-[10px] text-gris uppercase tracking-[0.2em] font-medium">Pièces</span>
+          <span class="text-xl font-bold font-serif mt-1">2 pièces</span>
+        </div>
+        <div class="bg-blanc-chaud p-6 flex flex-col items-center text-center border border-gris-clair/50 hover:border-gold/30 transition-all">
+          <span class="material-symbols-outlined text-gold text-3xl mb-2">bathtub</span>
+          <span class="text-[10px] text-gris uppercase tracking-[0.2em] font-medium">Salle de bain</span>
+          <span class="text-xl font-bold font-serif mt-1">1</span>
+        </div>
+        <div class="bg-blanc-chaud p-6 flex flex-col items-center text-center border border-gris-clair/50 hover:border-gold/30 transition-all">
+          <span class="material-symbols-outlined text-gold text-3xl mb-2">elevator</span>
+          <span class="text-[10px] text-gris uppercase tracking-[0.2em] font-medium">Étage</span>
+          <span class="text-xl font-bold font-serif mt-1">3e avec asc.</span>
+        </div>
+      </div>
+
+      <!-- Description Narrative -->
+      <div class="mb-14">
+        <h2 class="font-serif text-3xl font-bold mb-6 text-noir">Un écrin haussmannien d'exception</h2>
+        <p class="text-lg text-gris leading-relaxed font-light mb-6">
+          2 pièces d'environ 62 m², entièrement rénové, situé au 3e étage avec ascenseur d'un immeuble haussmannien. L'appartement comprend un lumineux séjour avec canapé 3 places, table basse et TV écran plat, une cuisine américaine ouverte équipée.
+        </p>
+        <!-- Pull quote -->
+        <div class="bg-noir-deep/5 border-l-4 border-gold p-8 italic text-noir text-xl mb-6 font-serif leading-relaxed">
+          "Idéalement situé à deux pas des Champs-Élysées et du Trocadéro, ce bien rare allie le charme haussmannien au confort moderne."
+        </div>
+        <p class="text-lg text-gris leading-relaxed font-light">
+          Machine Nespresso, micro-ondes, lave-linge séchant, une chambre queen-size, une salle de bain avec douche et des toilettes séparées. Chauffage électrique individuel et eau chaude. Un appartement parfait pour un collaborateur en mobilité ou un expatrié.
+        </p>
+      </div>
+
+      <!-- Équipements -->
+      <div class="mb-14">
+        <h3 class="font-serif text-2xl font-bold mb-8">Équipements & Services</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-12">
+          <div class="flex items-center space-x-4 border-b border-gris-clair/50 pb-4">
+            <div class="bg-gold/10 p-2.5 rounded-lg"><span class="material-symbols-outlined text-gold">wifi</span></div>
+            <span class="font-medium">Wifi haut débit</span>
+          </div>
+          <div class="flex items-center space-x-4 border-b border-gris-clair/50 pb-4">
+            <div class="bg-gold/10 p-2.5 rounded-lg"><span class="material-symbols-outlined text-gold">tv</span></div>
+            <span class="font-medium">Télévision 4K</span>
+          </div>
+          <div class="flex items-center space-x-4 border-b border-gris-clair/50 pb-4">
+            <div class="bg-gold/10 p-2.5 rounded-lg"><span class="material-symbols-outlined text-gold">dishwasher</span></div>
+            <span class="font-medium">Lave-vaisselle</span>
+          </div>
+          <div class="flex items-center space-x-4 border-b border-gris-clair/50 pb-4">
+            <div class="bg-gold/10 p-2.5 rounded-lg"><span class="material-symbols-outlined text-gold">local_laundry_service</span></div>
+            <span class="font-medium">Lave-linge séchant</span>
+          </div>
+          <div class="flex items-center space-x-4 border-b border-gris-clair/50 pb-4">
+            <div class="bg-gold/10 p-2.5 rounded-lg"><span class="material-symbols-outlined text-gold">coffee</span></div>
+            <span class="font-medium">Machine Nespresso</span>
+          </div>
+          <div class="flex items-center space-x-4 border-b border-gris-clair/50 pb-4">
+            <div class="bg-gold/10 p-2.5 rounded-lg"><span class="material-symbols-outlined text-gold">microwave</span></div>
+            <span class="font-medium">Micro-ondes</span>
+          </div>
+          <div class="flex items-center space-x-4 border-b border-gris-clair/50 pb-4">
+            <div class="bg-gold/10 p-2.5 rounded-lg"><span class="material-symbols-outlined text-gold">vacuum</span></div>
+            <span class="font-medium">Aspirateur</span>
+          </div>
+          <div class="flex items-center space-x-4 border-b border-gris-clair/50 pb-4">
+            <div class="bg-gold/10 p-2.5 rounded-lg"><span class="material-symbols-outlined text-gold">elevator</span></div>
+            <span class="font-medium">Ascenseur</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quartier -->
+      <div class="mb-12">
+        <h3 class="font-serif text-2xl font-bold mb-8">Le quartier : Paris 16e</h3>
+        <!-- Map -->
+        <div class="overflow-hidden mb-8 h-72">
+          <iframe
+            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=Rue+de+Bassano,+Paris+16e,+France&zoom=15"
+            width="100%" height="100%" style="border:0;" allowfullscreen loading="lazy" title="Localisation"></iframe>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="flex flex-col gap-2">
+            <span class="text-gold font-bold text-lg font-serif">3 min</span>
+            <h4 class="font-bold text-sm uppercase tracking-wider">George V</h4>
+            <p class="text-sm text-gris font-light">Métro ligne 9</p>
+          </div>
+          <div class="flex flex-col gap-2">
+            <span class="text-gold font-bold text-lg font-serif">5 min</span>
+            <h4 class="font-bold text-sm uppercase tracking-wider">Iéna</h4>
+            <p class="text-sm text-gris font-light">Métro ligne 2</p>
+          </div>
+          <div class="flex flex-col gap-2">
+            <span class="text-gold font-bold text-lg font-serif">8 min</span>
+            <h4 class="font-bold text-sm uppercase tracking-wider">Charles de Gaulle Étoile</h4>
+            <p class="text-sm text-gris font-light">RER A, Métro lignes 1, 2, 6</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar Contact (Sticky) -->
+    <div class="col-span-12 lg:col-span-4">
+      <div class="sticky top-28 space-y-6">
+        <!-- Price Card -->
+        <div class="bg-noir-deep p-8 text-center">
+          <span class="text-gold text-[10px] tracking-[0.3em] uppercase">Loyer mensuel</span>
+          <div class="font-serif text-3xl text-white mt-2 mb-1">Sur demande</div>
+          <p class="text-white/40 text-xs">Charges comprises • Bail corporate</p>
+          <div class="mt-6 space-y-3 text-sm text-left">
+            <div class="flex justify-between text-white/50">
+              <span>Surface</span><span class="text-white">62 m²</span>
+            </div>
+            <div class="flex justify-between text-white/50">
+              <span>Type</span><span class="text-white">2 pièces</span>
+            </div>
+            <div class="flex justify-between text-white/50">
+              <span>Étage</span><span class="text-white">3e avec ascenseur</span>
+            </div>
+            <div class="flex justify-between text-white/50">
+              <span>Bail</span><span class="text-white">Corporate</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="bg-blanc-chaud border border-gris-clair/50 p-8">
+          <h3 class="font-serif text-xl text-noir mb-6">Demander une visite</h3>
+          <form class="space-y-4">
+            <input type="text" placeholder="Votre nom" class="w-full bg-white border border-gris-clair px-4 py-3 text-sm focus:border-gold focus:outline-none focus:ring-0 transition-colors" />
+            <input type="email" placeholder="Votre email" class="w-full bg-white border border-gris-clair px-4 py-3 text-sm focus:border-gold focus:outline-none focus:ring-0 transition-colors" />
+            <input type="tel" placeholder="Votre téléphone" class="w-full bg-white border border-gris-clair px-4 py-3 text-sm focus:border-gold focus:outline-none focus:ring-0 transition-colors" />
+            <textarea rows="3" placeholder="Votre message" class="w-full bg-white border border-gris-clair px-4 py-3 text-sm focus:border-gold focus:outline-none focus:ring-0 transition-colors resize-none">Bonjour, je suis intéressé(e) par l'appartement "Rue de Bassano". Pourriez-vous me recontacter ?</textarea>
+            <button type="submit" class="w-full bg-gold text-noir-deep py-4 font-medium tracking-wider uppercase text-sm hover:bg-gold-light transition-all">
+              Envoyer ma demande
+            </button>
+          </form>
+          <div class="mt-6 pt-6 border-t border-gris-clair/50 text-center">
+            <p class="text-xs text-gris mb-2">Ou appelez-nous directement</p>
+            <a href="tel:+33145200603" class="text-gold font-serif text-lg hover:text-gold-dark transition-colors">
+              +33 1 45 20 06 03
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-noir-deep py-16 mt-20">
+  <div class="max-w-screen-2xl mx-auto px-8">
+    <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+      <div class="flex flex-col items-center md:items-start">
+        <img src="/Logo-gold.png" alt="Move in Paris" class="h-20 w-auto mb-4" />
+        <p class="text-white/30 text-sm">© 2026 Move in Paris. Tous droits réservés.</p>
+      </div>
+      <div class="flex gap-8 text-white/30 text-sm">
+        <a class="hover:text-gold transition-colors" href="/mentions-legales">Mentions légales</a>
+        <a class="hover:text-gold transition-colors" href="/cgu">CGU</a>
+        <a class="hover:text-gold transition-colors" href="/politique-de-confidentialite">Confidentialité</a>
+        <a class="hover:text-gold transition-colors" href="/contact">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

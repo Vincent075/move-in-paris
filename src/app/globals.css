@@ -46,6 +46,18 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Rounded corners 10px global */
+img,
+button,
+input,
+textarea,
+select,
+iframe,
+article,
+form {
+  border-radius: 10px !important;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
