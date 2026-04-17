@@ -69,11 +69,9 @@ export async function POST(req: NextRequest) {
         htmlContent = `<pre>${JSON.stringify(fields, null, 2)}</pre>`;
     }
 
-    // Send to vincent@ for now (account email = works immediately)
-    // Once domain is verified in Resend, change to contact@move-in-paris.com
     const result = await resend.emails.send({
-      from: "Move in Paris <onboarding@resend.dev>",
-      to: "vincent@move-in-paris.com",
+      from: "Move in Paris <noreply@move-in-paris.com>",
+      to: "contact@move-in-paris.com",
       replyTo: fields.email || undefined,
       subject,
       html: htmlContent,
