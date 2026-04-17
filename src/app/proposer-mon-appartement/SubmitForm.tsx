@@ -6,28 +6,48 @@ import { motion } from "framer-motion";
 export default function SubmitForm() {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [photoFiles, setPhotoFiles] = useState<File[]>([]);
+  const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
+
+  function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files || []);
+    setPhotoFiles((prev) => [...prev, ...files]);
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = () => setPhotoPreviews((prev) => [...prev, reader.result as string]);
+      reader.readAsDataURL(file);
+    });
+    e.target.value = "";
+  }
+
+  function removePhoto(index: number) {
+    setPhotoFiles((prev) => prev.filter((_, i) => i !== index));
+    setPhotoPreviews((prev) => prev.filter((_, i) => i !== index));
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     const form = e.currentTarget;
-    const data = {
-      formType: "proposer",
-      civilite: (form.elements.namedItem("civilite") as HTMLSelectElement).value,
-      prenom: (form.elements.namedItem("prenom") as HTMLInputElement).value,
-      nom: (form.elements.namedItem("nom") as HTMLInputElement).value,
-      email: (form.elements.namedItem("email") as HTMLInputElement).value,
-      telephone: (form.elements.namedItem("telephone") as HTMLInputElement).value,
-      adresse: (form.elements.namedItem("adresse") as HTMLInputElement).value,
-      surface: (form.elements.namedItem("surface") as HTMLInputElement).value,
-      pieces: (form.elements.namedItem("pieces") as HTMLSelectElement).value,
-      etage: (form.elements.namedItem("etage") as HTMLInputElement).value,
-      etat: (form.elements.namedItem("etat") as HTMLSelectElement).value,
-      disponibilite: (form.elements.namedItem("disponibilite") as HTMLInputElement).value,
-      description: (form.elements.namedItem("description") as HTMLTextAreaElement).value,
-    };
+
+    const formData = new FormData();
+    formData.append("formType", "proposer");
+    formData.append("civilite", (form.elements.namedItem("civilite") as HTMLSelectElement).value);
+    formData.append("prenom", (form.elements.namedItem("prenom") as HTMLInputElement).value);
+    formData.append("nom", (form.elements.namedItem("nom") as HTMLInputElement).value);
+    formData.append("email", (form.elements.namedItem("email") as HTMLInputElement).value);
+    formData.append("telephone", (form.elements.namedItem("telephone") as HTMLInputElement).value);
+    formData.append("adresse", (form.elements.namedItem("adresse") as HTMLInputElement).value);
+    formData.append("surface", (form.elements.namedItem("surface") as HTMLInputElement).value);
+    formData.append("pieces", (form.elements.namedItem("pieces") as HTMLSelectElement).value);
+    formData.append("etage", (form.elements.namedItem("etage") as HTMLInputElement).value);
+    formData.append("etat", (form.elements.namedItem("etat") as HTMLSelectElement).value);
+    formData.append("disponibilite", (form.elements.namedItem("disponibilite") as HTMLInputElement).value);
+    formData.append("description", (form.elements.namedItem("description") as HTMLTextAreaElement).value);
+    photoFiles.forEach((file) => formData.append("photos", file));
+
     try {
-      await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+      await fetch("/api/contact", { method: "POST", body: formData });
       setSent(true);
     } catch { /* ignore */ }
     setLoading(false);
@@ -147,6 +167,29 @@ export default function SubmitForm() {
                   <textarea name="description" rows={4} placeholder="Décrivez votre bien, ses atouts, vos attentes..."
                     className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors resize-none" />
                 </div>
+                {/* Photos */}
+                <div>
+                  <label className="block text-xs text-gris uppercase tracking-wider mb-2">Photos de votre bien (optionnel)</label>
+                  <label className="block w-full border-2 border-dashed border-gris-clair hover:border-gold transition-colors p-6 text-center cursor-pointer">
+                    <input type="file" accept="image/*" multiple onChange={handlePhotoUpload} className="hidden" />
+                    <div className="text-gold text-2xl mb-1">+</div>
+                    <div className="text-xs text-gris">Cliquez pour ajouter des photos</div>
+                  </label>
+                  {photoPreviews.length > 0 && (
+                    <div className="grid grid-cols-4 gap-2 mt-3">
+                      {photoPreviews.map((src, i) => (
+                        <div key={i} className="relative aspect-square group">
+                          <div className="absolute inset-0 bg-cover bg-center rounded" style={{ backgroundImage: `url('${src}')` }} />
+                          <button type="button" onClick={() => removePhoto(i)}
+                            className="absolute top-1 right-1 w-5 h-5 bg-red-500 text-white text-[10px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
                 <div className="flex items-start gap-3">
                   <input type="checkbox" id="cgu" required className="mt-1 accent-[#B88B58]" />
                   <label htmlFor="cgu" className="text-xs text-gris leading-relaxed">
