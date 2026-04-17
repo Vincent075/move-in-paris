@@ -11,7 +11,10 @@ export default function SubmitForm() {
 
   function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files || []);
-    files.forEach((file) => {
+    const remaining = 5 - photoFiles.length;
+    const filesToProcess = files.slice(0, remaining);
+    if (filesToProcess.length === 0) return;
+    filesToProcess.forEach((file) => {
       const reader = new FileReader();
       reader.onload = () => {
         const img = new window.Image();
@@ -67,7 +70,7 @@ export default function SubmitForm() {
     formData.append("etat", (form.elements.namedItem("etat") as HTMLSelectElement).value);
     formData.append("disponibilite", (form.elements.namedItem("disponibilite") as HTMLInputElement).value);
     formData.append("description", (form.elements.namedItem("description") as HTMLTextAreaElement).value);
-    photoFiles.forEach((file) => formData.append("photos", file));
+    photoFiles.slice(0, 5).forEach((file) => formData.append("photos", file));
 
     try {
       await fetch("/api/contact", { method: "POST", body: formData });

@@ -11,12 +11,7 @@ function emailTemplate(title: string, content: string, replyEmail?: string) {
 
     <!-- Header -->
     <div style="background-color:#0D0D0D;padding:30px 40px;text-align:center;">
-      <div style="font-family:Georgia,serif;font-size:24px;font-weight:bold;color:#ffffff;letter-spacing:2px;">
-        MOVE <span style="color:#B88B58;">IN</span> PARIS
-      </div>
-      <div style="font-size:10px;letter-spacing:4px;color:#B88B58;margin-top:4px;">
-        LOCATION MEUBLÉE CORPORATE
-      </div>
+      <img src="https://move-in-paris.vercel.app/Logo-gold.png" alt="Move in Paris" width="120" height="120" style="display:block;margin:0 auto;" />
     </div>
 
     <!-- Title bar -->
@@ -75,12 +70,21 @@ export async function POST(req: NextRequest) {
       const formData = await req.formData();
       formType = formData.get("formType") as string;
 
+      let totalSize = 0;
+      const MAX_TOTAL_SIZE = 3.5 * 1024 * 1024; // 3.5 Mo max pour les PJ
+      const MAX_PHOTOS = 5;
+      let photoCount = 0;
+
       for (const [key, value] of formData.entries()) {
         if (key === "photos") {
           const file = value as File;
-          if (file.size > 0) {
+          if (file.size > 0 && photoCount < MAX_PHOTOS) {
             const buffer = Buffer.from(await file.arrayBuffer());
-            attachments.push({ filename: file.name, content: buffer });
+            totalSize += buffer.length;
+            if (totalSize <= MAX_TOTAL_SIZE) {
+              attachments.push({ filename: file.name, content: buffer });
+              photoCount++;
+            }
           }
         } else {
           fields[key] = value as string;
