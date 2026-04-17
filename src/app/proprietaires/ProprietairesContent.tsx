@@ -6,7 +6,7 @@ import Link from "next/link";
 const avantages = [
   {
     num: "01",
-    title: "Clientèle corporate vérifiée",
+    title: "Clientèle corporate premium",
     desc: "Grandes entreprises, institutions internationales et collaborateurs expatriés. Chaque dossier est vérifié : solvabilité, employeur, garanties. Loyers garantis par l'employeur — zéro impayé.",
   },
   {
