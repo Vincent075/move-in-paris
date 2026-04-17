@@ -300,7 +300,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.1 }}
-                className="grid grid-cols-2 sm:grid-cols-4 gap-6 p-6 bg-blanc-chaud border border-gris-clair/50 mb-10"
+                className="grid grid-cols-2 sm:grid-cols-4 gap-6 p-6 bg-blanc-chaud border border-gris-clair/50 mb-10 [&>div+div]:relative sm:[&>div+div]:before:content-[''] sm:[&>div+div]:before:absolute sm:[&>div+div]:before:left-0 sm:[&>div+div]:before:top-1/2 sm:[&>div+div]:before:-translate-y-1/2 sm:[&>div+div]:before:h-10 sm:[&>div+div]:before:w-px sm:[&>div+div]:before:bg-gris-clair"
               >
                 <div className="text-center">
                   <div className="text-2xl font-serif text-gold font-bold">{apt.surface} m²</div>
