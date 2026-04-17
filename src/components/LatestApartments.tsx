@@ -83,7 +83,7 @@ const doubled = [...latestApartments, ...latestApartments];
 
 export default function LatestApartments() {
   return (
-    <section className="py-20 bg-blanc overflow-hidden">
+    <section className="pt-20 pb-6 bg-blanc overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 lg:px-12 mb-12">
         <div className="flex items-end justify-between">
           <div>
