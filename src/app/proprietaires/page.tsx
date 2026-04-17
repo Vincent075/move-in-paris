@@ -23,7 +23,7 @@ export default function Proprietaires() {
       <main>
         <PageHero
           title="Propriétaires"
-          subtitle="Confiez-nous votre bien et profitez d'une gestion opérationnelle complète, sans aucun souci."
+          subtitle="Service 100 % gratuit pour le propriétaire. Confiez-nous votre bien et percevez un loyer charges comprises, sans la moindre commission."
           breadcrumb="Propriétaires"
         />
         <ProprietairesContent />

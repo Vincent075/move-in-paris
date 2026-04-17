@@ -6,31 +6,41 @@ import Link from "next/link";
 const avantages = [
   {
     num: "01",
+    title: "Service 100 % gratuit",
+    desc: "Aucun frais de mise en location, aucun honoraire de gestion, aucune commission sur votre loyer. Vous percevez 100 % du loyer convenu au contrat, sans la moindre déduction. Nous nous rémunérons exclusivement auprès de nos clients corporate.",
+  },
+  {
+    num: "02",
+    title: "Loyer tout inclus",
+    desc: "Le loyer que vous percevez chaque mois est charges comprises : électricité, gaz, internet + TV + Canal+, charges d'immeuble, entretien chaudière, taxe d'enlèvement des ordures. Aucune régularisation, aucune facture surprise. Tout est pris en charge dans notre modèle.",
+  },
+  {
+    num: "03",
     title: "Clientèle corporate premium",
     desc: "Grandes entreprises, institutions internationales et collaborateurs expatriés. Chaque dossier est vérifié : solvabilité, employeur, garanties. Loyers garantis par l'employeur — zéro impayé.",
   },
   {
-    num: "02",
+    num: "04",
     title: "Rentabilité supérieure",
-    desc: "En moyenne +30% de revenus supplémentaires vs location classique. Jusqu'à 55€/m² en bail corporate, avec un régime fiscal avantageux (LMNP).",
+    desc: "En moyenne +30 % de revenus supplémentaires vs location classique. Jusqu'à 55 €/m² en bail corporate, avec un régime fiscal avantageux (LMNP).",
   },
   {
-    num: "03",
+    num: "05",
     title: "Gestion Opérationnelle",
     desc: "État des lieux, entretien, ménage, petits travaux, relation locataire, comptabilité : nous gérons absolument tout sans aucune implication de votre part.",
   },
   {
-    num: "04",
-    title: "Taux d'occupation optimal",
-    desc: "Grâce à notre réseau d'entreprises et de agences de relocation, nous maintenons un taux d'occupation supérieur à 95% sur l'ensemble de notre parc.",
-  },
-  {
-    num: "05",
-    title: "Bail sécurisé",
-    desc: "Baux conformes à la réglementation, assurances adaptées, diagnostics à jour. Votre investissement est juridiquement protégé à chaque instant.",
-  },
-  {
     num: "06",
+    title: "Taux d'occupation optimal",
+    desc: "Grâce à notre réseau d'entreprises et d'agences de relocation, nous maintenons un taux d'occupation supérieur à 95 % sur l'ensemble de notre parc.",
+  },
+  {
+    num: "07",
+    title: "Bail sécurisé",
+    desc: "Baux Code Civil (articles 1714-1762), assurance multirisques habitation incluse, diagnostics à jour. Votre investissement est juridiquement protégé à chaque instant.",
+  },
+  {
+    num: "08",
     title: "Reporting trimestriel",
     desc: "Chaque trimestre, recevez un reporting détaillé : revenus, charges, interventions. Visibilité totale sur la performance de votre bien.",
   },
@@ -54,6 +64,26 @@ export default function ProprietairesContent() {
                 <br />
                 <span className="text-gold">la location meublée corporate</span>
               </h2>
+
+              {/* Banner Service 100% gratuit */}
+              <div
+                className="mb-6 p-5 bg-gradient-to-r from-gold/10 to-gold/5 border-l-4 border-gold"
+                style={{ borderRadius: 10 }}
+              >
+                <div className="flex items-start gap-3">
+                  <svg className="w-6 h-6 text-gold flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <div>
+                    <div className="font-serif text-lg text-noir mb-1">Service 100 % gratuit pour le propriétaire</div>
+                    <p className="text-sm text-gris font-light leading-relaxed">
+                      Zéro frais de mise en location, zéro honoraire de gestion, zéro commission prélevée sur votre loyer.
+                      Vous percevez l&apos;intégralité du loyer convenu — <strong className="text-noir font-medium">charges comprises</strong>.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               <div className="space-y-4 text-gris font-light leading-relaxed">
                 <p>
                   Vous possédez un appartement à Paris ou en proche banlieue ? Confiez-le à Move in Paris et bénéficiez
@@ -61,7 +91,10 @@ export default function ProprietairesContent() {
                 </p>
                 <p>
                   Notre clientèle exclusive — grandes entreprises, institutions internationales — garantit des loyers
-                  payés par l&apos;employeur. Résultat : <strong className="text-noir font-medium">zéro impayé</strong> et en moyenne <strong className="text-noir font-medium">+30% de revenus</strong> par rapport à une location classique.
+                  payés par l&apos;employeur. Résultat : <strong className="text-noir font-medium">zéro impayé</strong> et en moyenne <strong className="text-noir font-medium">+30 % de revenus</strong> par rapport à une location classique.
+                </p>
+                <p>
+                  Le loyer que vous percevez est <strong className="text-noir font-medium">charges comprises</strong> : électricité, gaz, internet + TV, charges d&apos;immeuble, entretien chaudière, taxe d&apos;enlèvement des ordures ménagères — tout est inclus. Aucune régularisation à faire, aucune facture à gérer.
                 </p>
               </div>
               <Link
