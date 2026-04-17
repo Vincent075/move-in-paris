@@ -54,8 +54,36 @@ textarea,
 select,
 iframe,
 article,
-form {
+form,
+[class*="border"],
+[class*="bg-blanc-chaud"],
+[class*="bg-noir-deep"],
+[class*="bg-gold"],
+[class*="bg-blanc"],
+[class*="bg-white"],
+[class*="bg-gris"],
+[class*="overflow-hidden"],
+[class*="shadow"],
+[class*="backdrop-blur"] {
   border-radius: 10px !important;
+}
+
+/* Exceptions - pas d'arrondi sur le body/header/footer/sections plein largeur */
+body,
+html,
+main,
+header,
+footer,
+nav,
+section,
+[class*="fixed"],
+[class*="sticky"],
+[class*="border-t"],
+[class*="border-b"],
+[class*="border-l"],
+[class*="border-r"],
+hr {
+  border-radius: 0 !important;
 }
 
 /* Custom scrollbar */
