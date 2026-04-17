@@ -1,6 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+
+type BanFeature = {
+  geometry?: { type: "Point"; coordinates: [number, number] };
+  properties: {
+    label: string;
+    postcode?: string;
+    city?: string;
+    citycode?: string;
+    context?: string;
+    name?: string;
+  };
+};
 
 export const FLOOR_OPTIONS = [
   "Rez-de-chaussée",
@@ -112,6 +124,23 @@ export default function AddApartment({ password, onSuccess }: { password: string
   const [nearbyRows, setNearbyRows] = useState<{ type: string; name: string; distance: string }[]>([]);
   const [nearbyLoading, setNearbyLoading] = useState(false);
 
+  // Address autocomplete (BAN)
+  const [suggestions, setSuggestions] = useState<BanFeature[]>([]);
+  const [suggestOpen, setSuggestOpen] = useState(false);
+  const [suggestLoading, setSuggestLoading] = useState(false);
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function onClickOutside(e: MouseEvent) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+        setSuggestOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, []);
+
   const slug = title
     .toLowerCase()
     .normalize("NFD")
@@ -159,6 +188,71 @@ export default function AddApartment({ password, onSuccess }: { password: string
       setStreetOnly(street);
       if (!title) setTitle(street);
     }
+    // Trigger BAN autocomplete
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (value.trim().length < 3) {
+      setSuggestions([]);
+      setSuggestOpen(false);
+      return;
+    }
+    setSuggestOpen(true);
+    setSuggestLoading(true);
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(value)}&limit=6&type=housenumber`
+        );
+        const data = await res.json();
+        setSuggestions((data.features || []) as BanFeature[]);
+      } catch {
+        setSuggestions([]);
+      }
+      setSuggestLoading(false);
+    }, 220);
+  }
+
+  function pickSuggestion(f: BanFeature) {
+    const p = f.properties;
+    setFullAddress(p.label);
+    setSuggestOpen(false);
+    setSuggestions([]);
+    // Extract street (remove leading number)
+    const street = (p.name || p.label.split(",")[0] || "").replace(/^\d+[,.\s]*/, "").trim();
+    if (street) {
+      setStreetOnly(street);
+      if (!title) setTitle(street);
+    }
+    // Derive district
+    const postcode = p.postcode || "";
+    if (/^75\d{3}$/.test(postcode)) {
+      const n = parseInt(postcode.slice(-2), 10);
+      setDistrict(n === 1 ? "Paris 1er" : `Paris ${n}e`);
+    } else if (p.city) {
+      setDistrict(p.city);
+    }
+    // Auto-trigger nearby lookup
+    setTimeout(() => fetchNearbyFrom(p.label), 0);
+  }
+
+  async function fetchNearbyFrom(address: string) {
+    if (address.length < 5) return;
+    setNearbyLoading(true);
+    setNearbyError("");
+    setNearbyDone(false);
+    try {
+      const res = await fetch(`/api/nearby?address=${encodeURIComponent(address)}`);
+      const data = await res.json();
+      if (data.error) {
+        setNearbyError(data.error);
+      } else {
+        if (data.district) setDistrict(data.district);
+        if (data.places && data.places.length > 0) setNearbyRows(data.places);
+        setNearbyDone(true);
+      }
+    } catch {
+      setNearbyError("Erreur de connexion — réessayez");
+    }
+    setNearbyLoading(false);
   }
 
   function toggleFeature(feature: string) {
@@ -373,22 +467,36 @@ export default function AddApartment({ password, onSuccess }: { password: string
         <div className="bg-white border border-[#E8E4DF] p-8 mb-6">
           <h2 className="font-serif text-2xl text-[#1A1A1A] mb-6">Adresse & informations</h2>
 
-          <div className="mb-4">
+          <div className="mb-4" ref={wrapperRef}>
             <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-2">Adresse complète (avec numéro) *</label>
-            <div className="flex gap-2">
+            <div className="relative">
               <input type="text" required value={fullAddress}
                 onChange={(e) => handleFullAddress(e.target.value)}
+                onFocus={() => { if (suggestions.length > 0) setSuggestOpen(true); }}
                 onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); fetchNearby(); } }}
-                placeholder="12 rue Pergolèse, Paris 16e"
-                className="flex-1 px-4 py-3 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
-              <button type="button" onClick={fetchNearby} disabled={nearbyLoading}
-                className={`px-5 py-3 text-sm font-medium transition-all ${nearbyLoading ? "bg-[#6B6B6B] text-white" : nearbyDone ? "bg-green-600 text-white" : "bg-[#B88B58] text-white hover:bg-[#D4AF7A]"}`}>
-                {nearbyLoading ? "⏳" : nearbyDone ? "✓" : "Rechercher"}
-              </button>
+                placeholder="Commencez à taper : 12 rue Pergolèse…"
+                autoComplete="off"
+                className="w-full px-4 py-3 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
+              {suggestOpen && (suggestLoading || suggestions.length > 0) && (
+                <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-[#E8E4DF] shadow-xl z-20 max-h-72 overflow-y-auto">
+                  {suggestLoading && suggestions.length === 0 && (
+                    <div className="px-4 py-3 text-sm text-[#6B6B6B] italic">Recherche…</div>
+                  )}
+                  {suggestions.map((f, i) => (
+                    <button type="button" key={`${f.properties.label}-${i}`}
+                      onClick={() => pickSuggestion(f)}
+                      className="w-full text-left px-4 py-3 text-sm hover:bg-[#FAFAF8] transition-colors border-b border-[#E8E4DF]/60 last:border-b-0">
+                      <div className="text-[#1A1A1A]">{f.properties.label}</div>
+                      <div className="text-xs text-[#6B6B6B] mt-0.5">{f.properties.postcode} {f.properties.city}</div>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             {nearbyError && <p className="text-xs text-red-500 mt-1">{nearbyError}</p>}
-            {nearbyDone && <p className="text-xs text-green-600 mt-1">✓ Quartier, métros et commerces détectés automatiquement</p>}
-            {!nearbyDone && !nearbyError && <p className="text-xs text-[#6B6B6B] mt-1">Tapez l&apos;adresse puis cliquez Rechercher. Le numéro ne sera pas affiché sur le site.</p>}
+            {nearbyDone && <p className="text-xs text-green-600 mt-1">✓ Adresse validée — quartier, métros et commerces détectés</p>}
+            {nearbyLoading && <p className="text-xs text-[#B88B58] mt-1">⏳ Détection des métros et commerces…</p>}
+            {!nearbyDone && !nearbyError && !nearbyLoading && <p className="text-xs text-[#6B6B6B] mt-1">Sélectionnez une suggestion dans la liste. Le numéro ne sera pas affiché sur le site.</p>}
           </div>
 
           <div className="grid sm:grid-cols-3 gap-4 mb-4">
