@@ -22,9 +22,9 @@ export default function APropos() {
       <Header />
       <main>
         <PageHero
-          title="A propos"
+          title="À propos"
           subtitle="Une solution locative clés en main pour les entreprises et les expatriés depuis 2005."
-          breadcrumb="A propos"
+          breadcrumb="À propos"
         />
         <AboutContent />
         <CTABanner

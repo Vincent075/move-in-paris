@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 const contactInfo = [
@@ -11,7 +12,7 @@ const contactInfo = [
       </svg>
     ),
     label: "Adresse",
-    value: "26 rue de l'Etoile, 75017 Paris",
+    value: "26 rue de l'Étoile, 75017 Paris",
   },
   {
     icon: (
@@ -19,7 +20,7 @@ const contactInfo = [
         <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
       </svg>
     ),
-    label: "Telephone",
+    label: "Téléphone",
     value: "+33 1 45 20 06 03",
   },
   {
@@ -34,162 +35,116 @@ const contactInfo = [
 ];
 
 export default function Contact() {
+  const [loading, setLoading] = useState(false);
+  const [sent, setSent] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setLoading(true);
+    const form = e.currentTarget;
+    const data = {
+      formType: "contact",
+      prenom: (form.elements.namedItem("prenom") as HTMLInputElement).value,
+      nom: (form.elements.namedItem("nom") as HTMLInputElement).value,
+      email: (form.elements.namedItem("email") as HTMLInputElement).value,
+      telephone: (form.elements.namedItem("telephone") as HTMLInputElement).value,
+      profil: (form.elements.namedItem("profil") as HTMLSelectElement).value,
+      message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
+    };
+    try {
+      await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+      setSent(true);
+      form.reset();
+    } catch { /* ignore */ }
+    setLoading(false);
+  }
+
   return (
     <section id="contact" className="py-28 bg-blanc-chaud">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <div className="grid lg:grid-cols-2 gap-16">
-          {/* Left - Info */}
           <div>
-            <motion.span
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-gold text-xs tracking-[0.3em] uppercase"
-            >
-              Parlons de votre projet
-            </motion.span>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="font-serif text-4xl md:text-5xl text-noir mt-4 mb-8"
-            >
-              Contactez-nous
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="text-gris font-light leading-relaxed mb-12 max-w-md"
-            >
-              Que vous soyez proprietaire ou a la recherche d&apos;un logement
-              pour vos collaborateurs, notre equipe est a votre ecoute.
+            <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+              className="text-gold text-xs tracking-[0.3em] uppercase">Parlons de votre projet</motion.span>
+            <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              transition={{ delay: 0.1 }} className="font-serif text-4xl md:text-5xl text-noir mt-4 mb-8">Contactez-nous</motion.h2>
+            <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+              transition={{ delay: 0.2 }} className="text-gris font-light leading-relaxed mb-12 max-w-md">
+              Que vous soyez propriétaire ou à la recherche d&apos;un logement pour vos collaborateurs, notre équipe est à votre écoute.
             </motion.p>
-
             <div className="space-y-6">
               {contactInfo.map((info, i) => (
-                <motion.div
-                  key={info.label}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3 + i * 0.1 }}
-                  className="flex items-center gap-4"
-                >
-                  <div className="w-10 h-10 flex items-center justify-center border border-gold/30 text-gold">
-                    {info.icon}
-                  </div>
+                <motion.div key={info.label} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }} transition={{ delay: 0.3 + i * 0.1 }} className="flex items-center gap-4">
+                  <div className="w-10 h-10 flex items-center justify-center border border-gold/30 text-gold">{info.icon}</div>
                   <div>
-                    <div className="text-xs text-gris uppercase tracking-wider">
-                      {info.label}
-                    </div>
+                    <div className="text-xs text-gris uppercase tracking-wider">{info.label}</div>
                     <div className="text-noir">{info.value}</div>
                   </div>
                 </motion.div>
               ))}
             </div>
-
-            {/* Map placeholder */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.5 }}
-              className="mt-12 aspect-[16/9] bg-gris-clair overflow-hidden"
-            >
+            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+              transition={{ delay: 0.5 }} className="mt-12 aspect-[16/9] bg-gris-clair overflow-hidden">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2623.5!2d2.295!3d48.877!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z26+Rue+de+l'%C3%89toile%2C+75017+Paris!5e0!3m2!1sfr!2sfr!4v1"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Move in Paris - Localisation"
-              />
+                width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade" title="Move in Paris - Localisation" />
             </motion.div>
           </div>
 
-          {/* Right - Form */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-            className="bg-blanc p-10 lg:p-12 border border-gris-clair/50"
-          >
-            <h3 className="font-serif text-2xl text-noir mb-8">
-              Envoyez-nous un message
-            </h3>
-            <form className="space-y-6">
-              <div className="grid sm:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-xs text-gris uppercase tracking-wider mb-2">
-                    Prenom
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors"
-                  />
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            transition={{ delay: 0.3 }} className="bg-blanc p-10 lg:p-12 border border-gris-clair/50">
+            <h3 className="font-serif text-2xl text-noir mb-8">Envoyez-nous un message</h3>
+            {sent ? (
+              <div className="text-center py-12">
+                <div className="text-gold text-4xl mb-4">✓</div>
+                <h4 className="font-serif text-xl text-noir mb-2">Message envoyé !</h4>
+                <p className="text-gris text-sm">Nous vous répondrons dans les plus brefs délais.</p>
+                <button onClick={() => setSent(false)} className="mt-6 text-gold text-sm hover:text-gold-dark transition-colors">
+                  Envoyer un autre message
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs text-gris uppercase tracking-wider mb-2">Prénom</label>
+                    <input name="prenom" type="text" required className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors" />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gris uppercase tracking-wider mb-2">Nom</label>
+                    <input name="nom" type="text" required className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors" />
+                  </div>
                 </div>
                 <div>
-                  <label className="block text-xs text-gris uppercase tracking-wider mb-2">
-                    Nom
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors"
-                  />
+                  <label className="block text-xs text-gris uppercase tracking-wider mb-2">Email</label>
+                  <input name="email" type="email" required className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors" />
                 </div>
-              </div>
-              <div>
-                <label className="block text-xs text-gris uppercase tracking-wider mb-2">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors"
-                />
-              </div>
-              <div>
-                <label className="block text-xs text-gris uppercase tracking-wider mb-2">
-                  Telephone
-                </label>
-                <input
-                  type="tel"
-                  className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors"
-                />
-              </div>
-              <div>
-                <label className="block text-xs text-gris uppercase tracking-wider mb-2">
-                  Vous etes
-                </label>
-                <select className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors">
-                  <option value="">Selectionnez...</option>
-                  <option value="entreprise">Entreprise / RH</option>
-                  <option value="expatrie">Expatrie</option>
-                  <option value="proprietaire">Proprietaire</option>
-                  <option value="autre">Autre</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs text-gris uppercase tracking-wider mb-2">
-                  Message
-                </label>
-                <textarea
-                  rows={4}
-                  className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors resize-none"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full py-4 bg-gold text-noir-deep font-medium tracking-wider uppercase text-sm hover:bg-gold-light transition-all duration-300"
-              >
-                Envoyer le message
-              </button>
-            </form>
+                <div>
+                  <label className="block text-xs text-gris uppercase tracking-wider mb-2">Téléphone</label>
+                  <input name="telephone" type="tel" className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors" />
+                </div>
+                <div>
+                  <label className="block text-xs text-gris uppercase tracking-wider mb-2">Vous êtes</label>
+                  <select name="profil" className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors">
+                    <option value="">Sélectionnez...</option>
+                    <option value="entreprise">Entreprise / RH</option>
+                    <option value="expatrie">Expatrié</option>
+                    <option value="proprietaire">Propriétaire</option>
+                    <option value="autre">Autre</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs text-gris uppercase tracking-wider mb-2">Message</label>
+                  <textarea name="message" rows={4} required className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors resize-none" />
+                </div>
+                <button type="submit" disabled={loading}
+                  className={`w-full py-4 font-medium tracking-wider uppercase text-sm transition-all duration-300 ${loading ? "bg-gris text-blanc" : "bg-gold text-noir-deep hover:bg-gold-light"}`}>
+                  {loading ? "Envoi en cours..." : "Envoyer le message"}
+                </button>
+              </form>
+            )}
           </motion.div>
         </div>
       </div>

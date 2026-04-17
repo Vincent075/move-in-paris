@@ -4,6 +4,61 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
+function VisitForm({ title }: { title: string }) {
+  const [loading, setLoading] = useState(false);
+  const [sent, setSent] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setLoading(true);
+    const form = e.currentTarget;
+    const data = {
+      formType: "visite",
+      appartement: title,
+      nom: (form.elements.namedItem("nom") as HTMLInputElement).value,
+      email: (form.elements.namedItem("email") as HTMLInputElement).value,
+      telephone: (form.elements.namedItem("telephone") as HTMLInputElement).value,
+      message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
+    };
+    try {
+      await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+      setSent(true);
+    } catch { /* ignore */ }
+    setLoading(false);
+  }
+
+  if (sent) {
+    return (
+      <>
+        <h3 className="font-serif text-xl text-noir mb-4">Demande envoyée !</h3>
+        <p className="text-gris text-sm font-light">Nous vous recontacterons rapidement.</p>
+        <button onClick={() => setSent(false)} className="mt-4 text-gold text-sm">Nouvelle demande</button>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <h3 className="font-serif text-xl text-noir mb-6">Demander une visite</h3>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input name="nom" type="text" required placeholder="Votre nom"
+          className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors" />
+        <input name="email" type="email" required placeholder="Votre email"
+          className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors" />
+        <input name="telephone" type="tel" placeholder="Votre téléphone"
+          className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors" />
+        <textarea name="message" rows={3}
+          defaultValue={`Bonjour, je suis intéressé(e) par l'appartement "${title}". Pourriez-vous me recontacter ?`}
+          className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors resize-none" />
+        <button type="submit" disabled={loading}
+          className={`w-full py-4 font-medium tracking-wider uppercase text-sm transition-all duration-300 ${loading ? "bg-gris text-blanc" : "bg-gold text-noir-deep hover:bg-gold-light"}`}>
+          {loading ? "Envoi..." : "Envoyer ma demande"}
+        </button>
+      </form>
+    </>
+  );
+}
+
 interface ApartmentProps {
   apartment: {
     title: string;
@@ -272,36 +327,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                   transition={{ delay: 0.3 }}
                   className="bg-blanc-chaud border border-gris-clair/50 p-8"
                 >
-                  <h3 className="font-serif text-xl text-noir mb-6">Demander une visite</h3>
-                  <form className="space-y-4">
-                    <input
-                      type="text"
-                      placeholder="Votre nom"
-                      className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors"
-                    />
-                    <input
-                      type="email"
-                      placeholder="Votre email"
-                      className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors"
-                    />
-                    <input
-                      type="tel"
-                      placeholder="Votre téléphone"
-                      className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors"
-                    />
-                    <textarea
-                      rows={3}
-                      placeholder="Votre message"
-                      defaultValue={`Bonjour, je suis intéressé(e) par l'appartement "${apt.title}". Pourriez-vous me recontacter ?`}
-                      className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors resize-none"
-                    />
-                    <button
-                      type="submit"
-                      className="w-full py-4 bg-gold text-noir-deep font-medium tracking-wider uppercase text-sm hover:bg-gold-light transition-all duration-300"
-                    >
-                      Envoyer ma demande
-                    </button>
-                  </form>
+                  <VisitForm title={apt.title} />
                   <div className="mt-6 pt-6 border-t border-gris-clair/50 text-center">
                     <p className="text-xs text-gris mb-2">Ou appelez-nous directement</p>
                     <a href="tel:+33145200603" className="text-gold font-serif text-lg hover:text-gold-dark transition-colors">
