@@ -11,7 +11,6 @@ export default function Footer() {
     { href: "/nos-appartements", label: t("nav.apartments") },
     { href: "/a-propos", label: t("nav.about") },
     { href: "/proprietaires", label: t("nav.owners") },
-    { href: "/proposer-mon-appartement", label: t("nav.proposeProperty") },
     { href: "/estimation", label: t("nav.estimation") },
     { href: "/blog", label: t("nav.blog") },
     { href: "/contact", label: t("nav.contact") },
