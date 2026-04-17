@@ -147,6 +147,11 @@ export default async function ArticlePage({
         {/* Article body */}
         <article className="py-16 md:py-20 bg-blanc">
           <div className="max-w-3xl mx-auto px-6 lg:px-12">
+            {locale === "en" && (
+              <div className="mb-10 p-5 border border-gris-clair/50 bg-blanc-chaud text-sm text-gris leading-relaxed" style={{ borderRadius: 12 }}>
+                {messages.blogPage.contentNotice}
+              </div>
+            )}
             <p className="font-serif text-xl md:text-2xl text-noir leading-relaxed mb-12 pb-12 border-b border-gris-clair/40">
               {article.excerpt}
             </p>

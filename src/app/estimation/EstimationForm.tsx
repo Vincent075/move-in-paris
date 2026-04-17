@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import rentTable from "@/data/encadrement/rent-table.json";
+import { useT } from "@/i18n/LocaleProvider";
 
 type BanFeature = {
   geometry?: { type: "Point"; coordinates: [number, number] };
@@ -66,6 +67,13 @@ function matchFallbackCity(city?: string, postcode?: string): string | null {
 type Step = "property" | "contact" | "result";
 
 export default function EstimationForm() {
+  const t = useT();
+  const EPOCH_T: Record<Epoque, string> = {
+    "Avant 1946": t("estimationPage.epochBefore1946"),
+    "1946-1970": t("estimationPage.epoch1946_1970"),
+    "1971-1990": t("estimationPage.epoch1971_1990"),
+    "Apres 1990": t("estimationPage.epochAfter1990"),
+  };
   const [step, setStep] = useState<Step>("property");
   const [submitting, setSubmitting] = useState(false);
 
@@ -248,7 +256,7 @@ export default function EstimationForm() {
       });
       setStep("result");
     } catch {
-      setErrorMsg("Erreur — réessayez dans un instant.");
+      setErrorMsg(t("estimationPage.errorRetry"));
     }
     setSubmitting(false);
   }
@@ -301,16 +309,16 @@ export default function EstimationForm() {
               style={{ borderRadius: 10 }}
             >
               <span className="text-gold text-xs tracking-[0.3em] uppercase">
-                Étape 1 / 3
+                {t("estimationPage.stepPropertyBadge")}
               </span>
               <h2 className="font-serif text-2xl md:text-3xl text-noir mt-2 mb-8">
-                Parlez-nous de votre bien
+                {t("estimationPage.stepPropertyTitle")}
               </h2>
 
               <div className="space-y-5">
                 <div ref={wrapperRef} className="relative">
                   <label className="block text-xs text-gris uppercase tracking-wider mb-2">
-                    Adresse du bien *
+                    {t("estimationPage.addressLabel")}
                   </label>
                   <input
                     type="text"
@@ -319,7 +327,7 @@ export default function EstimationForm() {
                     onFocus={() => {
                       if (suggestions.length > 0) setSuggestOpen(true);
                     }}
-                    placeholder="Commencez à taper : 12 rue Pergolèse…"
+                    placeholder={t("estimationPage.addressPlaceholder")}
                     autoComplete="off"
                     className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none"
                   />
@@ -329,7 +337,7 @@ export default function EstimationForm() {
                       style={{ borderRadius: 10 }}
                     >
                       {suggestLoading && suggestions.length === 0 && (
-                        <div className="px-4 py-3 text-sm text-gris italic">Recherche…</div>
+                        <div className="px-4 py-3 text-sm text-gris italic">{t("estimationPage.searching")}</div>
                       )}
                       {suggestions.map((f, i) => {
                         const p = f.properties;
@@ -353,26 +361,26 @@ export default function EstimationForm() {
                   {/* Status line */}
                   <div className="text-xs mt-2 min-h-[1.25em]">
                     {resolving && (
-                      <span className="text-gris italic">Identification du quartier…</span>
+                      <span className="text-gris italic">{t("estimationPage.identifyingDistrict")}</span>
                     )}
                     {!resolving && quartier && (
                       <span className="text-gold">
-                        ✓ Quartier détecté : <strong>{quartier.nom}</strong> — Paris {postcode}
+                        ✓ {t("estimationPage.districtDetected")} : <strong>{quartier.nom}</strong> — Paris {postcode}
                       </span>
                     )}
                     {!resolving && !quartier && fallbackCity && (
                       <span className="text-gold">
-                        ✓ Zone : <strong>{fallbackCity}</strong>
+                        ✓ {t("estimationPage.zone")} : <strong>{fallbackCity}</strong>
                       </span>
                     )}
                     {!resolving && !quartier && !fallbackCity && address.length > 3 && !suggestOpen && (
                       <span className="text-gris italic">
-                        Sélectionnez une suggestion ci-dessus pour détecter automatiquement le quartier.
+                        {t("estimationPage.selectSuggestion")}
                       </span>
                     )}
                     {!resolving && !quartier && !fallbackCity && !address && (
                       <span className="text-gris italic">
-                        Sélectionnez une suggestion : le quartier se remplit automatiquement.
+                        {t("estimationPage.selectSuggestionEmpty")}
                       </span>
                     )}
                   </div>
@@ -381,7 +389,7 @@ export default function EstimationForm() {
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-xs text-gris uppercase tracking-wider mb-2">
-                      Surface (m²) *
+                      {t("estimationPage.surfaceLabel")}
                     </label>
                     <input
                       required
@@ -396,7 +404,7 @@ export default function EstimationForm() {
                   </div>
                   <div>
                     <label className="block text-xs text-gris uppercase tracking-wider mb-2">
-                      Nombre de pièces *
+                      {t("estimationPage.roomsLabel")}
                     </label>
                     <select
                       required
@@ -404,27 +412,27 @@ export default function EstimationForm() {
                       onChange={(e) => setRooms(e.target.value as Pieces | "")}
                       className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none"
                     >
-                      <option value="">Sélectionnez</option>
-                      <option value="1">Studio / 1 pièce</option>
-                      <option value="2">2 pièces</option>
-                      <option value="3">3 pièces</option>
-                      <option value="4">4 pièces et plus</option>
+                      <option value="">{t("estimationPage.selectPrompt")}</option>
+                      <option value="1">{t("estimationPage.roomStudio")}</option>
+                      <option value="2">{t("estimationPage.room2")}</option>
+                      <option value="3">{t("estimationPage.room3")}</option>
+                      <option value="4">{t("estimationPage.room4")}</option>
                     </select>
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-xs text-gris uppercase tracking-wider mb-2">
-                    Époque de construction *
+                    {t("estimationPage.epochLabel")}
                   </label>
                   <select
                     value={epoch}
                     onChange={(e) => setEpoch(e.target.value as Epoque)}
                     className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none"
                   >
-                    {Object.entries(EPOQUE_LABELS).map(([v, label]) => (
+                    {(Object.keys(EPOCH_T) as Epoque[]).map((v) => (
                       <option key={v} value={v}>
-                        {label}
+                        {EPOCH_T[v]}
                       </option>
                     ))}
                   </select>
@@ -442,13 +450,11 @@ export default function EstimationForm() {
                 }`}
                 style={{ borderRadius: 10 }}
               >
-                Obtenir mon estimation →
+                {t("estimationPage.getEstimate")}
               </button>
 
               <p className="text-xs text-gris mt-4 italic">
-                Calcul basé sur les barèmes officiels de l&apos;encadrement des loyers parisien 2025
-                (DRIHL, meublé) et sur les conditions corporate Move in Paris. Un conseiller validera
-                ces chiffres après visite.
+                {t("estimationPage.calcNote")}
               </p>
             </motion.div>
           )}
@@ -464,14 +470,13 @@ export default function EstimationForm() {
               style={{ borderRadius: 10 }}
             >
               <span className="text-gold text-xs tracking-[0.3em] uppercase">
-                Étape 2 / 3 — Quasiment fini !
+                {t("estimationPage.stepContactBadge")}
               </span>
               <h2 className="font-serif text-2xl md:text-3xl text-noir mt-2 mb-2">
-                Votre estimation est prête
+                {t("estimationPage.stepContactTitle")}
               </h2>
               <p className="text-gris text-sm mb-8">
-                Laissez-nous vos coordonnées pour découvrir le loyer auquel nous pouvons louer votre
-                appartement à nos clients corporate — et planifier une visite pour finaliser l&apos;estimation.
+                {t("estimationPage.stepContactIntro")}
               </p>
 
               {/* Recap */}
@@ -480,27 +485,29 @@ export default function EstimationForm() {
                 style={{ borderRadius: 10 }}
               >
                 <div className="text-[10px] uppercase tracking-[0.15em] text-gold mb-2">
-                  Votre bien
+                  {t("estimationPage.yourProperty")}
                 </div>
                 <div className="grid sm:grid-cols-2 gap-y-1 text-noir">
                   <div>
-                    <span className="text-gris">Quartier :</span> {zoneLabel || "—"}
+                    <span className="text-gris">{t("estimationPage.district")} :</span> {zoneLabel || "—"}
                   </div>
                   <div>
-                    <span className="text-gris">Surface :</span> {surface} m²
+                    <span className="text-gris">{t("estimationPage.surface")} :</span> {surface} m²
                   </div>
                   <div>
-                    <span className="text-gris">Pièces :</span>{" "}
+                    <span className="text-gris">{t("estimationPage.rooms")} :</span>{" "}
                     {rooms === "4"
-                      ? "4 pièces et plus"
+                      ? t("estimationPage.room4")
                       : rooms === "1"
-                      ? "Studio / 1 pièce"
-                      : rooms
-                      ? `${rooms} pièces`
+                      ? t("estimationPage.roomStudio")
+                      : rooms === "2"
+                      ? t("estimationPage.room2")
+                      : rooms === "3"
+                      ? t("estimationPage.room3")
                       : "—"}
                   </div>
                   <div>
-                    <span className="text-gris">Époque :</span> {EPOQUE_LABELS[epoch]}
+                    <span className="text-gris">{t("estimationPage.epoch")} :</span> {EPOCH_T[epoch]}
                   </div>
                 </div>
                 <button
@@ -508,7 +515,7 @@ export default function EstimationForm() {
                   onClick={() => setStep("property")}
                   className="mt-3 text-xs text-gold hover:text-gold-dark underline"
                 >
-                  Modifier
+                  {t("estimationPage.modify")}
                 </button>
               </div>
 
@@ -516,7 +523,7 @@ export default function EstimationForm() {
                 <div className="grid sm:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-xs text-gris uppercase tracking-wider mb-2">
-                      Civilité
+                      {t("estimationPage.civility")}
                     </label>
                     <select
                       value={civilite}
@@ -524,13 +531,13 @@ export default function EstimationForm() {
                       className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none"
                     >
                       <option value="">—</option>
-                      <option value="M.">Monsieur</option>
-                      <option value="Mme">Madame</option>
+                      <option value="M.">{t("estimationPage.mr")}</option>
+                      <option value="Mme">{t("estimationPage.mrs")}</option>
                     </select>
                   </div>
                   <div>
                     <label className="block text-xs text-gris uppercase tracking-wider mb-2">
-                      Prénom *
+                      {t("estimationPage.firstName")}
                     </label>
                     <input
                       required
@@ -542,7 +549,7 @@ export default function EstimationForm() {
                   </div>
                   <div>
                     <label className="block text-xs text-gris uppercase tracking-wider mb-2">
-                      Nom *
+                      {t("estimationPage.lastName")}
                     </label>
                     <input
                       required
@@ -557,7 +564,7 @@ export default function EstimationForm() {
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs text-gris uppercase tracking-wider mb-2">
-                      Email *
+                      {t("estimationPage.email")}
                     </label>
                     <input
                       required
@@ -569,7 +576,7 @@ export default function EstimationForm() {
                   </div>
                   <div>
                     <label className="block text-xs text-gris uppercase tracking-wider mb-2">
-                      Téléphone *
+                      {t("estimationPage.phone")}
                     </label>
                     <input
                       required
@@ -588,11 +595,7 @@ export default function EstimationForm() {
                     onChange={(e) => setConsent(e.target.checked)}
                     className="mt-1 accent-[#B88B58]"
                   />
-                  <span>
-                    J&apos;accepte d&apos;être contacté par Move in Paris au sujet de mon estimation
-                    et j&apos;accepte la politique de confidentialité (RGPD). Vos données ne sont
-                    transmises à aucun tiers.
-                  </span>
+                  <span>{t("estimationPage.consent")}</span>
                 </label>
 
                 {errorMsg && (
@@ -609,7 +612,7 @@ export default function EstimationForm() {
                   }`}
                   style={{ borderRadius: 10 }}
                 >
-                  {submitting ? "Envoi…" : "Découvrir mon estimation →"}
+                  {submitting ? t("estimationPage.sending") : t("estimationPage.revealEstimate")}
                 </button>
               </form>
             </motion.div>
@@ -635,14 +638,13 @@ export default function EstimationForm() {
               />
               <div className="relative">
                 <span className="text-gold text-xs tracking-[0.3em] uppercase">
-                  Votre estimation Move in Paris
+                  {t("estimationPage.resultBadge")}
                 </span>
                 <h2 className="font-serif text-3xl md:text-4xl text-blanc mt-3 mb-2">
-                  Merci {prenom} !
+                  {t("estimationPage.resultThanks")} {prenom} !
                 </h2>
                 <p className="text-blanc/60 text-sm mb-10">
-                  Voici le loyer auquel nous pouvons louer votre appartement à nos clients corporate
-                  ({surface} m², {zoneLabel}).
+                  {t("estimationPage.resultIntro")} ({surface} m², {zoneLabel}).
                 </p>
 
                 <div
@@ -650,7 +652,7 @@ export default function EstimationForm() {
                   style={{ borderRadius: 10 }}
                 >
                   <div className="text-[10px] uppercase tracking-[0.15em] text-gold mb-2">
-                    Fourchette de loyer mensuel (hors charges)
+                    {t("estimationPage.rangeLabel")}
                   </div>
                   <div className="font-serif text-4xl md:text-5xl text-gold font-bold leading-tight">
                     {formatEuro(computation.loyerMIPMin)} €
@@ -658,11 +660,11 @@ export default function EstimationForm() {
                     {formatEuro(computation.loyerMIPMax)} €
                   </div>
                   <div className="text-blanc/70 text-sm mt-3">
-                    soit environ{" "}
-                    {formatEuro(Math.round(computation.loyerMIPMin / parseFloat(surface)))} €/m²
-                    à{" "}
-                    {formatEuro(Math.round(computation.loyerMIPMax / parseFloat(surface)))} €/m² —
-                    hors charges et utilities
+                    {t("estimationPage.roughly")}{" "}
+                    {formatEuro(Math.round(computation.loyerMIPMin / parseFloat(surface)))} €/m²{" "}
+                    {t("estimationPage.to")}{" "}
+                    {formatEuro(Math.round(computation.loyerMIPMax / parseFloat(surface)))} €/m² —{" "}
+                    {t("estimationPage.exclCharges")}
                   </div>
                 </div>
 
@@ -672,13 +674,13 @@ export default function EstimationForm() {
                     style={{ borderRadius: 10 }}
                   >
                     <div className="text-[10px] uppercase tracking-[0.15em] text-blanc/40 mb-2">
-                      Encadrement Paris (loyer majoré)
+                      {t("estimationPage.parisEncadrement")}
                     </div>
                     <div className="font-serif text-2xl text-blanc">
                       {formatEuro(computation.loyerMajore)} €
                     </div>
                     <div className="text-blanc/40 text-xs mt-1">
-                      {computation.pricePerM2} €/m² majoré
+                      {computation.pricePerM2} €/m² {t("estimationPage.perM2Raised")}
                     </div>
                   </div>
                   <div
@@ -686,13 +688,13 @@ export default function EstimationForm() {
                     style={{ borderRadius: 10 }}
                   >
                     <div className="text-[10px] uppercase tracking-[0.15em] text-gold mb-2">
-                      Marge corporate Move in Paris
+                      {t("estimationPage.mipBonus")}
                     </div>
                     <div className="font-serif text-2xl text-gold">
                       + {formatEuro(computation.bonusMin)} € à + {formatEuro(computation.bonusMax)} €
                     </div>
                     <div className="text-blanc/40 text-xs mt-1">
-                      soit +25 % à +36 % grâce à notre clientèle corporate
+                      {t("estimationPage.mipBonusNote")}
                     </div>
                   </div>
                 </div>
@@ -701,12 +703,9 @@ export default function EstimationForm() {
                   className="p-5 bg-blanc/5 text-sm text-blanc/70 leading-relaxed mb-8"
                   style={{ borderRadius: 10 }}
                 >
-                  <div className="text-blanc font-medium mb-1">Et ce n&apos;est pas tout :</div>
-                  Ce loyer est exprimé <strong className="text-gold">hors charges et hors utilities</strong>,
-                  comme le loyer de l&apos;encadrement. Service Move in Paris 100 % gratuit —{" "}
-                  <strong>aucun frais de gestion</strong>, aucune commission. Les charges et utilities
-                  (électricité, gaz, internet, charges d&apos;immeuble, entretien chaudière, TEOM) sont
-                  refacturées en sus à la charge du locataire corporate.
+                  <div className="text-blanc font-medium mb-1">{t("estimationPage.andMore")}</div>
+                  {t("estimationPage.rentExpressed")} <strong className="text-gold">{t("estimationPage.exclChargesUtilities")}</strong>{t("estimationPage.rentDetail")}{" "}
+                  <strong>{t("estimationPage.noManagementFees")}</strong>{t("estimationPage.rentDetail2")}
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4">
@@ -715,22 +714,19 @@ export default function EstimationForm() {
                     className="flex-1 text-center py-4 bg-gold text-noir-deep font-medium tracking-wider uppercase text-sm hover:bg-gold-light transition-all"
                     style={{ borderRadius: 10 }}
                   >
-                    Confier mon bien à Move in Paris →
+                    {t("estimationPage.entrustProperty")}
                   </Link>
                   <Link
                     href="/contact"
                     className="flex-1 text-center py-4 border border-blanc/30 text-blanc font-medium tracking-wider uppercase text-sm hover:border-gold hover:text-gold transition-all"
                     style={{ borderRadius: 10 }}
                   >
-                    Parler à un conseiller
+                    {t("estimationPage.speakToAdvisor")}
                   </Link>
                 </div>
 
                 <p className="mt-8 text-xs text-blanc/40 italic">
-                  Estimation indicative basée sur les barèmes officiels de l&apos;encadrement des
-                  loyers parisien 2025 (DRIHL, meublé). Un conseiller Move in Paris vous contactera
-                  sous 24h pour valider ces chiffres après visite du bien. Les valeurs peuvent varier
-                  selon l&apos;état, la vue, l&apos;étage et les équipements.
+                  {t("estimationPage.resultDisclaimer")}
                 </p>
               </div>
             </motion.div>
