@@ -73,9 +73,8 @@ export default function AdminPage() {
   const [allFeatures, setAllFeatures] = useState(EQUIPMENT_OPTIONS);
   const [photos, setPhotos] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
-  const [nearbyRows, setNearbyRows] = useState([
-    { type: "Métro", name: "", distance: "" },
-  ]);
+  const [nearbyRows, setNearbyRows] = useState<{ type: string; name: string; distance: string }[]>([]);
+  const [nearbyLoading, setNearbyLoading] = useState(false);
 
   const slug = title
     .toLowerCase()
@@ -84,6 +83,20 @@ export default function AdminPage() {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "")
     + (district ? "-" + district.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") : "");
+
+  // Auto-fetch nearby places when address changes
+  async function fetchNearby(address: string) {
+    if (address.length < 10) return;
+    setNearbyLoading(true);
+    try {
+      const res = await fetch(`/api/nearby?address=${encodeURIComponent(address)}`);
+      const data = await res.json();
+      if (data.places && data.places.length > 0) {
+        setNearbyRows(data.places);
+      }
+    } catch { /* ignore */ }
+    setNearbyLoading(false);
+  }
 
   function handleFullAddress(value: string) {
     setFullAddress(value);
@@ -243,10 +256,12 @@ export default function AdminPage() {
 
           <div className="mb-4">
             <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-2">Adresse complète (avec numéro) *</label>
-            <input type="text" required value={fullAddress} onChange={(e) => handleFullAddress(e.target.value)}
+            <input type="text" required value={fullAddress}
+              onChange={(e) => handleFullAddress(e.target.value)}
+              onBlur={() => fetchNearby(fullAddress)}
               placeholder="12 rue Pergolèse, Paris 16e"
               className="w-full px-4 py-3 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
-            <p className="text-xs text-[#6B6B6B] mt-1">Le numéro ne sera pas affiché sur le site, uniquement utilisé pour la carte Google Maps.</p>
+            <p className="text-xs text-[#6B6B6B] mt-1">Le numéro ne sera pas affiché sur le site. Les métros et commerces à proximité seront détectés automatiquement.</p>
           </div>
 
           <div className="grid sm:grid-cols-3 gap-4 mb-4">
@@ -399,7 +414,12 @@ export default function AdminPage() {
 
         {/* À proximité */}
         <div className="bg-white border border-[#E8E4DF] p-8 mb-6">
-          <h2 className="font-serif text-2xl text-[#1A1A1A] mb-6">À proximité</h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="font-serif text-2xl text-[#1A1A1A]">À proximité</h2>
+            {nearbyLoading && <span className="text-sm text-[#B88B58] animate-pulse">Recherche en cours...</span>}
+            {!nearbyLoading && nearbyRows.length > 0 && <span className="text-xs text-green-600">✓ {nearbyRows.length} lieu(x) trouvé(s) automatiquement</span>}
+            {!nearbyLoading && nearbyRows.length === 0 && <button type="button" onClick={() => fetchNearby(fullAddress)} className="text-xs text-[#B88B58] hover:text-[#9A7345]">Rechercher automatiquement</button>}
+          </div>
           {nearbyRows.map((row, i) => (
             <div key={i} className="grid grid-cols-[120px_1fr_100px_40px] gap-3 mb-3">
               <select value={row.type} onChange={(e) => updateNearby(i, "type", e.target.value)}
