@@ -25,7 +25,7 @@ export default function EstimationPage() {
       <main>
         <PageHero
           title="Estimation de votre loyer"
-          subtitle="En 30 secondes, découvrez le loyer mensuel que Move in Paris peut vous garantir — basé sur l'encadrement des loyers parisien et notre marge corporate."
+          subtitle="En 30 secondes, découvrez le loyer auquel Move in Paris peut louer votre appartement à ses clients corporate — basé sur les barèmes officiels de l'encadrement des loyers parisien 2025."
           breadcrumb="Estimation"
         />
         <EstimationForm />

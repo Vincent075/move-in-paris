@@ -141,7 +141,7 @@ function propositionEmail(fields: Record<string, string>) {
         <p style="font-size:11px;color:#c8a84b;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;">Move In Paris</p>
         <p style="font-size:28px;font-weight:700;color:#fff;margin:0;">${formatEuro(loyerMIP)} €</p>
         <p style="font-size:12px;color:#aaa;margin:4px 0 0;">/ mois, charges comprises</p>
-        <p style="font-size:11px;color:#888;margin:8px 0 0;">Service 100 % gratuit<br/>Zéro frais, zéro impayé</p>
+        <p style="font-size:11px;color:#888;margin:8px 0 0;">Service 100 % gratuit<br/>Zéro frais de gestion</p>
       </td>
     </tr></table>
 
@@ -173,8 +173,8 @@ function propositionEmail(fields: Record<string, string>) {
       <tr><td style="padding:5px 0;"><span style="color:#c8a84b;margin-right:8px;">&#9670;</span><strong style="color:#111;">Gestion opérationnelle complète</strong> — entrées/sorties, comptabilité, reporting trimestriel</td></tr>
       <tr><td style="padding:5px 0;"><span style="color:#c8a84b;margin-right:8px;">&#9670;</span><strong style="color:#111;">Ménage hebdomadaire</strong> — personnel qualifié et salarié</td></tr>
       <tr><td style="padding:5px 0;"><span style="color:#c8a84b;margin-right:8px;">&#9670;</span><strong style="color:#111;">Assistance technique 7j/7</strong> — chaque problème traité immédiatement</td></tr>
-      <tr><td style="padding:5px 0;"><span style="color:#c8a84b;margin-right:8px;">&#9670;</span><strong style="color:#111;">Clientèle corporate premium</strong> — L'Oréal, LVMH, AXA, Sanofi, Goldman Sachs… loyers garantis par l'employeur</td></tr>
-      <tr><td style="padding:5px 0;"><span style="color:#c8a84b;margin-right:8px;">&#9670;</span><strong style="color:#111;">Taux d'occupation +95 %</strong> — revenu stable, zéro impayé</td></tr>
+      <tr><td style="padding:5px 0;"><span style="color:#c8a84b;margin-right:8px;">&#9670;</span><strong style="color:#111;">Clientèle corporate premium</strong> — L'Oréal, LVMH, AXA, Sanofi, Goldman Sachs… loyers pris en charge par l'employeur</td></tr>
+      <tr><td style="padding:5px 0;"><span style="color:#c8a84b;margin-right:8px;">&#9670;</span><strong style="color:#111;">Taux d'occupation +95 %</strong> — revenu stable, zéro impayé sur les périodes d'occupation</td></tr>
     </table>
   </td></tr>
 

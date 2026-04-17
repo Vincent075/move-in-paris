@@ -3,8 +3,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import rentTable from "@/data/encadrement/rent-table.json";
 
 type BanFeature = {
+  geometry?: { type: "Point"; coordinates: [number, number] };
   properties: {
     label: string;
     postcode?: string;
@@ -12,75 +14,52 @@ type BanFeature = {
     citycode?: string;
     context?: string;
     name?: string;
+    x?: number;
+    y?: number;
   };
 };
 
-function mapPostcodeToZone(postcode?: string, city?: string): string | null {
-  if (!postcode) return null;
-  if (postcode === "75116") return "Paris 16e";
-  if (/^7500[1-9]$/.test(postcode)) return `Paris ${parseInt(postcode.slice(3), 10)}er`.replace("Paris 1er", "Paris 1er");
-  if (/^750(0[1-9]|1\d|20)$/.test(postcode)) {
-    const n = parseInt(postcode.slice(3), 10);
-    return n === 1 ? "Paris 1er" : `Paris ${n}e`;
-  }
-  if (postcode === "92200") return "Neuilly-sur-Seine";
-  if (postcode === "92300") return "Levallois-Perret";
-  if (postcode === "92100") return "Boulogne-Billancourt";
-  // fallback via city name
-  if (city) {
-    const c = city.toLowerCase();
-    if (c.includes("neuilly")) return "Neuilly-sur-Seine";
-    if (c.includes("levallois")) return "Levallois-Perret";
-    if (c.includes("boulogne-billancourt")) return "Boulogne-Billancourt";
-  }
-  return null;
-}
+type Quartier = { id: number; nom: string };
+
+type Pieces = "1" | "2" | "3" | "4";
+type Epoque = "Avant 1946" | "1946-1970" | "1971-1990" | "Apres 1990";
+
+const EPOQUE_LABELS: Record<Epoque, string> = {
+  "Avant 1946": "Avant 1946",
+  "1946-1970": "1946 – 1970",
+  "1971-1990": "1971 – 1990",
+  "Apres 1990": "Après 1990",
+};
 
 /**
- * Approximation loyer majoré MEUBLÉ €/m² — Paris & proche banlieue ouest 2025.
- * Valeurs médianes par zone et par catégorie de pièces.
- * Basé sur les barèmes DRIHL Île-de-France (arrondis au plus favorable).
- * Pour un calcul officiel : referenceloyer.drihl.ile-de-france.developpement-durable.gouv.fr
+ * Fallback €/m² pour les communes hors encadrement parisien
+ * (Neuilly, Levallois, Boulogne — non couverts par l'encadrement des loyers).
+ * Valeurs indicatives basées sur le marché meublé corporate constaté.
  */
-const LOYER_MAJORE: Record<string, { [k in "1" | "2" | "3" | "4+"]: number }> = {
-  "Paris 1er":   { "1": 42, "2": 38, "3": 35, "4+": 32 },
-  "Paris 2e":    { "1": 42, "2": 38, "3": 35, "4+": 32 },
-  "Paris 3e":    { "1": 40, "2": 36, "3": 33, "4+": 30 },
-  "Paris 4e":    { "1": 42, "2": 38, "3": 35, "4+": 32 },
-  "Paris 5e":    { "1": 40, "2": 36, "3": 33, "4+": 30 },
-  "Paris 6e":    { "1": 41, "2": 37, "3": 34, "4+": 31 },
-  "Paris 7e":    { "1": 41, "2": 37, "3": 34, "4+": 31 },
-  "Paris 8e":    { "1": 40, "2": 36, "3": 33, "4+": 30 },
-  "Paris 9e":    { "1": 38, "2": 34, "3": 31, "4+": 28 },
-  "Paris 10e":   { "1": 35, "2": 31, "3": 28, "4+": 25 },
-  "Paris 11e":   { "1": 35, "2": 31, "3": 28, "4+": 25 },
-  "Paris 12e":   { "1": 33, "2": 29, "3": 26, "4+": 24 },
-  "Paris 13e":   { "1": 31, "2": 27, "3": 24, "4+": 22 },
-  "Paris 14e":   { "1": 33, "2": 29, "3": 26, "4+": 24 },
-  "Paris 15e":   { "1": 33, "2": 29, "3": 26, "4+": 24 },
-  "Paris 16e":   { "1": 38, "2": 34, "3": 31, "4+": 28 },
-  "Paris 17e":   { "1": 36, "2": 32, "3": 29, "4+": 26 },
-  "Paris 18e":   { "1": 33, "2": 29, "3": 26, "4+": 24 },
-  "Paris 19e":   { "1": 30, "2": 26, "3": 23, "4+": 21 },
-  "Paris 20e":   { "1": 30, "2": 26, "3": 23, "4+": 21 },
-  "Neuilly-sur-Seine": { "1": 35, "2": 31, "3": 28, "4+": 25 },
-  "Levallois-Perret":  { "1": 33, "2": 29, "3": 26, "4+": 24 },
-  "Boulogne-Billancourt": { "1": 32, "2": 28, "3": 25, "4+": 23 },
+const FALLBACK_PER_M2: Record<string, { 1: number; 2: number; 3: number; 4: number }> = {
+  "Neuilly-sur-Seine": { 1: 38, 2: 34, 3: 30, 4: 28 },
+  "Levallois-Perret": { 1: 34, 2: 30, 3: 27, 4: 25 },
+  "Boulogne-Billancourt": { 1: 33, 2: 29, 3: 26, 4: 24 },
 };
 
-const EPOCH_MULTIPLIER: Record<string, number> = {
-  "avant-1946": 1.05,
-  "1946-1970": 0.95,
-  "1971-1990": 0.98,
-  "apres-1990": 1.0,
-};
-
-const MOVE_IN_PARIS_PREMIUM = 1.35; // +35 % sur le loyer majoré
+const MOVE_IN_PARIS_PREMIUM = 1.35;
 
 function formatEuro(value: number) {
-  return value.toLocaleString("fr-FR", {
-    maximumFractionDigits: 0,
-  });
+  return value.toLocaleString("fr-FR", { maximumFractionDigits: 0 });
+}
+
+function isParisPostcode(postcode?: string): boolean {
+  if (!postcode) return false;
+  return /^75[0-9]{3}$/.test(postcode);
+}
+
+function matchFallbackCity(city?: string, postcode?: string): string | null {
+  const c = (city || "").toLowerCase();
+  if (postcode === "92200" || c.includes("neuilly")) return "Neuilly-sur-Seine";
+  if (postcode === "92300" || c.includes("levallois")) return "Levallois-Perret";
+  if (postcode === "92100" || c.includes("boulogne-billancourt"))
+    return "Boulogne-Billancourt";
+  return null;
 }
 
 type Step = "property" | "contact" | "result";
@@ -90,11 +69,26 @@ export default function EstimationForm() {
   const [submitting, setSubmitting] = useState(false);
 
   // Property fields
-  const [zone, setZone] = useState<string>("");
-  const [rooms, setRooms] = useState<"1" | "2" | "3" | "4+" | "">("");
-  const [surface, setSurface] = useState("");
-  const [epoch, setEpoch] = useState<string>("apres-1990");
   const [address, setAddress] = useState("");
+  const [latLon, setLatLon] = useState<[number, number] | null>(null);
+  const [postcode, setPostcode] = useState<string | null>(null);
+  const [city, setCity] = useState<string | null>(null);
+  const [quartier, setQuartier] = useState<Quartier | null>(null);
+  const [fallbackCity, setFallbackCity] = useState<string | null>(null);
+  const [resolving, setResolving] = useState(false);
+
+  const [rooms, setRooms] = useState<Pieces | "">("");
+  const [surface, setSurface] = useState("");
+  const [epoch, setEpoch] = useState<Epoque>("Apres 1990");
+
+  // Contact fields
+  const [civilite, setCivilite] = useState("");
+  const [prenom, setPrenom] = useState("");
+  const [nom, setNom] = useState("");
+  const [email, setEmail] = useState("");
+  const [telephone, setTelephone] = useState("");
+  const [consent, setConsent] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   // Address autocomplete
   const [suggestions, setSuggestions] = useState<BanFeature[]>([]);
@@ -115,6 +109,11 @@ export default function EstimationForm() {
 
   function handleAddressInput(value: string) {
     setAddress(value);
+    setQuartier(null);
+    setLatLon(null);
+    setPostcode(null);
+    setCity(null);
+    setFallbackCity(null);
     if (debounceRef.current) clearTimeout(debounceRef.current);
     if (value.trim().length < 3) {
       setSuggestions([]);
@@ -137,44 +136,80 @@ export default function EstimationForm() {
     }, 220);
   }
 
-  function pickSuggestion(f: BanFeature) {
+  async function pickSuggestion(f: BanFeature) {
     const p = f.properties;
     setAddress(p.label);
-    const detected = mapPostcodeToZone(p.postcode, p.city);
-    if (detected && LOYER_MAJORE[detected]) {
-      setZone(detected);
-    }
     setSuggestOpen(false);
     setSuggestions([]);
+
+    const coords = f.geometry?.coordinates;
+    if (coords) {
+      const [lon, lat] = coords;
+      setLatLon([lat, lon]);
+    }
+    setPostcode(p.postcode || null);
+    setCity(p.city || null);
+
+    // Try Paris quartier lookup
+    if (isParisPostcode(p.postcode) && coords) {
+      const [lon, lat] = coords;
+      setResolving(true);
+      try {
+        const res = await fetch(`/api/quartier?lat=${lat}&lon=${lon}`);
+        const data = await res.json();
+        if (data.quartier) {
+          setQuartier(data.quartier);
+          setFallbackCity(null);
+        }
+      } catch { /* ignore */ }
+      setResolving(false);
+      return;
+    }
+
+    // Fallback for non-Paris communes we support
+    const fb = matchFallbackCity(p.city, p.postcode);
+    if (fb) {
+      setFallbackCity(fb);
+      setQuartier(null);
+    }
   }
 
-  // Contact fields
-  const [civilite, setCivilite] = useState("");
-  const [prenom, setPrenom] = useState("");
-  const [nom, setNom] = useState("");
-  const [email, setEmail] = useState("");
-  const [telephone, setTelephone] = useState("");
-  const [consent, setConsent] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-
   const computation = useMemo(() => {
-    if (!zone || !rooms || !surface) return null;
+    if (!rooms || !surface) return null;
     const s = parseFloat(surface);
     if (!s || s <= 0) return null;
-    const table = LOYER_MAJORE[zone];
-    if (!table) return null;
-    const basePerM2 = table[rooms] * (EPOCH_MULTIPLIER[epoch] ?? 1);
-    const loyerMajore = Math.round(basePerM2 * s);
+
+    let pricePerM2: number | null = null;
+
+    if (quartier) {
+      const key = `${quartier.id}|${rooms}|${epoch}`;
+      const entry = (rentTable as Record<string, { max: number; ref: number; min: number }>)[key];
+      if (entry) pricePerM2 = entry.max;
+    } else if (fallbackCity) {
+      const t = FALLBACK_PER_M2[fallbackCity];
+      if (t) pricePerM2 = t[parseInt(rooms, 10) as 1 | 2 | 3 | 4] ?? t[4];
+    }
+
+    if (pricePerM2 == null) return null;
+
+    const loyerMajore = Math.round(pricePerM2 * s);
     const loyerMoveInParis = Math.round(loyerMajore * MOVE_IN_PARIS_PREMIUM);
     return {
-      pricePerM2: Math.round(basePerM2),
+      pricePerM2: Math.round(pricePerM2 * 100) / 100,
       loyerMajore,
       loyerMoveInParis,
       bonus: loyerMoveInParis - loyerMajore,
     };
-  }, [zone, rooms, surface, epoch]);
+  }, [quartier, fallbackCity, rooms, surface, epoch]);
 
-  const canContinue = !!zone && !!rooms && !!surface && !!computation;
+  const zoneLabel = quartier
+    ? `${quartier.nom} (Paris${postcode ? " — " + postcode : ""})`
+    : fallbackCity
+    ? fallbackCity
+    : null;
+
+  const addressValid = !!quartier || !!fallbackCity;
+  const canContinue = addressValid && !!rooms && !!surface && !!computation;
 
   async function handleSubmitContact(e: React.FormEvent) {
     e.preventDefault();
@@ -196,7 +231,8 @@ export default function EstimationForm() {
           email,
           telephone,
           adresse: address,
-          zone,
+          zone: zoneLabel || "",
+          quartier: quartier?.nom || "",
           pieces: rooms,
           surface,
           epoch,
@@ -269,7 +305,7 @@ export default function EstimationForm() {
               <div className="space-y-5">
                 <div ref={wrapperRef} className="relative">
                   <label className="block text-xs text-gris uppercase tracking-wider mb-2">
-                    Adresse du bien
+                    Adresse du bien *
                   </label>
                   <input
                     type="text"
@@ -292,8 +328,6 @@ export default function EstimationForm() {
                       )}
                       {suggestions.map((f, i) => {
                         const p = f.properties;
-                        const detected = mapPostcodeToZone(p.postcode, p.city);
-                        const supported = detected && LOYER_MAJORE[detected];
                         return (
                           <button
                             type="button"
@@ -302,41 +336,41 @@ export default function EstimationForm() {
                             className="w-full text-left px-4 py-3 text-sm hover:bg-blanc-chaud transition-colors border-b border-gris-clair/30 last:border-b-0"
                           >
                             <div className="text-noir">{p.label}</div>
-                            <div className="text-xs text-gris mt-0.5 flex items-center gap-2">
-                              <span>{p.postcode} {p.city}</span>
-                              {supported && (
-                                <span className="text-gold text-[10px] uppercase tracking-wider">
-                                  • Zone détectée : {detected}
-                                </span>
-                              )}
+                            <div className="text-xs text-gris mt-0.5">
+                              {p.postcode} {p.city}
                             </div>
                           </button>
                         );
                       })}
                     </div>
                   )}
-                  <p className="text-xs text-gris mt-1.5 italic">
-                    Sélectionnez une suggestion : la zone se remplit automatiquement.
-                  </p>
-                </div>
 
-                <div>
-                  <label className="block text-xs text-gris uppercase tracking-wider mb-2">
-                    Zone / arrondissement *
-                  </label>
-                  <select
-                    required
-                    value={zone}
-                    onChange={(e) => setZone(e.target.value)}
-                    className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none"
-                  >
-                    <option value="">Sélectionnez votre zone</option>
-                    {Object.keys(LOYER_MAJORE).map((z) => (
-                      <option key={z} value={z}>
-                        {z}
-                      </option>
-                    ))}
-                  </select>
+                  {/* Status line */}
+                  <div className="text-xs mt-2 min-h-[1.25em]">
+                    {resolving && (
+                      <span className="text-gris italic">Identification du quartier…</span>
+                    )}
+                    {!resolving && quartier && (
+                      <span className="text-gold">
+                        ✓ Quartier détecté : <strong>{quartier.nom}</strong> — Paris {postcode}
+                      </span>
+                    )}
+                    {!resolving && !quartier && fallbackCity && (
+                      <span className="text-gold">
+                        ✓ Zone : <strong>{fallbackCity}</strong>
+                      </span>
+                    )}
+                    {!resolving && !quartier && !fallbackCity && address.length > 3 && !suggestOpen && (
+                      <span className="text-gris italic">
+                        Sélectionnez une suggestion ci-dessus pour détecter automatiquement le quartier.
+                      </span>
+                    )}
+                    {!resolving && !quartier && !fallbackCity && !address && (
+                      <span className="text-gris italic">
+                        Sélectionnez une suggestion : le quartier se remplit automatiquement.
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-5">
@@ -362,31 +396,32 @@ export default function EstimationForm() {
                     <select
                       required
                       value={rooms}
-                      onChange={(e) => setRooms(e.target.value as "1" | "2" | "3" | "4+" | "")}
+                      onChange={(e) => setRooms(e.target.value as Pieces | "")}
                       className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none"
                     >
                       <option value="">Sélectionnez</option>
                       <option value="1">Studio / 1 pièce</option>
                       <option value="2">2 pièces</option>
                       <option value="3">3 pièces</option>
-                      <option value="4+">4 pièces et plus</option>
+                      <option value="4">4 pièces et plus</option>
                     </select>
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-xs text-gris uppercase tracking-wider mb-2">
-                    Époque de construction
+                    Époque de construction *
                   </label>
                   <select
                     value={epoch}
-                    onChange={(e) => setEpoch(e.target.value)}
+                    onChange={(e) => setEpoch(e.target.value as Epoque)}
                     className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none"
                   >
-                    <option value="avant-1946">Avant 1946</option>
-                    <option value="1946-1970">1946 – 1970</option>
-                    <option value="1971-1990">1971 – 1990</option>
-                    <option value="apres-1990">Après 1990</option>
+                    {Object.entries(EPOQUE_LABELS).map(([v, label]) => (
+                      <option key={v} value={v}>
+                        {label}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -406,8 +441,9 @@ export default function EstimationForm() {
               </button>
 
               <p className="text-xs text-gris mt-4 italic">
-                Estimation indicative basée sur les barèmes DRIHL Paris 2025 et la marge corporate Move in Paris.
-                Un conseiller validera ces chiffres après visite du bien.
+                Calcul basé sur les barèmes officiels de l&apos;encadrement des loyers parisien 2025
+                (DRIHL, meublé) et sur les conditions corporate Move in Paris. Un conseiller validera
+                ces chiffres après visite.
               </p>
             </motion.div>
           )}
@@ -429,8 +465,8 @@ export default function EstimationForm() {
                 Votre estimation est prête
               </h2>
               <p className="text-gris text-sm mb-8">
-                Laissez-nous vos coordonnées pour découvrir le loyer que Move in Paris peut vous garantir —
-                et planifier une visite pour finaliser l&apos;estimation.
+                Laissez-nous vos coordonnées pour découvrir le loyer auquel nous pouvons louer votre
+                appartement à nos clients corporate — et planifier une visite pour finaliser l&apos;estimation.
               </p>
 
               {/* Recap */}
@@ -443,18 +479,23 @@ export default function EstimationForm() {
                 </div>
                 <div className="grid sm:grid-cols-2 gap-y-1 text-noir">
                   <div>
-                    <span className="text-gris">Zone :</span> {zone || "—"}
+                    <span className="text-gris">Quartier :</span> {zoneLabel || "—"}
                   </div>
                   <div>
                     <span className="text-gris">Surface :</span> {surface} m²
                   </div>
                   <div>
                     <span className="text-gris">Pièces :</span>{" "}
-                    {rooms === "4+" ? "4 pièces et plus" : rooms === "1" ? "Studio / 1 pièce" : `${rooms} pièces`}
+                    {rooms === "4"
+                      ? "4 pièces et plus"
+                      : rooms === "1"
+                      ? "Studio / 1 pièce"
+                      : rooms
+                      ? `${rooms} pièces`
+                      : "—"}
                   </div>
                   <div>
-                    <span className="text-gris">Époque :</span>{" "}
-                    {epoch === "avant-1946" ? "Avant 1946" : epoch === "1946-1970" ? "1946-1970" : epoch === "1971-1990" ? "1971-1990" : "Après 1990"}
+                    <span className="text-gris">Époque :</span> {EPOQUE_LABELS[epoch]}
                   </div>
                 </div>
                 <button
@@ -543,8 +584,9 @@ export default function EstimationForm() {
                     className="mt-1 accent-[#B88B58]"
                   />
                   <span>
-                    J&apos;accepte d&apos;être contacté par Move in Paris au sujet de mon estimation et j&apos;accepte la
-                    politique de confidentialité (RGPD). Vos données ne sont transmises à aucun tiers.
+                    J&apos;accepte d&apos;être contacté par Move in Paris au sujet de mon estimation
+                    et j&apos;accepte la politique de confidentialité (RGPD). Vos données ne sont
+                    transmises à aucun tiers.
                   </span>
                 </label>
 
@@ -594,7 +636,8 @@ export default function EstimationForm() {
                   Merci {prenom} !
                 </h2>
                 <p className="text-blanc/60 text-sm mb-10">
-                  Voici ce que Move in Paris peut vous garantir pour votre bien ({surface} m², {zone}).
+                  Voici le loyer auquel nous pouvons louer votre appartement à nos clients corporate
+                  ({surface} m², {zoneLabel}).
                 </p>
 
                 <div
@@ -608,7 +651,8 @@ export default function EstimationForm() {
                     {formatEuro(computation.loyerMoveInParis)} €
                   </div>
                   <div className="text-blanc/70 text-sm mt-2">
-                    soit environ {formatEuro(Math.round(computation.loyerMoveInParis / parseFloat(surface)))} €/m² — tout compris
+                    soit environ{" "}
+                    {formatEuro(Math.round(computation.loyerMoveInParis / parseFloat(surface)))} €/m² — tout compris
                   </div>
                 </div>
 
@@ -624,7 +668,7 @@ export default function EstimationForm() {
                       {formatEuro(computation.loyerMajore)} €
                     </div>
                     <div className="text-blanc/40 text-xs mt-1">
-                      {formatEuro(computation.pricePerM2)} €/m² majoré
+                      {computation.pricePerM2} €/m² majoré
                     </div>
                   </div>
                   <div
@@ -648,9 +692,10 @@ export default function EstimationForm() {
                   style={{ borderRadius: 10 }}
                 >
                   <div className="text-blanc font-medium mb-1">Et ce n&apos;est pas tout :</div>
-                  Ce loyer est <strong className="text-gold">entièrement net pour vous</strong>. Service Move in Paris
-                  100 % gratuit — <strong>aucun frais de gestion</strong>, aucune commission. Le loyer inclut également
-                  l&apos;ensemble des charges : électricité, gaz, internet, charges d&apos;immeuble, entretien chaudière, TEOM.
+                  Ce loyer est <strong className="text-gold">entièrement net pour vous</strong>.
+                  Service Move in Paris 100 % gratuit — <strong>aucun frais de gestion</strong>,
+                  aucune commission. Le loyer inclut également l&apos;ensemble des charges :
+                  électricité, gaz, internet, charges d&apos;immeuble, entretien chaudière, TEOM.
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4">
@@ -671,9 +716,10 @@ export default function EstimationForm() {
                 </div>
 
                 <p className="mt-8 text-xs text-blanc/40 italic">
-                  Estimation indicative basée sur les barèmes Paris 2025. Un conseiller Move in Paris vous contactera
-                  sous 24h pour valider ces chiffres après visite du bien. Les valeurs peuvent varier selon l&apos;état,
-                  la vue, l&apos;étage et les équipements.
+                  Estimation indicative basée sur les barèmes officiels de l&apos;encadrement des
+                  loyers parisien 2025 (DRIHL, meublé). Un conseiller Move in Paris vous contactera
+                  sous 24h pour valider ces chiffres après visite du bien. Les valeurs peuvent varier
+                  selon l&apos;état, la vue, l&apos;étage et les équipements.
                 </p>
               </div>
             </motion.div>
