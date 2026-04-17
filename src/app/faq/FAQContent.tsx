@@ -40,8 +40,32 @@ const faqs = [
         a: "Move in Paris réalise un état des lieux photographique complet entre chaque occupant, incluant l'inventaire détaillé du mobilier et des équipements. Cette documentation sert de référence contractuelle. En cas de dégradation constatée, nous gérons directement l'évaluation des coûts et la facturation à l'entreprise cliente — vous n'avez rien à faire.",
       },
       {
-        q: "Quel est le régime fiscal applicable ?",
-        a: "La location meublée relève du statut LMNP (Loueur en Meublé Non Professionnel), avec deux options : micro-BIC (abattement forfaitaire de 50 % jusqu'à 77 700 € de recettes) ou régime réel simplifié (déduction des charges réelles + amortissement du bien, très avantageux à Paris). Nous orientons nos propriétaires partenaires vers des experts-comptables spécialisés LMNP.",
+        q: "LMNP ou LMP : quelle différence ?",
+        a: "Vous êtes LMNP (Loueur en Meublé Non Professionnel) — statut de la grande majorité de nos propriétaires — si vos recettes locatives meublées ne dépassent pas 23 000 €/an, ou si elles représentent moins de 50 % de vos revenus globaux du foyer fiscal. Au-delà de ces deux seuils cumulés, vous basculez en LMP (Professionnel) : cotisations URSSAF, mais aussi avantages (déficit imputable sur le revenu global, exonération possible de plus-value après 5 ans). Depuis 2018, l'inscription au RCS n'est plus un critère.",
+      },
+      {
+        q: "Micro-BIC ou régime réel : comment choisir ?",
+        a: "Vos revenus de location meublée relèvent des BIC, avec deux options. Le micro-BIC applique un abattement forfaitaire de 50 % sur les recettes (simple, sans comptabilité, plafond 77 700 €/an). Le régime réel permet de déduire toutes les charges réelles ET d'amortir le bien et le mobilier — résultat : dans la plupart des cas, le bénéfice imposable est réduit à zéro pendant des années. Le réel devient gagnant dès que vos charges + amortissements dépassent 50 % des loyers — quasi systématiquement à Paris en présence d'un crédit, de travaux récents ou de mobilier. Coût d'un expert-comptable spécialisé LMNP : 400 à 800 €/an, déductible.",
+      },
+      {
+        q: "Qu'est-ce que l'amortissement en LMNP et pourquoi c'est la clé ?",
+        a: "L'amortissement est une charge comptable qui constate la dépréciation du bien dans le temps — sans mouvement de trésorerie. Au régime réel, vous amortissez la structure (40-50 ans), la toiture et façade (25 ans), les installations techniques (15-20 ans), les aménagements intérieurs (10-15 ans) et le mobilier (5-10 ans). Le terrain (15 à 20 % du prix à Paris) n'est jamais amortissable. Un bon plan d'amortissement par composants réduit souvent le résultat fiscal à zéro. L'amortissement ne peut pas créer de déficit, mais l'excédent est reportable sans limite sur les bénéfices futurs.",
+      },
+      {
+        q: "Quelles charges puis-je déduire au régime réel ?",
+        a: "Au régime réel, tout ce qui sert à la location est déductible : intérêts d'emprunt + assurance emprunteur (souvent le poste principal), taxe foncière, charges de copropriété non récupérables, assurance PNO (Propriétaire Non Occupant), CFE, frais de comptabilité et adhésion CGA, travaux d'entretien et de réparation, petits équipements (linge, ustensiles, produits ménagers), frais de déplacement liés à la gestion du bien, frais bancaires. À noter : chez Move in Paris, notre service est 100 % gratuit — aucun honoraire de gestion à comptabiliser.",
+      },
+      {
+        q: "Comment m'immatriculer et obtenir un numéro SIRET ?",
+        a: "L'immatriculation est obligatoire et s'effectue en ligne sur formalites.entreprises.gouv.fr : créez un compte, sélectionnez « Déclarer une activité de loueur en meublé », indiquez l'adresse du bien et la date de début d'activité, choisissez votre régime fiscal. Vous recevez votre SIRET sous quelques jours. Un seul numéro SIRET suffit même si vous avez plusieurs biens (chacun déclaré comme établissement secondaire). Créez ensuite votre espace professionnel sur impots.gouv.fr — indispensable pour consulter vos avis de CFE.",
+      },
+      {
+        q: "Qu'est-ce que la CFE et combien ça me coûte ?",
+        a: "La Cotisation Foncière des Entreprises est un impôt local dû par tout loueur meublé, basé sur la valeur locative du bien. Exonération automatique la première année d'activité. À Paris, comptez 200 à 1 500 €/an selon l'arrondissement et la surface. Avis disponible uniquement en ligne sur votre espace professionnel impots.gouv.fr — paiement avant le 15 décembre. 100 % déductible en régime réel.",
+      },
+      {
+        q: "Quel est le calendrier fiscal à respecter ?",
+        a: "Février-mars : transmettez vos pièces à votre expert-comptable (relevés Move in Paris, factures, taxe foncière). Avril : ouverture de la déclaration sur impots.gouv.fr. Début mai : date limite de la liasse 2031-SD au régime réel (télétransmise par le comptable). Mai-juin : date limite du formulaire 2042 C-PRO (cases 5ND pour micro-BIC, 5NA si bénéfice au réel, 5NK si déficit). Juillet-août : réception de l'avis. Décembre : paiement de la CFE.",
       },
       {
         q: "Quel cadre juridique pour les baux que vous signez ?",
@@ -114,28 +138,12 @@ const faqs = [
       },
     ],
   },
-  {
-    category: "Entreprises & RH",
-    questions: [
-      {
-        q: "Travaillez-vous directement avec les entreprises ?",
-        a: "Oui. Nous sommes partenaires de grands groupes internationaux et des principales agences de relocation opérant en France. Nous facturons directement l'entreprise cliente, avec des conditions de paiement adaptées aux services achats corporate.",
-      },
-      {
-        q: "Peut-on déléguer la gestion de plusieurs collaborateurs ?",
-        a: "Absolument. Nous accompagnons des programmes de mobilité complets : plusieurs dizaines de collaborateurs simultanément, gestion centralisée, interlocuteur unique pour la DRH, reporting consolidé. Notre modèle est conçu pour les flux corporate.",
-      },
-      {
-        q: "Quelle est la garantie de paiement pour le propriétaire ?",
-        a: "Les loyers sont garantis par l'employeur (entreprise cliente), pas par le salarié expatrié. C'est ce qui nous permet d'afficher un taux d'impayés de 0 %. Les flux financiers sont sécurisés par les procédures d'achats des grandes entreprises.",
-      },
-      {
-        q: "Quels sont vos délais moyens de placement ?",
-        a: "Nous trouvons un logement adapté en moyenne sous 48 à 72h pour une demande standard. Pour des besoins plus complexes (famille nombreuse, contraintes d'écoles internationales, quartiers très demandés), comptez 5 à 10 jours.",
-      },
-    ],
-  },
 ];
+
+const categoryIcons: Record<string, string> = {
+  "Propriétaires": "🏠",
+  "Locataires & Entreprises": "🔑",
+};
 
 function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
@@ -179,25 +187,37 @@ export default function FAQContent() {
   return (
     <section className="py-20 bg-blanc">
       <div className="max-w-4xl mx-auto px-6 lg:px-12">
-        {faqs.map((cat) => (
-          <div key={cat.category} className="mb-16 last:mb-0">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="mb-8"
-            >
-              <span className="text-gold text-xs tracking-[0.3em] uppercase">
-                {cat.category}
-              </span>
-              <div className="h-px w-12 bg-gold mt-3" />
-            </motion.div>
+        {faqs.map((cat, catIdx) => (
+          <motion.div
+            key={cat.category}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className={`${catIdx > 0 ? "mt-20 pt-20 border-t-2 border-gold/20" : ""}`}
+          >
+            {/* Category header */}
+            <div className="flex items-center gap-5 mb-10">
+              <div
+                className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-gold to-gold-light flex items-center justify-center text-3xl shadow-lg shadow-gold/20"
+                style={{ borderRadius: 10 }}
+              >
+                {categoryIcons[cat.category] || "✦"}
+              </div>
+              <div>
+                <span className="text-gold text-xs tracking-[0.3em] uppercase">
+                  Pour les {cat.category.toLowerCase()}
+                </span>
+                <h2 className="font-serif text-2xl md:text-3xl text-noir mt-1">
+                  {cat.category}
+                </h2>
+              </div>
+            </div>
             <div>
               {cat.questions.map((faq) => (
                 <FAQItem key={faq.q} q={faq.q} a={faq.a} />
               ))}
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>
