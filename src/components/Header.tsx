@@ -136,7 +136,7 @@ export default function Header() {
             {/* Close button */}
             <div className="flex justify-between items-center px-6 py-6">
               <LogoLink onNavigate={() => setMobileOpen(false)}>
-                <Image src="/Logo-gold.png" alt="Move in Paris" width={200} height={200} className="h-16 w-auto" />
+                <Image src="/Logo-gold.png" alt="Move in Paris" width={640} height={640} className="h-32 w-auto" />
               </LogoLink>
               <div className="flex items-center gap-4">
                 <LocaleSwitcher dark />
