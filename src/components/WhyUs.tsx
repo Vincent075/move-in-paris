@@ -2,6 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
+import PartnerLogos from "./PartnerLogos";
 
 function AnimatedCounter({
   target,
@@ -87,6 +88,9 @@ export default function WhyUs() {
           </div>
         </div>
       </div>
+
+      {/* Partner logos carousel */}
+      <PartnerLogos />
 
       {/* Why us content */}
       <div className="py-28 bg-blanc-chaud">
