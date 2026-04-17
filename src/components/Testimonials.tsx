@@ -208,7 +208,7 @@ export default function Testimonials() {
             transition={{ delay: 0.1 }}
             className="font-serif text-4xl md:text-5xl text-blanc mt-4 mb-4"
           >
-            Avis Google 5 étoiles
+            Avis Google
           </motion.h2>
           <motion.div
             initial={{ opacity: 0 }}
