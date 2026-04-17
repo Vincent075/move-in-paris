@@ -70,10 +70,10 @@ export default function Header() {
                 ))}
               </div>
               <Link
-                href="/contact"
+                href="/proposer-mon-appartement"
                 className="ml-4 px-6 py-2.5 bg-gradient-to-r from-gold to-gold-light text-noir-deep text-sm tracking-wider uppercase font-semibold rounded-full hover:shadow-lg hover:shadow-gold/25 transition-all duration-300 hover:scale-105"
               >
-                Nous contacter
+                Proposer mon bien
               </Link>
             </nav>
 
@@ -144,11 +144,11 @@ export default function Header() {
             {/* Bottom CTA */}
             <div className="px-8 pb-10">
               <Link
-                href="/contact"
+                href="/proposer-mon-appartement"
                 onClick={() => setMobileOpen(false)}
                 className="block w-full py-4 bg-gradient-to-r from-gold to-gold-light text-noir-deep text-center font-semibold tracking-wider uppercase rounded-2xl"
               >
-                Nous contacter
+                Proposer mon bien
               </Link>
               <div className="flex items-center justify-center gap-6 mt-6 text-blanc/30 text-xs">
                 <a href="tel:+33145200603" className="hover:text-gold transition-colors">+33 1 45 20 06 03</a>

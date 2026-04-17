@@ -4,6 +4,7 @@ interface NearbyPlace {
   type: string;
   name: string;
   distance: string;
+  lines?: string[];
 }
 
 export async function GET(req: NextRequest) {
@@ -78,7 +79,9 @@ export async function GET(req: NextRequest) {
         }
 
         if (el.tags?.railway === "station") {
-          places.push({ type: "Métro", name, distance: dist });
+          // Extract metro line references from Overpass tags
+          const lines = extractMetroLines(el.tags);
+          places.push({ type: "Métro", name, distance: dist, ...(lines.length > 0 ? { lines } : {}) });
         } else if (el.tags?.shop === "supermarket") {
           places.push({ type: "Commerce", name, distance: dist });
         } else if (el.tags?.leisure === "park") {
@@ -101,6 +104,31 @@ export async function GET(req: NextRequest) {
     console.error("Nearby API error:", error);
     return NextResponse.json({ places: [], district: "", error: "Erreur de recherche" });
   }
+}
+
+function extractMetroLines(tags: Record<string, string>): string[] {
+  const candidates = [
+    tags["ref"],
+    tags["line"],
+    tags["ref:FR:RATP"],
+    tags["lines"],
+  ].filter(Boolean) as string[];
+
+  const lines = new Set<string>();
+
+  for (const val of candidates) {
+    // Split on common delimiters: semicolon, comma, space
+    const parts = val.split(/[;,\s]+/).map((p) => p.trim()).filter(Boolean);
+    for (const part of parts) {
+      // Accept: 1-14, 3bis, 7bis, A, B (RER), with optional prefix "M" or "ligne"
+      const clean = part.replace(/^(ligne|line|m|métro|metro)/i, "").trim();
+      if (/^(1[0-4]|[1-9]|3bis|7bis|[AB])$/i.test(clean)) {
+        lines.add(clean.toUpperCase().replace(/^([AB])$/, "RER $1"));
+      }
+    }
+  }
+
+  return Array.from(lines);
 }
 
 function haversine(lat1: number, lon1: number, lat2: number, lon2: number): number {

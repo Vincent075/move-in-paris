@@ -204,6 +204,27 @@ export default function AddApartment({ password, onSuccess }: { password: string
     setDragIndex(null);
   }
 
+  // Drag & drop reorder for nearby rows
+  const [nearbyDragIndex, setNearbyDragIndex] = useState<number | null>(null);
+
+  function handleNearbyDragStart(index: number) {
+    setNearbyDragIndex(index);
+  }
+
+  function handleNearbyDragOver(e: React.DragEvent, index: number) {
+    e.preventDefault();
+    if (nearbyDragIndex === null || nearbyDragIndex === index) return;
+    const newRows = [...nearbyRows];
+    const [moved] = newRows.splice(nearbyDragIndex, 1);
+    newRows.splice(index, 0, moved);
+    setNearbyRows(newRows);
+    setNearbyDragIndex(index);
+  }
+
+  function handleNearbyDragEnd() {
+    setNearbyDragIndex(null);
+  }
+
   function addNearbyRow() {
     setNearbyRows((prev) => [...prev, { type: "Métro", name: "", distance: "" }]);
   }
@@ -500,8 +521,23 @@ export default function AddApartment({ password, onSuccess }: { password: string
             {!nearbyLoading && nearbyRows.length > 0 && <span className="text-xs text-green-600">✓ {nearbyRows.length} lieu(x) trouvé(s) automatiquement</span>}
             {!nearbyLoading && nearbyRows.length === 0 && <button type="button" onClick={() => fetchNearby()} className="text-xs text-[#B88B58] hover:text-[#9A7345]">Rechercher automatiquement</button>}
           </div>
+          {nearbyRows.length > 1 && (
+            <p className="text-xs text-[#6B6B6B] mb-3">Glissez-déposez les lignes pour les réorganiser.</p>
+          )}
           {nearbyRows.map((row, i) => (
-            <div key={i} className="grid grid-cols-[120px_1fr_100px_40px] gap-3 mb-3">
+            <div
+              key={i}
+              draggable
+              onDragStart={() => handleNearbyDragStart(i)}
+              onDragOver={(e) => handleNearbyDragOver(e, i)}
+              onDragEnd={handleNearbyDragEnd}
+              className={`grid grid-cols-[24px_120px_1fr_100px_40px] gap-3 mb-3 transition-all ${
+                nearbyDragIndex === i ? "opacity-50 scale-[0.99]" : ""
+              }`}
+            >
+              <div className="flex items-center justify-center cursor-grab active:cursor-grabbing text-[#6B6B6B] hover:text-[#B88B58] transition-colors select-none">
+                ⠿
+              </div>
               <select value={row.type} onChange={(e) => updateNearby(i, "type", e.target.value)}
                 className="px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none">
                 <option value="Métro">Métro</option>
