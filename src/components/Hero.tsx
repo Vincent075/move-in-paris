@@ -9,7 +9,7 @@ export default function Hero() {
       <div className="absolute inset-0">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/apartments/vue-paris.jpg')" }}
+          style={{ backgroundImage: "url('/apartments/hero-salon.jpg')" }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-noir-deep/70 via-noir-deep/50 to-noir-deep/90" />
       </div>

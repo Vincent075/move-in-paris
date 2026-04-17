@@ -26,6 +26,7 @@ export default function SearchBar() {
   const [loc, setLoc] = useState("Toutes les villes");
   const [type, setType] = useState("Tous");
   const [surfaceMin, setSurfaceMin] = useState("");
+  const [surfaceMax, setSurfaceMax] = useState("");
 
   function handleSearch() {
     router.push("/nos-appartements");
@@ -52,9 +53,9 @@ export default function SearchBar() {
             </select>
           </div>
 
-          {/* Format */}
+          {/* Type */}
           <div className="flex-1 px-5 py-3.5 border-b md:border-b-0 md:border-r border-gris-clair/20">
-            <div className="text-[10px] text-gold uppercase tracking-[0.15em] font-semibold mb-1.5">Format</div>
+            <div className="text-[10px] text-gold uppercase tracking-[0.15em] font-semibold mb-1.5">Type</div>
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
@@ -72,6 +73,18 @@ export default function SearchBar() {
               value={surfaceMin}
               onChange={(e) => setSurfaceMin(e.target.value)}
               placeholder="50m²"
+              className="w-full bg-transparent text-noir text-sm font-medium focus:outline-none border-0 p-0 placeholder:text-gris/40"
+            />
+          </div>
+
+          {/* Surface max */}
+          <div className="flex-1 px-5 py-3.5 border-b md:border-b-0 md:border-r border-gris-clair/20">
+            <div className="text-[10px] text-gold uppercase tracking-[0.15em] font-semibold mb-1.5">Surface max</div>
+            <input
+              type="text"
+              value={surfaceMax}
+              onChange={(e) => setSurfaceMax(e.target.value)}
+              placeholder="120m²"
               className="w-full bg-transparent text-noir text-sm font-medium focus:outline-none border-0 p-0 placeholder:text-gris/40"
             />
           </div>

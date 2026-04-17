@@ -47,7 +47,7 @@ const services = [
 
 export default function Services() {
   return (
-    <section id="services" className="pt-4 pb-28 bg-blanc">
+    <section id="services" className="pt-[calc(1rem+0.5cm)] pb-28 bg-blanc">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         {/* Section header */}
         <div className="text-center mb-14">
