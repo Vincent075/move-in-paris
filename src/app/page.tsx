@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import SearchBar from "@/components/SearchBar";
 import LatestApartments from "@/components/LatestApartments";
 import Services from "@/components/Services";
 import WhyUs from "@/components/WhyUs";
@@ -13,6 +14,7 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
+        <SearchBar />
         <LatestApartments />
         <Services />
         <WhyUs />
