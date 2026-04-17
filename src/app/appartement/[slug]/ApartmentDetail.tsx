@@ -79,12 +79,61 @@ interface ApartmentProps {
 
 export default function ApartmentDetail({ apartment }: ApartmentProps) {
   const [currentImage, setCurrentImage] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   const apt = apartment;
 
   return (
     <>
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightboxOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-noir-deep/95 flex items-center justify-center"
+            onClick={() => setLightboxOpen(false)}
+          >
+            <button
+              onClick={() => setLightboxOpen(false)}
+              className="absolute top-6 right-6 w-10 h-10 bg-blanc/10 text-blanc text-xl flex items-center justify-center hover:bg-blanc/20 transition-colors z-10"
+            >
+              ✕
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); setCurrentImage((p) => (p - 1 + apt.images.length) % apt.images.length); }}
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-blanc/10 text-blanc text-2xl flex items-center justify-center hover:bg-gold transition-colors z-10"
+            >
+              &#8249;
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); setCurrentImage((p) => (p + 1) % apt.images.length); }}
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-blanc/10 text-blanc text-2xl flex items-center justify-center hover:bg-gold transition-colors z-10"
+            >
+              &#8250;
+            </button>
+            <motion.div
+              key={currentImage}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="max-w-[90vw] max-h-[85vh] relative"
+            >
+              <div
+                className="w-[85vw] h-[75vh] bg-contain bg-center bg-no-repeat"
+                style={{ backgroundImage: `url('${apt.images[currentImage]}')` }}
+              />
+            </motion.div>
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-blanc/60 text-sm">
+              {currentImage + 1} / {apt.images.length}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Breadcrumb */}
-      <div className="pt-24 pb-4 bg-blanc-chaud">
+      <div className="pt-24 pb-2 bg-blanc-chaud">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="flex items-center gap-2 text-xs text-gris">
             <Link href="/" className="hover:text-gold transition-colors">Accueil</Link>
@@ -97,11 +146,11 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
       </div>
 
       {/* Gallery */}
-      <section className="bg-blanc-chaud pb-8">
+      <section className="bg-blanc-chaud pb-4">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="grid lg:grid-cols-[1fr_300px] gap-4">
             {/* Main image */}
-            <div className="relative aspect-[16/10] overflow-hidden bg-gris-clair">
+            <div className="relative aspect-[16/10] overflow-hidden bg-gris-clair cursor-pointer" onClick={() => setLightboxOpen(true)}>
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentImage}

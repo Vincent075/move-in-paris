@@ -42,7 +42,7 @@ export default function MentionsLegales() {
               </p>
               <div className="bg-blanc-chaud border border-gris-clair p-6 space-y-2">
                 <p className="text-gris font-light"><span className="text-noir font-normal">Raison sociale :</span> Move in Paris</p>
-                <p className="text-gris font-light"><span className="text-noir font-normal">Forme juridique :</span> Société à responsabilité limitée (SARL)</p>
+                <p className="text-gris font-light"><span className="text-noir font-normal">Forme juridique :</span> Société par actions simplifiée (SAS)</p>
                 <p className="text-gris font-light"><span className="text-noir font-normal">Siège social :</span> 26, rue de l&apos;Étoile, 75017 Paris</p>
                 <p className="text-gris font-light"><span className="text-noir font-normal">Téléphone :</span> +33 1 45 20 06 03</p>
                 <p className="text-gris font-light"><span className="text-noir font-normal">Email :</span> contact@move-in-paris.com</p>
