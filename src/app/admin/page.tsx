@@ -433,6 +433,7 @@ export default function AdminPage() {
             <div className="text-xs text-[#6B6B6B]/60 mt-1">JPG, PNG — plusieurs fichiers possibles</div>
           </label>
           {previews.length > 0 && (
+            <>
             <p className="text-xs text-[#6B6B6B] mb-3">Glissez-déposez pour réorganiser l&apos;ordre des photos. La première photo sera la photo principale.</p>
             <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3">
               {previews.map((src, i) => (
@@ -462,6 +463,7 @@ export default function AdminPage() {
                 </div>
               ))}
             </div>
+            </>
           )}
         </div>
 
