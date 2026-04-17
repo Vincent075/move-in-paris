@@ -10,8 +10,8 @@ function emailTemplate(title: string, content: string, replyEmail?: string) {
   <div style="max-width:600px;margin:0 auto;background-color:#ffffff;">
 
     <!-- Header -->
-    <div style="background-color:#0D0D0D;padding:12px 40px;text-align:center;">
-      <img src="https://move-in-paris.vercel.app/Logo-gold.png" alt="Move in Paris" width="120" height="120" style="display:block;margin:0 auto;" />
+    <div style="background-color:#0D0D0D;padding:8px 40px;text-align:center;">
+      <img src="https://move-in-paris.vercel.app/Logo-gold.png" alt="Move in Paris" width="80" height="80" style="display:block;margin:0 auto;" />
     </div>
 
     <!-- Title bar -->
@@ -99,9 +99,9 @@ function propositionEmail(fields: Record<string, string>) {
 <table width="620" cellpadding="0" cellspacing="0" border="0" style="max-width:620px;width:100%;">
 
   <!-- Header -->
-  <tr><td style="background:#111;border-radius:12px 12px 0 0;padding:28px 40px 24px;">
+  <tr><td style="background:#111;border-radius:12px 12px 0 0;padding:14px 40px 12px;">
     <table width="100%" cellpadding="0" cellspacing="0"><tr>
-      <td valign="middle"><img src="https://move-in-paris.vercel.app/Logo-gold.png" alt="Move In Paris" height="120" style="display:block;height:120px;border:0;"/></td>
+      <td valign="middle"><img src="https://move-in-paris.vercel.app/Logo-gold.png" alt="Move In Paris" height="80" style="display:block;height:80px;border:0;"/></td>
       <td align="right" valign="middle">
         <span style="color:#aaa;font-size:12px;letter-spacing:.06em;text-transform:uppercase;display:block;">Proposition commerciale</span>
         <span style="color:#666;font-size:11px;display:block;margin-top:4px;">${monthCap}</span>
