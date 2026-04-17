@@ -109,7 +109,8 @@ function propositionEmail(fields: Record<string, string>) {
   <tr><td style="background:#fff;padding:32px 40px 24px;">
     <p style="font-size:16px;color:#111;margin:0 0 16px;font-weight:500;">Bonjour ${greeting},</p>
     <p style="font-size:15px;color:#444;line-height:1.7;margin:0 0 10px;">Nous faisons suite à votre demande d'estimation et vous adressons ci-dessous notre proposition de mise en location de votre bien auprès de notre clientèle d'entreprise.</p>
-    <p style="font-size:15px;color:#444;line-height:1.7;margin:0;">Vous trouverez une synthèse des conditions proposées, ainsi qu'une comparaison avec les loyers de référence du marché locatif parisien.</p>
+    <p style="font-size:15px;color:#444;line-height:1.7;margin:0 0 10px;">Vous trouverez une synthèse des conditions proposées, ainsi qu'une comparaison avec les loyers de référence du marché locatif parisien.</p>
+    <p style="font-size:15px;color:#444;line-height:1.7;margin:0;">Vous trouverez également <strong style="color:#111;">notre plaquette de présentation en pièce jointe</strong> de cet email — elle détaille notre approche, notre clientèle corporate et nos références.</p>
   </td></tr>
 
   <!-- Appartement -->
@@ -380,12 +381,29 @@ export async function POST(req: NextRequest) {
     // Lead-facing email for estimation: send the HTML proposal to the prospect
     if (formType === "estimation" && fields.email) {
       try {
+        // Fetch the plaquette PDF from the public folder to attach it
+        const origin = new URL(req.url).origin || "https://move-in-paris.vercel.app";
+        let plaquetteAttachment: { filename: string; content: Buffer } | null = null;
+        try {
+          const pdfRes = await fetch(`${origin}/documents/plaquette-move-in-paris.pdf`);
+          if (pdfRes.ok) {
+            const ab = await pdfRes.arrayBuffer();
+            plaquetteAttachment = {
+              filename: "Plaquette-Move-in-Paris.pdf",
+              content: Buffer.from(ab),
+            };
+          }
+        } catch (pdfErr) {
+          console.error("Impossible de récupérer la plaquette PDF:", pdfErr);
+        }
+
         await resend.emails.send({
           from: "Move in Paris <noreply@move-in-paris.com>",
           to: fields.email,
           replyTo: "contact@move-in-paris.com",
           subject: `Votre estimation Move in Paris — ${fields.zone || "Paris"}`,
           html: propositionEmail(fields),
+          attachments: plaquetteAttachment ? [plaquetteAttachment] : undefined,
         });
       } catch (err) {
         console.error("Erreur envoi proposition au lead:", err);
