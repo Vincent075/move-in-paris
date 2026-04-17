@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getMetroLines } from "@/data/paris-metro-lines";
 
 interface NearbyPlace {
   type: string;
@@ -79,8 +80,11 @@ export async function GET(req: NextRequest) {
         }
 
         if (el.tags?.railway === "station") {
-          // Extract metro line references from Overpass tags
-          const lines = extractMetroLines(el.tags);
+          // Extract metro line references from Overpass tags, with a
+          // hardcoded Paris Métro fallback since OSM station nodes
+          // rarely expose line info directly.
+          let lines = extractMetroLines(el.tags);
+          if (lines.length === 0) lines = getMetroLines(name);
           places.push({ type: "Métro", name, distance: dist, ...(lines.length > 0 ? { lines } : {}) });
         } else if (el.tags?.shop === "supermarket") {
           places.push({ type: "Commerce", name, distance: dist });

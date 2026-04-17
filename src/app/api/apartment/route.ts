@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { translateApartment } from "@/lib/translate";
 
 const REPO_OWNER = "Vincent075";
 const REPO_NAME = "move-in-paris";
@@ -33,7 +34,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Mot de passe incorrect" }, { status: 401 });
     }
 
-    const apartment = {
+    const apartment: Record<string, unknown> = {
       slug: data.slug,
       title: data.title,
       address: data.address,
@@ -53,6 +54,21 @@ export async function POST(req: NextRequest) {
 
     if (!apartment.slug) {
       return NextResponse.json({ error: "Le titre est requis" }, { status: 400 });
+    }
+
+    const translated = await translateApartment({
+      title: String(apartment.title ?? ""),
+      description: String(apartment.description ?? ""),
+      floor: String(apartment.floor ?? ""),
+      features: Array.isArray(apartment.features)
+        ? (apartment.features as string[])
+        : [],
+    });
+    if (translated) {
+      apartment.title_en = translated.title_en;
+      apartment.description_en = translated.description_en;
+      apartment.floor_en = translated.floor_en;
+      apartment.features_en = translated.features_en;
     }
 
     // Get current apartments.json

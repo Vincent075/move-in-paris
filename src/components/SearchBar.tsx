@@ -78,7 +78,7 @@ export default function SearchBar() {
               type="text"
               value={surfaceMin}
               onChange={(e) => setSurfaceMin(e.target.value)}
-              placeholder="50m²"
+              placeholder={`50 ${t("common.surfaceUnit")}`}
               className="w-full bg-transparent text-noir text-sm font-medium focus:outline-none border-0 p-0 placeholder:text-gris/40"
             />
           </div>
@@ -90,7 +90,7 @@ export default function SearchBar() {
               type="text"
               value={surfaceMax}
               onChange={(e) => setSurfaceMax(e.target.value)}
-              placeholder="120m²"
+              placeholder={`120 ${t("common.surfaceUnit")}`}
               className="w-full bg-transparent text-noir text-sm font-medium focus:outline-none border-0 p-0 placeholder:text-gris/40"
             />
           </div>

@@ -10,7 +10,8 @@
     "onRequest": "On request",
     "chargesIncluded": "Charges included",
     "photos": "photos",
-    "photo": "photo"
+    "photo": "photo",
+    "surfaceUnit": "sqm"
   },
   "nav": {
     "apartments": "Our apartments",

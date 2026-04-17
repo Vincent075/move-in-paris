@@ -19,8 +19,21 @@ const inter = Inter({
 export async function generateMetadata(): Promise<Metadata> {
   const { messages } = await getMessages();
   return {
+    metadataBase: new URL("https://www.move-in-paris.com"),
     title: messages.meta.title,
     description: messages.meta.description,
+    openGraph: {
+      type: "website",
+      siteName: "Move in Paris",
+      locale: "fr_FR",
+      title: messages.meta.title,
+      description: messages.meta.description,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: messages.meta.title,
+      description: messages.meta.description,
+    },
   };
 }
 

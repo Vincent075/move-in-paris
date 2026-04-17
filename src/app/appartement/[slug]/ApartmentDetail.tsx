@@ -317,7 +317,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                 className="grid grid-cols-2 sm:grid-cols-4 gap-6 p-6 bg-blanc-chaud border border-gris-clair/50 mb-10 [&>div+div]:relative sm:[&>div+div]:before:content-[''] sm:[&>div+div]:before:absolute sm:[&>div+div]:before:left-0 sm:[&>div+div]:before:top-1/2 sm:[&>div+div]:before:-translate-y-1/2 sm:[&>div+div]:before:h-10 sm:[&>div+div]:before:w-px sm:[&>div+div]:before:bg-gris-clair"
               >
                 <div className="text-center">
-                  <div className="text-2xl font-serif text-gold font-bold">{apt.surface} m²</div>
+                  <div className="text-2xl font-serif text-gold font-bold">{apt.surface} {t("common.surfaceUnit")}</div>
                   <div className="text-xs text-gris uppercase tracking-wider mt-1">{t("apartment.surface")}</div>
                 </div>
                 <div className="text-center">
@@ -453,7 +453,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between text-blanc/60">
                       <span>{t("apartment.surface")}</span>
-                      <span className="text-blanc">{apt.surface} m²</span>
+                      <span className="text-blanc">{apt.surface} {t("common.surfaceUnit")}</span>
                     </div>
                     <div className="flex justify-between text-blanc/60">
                       <span>{t("apartment.type")}</span>

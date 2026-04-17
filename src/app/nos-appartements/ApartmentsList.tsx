@@ -83,7 +83,7 @@ export default function ApartmentsList() {
               </select>
             </div>
             <div>
-              <label className="block text-xs text-gris uppercase tracking-wider mb-2">{t("searchBar.surfaceMin")} (m²)</label>
+              <label className="block text-xs text-gris uppercase tracking-wider mb-2">{t("searchBar.surfaceMin")} ({t("common.surfaceUnit")})</label>
               <input
                 type="number"
                 value={surfaceMin}
@@ -93,7 +93,7 @@ export default function ApartmentsList() {
               />
             </div>
             <div>
-              <label className="block text-xs text-gris uppercase tracking-wider mb-2">{t("searchBar.surfaceMax")} (m²)</label>
+              <label className="block text-xs text-gris uppercase tracking-wider mb-2">{t("searchBar.surfaceMax")} ({t("common.surfaceUnit")})</label>
               <input
                 type="number"
                 value={surfaceMax}
@@ -156,7 +156,7 @@ export default function ApartmentsList() {
 
                 <div className="grid grid-cols-3 gap-3 mb-4 py-4 border-t border-b border-gris-clair/50 [&>div+div]:relative [&>div+div]:before:content-[''] [&>div+div]:before:absolute [&>div+div]:before:left-0 [&>div+div]:before:top-1/2 [&>div+div]:before:-translate-y-1/2 [&>div+div]:before:h-8 [&>div+div]:before:w-px [&>div+div]:before:bg-gris-clair">
                   <div className="text-center">
-                    <div className="text-noir font-medium">{apt.surface} m²</div>
+                    <div className="text-noir font-medium">{apt.surface} {t("common.surfaceUnit")}</div>
                     <div className="text-xs text-gris">{t("apartment.surface")}</div>
                   </div>
                   <div className="text-center">

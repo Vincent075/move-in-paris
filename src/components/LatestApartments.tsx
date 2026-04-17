@@ -111,7 +111,7 @@ export default function LatestApartments() {
               </h3>
               <p className="text-sm text-gris font-light">{apt.district}</p>
               <div className="flex items-center gap-4 mt-2 text-xs text-gris">
-                <span>{apt.surface} m²</span>
+                <span>{apt.surface} {t("common.surfaceUnit")}</span>
                 <span className="w-1 h-1 bg-gold rounded-full" />
                 <span>{apt.rooms} {(apt.rooms > 1 ? t("apartment.rooms") : t("apartment.room")).toLowerCase()}</span>
               </div>

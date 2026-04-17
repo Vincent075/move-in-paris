@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { translateApartment } from "@/lib/translate";
 
 const REPO_OWNER = "Vincent075";
 const REPO_NAME = "move-in-paris";
@@ -65,6 +66,28 @@ export async function PUT(req: NextRequest) {
 
     // Merge updates
     apartments[index] = { ...apartments[index], ...updates };
+
+    // Re-translate if any user-visible French text changed
+    const translatableChanged =
+      updates.title !== undefined ||
+      updates.description !== undefined ||
+      updates.floor !== undefined ||
+      updates.features !== undefined;
+    if (translatableChanged) {
+      const merged = apartments[index];
+      const translated = await translateApartment({
+        title: String(merged.title ?? ""),
+        description: String(merged.description ?? ""),
+        floor: String(merged.floor ?? ""),
+        features: Array.isArray(merged.features) ? merged.features : [],
+      });
+      if (translated) {
+        apartments[index].title_en = translated.title_en;
+        apartments[index].description_en = translated.description_en;
+        apartments[index].floor_en = translated.floor_en;
+        apartments[index].features_en = translated.features_en;
+      }
+    }
 
     const newContent = Buffer.from(JSON.stringify(apartments, null, 2)).toString("base64");
     await githubAPI("contents/src/data/apartments.json", "PUT", {
