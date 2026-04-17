@@ -84,8 +84,11 @@ interface Apartment {
 }
 
 export default function AdminDashboard() {
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
+  const [authLoading, setAuthLoading] = useState(false);
+  const [authError, setAuthError] = useState("");
   const [activeTab, setActiveTab] = useState<"list" | "add">("list");
   const [apartments, setApartments] = useState<Apartment[]>([]);
   const [loading, setLoading] = useState(false);
@@ -342,6 +345,28 @@ export default function AdminDashboard() {
     }).then(() => fetchApartments());
   }
 
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
+    setAuthLoading(true);
+    setAuthError("");
+    try {
+      const res = await fetch("/api/admin-auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+      if (res.ok) {
+        setAuthenticated(true);
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setAuthError(data.error || "Identifiants invalides");
+      }
+    } catch {
+      setAuthError("Erreur de connexion");
+    }
+    setAuthLoading(false);
+  }
+
   // Login screen
   if (!authenticated) {
     return (
@@ -351,11 +376,19 @@ export default function AdminDashboard() {
             <Image src="/Logo-gold.png" alt="Move in Paris" width={200} height={200} className="h-24 w-auto mx-auto mb-6" />
             <h1 className="font-serif text-2xl text-white">Administration</h1>
           </div>
-          <form onSubmit={(e) => { e.preventDefault(); setAuthenticated(true); }} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4">
+            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)}
+              placeholder="Nom d'utilisateur" autoComplete="username" required
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white text-sm focus:border-[#B88B58] focus:outline-none" />
             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-              placeholder="Mot de passe" className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white text-sm focus:border-[#B88B58] focus:outline-none" />
-            <button type="submit" className="w-full py-3 bg-[#B88B58] text-[#0D0D0D] font-medium tracking-wider uppercase text-sm hover:bg-[#D4AF7A] transition-all">
-              Accéder
+              placeholder="Mot de passe" autoComplete="current-password" required
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white text-sm focus:border-[#B88B58] focus:outline-none" />
+            {authError && (
+              <p className="text-red-400 text-xs">{authError}</p>
+            )}
+            <button type="submit" disabled={authLoading}
+              className={`w-full py-3 font-medium tracking-wider uppercase text-sm transition-all ${authLoading ? "bg-[#6B6B6B] text-white cursor-wait" : "bg-[#B88B58] text-[#0D0D0D] hover:bg-[#D4AF7A]"}`}>
+              {authLoading ? "Vérification…" : "Accéder"}
             </button>
           </form>
         </div>
