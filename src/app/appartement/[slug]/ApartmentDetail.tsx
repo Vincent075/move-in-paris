@@ -183,11 +183,34 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                 </div>
               </motion.div>
 
-              {/* Nearby */}
+              {/* Map */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}
+                className="mb-10"
+              >
+                <h2 className="font-serif text-2xl text-noir mb-4">Localisation</h2>
+                <div className="h-px w-12 bg-gold mb-6" />
+                <div className="aspect-[16/9] bg-gris-clair overflow-hidden">
+                  <iframe
+                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(apt.address + ", France")}&zoom=15`}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title={`Localisation - ${apt.title}`}
+                  />
+                </div>
+              </motion.div>
+
+              {/* Nearby */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
               >
                 <h2 className="font-serif text-2xl text-noir mb-4">À proximité</h2>
                 <div className="h-px w-12 bg-gold mb-6" />
