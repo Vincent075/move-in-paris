@@ -6,13 +6,13 @@ import CTABanner from "@/components/CTABanner";
 import ProprietairesContent from "./ProprietairesContent";
 
 export const metadata: Metadata = {
-  title: "Propriétaires — Gestion Locative Meublée Paris | Move in Paris",
+  title: "Propriétaires — Gestion Opérationnelle Meublée Paris | Move in Paris",
   description:
-    "Confiez votre appartement à Move in Paris. Gestion locative complète, clientèle corporate sélectionnée, rentabilité optimisée. Service clés en main pour propriétaires parisiens.",
-  keywords: "gestion locative paris, gestion locative meublée, rentabilité location meublée, confier appartement gestion paris",
+    "Confiez votre appartement à Move in Paris. Gestion opérationnelle complète, clientèle corporate sélectionnée, rentabilité optimisée. Service clés en main pour propriétaires parisiens.",
+  keywords: "gestion opérationnelle paris, gestion opérationnelle meublée, rentabilité location meublée, confier appartement gestion paris",
   openGraph: {
-    title: "Propriétaires — Gestion Locative Meublée | Move in Paris",
-    description: "Gestion locative complète pour votre appartement meublé à Paris. Rentabilité optimisée.",
+    title: "Propriétaires — Gestion Opérationnelle Meublée | Move in Paris",
+    description: "Gestion opérationnelle complète pour votre appartement meublé à Paris. Rentabilité optimisée.",
   },
 };
 
@@ -23,7 +23,7 @@ export default function Proprietaires() {
       <main>
         <PageHero
           title="Propriétaires"
-          subtitle="Confiez-nous votre bien et profitez d'une gestion locative complète, sans aucun souci."
+          subtitle="Confiez-nous votre bien et profitez d'une gestion opérationnelle complète, sans aucun souci."
           breadcrumb="Propriétaires"
         />
         <ProprietairesContent />

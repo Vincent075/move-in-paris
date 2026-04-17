@@ -84,7 +84,7 @@ export default function AboutContent() {
                   avec services, dédiés exclusivement aux entreprises et à leurs collaborateurs internationaux.
                 </p>
                 <p>
-                  En tant que propriétaire partenaire, vous bénéficiez d&apos;une gestion locative complète et d&apos;une
+                  En tant que propriétaire partenaire, vous bénéficiez d&apos;une gestion opérationnelle complète et d&apos;une
                   valorisation optimale de votre bien, sans aucun souci au quotidien.
                 </p>
                 <p>
@@ -176,12 +176,28 @@ export default function AboutContent() {
             <span className="text-gold text-xs tracking-[0.3em] uppercase">Nos bureaux</span>
             <h2 className="font-serif text-3xl text-noir mt-3">Où nous trouver</h2>
           </div>
-          <div className="max-w-sm">
-            <div className="p-8 border border-gris-clair/50 hover:border-gold/30 transition-all">
-              <h3 className="font-serif text-xl text-noir mb-2">Agence principale</h3>
-              <p className="text-gris font-light">26, rue de l&apos;Étoile</p>
-              <p className="text-gris font-light">75017 Paris</p>
-              <p className="text-gold mt-3">+33 1 45 20 06 03</p>
+          <div className="relative">
+            <iframe
+              title="Localisation Move in Paris"
+              src="https://www.google.com/maps?q=26+rue+de+l%27Etoile+75017+Paris&t=m&z=16&output=embed"
+              className="w-full h-[380px] md:h-[480px] border-0"
+              loading="lazy"
+              allowFullScreen
+              referrerPolicy="no-referrer-when-downgrade"
+              style={{ borderRadius: 10 }}
+            />
+            <div
+              className="absolute left-1/2 -translate-x-1/2 bottom-6 md:bottom-10 bg-blanc px-8 py-6 md:px-10 md:py-7 text-center shadow-2xl shadow-noir-deep/20 w-[90%] max-w-sm"
+              style={{ borderRadius: 10 }}
+            >
+              <p className="font-serif text-xl md:text-2xl text-noir">26, rue de l&apos;Étoile</p>
+              <p className="text-gris font-light mt-1">75017 Paris</p>
+              <a
+                href="tel:+33145200603"
+                className="inline-block mt-3 text-gold font-medium hover:text-gold-light transition-colors"
+              >
+                +33 1 45 20 06 03
+              </a>
             </div>
           </div>
         </div>

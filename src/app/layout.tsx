@@ -17,7 +17,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Move in Paris — Location meublée corporate & expatriés",
   description:
-    "Agence parisienne spécialisée dans la location meublée haut de gamme pour entreprises et expatriés. Gestion locative, accompagnement sur-mesure.",
+    "Agence parisienne spécialisée dans la location meublée haut de gamme pour entreprises et expatriés. Gestion opérationnelle, accompagnement sur-mesure.",
 };
 
 export default function RootLayout({

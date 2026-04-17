@@ -57,7 +57,7 @@ export default function ProprietairesContent() {
               <div className="space-y-4 text-gris font-light leading-relaxed">
                 <p>
                   Vous possédez un appartement à Paris ou en proche banlieue ? Confiez-le à Move in Paris et bénéficiez
-                  d&apos;une gestion locative complète et d&apos;une valorisation optimale de votre bien.
+                  d&apos;une gestion opérationnelle complète et d&apos;une valorisation optimale de votre bien.
                 </p>
                 <p>
                   Notre clientèle exclusive — grandes entreprises, institutions internationales — garantit des loyers

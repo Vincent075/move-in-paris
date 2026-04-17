@@ -5,13 +5,13 @@ import PageHero from "@/components/PageHero";
 import SubmitForm from "./SubmitForm";
 
 export const metadata: Metadata = {
-  title: "Proposer Mon Appartement | Move in Paris — Gestion Locative Paris",
+  title: "Proposer Mon Appartement | Move in Paris — Gestion Opérationnelle Paris",
   description:
     "Proposez votre appartement meublé à la location corporate avec Move in Paris. Formulaire simple, estimation gratuite, réponse sous 24h.",
-  keywords: "proposer appartement location meublée, gestion locative paris, louer appartement corporate paris",
+  keywords: "proposer appartement location meublée, gestion opérationnelle paris, louer appartement corporate paris",
   openGraph: {
     title: "Proposer Mon Appartement | Move in Paris",
-    description: "Confiez votre appartement à Move in Paris pour une gestion locative complète.",
+    description: "Confiez votre appartement à Move in Paris pour une gestion opérationnelle complète.",
   },
 };
 
