@@ -249,12 +249,6 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
               <div className="absolute bottom-4 right-4 bg-noir-deep/70 text-blanc text-xs px-3 py-1">
                 {currentImage + 1} / {apt.images.length}
               </div>
-              {/* Status badge */}
-              <div className="absolute top-4 left-4">
-                <span className="px-4 py-2 bg-gold text-noir-deep text-xs uppercase tracking-wider font-medium">
-                  {apt.status}
-                </span>
-              </div>
             </div>
 
             {/* Thumbnails — bounded to main image height on desktop, scrollable if overflow */}

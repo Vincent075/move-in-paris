@@ -159,17 +159,6 @@ export default function LatestApartments() {
                   style={{ backgroundImage: `url('${apt.image}')` }}
                 />
                 <div className="absolute inset-0 bg-noir-deep/0 group-hover:bg-noir-deep/20 transition-all duration-500" />
-                <div className="absolute top-3 left-3">
-                  <span
-                    className={`px-3 py-1 text-[10px] uppercase tracking-wider font-medium ${
-                      apt.status === "Loué"
-                        ? "bg-gris text-blanc"
-                        : "bg-gold text-noir-deep"
-                    }`}
-                  >
-                    {apt.status}
-                  </span>
-                </div>
               </div>
 
               {/* Info */}

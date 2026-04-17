@@ -128,17 +128,6 @@ export default function ApartmentsList() {
                     className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-700"
                     style={{ backgroundImage: `url('${apt.images[0]}')` }}
                   />
-                  <div className="absolute top-4 left-4">
-                    <span
-                      className={`px-3 py-1 text-xs uppercase tracking-wider ${
-                        apt.status === "Loué"
-                          ? "bg-gris text-blanc"
-                          : "bg-gold text-noir-deep"
-                      }`}
-                    >
-                      {apt.status}
-                    </span>
-                  </div>
                   <div className="absolute bottom-4 right-4 bg-noir-deep/60 text-blanc text-xs px-2 py-1">
                     {apt.images.length} photos
                   </div>
