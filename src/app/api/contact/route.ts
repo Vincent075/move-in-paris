@@ -347,8 +347,8 @@ export async function POST(req: NextRequest) {
             ${row("Époque", fields.epoch)}
           </table>
           <div style="background-color:#0D0D0D;padding:20px;border-radius:4px;margin-bottom:16px;">
-            <div style="font-size:11px;color:#B88B58;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Estimation communiquée</div>
-            <div style="font-family:Georgia,serif;font-size:28px;color:#B88B58;font-weight:bold;">${fields.loyerMoveInParis ? Number(fields.loyerMoveInParis).toLocaleString("fr-FR") + " €/mois" : "—"}</div>
+            <div style="font-size:11px;color:#B88B58;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">Fourchette communiquée</div>
+            <div style="font-family:Georgia,serif;font-size:28px;color:#B88B58;font-weight:bold;">${fields.loyerMIPMin && fields.loyerMIPMax ? Number(fields.loyerMIPMin).toLocaleString("fr-FR") + " € – " + Number(fields.loyerMIPMax).toLocaleString("fr-FR") + " €/mois" : "—"}</div>
             <div style="font-size:12px;color:#ffffff80;margin-top:4px;">
               Loyer majoré (encadrement) : ${fields.loyerMajore ? Number(fields.loyerMajore).toLocaleString("fr-FR") + " €" : "—"}
               — ${fields.pricePerM2 ? fields.pricePerM2 + " €/m²" : ""}
