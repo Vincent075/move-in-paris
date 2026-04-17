@@ -16,7 +16,7 @@ const avantages = [
   },
   {
     num: "03",
-    title: "Gestion intégrale",
+    title: "Gestion Opérationnelle",
     desc: "État des lieux, entretien, ménage, petits travaux, relation locataire, comptabilité : nous gérons absolument tout sans aucune implication de votre part.",
   },
   {
