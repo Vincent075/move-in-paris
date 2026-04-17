@@ -7,11 +7,11 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 const navLinks = [
-  { href: "/nos-appartements", label: "Nos appartements", icon: "🏠" },
-  { href: "/a-propos", label: "À propos", icon: "✦" },
-  { href: "/proprietaires", label: "Propriétaires", icon: "🔑" },
-  { href: "/proposer-mon-appartement", label: "Proposer un bien", icon: "📋" },
-  { href: "/contact", label: "Contact", icon: "✉" },
+  { href: "/nos-appartements", label: "Nos appartements" },
+  { href: "/a-propos", label: "À propos" },
+  { href: "/proprietaires", label: "Propriétaires" },
+  { href: "/proposer-mon-appartement", label: "Proposer un bien" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export default function Header() {
@@ -128,13 +128,13 @@ export default function Header() {
                   <Link
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className={`flex items-center gap-4 py-4 px-6 rounded-2xl transition-all ${
+                    className={`flex items-center gap-4 py-5 px-6 rounded-2xl transition-all ${
                       pathname === link.href
-                        ? "bg-gold/10 text-gold"
-                        : "text-blanc/70 hover:bg-white/5 hover:text-white"
+                        ? "bg-gold/10 border border-gold/20 text-gold"
+                        : "text-blanc/70 hover:bg-white/5 hover:text-white border border-transparent"
                     }`}
                   >
-                    <span className="text-2xl">{link.icon}</span>
+                    <div className={`w-1.5 h-8 rounded-full ${pathname === link.href ? "bg-gold" : "bg-white/10"}`} />
                     <span className="font-serif text-2xl">{link.label}</span>
                   </Link>
                 </motion.div>

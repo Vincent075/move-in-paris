@@ -11,103 +11,95 @@ export async function GET(req: NextRequest) {
   if (!address) return NextResponse.json({ error: "Adresse requise" }, { status: 400 });
 
   try {
-    // Step 1: Geocode with Nominatim (free, no API key)
+    // Step 1: Geocode — don't force "Paris" for suburbs
+    const searchQuery = address.includes("Paris") || address.includes("paris")
+      ? address + ", France"
+      : address + ", Île-de-France, France";
+
     const geoRes = await fetch(
-      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address + ", Paris, France")}&format=json&limit=1`,
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchQuery)}&format=json&limit=1&addressdetails=1`,
       { headers: { "User-Agent": "MoveInParis/1.0" } }
     );
     const geoData = await geoRes.json();
-    if (!geoData.length) return NextResponse.json({ places: [], district: "" });
+    if (!geoData.length) return NextResponse.json({ places: [], district: "", error: "Adresse non trouvée" });
 
     const lat = parseFloat(geoData[0].lat);
     const lon = parseFloat(geoData[0].lon);
 
-    // Reverse geocode to get district/city
+    // Extract district from geocode result directly
     let district = "";
-    try {
-      const reverseRes = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&zoom=16`,
-        { headers: { "User-Agent": "MoveInParis/1.0" } }
-      );
-      const reverseData = await reverseRes.json();
-      const addr = reverseData.address || {};
-      // Paris: use suburb (arrondissement name) or postcode
-      if (addr.postcode && addr.postcode.startsWith("75")) {
-        const arrNum = parseInt(addr.postcode.slice(-2));
-        const suffix = arrNum === 1 ? "er" : "e";
-        district = `Paris ${arrNum}${suffix}`;
-      } else if (addr.city || addr.town || addr.municipality) {
-        district = addr.city || addr.town || addr.municipality;
-      } else if (addr.suburb) {
-        district = addr.suburb;
-      }
-    } catch { /* ignore */ }
-
-    // Step 2: Query Overpass API for nearby amenities (500m radius)
-    const overpassQuery = `
-      [out:json][timeout:10];
-      (
-        node["railway"="station"]["station"="subway"](around:800,${lat},${lon});
-        node["railway"="station"]["train"="yes"](around:1000,${lat},${lon});
-        node["shop"="supermarket"](around:500,${lat},${lon});
-        node["leisure"="park"](around:600,${lat},${lon});
-        way["leisure"="park"](around:600,${lat},${lon});
-      );
-      out body;
-    `;
-
-    const overpassRes = await fetch("https://overpass-api.de/api/interpreter", {
-      method: "POST",
-      body: `data=${encodeURIComponent(overpassQuery)}`,
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    });
-    const overpassData = await overpassRes.json();
-
-    const places: NearbyPlace[] = [];
-    const seen = new Set<string>();
-
-    for (const el of overpassData.elements || []) {
-      const name = el.tags?.name;
-      if (!name || seen.has(name)) continue;
-      seen.add(name);
-
-      // Calculate distance
-      const elLat = el.lat || el.center?.lat;
-      const elLon = el.lon || el.center?.lon;
-      let dist = "";
-      if (elLat && elLon) {
-        const meters = haversine(lat, lon, elLat, elLon);
-        const minutes = Math.max(1, Math.round(meters / 80)); // ~80m/min walking
-        dist = `${minutes} min`;
-      }
-
-      if (el.tags?.railway === "station") {
-        const line = el.tags?.["ref:FR:RATP"] || el.tags?.line || "";
-        const displayName = line ? `${name} (${line})` : name;
-        places.push({ type: "Métro", name: displayName, distance: dist });
-      } else if (el.tags?.shop === "supermarket") {
-        places.push({ type: "Commerce", name, distance: dist });
-      } else if (el.tags?.leisure === "park") {
-        places.push({ type: "Parc", name, distance: dist });
-      }
+    const geoAddr = geoData[0].address || {};
+    if (geoAddr.postcode && geoAddr.postcode.startsWith("75")) {
+      const arrNum = parseInt(geoAddr.postcode.slice(-2));
+      district = `Paris ${arrNum}${arrNum === 1 ? "er" : "e"}`;
+    } else if (geoAddr.city || geoAddr.town || geoAddr.village || geoAddr.municipality) {
+      district = geoAddr.city || geoAddr.town || geoAddr.village || geoAddr.municipality;
+    } else if (geoAddr.suburb) {
+      district = geoAddr.suburb;
     }
 
-    // Sort by distance
-    places.sort((a, b) => {
-      const da = parseInt(a.distance) || 99;
-      const db = parseInt(b.distance) || 99;
-      return da - db;
-    });
+    // Step 2: Query Overpass API for nearby amenities
+    const overpassQuery = `
+      [out:json][timeout:8];
+      (
+        node["railway"="station"]["station"="subway"](around:1000,${lat},${lon});
+        node["shop"="supermarket"](around:600,${lat},${lon});
+        node["leisure"="park"](around:800,${lat},${lon});
+        way["leisure"="park"](around:800,${lat},${lon});
+      );
+      out center;
+    `;
 
-    // Limit results
-    const metros = places.filter((p) => p.type === "Métro").slice(0, 3);
-    const commerces = places.filter((p) => p.type === "Commerce").slice(0, 2);
-    const parcs = places.filter((p) => p.type === "Parc").slice(0, 1);
+    let places: NearbyPlace[] = [];
 
-    return NextResponse.json({ places: [...metros, ...commerces, ...parcs], district });
+    try {
+      const overpassRes = await fetch("https://overpass-api.de/api/interpreter", {
+        method: "POST",
+        body: `data=${encodeURIComponent(overpassQuery)}`,
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        signal: AbortSignal.timeout(8000),
+      });
+      const overpassData = await overpassRes.json();
+
+      const seen = new Set<string>();
+
+      for (const el of overpassData.elements || []) {
+        const name = el.tags?.name;
+        if (!name || seen.has(name)) continue;
+        seen.add(name);
+
+        const elLat = el.lat || el.center?.lat;
+        const elLon = el.lon || el.center?.lon;
+        let dist = "";
+        if (elLat && elLon) {
+          const meters = haversine(lat, lon, elLat, elLon);
+          const minutes = Math.max(1, Math.round(meters / 80));
+          dist = `${minutes} min`;
+        }
+
+        if (el.tags?.railway === "station") {
+          places.push({ type: "Métro", name, distance: dist });
+        } else if (el.tags?.shop === "supermarket") {
+          places.push({ type: "Commerce", name, distance: dist });
+        } else if (el.tags?.leisure === "park") {
+          places.push({ type: "Parc", name, distance: dist });
+        }
+      }
+
+      places.sort((a, b) => (parseInt(a.distance) || 99) - (parseInt(b.distance) || 99));
+
+      const metros = places.filter((p) => p.type === "Métro").slice(0, 3);
+      const commerces = places.filter((p) => p.type === "Commerce").slice(0, 2);
+      const parcs = places.filter((p) => p.type === "Parc").slice(0, 1);
+      places = [...metros, ...commerces, ...parcs];
+    } catch {
+      // Overpass timeout — return just district, no nearby
+    }
+
+    return NextResponse.json({ places, district });
   } catch (error) {
     console.error("Nearby API error:", error);
-    return NextResponse.json({ places: [] });
+    return NextResponse.json({ places: [], district: "", error: "Erreur de recherche" });
   }
 }
 

@@ -81,31 +81,44 @@ export default function AddApartment({ password, onSuccess }: { password: string
     .replace(/(^-|-$)/g, "")
     + (district ? "-" + district.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") : "");
 
-  // Auto-fetch nearby places when address changes
-  async function fetchNearby(address: string) {
-    if (address.length < 10) return;
+  const [nearbyError, setNearbyError] = useState("");
+  const [nearbyDone, setNearbyDone] = useState(false);
+
+  async function fetchNearby() {
+    if (fullAddress.length < 5) {
+      setNearbyError("Entrez une adresse plus complète");
+      return;
+    }
     setNearbyLoading(true);
+    setNearbyError("");
+    setNearbyDone(false);
     try {
-      const res = await fetch(`/api/nearby?address=${encodeURIComponent(address)}`);
+      const res = await fetch(`/api/nearby?address=${encodeURIComponent(fullAddress)}`);
       const data = await res.json();
-      if (data.places && data.places.length > 0) {
-        setNearbyRows(data.places);
+      if (data.error) {
+        setNearbyError(data.error);
+      } else {
+        if (data.district) setDistrict(data.district);
+        if (data.places && data.places.length > 0) {
+          setNearbyRows(data.places);
+        }
+        setNearbyDone(true);
       }
-      if (data.district) {
-        setDistrict(data.district);
-      }
-    } catch { /* ignore */ }
+    } catch {
+      setNearbyError("Erreur de connexion — réessayez");
+    }
     setNearbyLoading(false);
   }
 
   function handleFullAddress(value: string) {
     setFullAddress(value);
-    // Auto-extract street name (remove numbers at start)
-    const street = value.replace(/^\d+[,\s]*/,"").split(",")[0].trim();
-    setStreetOnly(street);
-    // Auto-set title from street
-    if (!title || title === streetOnly) {
-      setTitle(street);
+    setNearbyDone(false);
+    // Auto-extract street name (remove number at start)
+    const parts = value.split(",");
+    const street = parts[0].replace(/^\d+[,.\s]*/,"").trim();
+    if (street) {
+      setStreetOnly(street);
+      if (!title) setTitle(street);
     }
   }
 
@@ -296,12 +309,20 @@ export default function AddApartment({ password, onSuccess }: { password: string
 
           <div className="mb-4">
             <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-2">Adresse complète (avec numéro) *</label>
-            <input type="text" required value={fullAddress}
-              onChange={(e) => handleFullAddress(e.target.value)}
-              onBlur={() => fetchNearby(fullAddress)}
-              placeholder="12 rue Pergolèse, Paris 16e"
-              className="w-full px-4 py-3 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
-            <p className="text-xs text-[#6B6B6B] mt-1">Le numéro ne sera pas affiché sur le site. Les métros et commerces à proximité seront détectés automatiquement.</p>
+            <div className="flex gap-2">
+              <input type="text" required value={fullAddress}
+                onChange={(e) => handleFullAddress(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); fetchNearby(); } }}
+                placeholder="12 rue Pergolèse, Paris 16e"
+                className="flex-1 px-4 py-3 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
+              <button type="button" onClick={fetchNearby} disabled={nearbyLoading}
+                className={`px-5 py-3 text-sm font-medium transition-all ${nearbyLoading ? "bg-[#6B6B6B] text-white" : nearbyDone ? "bg-green-600 text-white" : "bg-[#B88B58] text-white hover:bg-[#D4AF7A]"}`}>
+                {nearbyLoading ? "⏳" : nearbyDone ? "✓" : "Rechercher"}
+              </button>
+            </div>
+            {nearbyError && <p className="text-xs text-red-500 mt-1">{nearbyError}</p>}
+            {nearbyDone && <p className="text-xs text-green-600 mt-1">✓ Quartier, métros et commerces détectés automatiquement</p>}
+            {!nearbyDone && !nearbyError && <p className="text-xs text-[#6B6B6B] mt-1">Tapez l&apos;adresse puis cliquez Rechercher. Le numéro ne sera pas affiché sur le site.</p>}
           </div>
 
           <div className="grid sm:grid-cols-3 gap-4 mb-4">
@@ -477,7 +498,7 @@ export default function AddApartment({ password, onSuccess }: { password: string
             <h2 className="font-serif text-2xl text-[#1A1A1A]">À proximité</h2>
             {nearbyLoading && <span className="text-sm text-[#B88B58] animate-pulse">Recherche en cours...</span>}
             {!nearbyLoading && nearbyRows.length > 0 && <span className="text-xs text-green-600">✓ {nearbyRows.length} lieu(x) trouvé(s) automatiquement</span>}
-            {!nearbyLoading && nearbyRows.length === 0 && <button type="button" onClick={() => fetchNearby(fullAddress)} className="text-xs text-[#B88B58] hover:text-[#9A7345]">Rechercher automatiquement</button>}
+            {!nearbyLoading && nearbyRows.length === 0 && <button type="button" onClick={() => fetchNearby()} className="text-xs text-[#B88B58] hover:text-[#9A7345]">Rechercher automatiquement</button>}
           </div>
           {nearbyRows.map((row, i) => (
             <div key={i} className="grid grid-cols-[120px_1fr_100px_40px] gap-3 mb-3">
