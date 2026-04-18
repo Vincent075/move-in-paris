@@ -277,5 +277,101 @@
         "distance": "2 min"
       }
     ]
+  },
+  {
+    "slug": "2-pieces-chaillot-2-paris-16e",
+    "title": "2 pièces Chaillot #2",
+    "address": "Rue de Bassano, Paris 16e",
+    "district": "Paris 16e",
+    "surface": 65,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "1er étage",
+    "status": "À louer",
+    "description": "2/3 pièces de standing entièrement meublé et équipé d’une surface d’environ 65 m²Au 1er étage avec ascenseur d’une immeuble \nHaussmannienDécoration moderne et contemporaine, mobilier signéEntrée avec grand dressing sur mesure\nSalon avec canapé en cuir 3 places convertible et TV écran 4K \nTable basse up&down avec ouverture pour table dinatoire\nAbonnement triple-play : Internet-Télévision-Téléphone (fibre optique)\nChambre avec lit King SizeSalle d’eau avec baignoire, WC séparés\nCuisine ouverte entièrement équipée\nAppartement donnant sur rue calme\nChauffage et eau chaude collectif",
+    "features": [
+      "Wifi",
+      "Lave-linge",
+      "Four",
+      "Congélateur",
+      "Toaster",
+      "Digicode",
+      "Parquet point de Hongrie",
+      "Baignoire",
+      "Smart TV",
+      "Sèche-linge",
+      "Micro-ondes",
+      "Machine Nespresso",
+      "Aspirateur",
+      "Chauffage collectif",
+      "Double vitrage",
+      "Fibre optique",
+      "Sèche-cheveux",
+      "Gardien",
+      "Fer à repasser",
+      "Plaques de cuisson",
+      "Lave-vaisselle",
+      "Cuisine équipée",
+      "Réfrigérateur",
+      "Bouilloire",
+      "Table à repasser",
+      "Ascenseur",
+      "Toilettes séparées"
+    ],
+    "photos": "2-pieces-chaillot-2-paris-16e",
+    "images": [
+      "/apartments/2-pieces-chaillot-2-paris-16e/photo-1.jpg",
+      "/apartments/2-pieces-chaillot-2-paris-16e/photo-2.jpg",
+      "/apartments/2-pieces-chaillot-2-paris-16e/photo-3.jpg",
+      "/apartments/2-pieces-chaillot-2-paris-16e/photo-4.jpg",
+      "/apartments/2-pieces-chaillot-2-paris-16e/photo-5.jpg",
+      "/apartments/2-pieces-chaillot-2-paris-16e/photo-6.jpg",
+      "/apartments/2-pieces-chaillot-2-paris-16e/photo-7.jpg",
+      "/apartments/2-pieces-chaillot-2-paris-16e/photo-8.jpg",
+      "/apartments/2-pieces-chaillot-2-paris-16e/photo-9.jpg",
+      "/apartments/2-pieces-chaillot-2-paris-16e/photo-10.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Kléber",
+        "distance": "5 min",
+        "lines": [
+          "6"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Iéna",
+        "distance": "6 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Alma-Marceau",
+        "distance": "6 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "G20",
+        "distance": "2 min"
+      },
+      {
+        "type": "Commerce",
+        "name": "monop'",
+        "distance": "3 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Thomas Jefferson",
+        "distance": "2 min"
+      }
+    ]
   }
 ]
