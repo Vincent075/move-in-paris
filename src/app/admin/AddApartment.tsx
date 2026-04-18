@@ -683,11 +683,11 @@ export default function AddApartment({ password, onSuccess }: { password: string
           <h2 className="font-serif text-2xl text-[#1A1A1A] mb-2">Équipements</h2>
           <p className="text-xs text-[#6B6B6B] mb-6">Cochez les équipements présents dans l&apos;appartement</p>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
+          <div className="columns-2 sm:columns-3 lg:columns-4 gap-3 mb-6">
             {allFeatures.map((feature) => (
               <label
                 key={feature}
-                className={`flex items-center gap-2 px-3 py-2 border cursor-pointer transition-all text-sm ${
+                className={`flex items-center gap-2 px-3 py-2 border cursor-pointer transition-all text-sm mb-3 break-inside-avoid ${
                   selectedFeatures.includes(feature)
                     ? "border-[#B88B58] bg-[#B88B58]/10 text-[#1A1A1A]"
                     : "border-[#E8E4DF] text-[#6B6B6B] hover:border-[#B88B58]/50"
