@@ -80,7 +80,7 @@
     "titleLine1": "L'excellence au service",
     "titleLine2": "de votre projet",
     "stats": [
-      { "value": 117, "suffix": "K+", "label": "Nuits d'hébergement" },
+      { "value": 117000, "suffix": "+", "label": "Nuits d'hébergement" },
       { "value": 95, "suffix": "%+", "label": "Taux d'occupation" },
       { "value": 3, "suffix": " mois", "label": "Durée moyenne de séjour" },
       { "value": 1300, "suffix": "+", "label": "Collaborateurs accueillis" }

@@ -80,7 +80,7 @@
     "titleLine1": "Excellence at the service",
     "titleLine2": "of your project",
     "stats": [
-      { "value": 117, "suffix": "K+", "label": "Nights hosted" },
+      { "value": 117000, "suffix": "+", "label": "Nights hosted" },
       { "value": 95, "suffix": "%+", "label": "Occupancy rate" },
       { "value": 3, "suffix": " months", "label": "Average stay length" },
       { "value": 1300, "suffix": "+", "label": "Employees hosted" }

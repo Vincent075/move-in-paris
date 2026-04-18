@@ -3,16 +3,18 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 import PartnerLogos from "./PartnerLogos";
-import { useT, useTArray } from "@/i18n/LocaleProvider";
+import { useT, useTArray, useLocale } from "@/i18n/LocaleProvider";
 
 function AnimatedCounter({
   target,
   suffix = "",
   prefix = "",
+  format,
 }: {
   target: number;
   suffix?: string;
   prefix?: string;
+  format?: (n: number) => string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true });
@@ -34,7 +36,7 @@ function AnimatedCounter({
   return (
     <span ref={ref}>
       {prefix}
-      {count}
+      {format ? format(count) : count}
       {suffix}
     </span>
   );
@@ -43,9 +45,30 @@ function AnimatedCounter({
 type Stat = { value: number; suffix: string; label: string };
 type Reason = { title: string; text: string };
 
+const STATS_REFERENCE_DATE = Date.UTC(2026, 3, 18);
+const NIGHTS_PER_DAY = 55;
+const COLLAB_PER_DAY = 0.6;
+
+function useDynamicStats(stats: Stat[]): Stat[] {
+  const [dynamic, setDynamic] = useState(stats);
+  useEffect(() => {
+    const days = Math.max(0, (Date.now() - STATS_REFERENCE_DATE) / 86_400_000);
+    setDynamic(
+      stats.map((s, i) => {
+        if (i === 0) return { ...s, value: 117000 + Math.floor(days * NIGHTS_PER_DAY) };
+        if (i === 3) return { ...s, value: 1300 + Math.floor(days * COLLAB_PER_DAY) };
+        return s;
+      })
+    );
+  }, [stats]);
+  return dynamic;
+}
+
 export default function WhyUs() {
   const t = useT();
-  const stats = useTArray<Stat>("whyUs.stats");
+  const { locale } = useLocale();
+  const rawStats = useTArray<Stat>("whyUs.stats");
+  const stats = useDynamicStats(rawStats);
   const reasons = useTArray<Reason>("whyUs.reasons");
   return (
     <section id="pourquoi" className="relative overflow-hidden">
@@ -63,7 +86,11 @@ export default function WhyUs() {
                 className="text-center"
               >
                 <div className="font-serif text-4xl md:text-5xl text-gold font-bold mb-2">
-                  <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+                  <AnimatedCounter
+                    target={stat.value}
+                    suffix={stat.suffix}
+                    format={stat.value >= 1000 ? (n) => n.toLocaleString(locale) : undefined}
+                  />
                 </div>
                 <div className="text-blanc/50 text-sm tracking-wide uppercase">
                   {stat.label}
