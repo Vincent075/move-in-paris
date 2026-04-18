@@ -205,14 +205,14 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
             </div>
 
             {/* Thumbnails — horizontal scroll on mobile, vertical bounded on desktop */}
-            <div className="lg:relative -mx-6 px-6 lg:mx-0 lg:px-0">
-              <div className="flex gap-2 overflow-x-auto snap-x snap-mandatory pb-2 thumbs-scroll lg:grid lg:grid-cols-2 lg:absolute lg:inset-0 lg:overflow-y-auto lg:overflow-x-hidden lg:pr-1 lg:pb-0 lg:snap-none">
+            <div className="lg:relative">
+              <div className="flex gap-2 overflow-x-auto snap-x pb-2 thumbs-scroll lg:grid lg:grid-cols-2 lg:absolute lg:inset-0 lg:overflow-y-auto lg:overflow-x-hidden lg:pr-1 lg:pb-0">
                 {apt.images.map((img, i) => (
                   <button
                     key={i}
                     onClick={() => setCurrentImage(i)}
                     aria-label={`Photo ${i + 1}`}
-                    className={`flex-shrink-0 w-24 h-24 snap-start lg:w-auto lg:h-auto lg:aspect-square bg-cover bg-center transition-all duration-300 ${
+                    className={`flex-shrink-0 w-20 h-20 snap-start lg:w-auto lg:h-auto lg:aspect-square bg-cover bg-center transition-all duration-300 ${
                       currentImage === i
                         ? "ring-2 ring-gold opacity-100"
                         : "opacity-60 hover:opacity-100"
