@@ -8,6 +8,11 @@ const apartments = apartmentsDataRaw as ApartmentRecord[];
 const STATIC_ROUTES: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"] }[] = [
   { path: "", priority: 1.0, changeFrequency: "weekly" },
   { path: "/nos-appartements", priority: 0.95, changeFrequency: "daily" },
+  { path: "/location-corporate-paris", priority: 0.92, changeFrequency: "monthly" },
+  { path: "/location-meublee-entreprise", priority: 0.92, changeFrequency: "monthly" },
+  { path: "/location-meublee-expatrie-paris", priority: 0.92, changeFrequency: "monthly" },
+  { path: "/bail-mobilite-paris", priority: 0.9, changeFrequency: "monthly" },
+  { path: "/code-civil-bail-meuble", priority: 0.88, changeFrequency: "monthly" },
   { path: "/proprietaires", priority: 0.85, changeFrequency: "monthly" },
   { path: "/proposer-mon-appartement", priority: 0.85, changeFrequency: "monthly" },
   { path: "/estimation", priority: 0.8, changeFrequency: "monthly" },

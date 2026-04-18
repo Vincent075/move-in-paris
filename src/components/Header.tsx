@@ -14,7 +14,17 @@ export default function Header() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const isApartmentPage = pathname?.startsWith("/appartement/") ?? false;
-  const IMMERSIVE_PAGES = new Set(["/a-propos", "/proprietaires", "/estimation", "/nos-appartements"]);
+  const IMMERSIVE_PAGES = new Set([
+    "/a-propos",
+    "/proprietaires",
+    "/estimation",
+    "/nos-appartements",
+    "/location-corporate-paris",
+    "/location-meublee-entreprise",
+    "/location-meublee-expatrie-paris",
+    "/bail-mobilite-paris",
+    "/code-civil-bail-meuble",
+  ]);
   const isImmersivePage = pathname ? IMMERSIVE_PAGES.has(pathname) : false;
   const fullyTransparent = isHome || isImmersivePage || isApartmentPage;
   const mobileOnlyTransparent = false;

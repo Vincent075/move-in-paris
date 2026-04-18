@@ -74,6 +74,18 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Topics SEO — maillage interne */}
+        <div className="pt-8 border-t border-blanc/10 mb-8">
+          <h4 className="text-blanc text-xs tracking-[0.2em] uppercase mb-4">Nos expertises</h4>
+          <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-blanc/50">
+            <Link href="/location-corporate-paris" className="hover:text-gold transition-colors">Location corporate Paris</Link>
+            <Link href="/location-meublee-entreprise" className="hover:text-gold transition-colors">Location meublée pour entreprise</Link>
+            <Link href="/location-meublee-expatrie-paris" className="hover:text-gold transition-colors">Location pour expatriés</Link>
+            <Link href="/bail-mobilite-paris" className="hover:text-gold transition-colors">Bail mobilité Paris</Link>
+            <Link href="/code-civil-bail-meuble" className="hover:text-gold transition-colors">Bail Code Civil</Link>
+          </div>
+        </div>
+
         {/* Bottom */}
         <div className="pt-8 border-t border-blanc/10 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-blanc/30 text-xs">
