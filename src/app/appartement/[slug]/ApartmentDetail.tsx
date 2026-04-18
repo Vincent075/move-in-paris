@@ -173,7 +173,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="grid lg:grid-cols-[1fr_300px] gap-4">
             {/* Main image */}
-            <div className="relative aspect-[16/10] overflow-hidden bg-gris-clair cursor-pointer -mx-6 lg:mx-0" onClick={() => setLightboxOpen(true)}>
+            <div className="relative aspect-[16/10] overflow-hidden bg-gris-clair cursor-pointer" onClick={() => setLightboxOpen(true)}>
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentImage}
@@ -204,15 +204,14 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
               </div>
             </div>
 
-            {/* Thumbnails — horizontal scroll edge-to-edge on mobile, vertical bounded on desktop */}
-            <div className="lg:relative -mx-6 lg:mx-0">
-              <div className="flex gap-2 overflow-x-auto snap-x pl-6 pr-6 pb-2 thumbs-scroll lg:grid lg:grid-cols-2 lg:absolute lg:inset-0 lg:overflow-y-auto lg:overflow-x-hidden lg:p-0 lg:pr-1 lg:pb-0">
+            {/* Thumbnails — bounded to main image height on desktop, scrollable if overflow */}
+            <div className="lg:relative">
+              <div className="grid grid-cols-3 lg:grid-cols-2 gap-2 lg:absolute lg:inset-0 lg:overflow-y-auto lg:pr-1 thumbs-scroll">
                 {apt.images.map((img, i) => (
                   <button
                     key={i}
                     onClick={() => setCurrentImage(i)}
-                    aria-label={`Photo ${i + 1}`}
-                    className={`flex-shrink-0 w-20 h-20 snap-start lg:w-auto lg:h-auto lg:aspect-square bg-cover bg-center transition-all duration-300 ${
+                    className={`aspect-square bg-cover bg-center transition-all duration-300 ${
                       currentImage === i
                         ? "ring-2 ring-gold opacity-100"
                         : "opacity-60 hover:opacity-100"
