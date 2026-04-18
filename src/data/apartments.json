@@ -374,5 +374,95 @@
         "distance": "2 min"
       }
     ]
+  },
+  {
+    "slug": "2-pieces-porte-dauphine-paris-16e",
+    "title": "2 pièces Porte Dauphine",
+    "address": "Boulevard Flandrin, Paris 16e",
+    "district": "Paris 16e",
+    "surface": 32,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "2e étage",
+    "status": "À louer",
+    "description": "2 pièces d’une surface d’environ 32 m2, entièrement refait à neuf par architecte.\nAu 2ème étage sans ascenseur d’un immeuble ancien.\nSéjour avec canapé convertible 2 places, une table basse et un Tv écran plat.\nUne cuisine toute équipée et ouverte sur le séjour.\nÉquipement : lave-vaisselle, four micro-onde, plaques à inductions, réfrigérateur, machine à café NespressoMachine à laver séchante\nUne chambre avec un lit double et rangements.\nSalle d’eau avec douche et WC.\nChauffage et eau chaude individuel électrique.",
+    "features": [
+      "Aspirateur",
+      "Bouilloire",
+      "Chauffage électrique individuel",
+      "Congélateur",
+      "Cuisine équipée",
+      "Digicode",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Fer à repasser",
+      "Four",
+      "Fibre optique",
+      "Interphone",
+      "Lave-linge séchant",
+      "Lave-vaisselle",
+      "Lit double",
+      "Canapé convertible",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Sèche-cheveux",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Wifi"
+    ],
+    "photos": "2-pieces-porte-dauphine-paris-16e",
+    "images": [
+      "/apartments/2-pieces-porte-dauphine-paris-16e/photo-1.jpg",
+      "/apartments/2-pieces-porte-dauphine-paris-16e/photo-2.jpg",
+      "/apartments/2-pieces-porte-dauphine-paris-16e/photo-3.jpg",
+      "/apartments/2-pieces-porte-dauphine-paris-16e/photo-4.jpg",
+      "/apartments/2-pieces-porte-dauphine-paris-16e/photo-5.jpg",
+      "/apartments/2-pieces-porte-dauphine-paris-16e/photo-6.jpg",
+      "/apartments/2-pieces-porte-dauphine-paris-16e/photo-7.jpg",
+      "/apartments/2-pieces-porte-dauphine-paris-16e/photo-8.jpg",
+      "/apartments/2-pieces-porte-dauphine-paris-16e/photo-9.jpg",
+      "/apartments/2-pieces-porte-dauphine-paris-16e/photo-10.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Rue de la Pompe",
+        "distance": "5 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Porte Dauphine",
+        "distance": "7 min",
+        "lines": [
+          "2"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Victor Hugo",
+        "distance": "12 min",
+        "lines": [
+          "2"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "U Express",
+        "distance": "2 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Robert Schuman",
+        "distance": "2 min"
+      }
+    ]
   }
 ]
