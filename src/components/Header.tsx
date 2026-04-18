@@ -13,6 +13,8 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const isApartmentPage = pathname?.startsWith("/appartement/") ?? false;
+  const transparentByDefault = isHome || isApartmentPage;
   const t = useT();
   const { locale, setLocale } = useLocale();
 
@@ -31,7 +33,7 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const headerBg = isHome && !scrolled
+  const headerBg = transparentByDefault && !scrolled
     ? "bg-transparent"
     : "bg-noir-deep/95 backdrop-blur-xl shadow-2xl shadow-black/20";
 

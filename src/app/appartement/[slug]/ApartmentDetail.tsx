@@ -155,8 +155,8 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
         )}
       </AnimatePresence>
 
-      {/* Breadcrumb */}
-      <div className="pt-24 pb-2 bg-blanc-chaud">
+      {/* Breadcrumb — desktop only (mobile : la cover hero remplace) */}
+      <div className="hidden lg:block pt-24 pb-2 bg-blanc-chaud">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="flex items-center gap-2 text-xs text-gris">
             <Link href="/" className="hover:text-gold transition-colors">{t("apartment.breadcrumbHome")}</Link>
@@ -169,11 +169,13 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
       </div>
 
       {/* Gallery */}
-      <section className="bg-blanc-chaud pb-4">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+      <section className="bg-blanc-chaud lg:pb-4">
+        <div className="lg:max-w-7xl lg:mx-auto lg:px-12">
           <div className="grid lg:grid-cols-[1fr_300px] gap-4">
             {/* Main image */}
-            <div className="relative aspect-[4/3] sm:aspect-[16/10] overflow-hidden bg-gris-clair cursor-pointer -mx-6 lg:mx-0" onClick={() => setLightboxOpen(true)}>
+            <div className="relative h-[85vh] lg:h-auto lg:aspect-[16/10] overflow-hidden bg-gris-clair cursor-pointer" onClick={() => setLightboxOpen(true)}>
+              {/* Gradient haut (mobile uniquement) pour lisibilité du header transparent */}
+              <div className="lg:hidden absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-noir-deep/60 to-transparent pointer-events-none z-10" />
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentImage}
