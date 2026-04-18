@@ -304,6 +304,9 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                 animate={{ opacity: 1, y: 0 }}
               >
                 <h1 className="font-serif text-4xl md:text-5xl text-noir mb-2">
+                  <span className="block text-gold uppercase text-xs tracking-[0.2em] font-sans font-medium mb-3">
+                    {t("apartment.h1Eyebrow")} {apt.district}
+                  </span>
                   {title}
                 </h1>
                 <p className="text-gris text-lg font-light mb-8">{address}</p>

@@ -7,16 +7,20 @@ import { getMessages } from "@/i18n/server";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { messages, locale } = await getMessages();
+  const canonical = "https://www.move-in-paris.com/nos-appartements";
   if (locale === "en") {
     return {
-      title: "Our furnished apartments in Paris | Move in Paris",
-      description: "Discover our selection of high-end furnished apartments in Paris. Corporate and expat rentals, from studios to 3-bedroom flats in the finest Paris neighborhoods.",
+      title: "Furnished apartments in Paris — Corporate & expat rentals | Move in Paris",
+      description: "High-end furnished rentals in Paris for corporates and expats. Studios to 3-bedroom apartments in the finest neighborhoods, fully managed and move-in ready.",
+      alternates: { canonical },
+      openGraph: { title: "Furnished apartments in Paris | Move in Paris", description: "High-end furnished rentals for corporates and expats.", url: canonical },
     };
   }
   return {
-    title: "Nos Appartements Meublés à Paris | Move in Paris",
-    description: messages.apartmentsPage.subtitle,
-    keywords: "appartement meublé paris, location meublée corporate, location expatrié paris, studio meublé paris, appartement meublé 75017",
+    title: "Location meublée à Paris — Appartements meublés haut de gamme | Move in Paris",
+    description: "Location meublée à Paris pour entreprises et expatriés. Appartements meublés haut de gamme dans les meilleurs quartiers (16e, 17e, 8e…), gestion clé en main.",
+    alternates: { canonical },
+    openGraph: { title: "Location meublée à Paris | Move in Paris", description: messages.apartmentsPage.subtitle, url: canonical },
   };
 }
 

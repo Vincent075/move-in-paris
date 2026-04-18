@@ -37,6 +37,17 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+const organizationLd = {
+  "@context": "https://schema.org",
+  "@type": "RealEstateAgent",
+  name: "Move in Paris",
+  url: "https://www.move-in-paris.com",
+  logo: "https://www.move-in-paris.com/Logo-gold.png",
+  description: "Agence parisienne spécialisée dans la location meublée haut de gamme pour entreprises et expatriés.",
+  areaServed: { "@type": "City", name: "Paris" },
+  address: { "@type": "PostalAddress", addressLocality: "Paris", addressCountry: "FR" },
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -48,6 +59,12 @@ export default async function RootLayout({
       lang={locale}
       className={`${playfair.variable} ${inter.variable} h-full antialiased`}
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
+        />
+      </head>
       <body className="min-h-full flex flex-col font-sans">
         <LocaleProvider locale={locale} messages={messages}>
           {children}

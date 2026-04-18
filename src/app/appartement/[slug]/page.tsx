@@ -15,17 +15,19 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const apt = apartmentsData.find((a) => a.slug === slug);
   if (!apt) return { title: "Appartement non trouvé" };
-  const title = `${apt.title} — ${apt.surface}m² ${apt.district} | Move in Paris`;
-  const description = `Location meublée corporate : ${apt.title}, ${apt.surface}m², ${apt.bedrooms} chambre(s), ${apt.district}. ${apt.description.slice(0, 150)}...`;
+  const title = `Location meublée ${apt.district} — ${apt.title}, ${apt.surface}m² | Move in Paris`;
+  const description = `Location meublée à Paris ${apt.district} : ${apt.title}, ${apt.surface}m², ${apt.bedrooms} chambre(s). Appartement meublé haut de gamme pour location corporate et expatriés. ${apt.description.slice(0, 110)}...`;
   const cover = apt.images && apt.images.length > 0 ? apt.images[0] : "/Logo-gold.png";
+  const canonical = `https://www.move-in-paris.com/appartement/${apt.slug}`;
   return {
     title,
     description,
-    keywords: `location meublée ${apt.district}, appartement meublé ${apt.address}, location corporate paris`,
+    alternates: { canonical },
     openGraph: {
       type: "website",
       siteName: "Move in Paris",
       locale: "fr_FR",
+      url: canonical,
       title,
       description,
       images: [{ url: cover, width: 1200, height: 630, alt: apt.title }],
@@ -55,10 +57,47 @@ export default async function ApartmentPage({ params }: { params: Promise<{ slug
     );
   }
 
+  const url = `https://www.move-in-paris.com/appartement/${apt.slug}`;
+  const absoluteImages = apt.images?.map((img) =>
+    img.startsWith("http") ? img : `https://www.move-in-paris.com${img}`,
+  );
+  const apartmentLd = {
+    "@context": "https://schema.org",
+    "@type": "Apartment",
+    name: `Location meublée ${apt.district} — ${apt.title}`,
+    description: apt.description,
+    url,
+    image: absoluteImages,
+    floorSize: { "@type": "QuantitativeValue", value: apt.surface, unitCode: "MTK" },
+    numberOfRooms: apt.rooms,
+    numberOfBedrooms: apt.bedrooms,
+    numberOfBathroomsTotal: apt.bathrooms,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: apt.address,
+      addressLocality: "Paris",
+      addressRegion: apt.district,
+      addressCountry: "FR",
+    },
+    accommodationCategory: "Furnished apartment",
+    petsAllowed: false,
+  };
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Accueil", item: "https://www.move-in-paris.com" },
+      { "@type": "ListItem", position: 2, name: "Nos appartements", item: "https://www.move-in-paris.com/nos-appartements" },
+      { "@type": "ListItem", position: 3, name: apt.title, item: url },
+    ],
+  };
+
   return (
     <>
       <Header />
       <main>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(apartmentLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
         <ApartmentDetail apartment={apt} />
       </main>
       <Footer />

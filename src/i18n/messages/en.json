@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "Move in Paris — Corporate & expat furnished rentals",
-    "description": "Paris agency specializing in high-end furnished rentals for companies and expatriates. Full operational management and bespoke relocation support."
+    "title": "Furnished rentals in Paris — Corporate & expats | Move in Paris",
+    "description": "Furnished rentals in Paris for companies and expats: specialist agency offering high-end furnished apartments, corporate leases, fully managed and move-in ready."
   },
   "common": {
     "readMore": "Read more",
@@ -157,6 +157,7 @@
     "nearby": "Nearby",
     "breadcrumbApartments": "Our apartments",
     "breadcrumbHome": "Home",
+    "h1Eyebrow": "Furnished rental in",
     "requestVisit": "Request a viewing",
     "requestSent": "Request sent!",
     "requestSentDetail": "We'll get back to you shortly.",
@@ -173,8 +174,8 @@
   "apartmentsPage": {
     "breadcrumbHome": "Home",
     "breadcrumbCurrent": "Our apartments",
-    "title": "Our apartments",
-    "subtitle": "Discover our selection of high-end furnished apartments in the finest Paris neighborhoods and inner suburbs.",
+    "title": "Furnished rentals in Paris",
+    "subtitle": "Discover our selection of high-end furnished apartments in the finest Paris neighborhoods and inner suburbs. Corporate and expat rentals, fully managed.",
     "searchTitle": "Find an apartment",
     "reset": "Reset",
     "foundSingular": "apartment found",

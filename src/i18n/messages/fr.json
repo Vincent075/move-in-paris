@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "Move in Paris — Location meublée corporate & expatriés",
-    "description": "Agence parisienne spécialisée dans la location meublée haut de gamme pour entreprises et expatriés. Gestion opérationnelle, accompagnement sur-mesure."
+    "title": "Location meublée à Paris — Corporate & expatriés | Move in Paris",
+    "description": "Location meublée à Paris pour entreprises et expatriés : agence spécialisée en appartements meublés haut de gamme. Gestion clé en main, baux corporate, accompagnement sur-mesure."
   },
   "common": {
     "readMore": "En savoir plus",
@@ -157,6 +157,7 @@
     "nearby": "À proximité",
     "breadcrumbApartments": "Nos appartements",
     "breadcrumbHome": "Accueil",
+    "h1Eyebrow": "Location meublée à",
     "requestVisit": "Demander une visite",
     "requestSent": "Demande envoyée !",
     "requestSentDetail": "Nous vous recontacterons rapidement.",
@@ -173,8 +174,8 @@
   "apartmentsPage": {
     "breadcrumbHome": "Accueil",
     "breadcrumbCurrent": "Nos appartements",
-    "title": "Nos appartements",
-    "subtitle": "Découvrez notre sélection d'appartements meublés haut de gamme dans les meilleurs quartiers de Paris et sa proche banlieue.",
+    "title": "Location meublée à Paris",
+    "subtitle": "Découvrez notre sélection d'appartements meublés haut de gamme dans les meilleurs quartiers de Paris et sa proche banlieue. Location meublée corporate et expatriés, gestion clé en main.",
     "searchTitle": "Rechercher un appartement",
     "reset": "Réinitialiser",
     "foundSingular": "appartement trouvé",
