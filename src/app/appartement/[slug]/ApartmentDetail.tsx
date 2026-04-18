@@ -173,7 +173,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="grid lg:grid-cols-[1fr_300px] gap-4">
             {/* Main image */}
-            <div className="relative aspect-[16/10] overflow-hidden bg-gris-clair cursor-pointer" onClick={() => setLightboxOpen(true)}>
+            <div className="relative aspect-[16/10] overflow-hidden bg-gris-clair cursor-pointer -mx-6 lg:mx-0" onClick={() => setLightboxOpen(true)}>
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentImage}
@@ -204,9 +204,9 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
               </div>
             </div>
 
-            {/* Thumbnails — horizontal scroll on mobile, vertical bounded on desktop */}
-            <div className="lg:relative">
-              <div className="flex gap-2 overflow-x-auto snap-x pb-2 thumbs-scroll lg:grid lg:grid-cols-2 lg:absolute lg:inset-0 lg:overflow-y-auto lg:overflow-x-hidden lg:pr-1 lg:pb-0">
+            {/* Thumbnails — horizontal scroll edge-to-edge on mobile, vertical bounded on desktop */}
+            <div className="lg:relative -mx-6 lg:mx-0">
+              <div className="flex gap-2 overflow-x-auto snap-x pl-6 pr-6 pb-2 thumbs-scroll lg:grid lg:grid-cols-2 lg:absolute lg:inset-0 lg:overflow-y-auto lg:overflow-x-hidden lg:p-0 lg:pr-1 lg:pb-0">
                 {apt.images.map((img, i) => (
                   <button
                     key={i}
