@@ -16,10 +16,8 @@ export default function Header() {
   const isApartmentPage = pathname?.startsWith("/appartement/") ?? false;
   const IMMERSIVE_PAGES = new Set(["/a-propos", "/proprietaires", "/estimation"]);
   const isImmersivePage = pathname ? IMMERSIVE_PAGES.has(pathname) : false;
-  // Pages avec hero sur tout écran (mobile + desktop) → header transparent partout
-  const fullyTransparent = isHome || isImmersivePage;
-  // Pages appart : hero seulement sur mobile (desktop a un breadcrumb beige)
-  const mobileOnlyTransparent = isApartmentPage;
+  const fullyTransparent = isHome || isImmersivePage || isApartmentPage;
+  const mobileOnlyTransparent = false;
   const t = useT();
   const { locale, setLocale } = useLocale();
 

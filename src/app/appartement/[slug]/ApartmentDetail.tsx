@@ -155,97 +155,83 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
         )}
       </AnimatePresence>
 
-      {/* Breadcrumb — desktop only (mobile : la cover hero remplace) */}
-      <div className="hidden lg:block pt-24 pb-2 bg-blanc-chaud">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="flex items-center gap-2 text-xs text-gris">
-            <Link href="/" className="hover:text-gold transition-colors">{t("apartment.breadcrumbHome")}</Link>
-            <span>/</span>
-            <Link href="/nos-appartements" className="hover:text-gold transition-colors">{t("apartment.breadcrumbApartments")}</Link>
-            <span>/</span>
-            <span className="text-gold">{title}</span>
+      {/* Gallery — hero immersif full-bleed, mobile + desktop */}
+      <section className="relative bg-blanc-chaud">
+        <div className="relative h-[65vh] lg:h-[80vh] overflow-hidden bg-gris-clair cursor-pointer" onClick={() => setLightboxOpen(true)}>
+          {/* Gradient haut pour lisibilité du header transparent */}
+          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-noir-deep/60 to-transparent pointer-events-none z-10" />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentImage}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: `url('${apt.images[currentImage]}')` }}
+            />
+          </AnimatePresence>
+          {/* Arrows — desktop only */}
+          <button
+            onClick={(e) => { e.stopPropagation(); setCurrentImage((p) => (p - 1 + apt.images.length) % apt.images.length); }}
+            aria-label="Photo précédente"
+            className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-noir-deep/60 backdrop-blur-sm text-blanc items-center justify-center hover:bg-gold transition-colors z-20"
+          >
+            &#8249;
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); setCurrentImage((p) => (p + 1) % apt.images.length); }}
+            aria-label="Photo suivante"
+            className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-noir-deep/60 backdrop-blur-sm text-blanc items-center justify-center hover:bg-gold transition-colors z-20"
+          >
+            &#8250;
+          </button>
+          {/* Bouton Photos — visible mobile + desktop */}
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setLightboxOpen(true); }}
+            className="absolute bottom-4 left-4 bg-noir-deep/70 backdrop-blur-sm text-blanc text-sm px-4 py-2 flex items-center gap-2 hover:bg-noir-deep transition-colors z-20"
+            aria-label={`Voir les ${apt.images.length} photos`}
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+              <circle cx="12" cy="13" r="3" />
+            </svg>
+            Photos · {apt.images.length}
+          </button>
+          {/* Compteur en bas à droite */}
+          <div className="absolute bottom-4 right-4 bg-noir-deep/70 backdrop-blur-sm text-blanc text-xs px-3 py-2 z-20">
+            {currentImage + 1} / {apt.images.length}
           </div>
-        </div>
-      </div>
 
-      {/* Gallery */}
-      <section className="bg-blanc-chaud lg:pb-4">
-        <div className="lg:max-w-7xl lg:mx-auto lg:px-12">
-          <div className="grid lg:grid-cols-[1fr_300px] gap-4">
-            {/* Main image */}
-            <div className="relative h-[65vh] lg:h-auto lg:aspect-[16/10] overflow-hidden bg-gris-clair cursor-pointer" onClick={() => setLightboxOpen(true)}>
-              {/* Gradient haut (mobile uniquement) pour lisibilité du header transparent */}
-              <div className="lg:hidden absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-noir-deep/60 to-transparent pointer-events-none z-10" />
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentImage}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="absolute inset-0 bg-cover bg-center"
-                  style={{ backgroundImage: `url('${apt.images[currentImage]}')` }}
+          {/* Thumbs en overlay filigrane (desktop only) — bas de la cover, scroll horizontal */}
+          <div className="hidden lg:block absolute bottom-0 inset-x-0 z-10 bg-gradient-to-t from-noir-deep/65 via-noir-deep/30 to-transparent pt-16 pb-4 px-6">
+            <div
+              className="flex gap-2 overflow-x-auto thumbs-scroll"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {apt.images.map((img, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentImage(i)}
+                  aria-label={`Photo ${i + 1}`}
+                  className={`flex-shrink-0 w-24 h-16 bg-cover bg-center transition-all duration-300 ${
+                    currentImage === i
+                      ? "ring-2 ring-gold opacity-100"
+                      : "opacity-60 hover:opacity-100"
+                  }`}
+                  style={{ backgroundImage: `url('${img}')` }}
                 />
-              </AnimatePresence>
-              {/* Arrows — desktop only */}
-              <button
-                onClick={(e) => { e.stopPropagation(); setCurrentImage((p) => (p - 1 + apt.images.length) % apt.images.length); }}
-                aria-label="Photo précédente"
-                className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-noir-deep/60 text-blanc items-center justify-center hover:bg-gold transition-colors"
-              >
-                &#8249;
-              </button>
-              <button
-                onClick={(e) => { e.stopPropagation(); setCurrentImage((p) => (p + 1) % apt.images.length); }}
-                aria-label="Photo suivante"
-                className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-noir-deep/60 text-blanc items-center justify-center hover:bg-gold transition-colors"
-              >
-                &#8250;
-              </button>
-              {/* Counter — desktop only */}
-              <div className="hidden lg:block absolute bottom-4 right-4 bg-noir-deep/70 text-blanc text-xs px-3 py-1">
-                {currentImage + 1} / {apt.images.length}
-              </div>
-              {/* Mobile : bouton Photos overlay */}
-              <button
-                type="button"
-                onClick={(e) => { e.stopPropagation(); setLightboxOpen(true); }}
-                className="lg:hidden absolute bottom-4 left-4 bg-noir-deep/70 backdrop-blur-sm text-blanc text-sm px-4 py-2 flex items-center gap-2 hover:bg-noir-deep transition-colors"
-                aria-label={`Voir les ${apt.images.length} photos`}
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
-                  <circle cx="12" cy="13" r="3" />
-                </svg>
-                Photos · {apt.images.length}
-              </button>
+              ))}
             </div>
-
-            {/* Thumbnails — desktop only (cachées sur mobile, le bouton Photos ouvre le carrousel) */}
-            <div className="hidden lg:block lg:relative">
-              <div className="grid grid-cols-2 gap-2 absolute inset-0 overflow-y-auto pr-1 thumbs-scroll">
-                {apt.images.map((img, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setCurrentImage(i)}
-                    className={`aspect-square bg-cover bg-center transition-all duration-300 ${
-                      currentImage === i
-                        ? "ring-2 ring-gold opacity-100"
-                        : "opacity-60 hover:opacity-100"
-                    }`}
-                    style={{ backgroundImage: `url('${img}')` }}
-                  />
-                ))}
-              </div>
-            </div>
-            <style>{`
-              .thumbs-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
-              .thumbs-scroll::-webkit-scrollbar-thumb { background: rgba(197,160,89,0.4); border-radius: 2px; }
-              .thumbs-scroll::-webkit-scrollbar-track { background: transparent; }
-              .thumbs-scroll { scrollbar-width: thin; scrollbar-color: rgba(197,160,89,0.4) transparent; }
-            `}</style>
           </div>
         </div>
+        <style>{`
+          .thumbs-scroll::-webkit-scrollbar { height: 4px; }
+          .thumbs-scroll::-webkit-scrollbar-thumb { background: rgba(197,160,89,0.6); border-radius: 2px; }
+          .thumbs-scroll::-webkit-scrollbar-track { background: transparent; }
+          .thumbs-scroll { scrollbar-width: thin; scrollbar-color: rgba(197,160,89,0.6) transparent; }
+        `}</style>
       </section>
 
       {/* Content */}
