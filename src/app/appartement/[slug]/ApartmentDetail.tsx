@@ -101,9 +101,9 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
     () => [...features].sort((a, b) => a.localeCompare(b, "fr", { sensitivity: "base" })),
     [features],
   );
-  const FEATURES_MOBILE_COLLAPSED = 5;
+  const FEATURES_COLLAPSED = 5;
   const [featuresExpanded, setFeaturesExpanded] = useState(false);
-  const hasMoreFeatures = sortedFeatures.length > FEATURES_MOBILE_COLLAPSED;
+  const hasMoreFeatures = sortedFeatures.length > FEATURES_COLLAPSED;
 
   return (
     <>
@@ -308,11 +308,11 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                 <div className="h-px w-12 bg-gold mb-6" />
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {sortedFeatures.map((f, i) => {
-                    const hideOnMobile = !featuresExpanded && i >= FEATURES_MOBILE_COLLAPSED;
+                    const hide = !featuresExpanded && i >= FEATURES_COLLAPSED;
                     return (
                       <div
                         key={f}
-                        className={`items-center gap-3 py-2 ${hideOnMobile ? "hidden sm:flex" : "flex"}`}
+                        className={`items-center gap-3 py-2 ${hide ? "hidden" : "flex"}`}
                       >
                         {getFeatureIcon(f)}
                         <span className="text-gris text-sm">{f}</span>
@@ -324,10 +324,10 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                   <button
                     type="button"
                     onClick={() => setFeaturesExpanded((v) => !v)}
-                    className="sm:hidden mt-4 inline-flex items-center justify-center min-w-[3rem] h-9 px-4 border border-gold text-gold text-sm font-medium hover:bg-gold hover:text-noir-deep transition-colors"
+                    className="mt-4 inline-flex items-center justify-center min-w-[3rem] h-9 px-4 border border-gold text-gold text-sm font-medium hover:bg-gold hover:text-noir-deep transition-colors"
                     aria-expanded={featuresExpanded}
                   >
-                    {featuresExpanded ? "− Réduire" : `+ ${sortedFeatures.length - FEATURES_MOBILE_COLLAPSED}`}
+                    {featuresExpanded ? "− Réduire" : `+ ${sortedFeatures.length - FEATURES_COLLAPSED}`}
                   </button>
                 )}
               </motion.div>
