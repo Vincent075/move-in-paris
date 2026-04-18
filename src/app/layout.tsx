@@ -3,6 +3,7 @@ import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import { LocaleProvider } from "@/i18n/LocaleProvider";
 import { getMessages } from "@/i18n/server";
+import CookieConsent from "@/components/CookieConsent";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -17,7 +18,9 @@ const inter = Inter({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { messages } = await getMessages();
+  const { locale, messages } = await getMessages();
+  const ogLocale = locale === "en" ? "en_US" : "fr_FR";
+  const ogLocaleAlternate = locale === "en" ? "fr_FR" : "en_US";
   return {
     metadataBase: new URL("https://www.move-in-paris.com"),
     title: messages.meta.title,
@@ -25,7 +28,8 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       type: "website",
       siteName: "Move in Paris",
-      locale: "fr_FR",
+      locale: ogLocale,
+      alternateLocale: [ogLocaleAlternate],
       title: messages.meta.title,
       description: messages.meta.description,
     },
@@ -68,6 +72,7 @@ export default async function RootLayout({
       <body className="min-h-full flex flex-col font-sans">
         <LocaleProvider locale={locale} messages={messages}>
           {children}
+          <CookieConsent />
         </LocaleProvider>
       </body>
     </html>

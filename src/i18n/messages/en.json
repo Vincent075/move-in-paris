@@ -137,6 +137,22 @@
     "cgu": "Terms of use",
     "privacy": "Privacy policy"
   },
+  "cookies": {
+    "title": "Your privacy preferences",
+    "intro": "Move in Paris uses cookies to enhance your experience, analyse traffic and personalise content. You can accept all, reject all, or customise your choices at any time.",
+    "acceptAll": "Accept all",
+    "rejectAll": "Reject all",
+    "customize": "Customise",
+    "save": "Save my choices",
+    "back": "Back",
+    "essentialTitle": "Strictly necessary",
+    "essentialDesc": "Cookies essential to the website (language, security). Always active.",
+    "analyticsTitle": "Audience measurement",
+    "analyticsDesc": "Help us understand how you use the site to improve it (e.g. Google Analytics).",
+    "marketingTitle": "Marketing & personalisation",
+    "marketingDesc": "Used to deliver content and ads matching your interests.",
+    "policyLink": "Read our privacy policy"
+  },
   "apartment": {
     "surface": "Surface",
     "rooms": "Rooms",
