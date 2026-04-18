@@ -101,7 +101,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
     () => [...features].sort((a, b) => a.localeCompare(b, "fr", { sensitivity: "base" })),
     [features],
   );
-  const FEATURES_COLLAPSED = 5;
+  const FEATURES_COLLAPSED = 6;
   const [featuresExpanded, setFeaturesExpanded] = useState(false);
   const hasMoreFeatures = sortedFeatures.length > FEATURES_COLLAPSED;
 
