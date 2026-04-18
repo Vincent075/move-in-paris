@@ -34,6 +34,7 @@ export default async function NosAppartements() {
           title={messages.apartmentsPage.title}
           subtitle={messages.apartmentsPage.subtitle}
           breadcrumb={messages.apartmentsPage.breadcrumbCurrent}
+          image="/apartments/salon-orange.jpg"
         />
         <ApartmentsList />
       </main>

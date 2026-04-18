@@ -52,10 +52,10 @@ export default function ApartmentsList() {
   });
 
   return (
-    <section className="py-16 bg-blanc">
+    <section className="pb-16 bg-blanc">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
-        {/* Filters */}
-        <div className="bg-blanc-chaud border border-gris-clair/50 p-6 lg:p-8 mb-12">
+        {/* Filters — à cheval entre le hero et le contenu */}
+        <div className="bg-blanc border border-gris-clair/50 shadow-2xl shadow-noir-deep/15 p-6 lg:p-8 mb-12 -mt-16 lg:-mt-24 relative z-20">
           <h2 className="font-serif text-xl text-noir mb-6">{t("apartmentsPage.searchTitle")}</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
