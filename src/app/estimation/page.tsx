@@ -24,6 +24,7 @@ export default async function EstimationPage() {
           title={messages.estimationPage.heroTitle}
           subtitle={messages.estimationPage.heroSubtitle}
           breadcrumb={messages.estimationPage.breadcrumb}
+          image="/apartments/salon-bibliotheque.jpg"
         />
         <EstimationForm />
       </main>

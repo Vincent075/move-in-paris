@@ -14,7 +14,9 @@ export default function Header() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const isApartmentPage = pathname?.startsWith("/appartement/") ?? false;
-  const transparentByDefault = isHome || isApartmentPage;
+  const IMMERSIVE_PAGES = new Set(["/a-propos", "/proprietaires", "/estimation"]);
+  const isImmersivePage = pathname ? IMMERSIVE_PAGES.has(pathname) : false;
+  const transparentByDefault = isHome || isApartmentPage || isImmersivePage;
   const t = useT();
   const { locale, setLocale } = useLocale();
 

@@ -24,6 +24,7 @@ export default async function Proprietaires() {
           title={messages.owners.heroTitle}
           subtitle={messages.owners.heroSubtitle}
           breadcrumb={messages.owners.breadcrumb}
+          image="/apartments/vue-paris.jpg"
         />
         <ProprietairesContent />
         <CTABanner

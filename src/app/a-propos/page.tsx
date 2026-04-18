@@ -24,6 +24,7 @@ export default async function APropos() {
           title={messages.about.heroTitle}
           subtitle={messages.about.heroSubtitle}
           breadcrumb={messages.about.breadcrumb}
+          image="/apartments/salon-haussmann.jpg"
         />
         <AboutContent />
         <CTABanner
