@@ -16,7 +16,10 @@ export default function Header() {
   const isApartmentPage = pathname?.startsWith("/appartement/") ?? false;
   const IMMERSIVE_PAGES = new Set(["/a-propos", "/proprietaires", "/estimation"]);
   const isImmersivePage = pathname ? IMMERSIVE_PAGES.has(pathname) : false;
-  const transparentByDefault = isHome || isApartmentPage || isImmersivePage;
+  // Pages avec hero sur tout écran (mobile + desktop) → header transparent partout
+  const fullyTransparent = isHome || isImmersivePage;
+  // Pages appart : hero seulement sur mobile (desktop a un breadcrumb beige)
+  const mobileOnlyTransparent = isApartmentPage;
   const t = useT();
   const { locale, setLocale } = useLocale();
 
@@ -35,9 +38,15 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const headerBg = transparentByDefault && !scrolled
-    ? "bg-transparent"
-    : "bg-noir-deep/95 backdrop-blur-xl shadow-2xl shadow-black/20";
+  const opaqueClasses = "bg-noir-deep/95 backdrop-blur-xl shadow-2xl shadow-black/20";
+  const mobileTransparentDesktopOpaque = "bg-transparent lg:bg-noir-deep/95 lg:backdrop-blur-xl lg:shadow-2xl lg:shadow-black/20";
+  const headerBg = scrolled
+    ? opaqueClasses
+    : fullyTransparent
+      ? "bg-transparent"
+      : mobileOnlyTransparent
+        ? mobileTransparentDesktopOpaque
+        : opaqueClasses;
 
   const LocaleSwitcher = ({ dark = false }: { dark?: boolean }) => {
     const baseCls = dark
