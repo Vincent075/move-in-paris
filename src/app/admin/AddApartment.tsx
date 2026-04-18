@@ -1,6 +1,30 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import apartmentsDataRaw from "@/data/apartments.json";
+import type { ApartmentRecord } from "@/data/apartment-types";
+
+const apartmentsList = apartmentsDataRaw as ApartmentRecord[];
+
+function normalizeKey(s: string): string {
+  return s.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+function capitalizeFirst(s: string): string {
+  const t = s.trim();
+  return t ? t.charAt(0).toUpperCase() + t.slice(1) : t;
+}
+
+function dedupeAndSort(features: string[]): string[] {
+  const seen = new Map<string, string>();
+  for (const f of features) {
+    const trimmed = f.trim();
+    if (!trimmed) continue;
+    const key = normalizeKey(trimmed);
+    if (!seen.has(key)) seen.set(key, trimmed);
+  }
+  return Array.from(seen.values()).sort((a, b) => a.localeCompare(b, "fr", { sensitivity: "base" }));
+}
 
 type BanFeature = {
   geometry?: { type: "Point"; coordinates: [number, number] };
@@ -52,7 +76,7 @@ export const BATHROOM_OPTIONS = [
   { v: 3, label: "3 salles de bain et plus" },
 ];
 
-const EQUIPMENT_OPTIONS = [
+const SEED_FEATURES = [
   "Wifi",
   "Smart TV",
   "Télévision 4K",
@@ -97,6 +121,9 @@ const EQUIPMENT_OPTIONS = [
   "Serviettes fournies",
   "Fibre optique",
 ];
+
+const FEATURES_FROM_APARTMENTS = apartmentsList.flatMap((a) => a.features ?? []);
+const EQUIPMENT_OPTIONS = dedupeAndSort([...SEED_FEATURES, ...FEATURES_FROM_APARTMENTS]);
 
 export default function AddApartment({ password, onSuccess }: { password: string; onSuccess: () => void }) {
   const [loading, setLoading] = useState(false);
@@ -262,12 +289,20 @@ export default function AddApartment({ password, onSuccess }: { password: string
   }
 
   function addCustomFeature() {
-    if (customFeature.trim() && !allFeatures.includes(customFeature.trim())) {
-      const newFeature = customFeature.trim();
-      setAllFeatures((prev) => [...prev, newFeature]);
-      setSelectedFeatures((prev) => [...prev, newFeature]);
-      setCustomFeature("");
+    const raw = customFeature.trim();
+    if (!raw) return;
+    const normalized = capitalizeFirst(raw);
+    const key = normalizeKey(normalized);
+    const existing = allFeatures.find((f) => normalizeKey(f) === key);
+    if (existing) {
+      if (!selectedFeatures.includes(existing)) {
+        setSelectedFeatures((prev) => [...prev, existing]);
+      }
+    } else {
+      setAllFeatures((prev) => dedupeAndSort([...prev, normalized]));
+      setSelectedFeatures((prev) => [...prev, normalized]);
     }
+    setCustomFeature("");
   }
 
   function handlePhotos(e: React.ChangeEvent<HTMLInputElement>) {
