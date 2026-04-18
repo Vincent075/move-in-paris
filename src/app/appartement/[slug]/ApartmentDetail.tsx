@@ -1,80 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePickField, useT } from "@/i18n/LocaleProvider";
 import { getFeatureIcon } from "@/lib/featureIcons";
-
-// Official RATP metro line colors
-const METRO_LINE_COLORS: Record<string, { bg: string; text: string }> = {
-  "1":      { bg: "#FFCD00", text: "#000000" },
-  "2":      { bg: "#003CA6", text: "#FFFFFF" },
-  "3":      { bg: "#837902", text: "#FFFFFF" },
-  "3BIS":   { bg: "#6EC4E8", text: "#000000" },
-  "4":      { bg: "#CF009E", text: "#FFFFFF" },
-  "5":      { bg: "#FF7E2E", text: "#000000" },
-  "6":      { bg: "#6ECA97", text: "#000000" },
-  "7":      { bg: "#FA9ABA", text: "#000000" },
-  "7BIS":   { bg: "#6ECA97", text: "#000000" },
-  "8":      { bg: "#E19BDF", text: "#000000" },
-  "9":      { bg: "#B6BD00", text: "#000000" },
-  "10":     { bg: "#C9910D", text: "#FFFFFF" },
-  "11":     { bg: "#704B1C", text: "#FFFFFF" },
-  "12":     { bg: "#007852", text: "#FFFFFF" },
-  "13":     { bg: "#6EC4E8", text: "#000000" },
-  "14":     { bg: "#62259D", text: "#FFFFFF" },
-  "RER A":  { bg: "#E3051C", text: "#FFFFFF" },
-  "RER B":  { bg: "#477AB4", text: "#FFFFFF" },
-};
-
-/**
- * Parse metro line numbers from a station name like "George V (ligne 9)"
- * or "Charles de Gaulle Étoile (RER A, lignes 1, 2, 6)"
- */
-function parseMetroLinesFromName(name: string): string[] {
-  // Match content inside parentheses
-  const parenMatch = name.match(/\(([^)]+)\)/);
-  if (!parenMatch) return [];
-
-  const inner = parenMatch[1];
-  // Split by comma or semicolon
-  const parts = inner.split(/[,;]+/).map((p) => p.trim());
-  const lines: string[] = [];
-
-  for (const part of parts) {
-    // Remove "ligne", "lignes", "RER", "line" prefixes
-    const cleaned = part.replace(/\b(lignes?|lines?)\b/gi, "").trim();
-    // RER lines: "RER A", "RER B"
-    const rerMatch = cleaned.match(/\bRER\s*([AB])\b/i);
-    if (rerMatch) {
-      lines.push(`RER ${rerMatch[1].toUpperCase()}`);
-      continue;
-    }
-    // Numeric lines: 1-14, 3bis, 7bis
-    const numMatch = cleaned.match(/\b(1[0-4]|[1-9]|3[Bb][Ii][Ss]|7[Bb][Ii][Ss])\b/i);
-    if (numMatch) {
-      lines.push(numMatch[1].toUpperCase());
-    }
-  }
-
-  return lines;
-}
-
-function MetroLineBadge({ line }: { line: string }) {
-  const colors = METRO_LINE_COLORS[line] || { bg: "#6B6B6B", text: "#FFFFFF" };
-  // Display label: shorten "RER A" → "A" inside the badge, but show "RER A" in title
-  const label = line.startsWith("RER ") ? line.slice(4) : line.toLowerCase().replace("bis", "ᵇ");
-  return (
-    <span
-      title={`Ligne ${line}`}
-      className="inline-flex items-center justify-center w-6 h-6 rounded-full text-[10px] font-bold leading-none flex-shrink-0"
-      style={{ backgroundColor: colors.bg, color: colors.text }}
-    >
-      {label}
-    </span>
-  );
-}
+import { MetroLineBadge, resolveMetroLines } from "@/lib/metroLines";
 
 function VisitForm({ title }: { title: string }) {
   const t = useT();
@@ -166,6 +97,13 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
   const floor = pick<string>(apt, "floor");
   const description = pick<string>(apt, "description");
   const features = pick<string[]>(apt, "features", []);
+  const sortedFeatures = useMemo(
+    () => [...features].sort((a, b) => a.localeCompare(b, "fr", { sensitivity: "base" })),
+    [features],
+  );
+  const FEATURES_MOBILE_COLLAPSED = 5;
+  const [featuresExpanded, setFeaturesExpanded] = useState(false);
+  const hasMoreFeatures = sortedFeatures.length > FEATURES_MOBILE_COLLAPSED;
 
   return (
     <>
@@ -366,13 +304,28 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                 <h2 className="font-serif text-2xl text-noir mb-4">{t("apartment.equipment")}</h2>
                 <div className="h-px w-12 bg-gold mb-6" />
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {features.map((f) => (
-                    <div key={f} className="flex items-center gap-3 py-2">
-                      {getFeatureIcon(f)}
-                      <span className="text-gris text-sm">{f}</span>
-                    </div>
-                  ))}
+                  {sortedFeatures.map((f, i) => {
+                    const hideOnMobile = !featuresExpanded && i >= FEATURES_MOBILE_COLLAPSED;
+                    return (
+                      <div
+                        key={f}
+                        className={`items-center gap-3 py-2 ${hideOnMobile ? "hidden sm:flex" : "flex"}`}
+                      >
+                        {getFeatureIcon(f)}
+                        <span className="text-gris text-sm">{f}</span>
+                      </div>
+                    );
+                  })}
                 </div>
+                {hasMoreFeatures && !featuresExpanded && (
+                  <button
+                    type="button"
+                    onClick={() => setFeaturesExpanded(true)}
+                    className="sm:hidden mt-3 text-gold text-sm uppercase tracking-wider hover:text-gold-light transition-colors"
+                  >
+                    Voir les {sortedFeatures.length - FEATURES_MOBILE_COLLAPSED} autres équipements
+                  </button>
+                )}
               </motion.div>
 
               {/* Map */}
@@ -410,9 +363,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                   {apt.nearby.map((n, i) => {
                     // Determine lines to show: prefer explicit `lines` field, otherwise parse from name
                     const isMetroType = n.type === "Métro" || n.type === "RER" || n.type === "RER / Métro";
-                    const lines: string[] = isMetroType
-                      ? (n.lines && n.lines.length > 0 ? n.lines : parseMetroLinesFromName(n.name))
-                      : [];
+                    const lines: string[] = isMetroType ? resolveMetroLines(n.name, n.lines) : [];
 
                     return (
                       <div key={i} className="flex items-center justify-between py-3 border-b border-gris-clair/50 last:border-0">

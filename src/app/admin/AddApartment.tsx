@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import apartmentsDataRaw from "@/data/apartments.json";
 import type { ApartmentRecord } from "@/data/apartment-types";
+import { MetroLineBadge, resolveMetroLines } from "@/lib/metroLines";
 
 const apartmentsList = apartmentsDataRaw as ApartmentRecord[];
 
@@ -148,7 +149,7 @@ export default function AddApartment({ password, onSuccess }: { password: string
   const [allFeatures, setAllFeatures] = useState(EQUIPMENT_OPTIONS);
   const [photos, setPhotos] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
-  const [nearbyRows, setNearbyRows] = useState<{ type: string; name: string; distance: string }[]>([]);
+  const [nearbyRows, setNearbyRows] = useState<{ type: string; name: string; distance: string; lines?: string[] }[]>([]);
   const [nearbyLoading, setNearbyLoading] = useState(false);
 
   // Address autocomplete (BAN)
@@ -461,7 +462,14 @@ export default function AddApartment({ password, onSuccess }: { password: string
           description,
           features: featuresWithElevator,
           images: uploadedImages,
-          nearby: nearbyRows.filter((r) => r.name),
+          nearby: nearbyRows
+            .filter((r) => r.name)
+            .map((r) => {
+              const isMetroType = r.type === "Métro" || r.type === "RER" || r.type === "RER / Métro";
+              if (!isMetroType) return r;
+              const lines = resolveMetroLines(r.name, r.lines);
+              return lines.length > 0 ? { ...r, lines } : r;
+            }),
         }),
       });
       const data = await res.json();
@@ -735,7 +743,10 @@ export default function AddApartment({ password, onSuccess }: { password: string
           {nearbyRows.length > 1 && (
             <p className="text-xs text-[#6B6B6B] mb-3">Glissez-déposez les lignes pour les réorganiser.</p>
           )}
-          {nearbyRows.map((row, i) => (
+          {nearbyRows.map((row, i) => {
+            const isMetroType = row.type === "Métro" || row.type === "RER" || row.type === "RER / Métro";
+            const previewLines = isMetroType && row.name ? resolveMetroLines(row.name, row.lines) : [];
+            return (
             <div
               key={i}
               draggable
@@ -759,14 +770,24 @@ export default function AddApartment({ password, onSuccess }: { password: string
                 <option value="Parc">Parc</option>
                 <option value="École">École</option>
               </select>
-              <input type="text" value={row.name} onChange={(e) => updateNearby(i, "name", e.target.value)}
-                placeholder="George V (ligne 1)" className="px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
+              <div className="flex items-center gap-2 min-w-0">
+                <input type="text" value={row.name} onChange={(e) => updateNearby(i, "name", e.target.value)}
+                  placeholder="George V (ligne 1)" className="flex-1 min-w-0 px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
+                {previewLines.length > 0 && (
+                  <span className="flex items-center gap-1 flex-shrink-0">
+                    {previewLines.map((line) => (
+                      <MetroLineBadge key={line} line={line} />
+                    ))}
+                  </span>
+                )}
+              </div>
               <input type="text" value={row.distance} onChange={(e) => updateNearby(i, "distance", e.target.value)}
                 placeholder="5 min" className="px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none" />
               <button type="button" onClick={() => removeNearby(i)}
                 className="text-red-400 hover:text-red-600 transition-colors text-lg">✕</button>
             </div>
-          ))}
+            );
+          })}
           <button type="button" onClick={addNearbyRow}
             className="mt-2 text-sm text-[#B88B58] hover:text-[#9A7345] transition-colors">
             + Ajouter un lieu
