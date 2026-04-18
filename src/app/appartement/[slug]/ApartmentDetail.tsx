@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePickField, useT } from "@/i18n/LocaleProvider";
+import { getFeatureIcon } from "@/lib/featureIcons";
 
 // Official RATP metro line colors
 const METRO_LINE_COLORS: Record<string, { bg: string; text: string }> = {
@@ -367,9 +368,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {features.map((f) => (
                     <div key={f} className="flex items-center gap-3 py-2">
-                      <svg className="w-4 h-4 text-gold flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                      </svg>
+                      {getFeatureIcon(f)}
                       <span className="text-gris text-sm">{f}</span>
                     </div>
                   ))}
