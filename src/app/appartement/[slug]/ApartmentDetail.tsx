@@ -173,7 +173,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="grid lg:grid-cols-[1fr_300px] gap-4">
             {/* Main image */}
-            <div className="relative aspect-[16/10] overflow-hidden bg-gris-clair cursor-pointer" onClick={() => setLightboxOpen(true)}>
+            <div className="relative aspect-[4/3] sm:aspect-[16/10] overflow-hidden bg-gris-clair cursor-pointer -mx-6 lg:mx-0" onClick={() => setLightboxOpen(true)}>
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentImage}
@@ -185,28 +185,43 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                   style={{ backgroundImage: `url('${apt.images[currentImage]}')` }}
                 />
               </AnimatePresence>
-              {/* Arrows */}
+              {/* Arrows — desktop only */}
               <button
-                onClick={() => setCurrentImage((p) => (p - 1 + apt.images.length) % apt.images.length)}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-noir-deep/60 text-blanc flex items-center justify-center hover:bg-gold transition-colors"
+                onClick={(e) => { e.stopPropagation(); setCurrentImage((p) => (p - 1 + apt.images.length) % apt.images.length); }}
+                aria-label="Photo précédente"
+                className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-noir-deep/60 text-blanc items-center justify-center hover:bg-gold transition-colors"
               >
                 &#8249;
               </button>
               <button
-                onClick={() => setCurrentImage((p) => (p + 1) % apt.images.length)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-noir-deep/60 text-blanc flex items-center justify-center hover:bg-gold transition-colors"
+                onClick={(e) => { e.stopPropagation(); setCurrentImage((p) => (p + 1) % apt.images.length); }}
+                aria-label="Photo suivante"
+                className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-noir-deep/60 text-blanc items-center justify-center hover:bg-gold transition-colors"
               >
                 &#8250;
               </button>
-              {/* Counter */}
-              <div className="absolute bottom-4 right-4 bg-noir-deep/70 text-blanc text-xs px-3 py-1">
+              {/* Counter — desktop only */}
+              <div className="hidden lg:block absolute bottom-4 right-4 bg-noir-deep/70 text-blanc text-xs px-3 py-1">
                 {currentImage + 1} / {apt.images.length}
               </div>
+              {/* Mobile : bouton Photos overlay */}
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); setLightboxOpen(true); }}
+                className="lg:hidden absolute bottom-4 left-4 bg-noir-deep/70 backdrop-blur-sm text-blanc text-sm px-4 py-2 flex items-center gap-2 hover:bg-noir-deep transition-colors"
+                aria-label={`Voir les ${apt.images.length} photos`}
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                  <circle cx="12" cy="13" r="3" />
+                </svg>
+                Photos · {apt.images.length}
+              </button>
             </div>
 
-            {/* Thumbnails — bounded to main image height on desktop, scrollable if overflow */}
-            <div className="lg:relative">
-              <div className="grid grid-cols-3 lg:grid-cols-2 gap-2 lg:absolute lg:inset-0 lg:overflow-y-auto lg:pr-1 thumbs-scroll">
+            {/* Thumbnails — desktop only (cachées sur mobile, le bouton Photos ouvre le carrousel) */}
+            <div className="hidden lg:block lg:relative">
+              <div className="grid grid-cols-2 gap-2 absolute inset-0 overflow-y-auto pr-1 thumbs-scroll">
                 {apt.images.map((img, i) => (
                   <button
                     key={i}
