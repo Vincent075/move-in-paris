@@ -204,14 +204,15 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
               </div>
             </div>
 
-            {/* Thumbnails — bounded to main image height on desktop, scrollable if overflow */}
-            <div className="lg:relative">
-              <div className="grid grid-cols-3 lg:grid-cols-2 gap-2 lg:absolute lg:inset-0 lg:overflow-y-auto lg:pr-1 thumbs-scroll">
+            {/* Thumbnails — horizontal scroll on mobile, vertical bounded on desktop */}
+            <div className="lg:relative -mx-6 px-6 lg:mx-0 lg:px-0">
+              <div className="flex gap-2 overflow-x-auto snap-x snap-mandatory pb-2 thumbs-scroll lg:grid lg:grid-cols-2 lg:absolute lg:inset-0 lg:overflow-y-auto lg:overflow-x-hidden lg:pr-1 lg:pb-0 lg:snap-none">
                 {apt.images.map((img, i) => (
                   <button
                     key={i}
                     onClick={() => setCurrentImage(i)}
-                    className={`aspect-square bg-cover bg-center transition-all duration-300 ${
+                    aria-label={`Photo ${i + 1}`}
+                    className={`flex-shrink-0 w-24 h-24 snap-start lg:w-auto lg:h-auto lg:aspect-square bg-cover bg-center transition-all duration-300 ${
                       currentImage === i
                         ? "ring-2 ring-gold opacity-100"
                         : "opacity-60 hover:opacity-100"
@@ -222,7 +223,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
               </div>
             </div>
             <style>{`
-              .thumbs-scroll::-webkit-scrollbar { width: 4px; }
+              .thumbs-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
               .thumbs-scroll::-webkit-scrollbar-thumb { background: rgba(197,160,89,0.4); border-radius: 2px; }
               .thumbs-scroll::-webkit-scrollbar-track { background: transparent; }
               .thumbs-scroll { scrollbar-width: thin; scrollbar-color: rgba(197,160,89,0.4) transparent; }
@@ -317,13 +318,14 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                     );
                   })}
                 </div>
-                {hasMoreFeatures && !featuresExpanded && (
+                {hasMoreFeatures && (
                   <button
                     type="button"
-                    onClick={() => setFeaturesExpanded(true)}
-                    className="sm:hidden mt-3 text-gold text-sm uppercase tracking-wider hover:text-gold-light transition-colors"
+                    onClick={() => setFeaturesExpanded((v) => !v)}
+                    className="sm:hidden mt-4 inline-flex items-center justify-center min-w-[3rem] h-9 px-4 border border-gold text-gold text-sm font-medium hover:bg-gold hover:text-noir-deep transition-colors"
+                    aria-expanded={featuresExpanded}
                   >
-                    Voir les {sortedFeatures.length - FEATURES_MOBILE_COLLAPSED} autres équipements
+                    {featuresExpanded ? "− Réduire" : `+ ${sortedFeatures.length - FEATURES_MOBILE_COLLAPSED}`}
                   </button>
                 )}
               </motion.div>
