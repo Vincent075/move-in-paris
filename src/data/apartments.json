@@ -985,7 +985,7 @@
   },
   {
     "slug": "2p-batignolles-paris-17e",
-    "title": "2P Batignolles",
+    "title": "2 Pièces Batignolles",
     "address": "Rue Legendre, Paris 17e",
     "district": "Paris 17e",
     "surface": 40,
@@ -1033,6 +1033,7 @@
       "/apartments/2p-batignolles-paris-17e/photo-5.jpg",
       "/apartments/2p-batignolles-paris-17e/photo-6.jpg"
     ],
-    "nearby": []
+    "nearby": [],
+    "hasElevator": false
   }
 ]
