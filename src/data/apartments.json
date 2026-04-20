@@ -507,6 +507,10 @@
     ],
     "photos": "2p-ternes-paris-17e",
     "images": [
+      "/apartments/2p-ternes-paris-17e/photo-12.jpg",
+      "/apartments/2p-ternes-paris-17e/photo-9.jpg",
+      "/apartments/2p-ternes-paris-17e/photo-10.jpg",
+      "/apartments/2p-ternes-paris-17e/photo-11.jpg",
       "/apartments/2p-ternes-paris-17e/photo-1.jpg",
       "/apartments/2p-ternes-paris-17e/photo-2.jpg",
       "/apartments/2p-ternes-paris-17e/photo-3.jpg",
@@ -514,12 +518,9 @@
       "/apartments/2p-ternes-paris-17e/photo-5.jpg",
       "/apartments/2p-ternes-paris-17e/photo-6.jpg",
       "/apartments/2p-ternes-paris-17e/photo-7.jpg",
-      "/apartments/2p-ternes-paris-17e/photo-8.jpg",
-      "/apartments/2p-ternes-paris-17e/photo-9.jpg",
-      "/apartments/2p-ternes-paris-17e/photo-10.jpg",
-      "/apartments/2p-ternes-paris-17e/photo-11.jpg",
-      "/apartments/2p-ternes-paris-17e/photo-12.jpg"
+      "/apartments/2p-ternes-paris-17e/photo-8.jpg"
     ],
-    "nearby": []
+    "nearby": [],
+    "hasElevator": true
   }
 ]
