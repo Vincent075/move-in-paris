@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import AddApartment, { FLOOR_OPTIONS, ROOM_OPTIONS, BEDROOM_OPTIONS, BATHROOM_OPTIONS } from "./AddApartment";
 
@@ -101,6 +101,9 @@ export default function AdminDashboard() {
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
   const [customAmenity, setCustomAmenity] = useState("");
+  const [nearbyDetecting, setNearbyDetecting] = useState(false);
+  const [nearbyDetectMsg, setNearbyDetectMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
+  const editNearbyFetchIdRef = useRef(0);
 
   async function fetchApartments() {
     setLoading(true);
@@ -238,6 +241,53 @@ export default function AdminDashboard() {
     return Array.from(byFr.values()).sort((a, b) =>
       a.fr.localeCompare(b.fr, "fr", { sensitivity: "base" }),
     );
+  }
+
+  async function autoDetectNearby() {
+    const address = editData.address || "";
+    if (address.length < 5) {
+      setNearbyDetectMsg({ type: "err", text: "Adresse trop courte pour la détection" });
+      return;
+    }
+    const myId = ++editNearbyFetchIdRef.current;
+    setNearbyDetecting(true);
+    setNearbyDetectMsg(null);
+
+    async function attempt(): Promise<{
+      error?: string;
+      district?: string;
+      places?: { type: string; name: string; distance: string; lines?: string[] }[];
+    }> {
+      const res = await fetch(`/api/nearby?address=${encodeURIComponent(address)}`);
+      return res.json();
+    }
+
+    let data: Awaited<ReturnType<typeof attempt>> | null = null;
+    try {
+      data = await attempt();
+      if (data && !data.error && (!data.places || data.places.length === 0)) {
+        await new Promise((r) => setTimeout(r, 400));
+        if (editNearbyFetchIdRef.current !== myId) return;
+        data = await attempt();
+      }
+    } catch {
+      if (editNearbyFetchIdRef.current !== myId) return;
+      try { data = await attempt(); } catch { data = null; }
+    }
+
+    if (editNearbyFetchIdRef.current !== myId) return;
+
+    if (!data) {
+      setNearbyDetectMsg({ type: "err", text: "Erreur de connexion — réessayez" });
+    } else if (data.error) {
+      setNearbyDetectMsg({ type: "err", text: data.error });
+    } else if (!data.places || data.places.length === 0) {
+      setNearbyDetectMsg({ type: "err", text: "Aucun lieu trouvé à proximité" });
+    } else {
+      setEditData({ ...editData, nearby: data.places });
+      setNearbyDetectMsg({ type: "ok", text: `✓ ${data.places.length} lieux détectés` });
+    }
+    setNearbyDetecting(false);
   }
 
   function addCustomAmenity() {
@@ -717,13 +767,24 @@ export default function AdminDashboard() {
 
                         {/* ========== Nearby (metros etc.) ========== */}
                         <section className="border-t border-[#E8E4DF] pt-6">
-                          <div className="flex items-end justify-between mb-3">
+                          <div className="flex items-end justify-between mb-3 flex-wrap gap-3">
                             <div>
                               <h4 className="font-serif text-sm text-[#1A1A1A] uppercase tracking-[0.15em]">À proximité</h4>
                               <p className="text-xs text-[#6B6B6B] mt-0.5">Métros, RER, commerces. Lignes séparées par des virgules (ex: 1, 2, RER A).</p>
                             </div>
-                            <button type="button" onClick={addNearby} className="text-xs text-[#B88B58] hover:text-[#9A7345] uppercase tracking-wider">+ Ajouter</button>
+                            <div className="flex items-center gap-2">
+                              <button type="button" onClick={autoDetectNearby} disabled={nearbyDetecting}
+                                className={`px-3 py-1.5 text-xs uppercase tracking-wider transition-all ${nearbyDetecting ? "bg-[#6B6B6B] text-white cursor-wait" : "bg-[#1A1A1A] text-white hover:bg-[#B88B58] hover:text-[#0D0D0D]"}`}>
+                                {nearbyDetecting ? "Détection…" : "⟳ Détecter automatiquement"}
+                              </button>
+                              <button type="button" onClick={addNearby} className="text-xs text-[#B88B58] hover:text-[#9A7345] uppercase tracking-wider">+ Ajouter</button>
+                            </div>
                           </div>
+                          {nearbyDetectMsg && (
+                            <p className={`text-xs mb-3 ${nearbyDetectMsg.type === "ok" ? "text-green-600" : "text-red-500"}`}>
+                              {nearbyDetectMsg.text}
+                            </p>
+                          )}
                           <div className="space-y-2">
                             {(editData.nearby || []).map((n, i) => (
                               <div key={i} className="grid grid-cols-12 gap-2 items-center">
