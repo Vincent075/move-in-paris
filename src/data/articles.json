@@ -299,5 +299,34 @@
       {"type": "h2", "text": "Notre rappel"},
       {"type": "p", "text": "Nos propriétaires partenaires reçoivent un rappel trimestriel incluant toutes les échéances fiscales de l'année (CFE, déclaration 2031, acomptes). Un dispositif simple qui évite les oublis et les majorations."}
     ]
+  },
+  {
+    "slug": "dpe-interdiction-louer-proprietaires-parisiens-2026",
+    "title": "DPE et interdiction de louer : le guide complet pour propriétaires parisiens en 2026",
+    "excerpt": "Logements G interdits depuis 2025, passoires F dans le viseur en 2028 : voici ce que chaque propriétaire parisien doit savoir pour anticiper et agir.",
+    "category": "Réglementation",
+    "readTime": 6,
+    "date": "2026-04-20",
+    "author": "Move in Paris",
+    "image": "/apartments/hero-salon.jpg",
+    "tags": ["DPE", "Réglementation", "Énergie"],
+    "metaDescription": "DPE et interdiction de louer à Paris 2026 : calendrier des interdictions, travaux prioritaires, aides MaPrimeRénov'. Guide pour propriétaires de meublés.",
+    "content": [
+      {"type": "p", "text": "Depuis le 1er janvier 2025, les logements classés G au sens du diagnostic de performance énergétique (DPE) ne peuvent plus être mis en location en France. C'est la première étape d'un calendrier réglementaire ambitieux qui touchera ensuite les étiquettes F, puis E. À Paris, où une part significative du parc locatif date d'avant 1975, la question du DPE est devenue une priorité stratégique pour tous les propriétaires — et tout particulièrement pour ceux qui louent meublé."},
+      {"type": "h2", "text": "Le calendrier des interdictions étape par étape"},
+      {"type": "p", "text": "La loi Climat et Résilience de 2021 a fixé des échéances claires et progressives. Depuis le 1er janvier 2025 : interdiction de mise en location des logements classés G (consommation supérieure à 420 kWh/m²/an). À partir du 1er janvier 2028 : extension aux logements classés F (supérieure à 330 kWh/m²/an). À partir du 1er janvier 2034 : les logements classés E (supérieure à 250 kWh/m²/an) seront à leur tour concernés. Ces seuils s'appliquent aux nouvelles mises en location et aux renouvellements de bail. Un bail en cours peut se poursuivre jusqu'à son échéance naturelle, mais sa reconduction sera impossible si le DPE n'est pas conforme."},
+      {"type": "h2", "text": "Paris : un parc immobilier particulièrement exposé"},
+      {"type": "p", "text": "L'Île-de-France concentre environ 450 000 passoires thermiques (classes F et G), dont une proportion élevée dans Paris intra-muros. L'immobilier haussmannien — pierre de taille, double vitrage rare, isolation inexistante dans les murs et les combles — affiche souvent un DPE D ou E. Mais les immeubles des années 1950-1970 sont les plus touchés : chauffage électrique vétuste, menuiseries d'époque, façades non isolées. Dans les arrondissements prisés pour la location corporate (8e, 16e, 17e), les grandes surfaces au cachet indéniable — parquet ancien, hauts plafonds, moulures — sont fréquemment mal isolées, malgré leurs loyers élevés."},
+      {"type": "h2", "text": "Les conséquences concrètes sur la location meublée"},
+      {"type": "p", "text": "Pour un propriétaire en LMNP, l'impact est direct. Toute mise en location d'un logement classé G est désormais illégale : impossible de signer un nouveau bail ni de renouveler un bail existant. En cas de non-respect, le locataire peut exiger une réduction de loyer, saisir la commission de conciliation ou demander des dommages et intérêts devant le tribunal. Pour les biens classés F, il reste deux ans pour agir avant l'interdiction de 2028 — un délai court compte tenu des délais d'instruction des aides et des travaux, particulièrement en copropriété."},
+      {"type": "h2", "text": "Quels travaux pour changer de classe DPE ?"},
+      {"type": "p", "text": "L'objectif est de passer de G ou F à au minimum E, idéalement D. Les postes les plus efficaces, par ordre d'impact : isolation des combles et toitures (gain moyen d'une à deux étiquettes), remplacement du système de chauffage (chaudière à condensation, pompe à chaleur air/eau, radiateurs à inertie), isolation des murs par l'intérieur en appartement (praticable sans accord de copropriété pour les travaux intérieurs), remplacement des menuiseries simple vitrage par du double vitrage PVC ou aluminium. Attention : à Paris, les façades classées ou situées en secteur protégé peuvent imposer l'aval des Architectes des Bâtiments de France avant tout travaux extérieurs, ce qui allonge significativement les délais."},
+      {"type": "h2", "text": "Les aides financières à mobiliser dès maintenant"},
+      {"type": "p", "text": "Plusieurs dispositifs permettent de financer une partie des travaux. MaPrimeRénov' : aide de l'État accessible aux propriétaires bailleurs, calculée selon le type de travaux et le gain de performance atteint. L'éco-PTZ : prêt à taux zéro plafonné à 50 000 € pour une rénovation globale, cumulable avec MaPrimeRénov'. Les aides locales : la Ville de Paris et la Région Île-de-France proposent leurs propres subventions, parfois cumulables avec les dispositifs nationaux. Les Certificats d'Économies d'Énergie (CEE) : prime versée par les fournisseurs d'énergie en échange d'une amélioration prouvée de la performance. Un bien passant de G à D peut ainsi bénéficier d'une aide cumulée de 15 000 à 30 000 € selon sa surface et les travaux réalisés."},
+      {"type": "h2", "text": "DPE et valeur de revente : l'impact patrimonial à ne pas négliger"},
+      {"type": "p", "text": "Le DPE impacte désormais directement la valeur vénale d'un bien. Selon les études de la FNAIM et des notaires, un logement classé F ou G se vend 10 à 20 % moins cher qu'un bien équivalent classé C ou D. À Paris, où le prix moyen dépasse 10 000 €/m², cet écart représente souvent 80 000 à 200 000 € sur la valeur d'un appartement de 80 m². Engager des travaux avant la revente améliore donc à la fois la rentabilité locative pendant la détention et la valorisation patrimoniale à la sortie — deux arguments décisifs pour un propriétaire LMNP raisonnant en rentabilité globale."},
+      {"type": "h2", "text": "Notre approche Move in Paris"},
+      {"type": "p", "text": "Chez Move in Paris, nous analysons systématiquement le DPE de chaque bien lors de la prise de mandat. Notre offre de location meublée corporate longue durée — baux de 1 à 3 ans, loyers garantis par l'employeur, taux d'occupation supérieur à 95 % — est conditionnée à la conformité réglementaire du logement. Pour les propriétaires dont le bien est classé E ou en-deçà, nous pouvons orienter vers des maîtres d'œuvre spécialisés en rénovation en milieu occupé, coordonner les travaux entre deux locataires, et actualiser le DPE après chantier pour valoriser le loyer révisé à la hausse. Anticiper, c'est transformer une contrainte réglementaire en levier de rendement."}
+    ]
   }
 ]
