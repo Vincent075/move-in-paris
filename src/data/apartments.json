@@ -535,7 +535,7 @@
   },
   {
     "slug": "3p-ternes-paris-17e",
-    "title": "3P Ternes",
+    "title": "3 Pièces Ternes",
     "address": "Rue des Renaudes, Paris 17e",
     "district": "Paris 17e",
     "surface": 95,
@@ -598,7 +598,8 @@
       "/apartments/3p-ternes-paris-17e/photo-13.jpg",
       "/apartments/3p-ternes-paris-17e/photo-14.jpg"
     ],
-    "nearby": []
+    "nearby": [],
+    "hasElevator": true
   },
   {
     "slug": "3p-madelaine-paris-8e",
