@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getMetroLines } from "@/data/paris-metro-lines";
+import { findNearestStations } from "@/data/paris-metro-coords";
 
 // Use Node runtime (not edge) and ask Vercel for as much time as the plan allows.
 // On hobby this is capped to 10s silently.
@@ -136,6 +137,24 @@ export async function GET(req: NextRequest) {
       const commerces = places.filter((p) => p.type === "Commerce").slice(0, 1);
       const parcs = places.filter((p) => p.type === "Parc").slice(0, 1);
       places = [...metros, ...commerces, ...parcs];
+    }
+
+    // Local fallback: if Overpass didn't give us metros (down or rate-limited),
+    // fill in the 2 nearest Paris Métro stations from a snapshotted coord file.
+    // Ensures the admin UX never ends up with an empty list for Paris addresses.
+    const hasMetroFromOverpass = places.some((p) => p.type === "Métro");
+    if (!hasMetroFromOverpass) {
+      const local = findNearestStations(lat, lon, 2);
+      const localMetros: NearbyPlace[] = local.map((s) => {
+        const lines = getMetroLines(s.name);
+        return {
+          type: "Métro",
+          name: s.name,
+          distance: `${s.minutes} min`,
+          ...(lines.length > 0 ? { lines } : {}),
+        };
+      });
+      places = [...localMetros, ...places];
     }
 
     return NextResponse.json({
