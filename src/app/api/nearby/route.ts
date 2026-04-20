@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getMetroLines } from "@/data/paris-metro-lines";
 
-// Overpass can take up to ~20s; keep the route itself generous so a
-// race across mirrors has time to resolve without Vercel killing us.
-export const maxDuration = 25;
+// Use Node runtime (not edge) and ask Vercel for as much time as the plan allows.
+// On hobby this is capped to 10s silently.
+export const runtime = "nodejs";
+export const maxDuration = 60;
 
 interface NearbyPlace {
   type: string;
@@ -45,46 +46,49 @@ export async function GET(req: NextRequest) {
     }
 
     // Step 2: Query Overpass API for nearby amenities.
-    // The public overpass-api.de endpoint is notoriously overloaded (504s),
-    // so we race multiple mirrors and take the first non-empty response.
-    const overpassQuery = `
-      [out:json][timeout:20];
-      (
-        node["railway"="station"]["station"="subway"](around:1000,${lat},${lon});
-        node["shop"="supermarket"](around:600,${lat},${lon});
-        node["leisure"="park"](around:800,${lat},${lon});
-        way["leisure"="park"](around:800,${lat},${lon});
-      );
-      out center;
-    `;
+    // Vercel hobby kills the function at 10s, so we race 5 mirrors in parallel
+    // with a tight per-endpoint timeout. First non-empty response wins.
+    const overpassQuery = `[out:json][timeout:8];(node["railway"="station"]["station"="subway"](around:1000,${lat},${lon});node["shop"="supermarket"](around:600,${lat},${lon});node["leisure"="park"](around:800,${lat},${lon});way["leisure"="park"](around:800,${lat},${lon}););out center;`;
 
     const OVERPASS_ENDPOINTS = [
       "https://overpass-api.de/api/interpreter",
       "https://overpass.kumi.systems/api/interpreter",
       "https://overpass.private.coffee/api/interpreter",
+      "https://overpass.osm.ch/api/interpreter",
+      "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
     ];
 
-    async function tryEndpoint(url: string): Promise<{ elements: unknown[] }> {
+    async function tryEndpoint(url: string): Promise<{ elements: unknown[]; source: string }> {
       const res = await fetch(url, {
         method: "POST",
-        body: `data=${encodeURIComponent(overpassQuery)}`,
+        body: new URLSearchParams({ data: overpassQuery }).toString(),
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        signal: AbortSignal.timeout(22000),
+        signal: AbortSignal.timeout(8500),
       });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
+      if (!res.ok) throw new Error(`HTTP ${res.status} from ${url}`);
+      const data = (await res.json()) as { elements?: unknown[] };
       if (!data || !Array.isArray(data.elements) || data.elements.length === 0) {
-        throw new Error("empty");
+        throw new Error(`empty from ${url}`);
       }
-      return data as { elements: unknown[] };
+      return { elements: data.elements, source: url };
     }
 
-    let overpassData: { elements?: unknown[] } | null = null;
+    let overpassData: { elements: unknown[]; source: string } | null = null;
+    let overpassErrors: string[] = [];
     try {
-      // Race mirrors — first non-empty response wins, others aborted
       overpassData = await Promise.any(OVERPASS_ENDPOINTS.map(tryEndpoint));
-    } catch {
+    } catch (err) {
+      if (err instanceof AggregateError) {
+        overpassErrors = err.errors.map((e) => (e instanceof Error ? e.message : String(e)));
+      }
       overpassData = null;
+    }
+
+    // Surface diagnostics in the response so we can see why it failed in prod
+    if (!overpassData) {
+      console.error("All Overpass mirrors failed:", overpassErrors);
+    } else {
+      console.log(`Overpass source: ${overpassData.source}, elements: ${overpassData.elements.length}`);
     }
 
     let places: NearbyPlace[] = [];
@@ -128,7 +132,11 @@ export async function GET(req: NextRequest) {
       places = [...metros, ...commerces, ...parcs];
     }
 
-    return NextResponse.json({ places, district });
+    return NextResponse.json({
+      places,
+      district,
+      ...(overpassData ? {} : { overpassErrors, overpassSkipped: true }),
+    });
   } catch (error) {
     console.error("Nearby API error:", error);
     return NextResponse.json({ places: [], district: "", error: "Erreur de recherche" });
