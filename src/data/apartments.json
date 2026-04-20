@@ -719,7 +719,7 @@
   },
   {
     "slug": "3p-saint-augustin-paris-8e",
-    "title": "3p Saint Augustin",
+    "title": "3 Pièces Saint Augustin",
     "address": "Rue du Général Foy, Paris 8e",
     "district": "Paris 8e",
     "surface": 90,
@@ -775,7 +775,8 @@
       "/apartments/3p-saint-augustin-paris-8e/photo-11.jpg",
       "/apartments/3p-saint-augustin-paris-8e/photo-12.jpg"
     ],
-    "nearby": []
+    "nearby": [],
+    "hasElevator": true
   },
   {
     "slug": "2p-saint-germain-des-pres-paris-7e",
