@@ -470,7 +470,7 @@
   },
   {
     "slug": "2p-ternes-paris-17e",
-    "title": "2P Ternes",
+    "title": "2 Pièces Ternes",
     "address": "Rue Rennequin, Paris 17e",
     "district": "Paris 17e",
     "surface": 36,
@@ -523,7 +523,14 @@
       "/apartments/2p-ternes-paris-17e/photo-7.jpg",
       "/apartments/2p-ternes-paris-17e/photo-8.jpg"
     ],
-    "nearby": [],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "",
+        "distance": "5 min",
+        "lines": []
+      }
+    ],
     "hasElevator": true
   },
   {
