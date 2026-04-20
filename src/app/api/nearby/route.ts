@@ -62,7 +62,13 @@ export async function GET(req: NextRequest) {
       const res = await fetch(url, {
         method: "POST",
         body: new URLSearchParams({ data: overpassQuery }).toString(),
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          // Overpass usage policy requires a User-Agent; without it some
+          // mirrors return 406/403.
+          "User-Agent": "MoveInParis/1.0 (contact@move-in-paris.com)",
+          Accept: "application/json",
+        },
         signal: AbortSignal.timeout(8500),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status} from ${url}`);
