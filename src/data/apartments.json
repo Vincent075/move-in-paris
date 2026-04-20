@@ -526,9 +526,29 @@
     "nearby": [
       {
         "type": "Métro",
-        "name": "",
-        "distance": "5 min",
-        "lines": []
+        "name": "Pereire",
+        "distance": "3 min",
+        "lines": [
+          "3"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Wagram",
+        "distance": "8 min",
+        "lines": [
+          "3"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Hypercacher",
+        "distance": "4 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Promenade Gilberte Brossolette",
+        "distance": "1 min"
       }
     ],
     "hasElevator": true
