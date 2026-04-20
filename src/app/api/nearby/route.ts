@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getMetroLines } from "@/data/paris-metro-lines";
 
+// Overpass can take up to ~20s; keep the route itself generous so a
+// race across mirrors has time to resolve without Vercel killing us.
+export const maxDuration = 25;
+
 interface NearbyPlace {
   type: string;
   name: string;
@@ -40,9 +44,11 @@ export async function GET(req: NextRequest) {
       district = geoAddr.suburb;
     }
 
-    // Step 2: Query Overpass API for nearby amenities
+    // Step 2: Query Overpass API for nearby amenities.
+    // The public overpass-api.de endpoint is notoriously overloaded (504s),
+    // so we race multiple mirrors and take the first non-empty response.
     const overpassQuery = `
-      [out:json][timeout:8];
+      [out:json][timeout:20];
       (
         node["railway"="station"]["station"="subway"](around:1000,${lat},${lon});
         node["shop"="supermarket"](around:600,${lat},${lon});
@@ -52,20 +58,45 @@ export async function GET(req: NextRequest) {
       out center;
     `;
 
-    let places: NearbyPlace[] = [];
+    const OVERPASS_ENDPOINTS = [
+      "https://overpass-api.de/api/interpreter",
+      "https://overpass.kumi.systems/api/interpreter",
+      "https://overpass.private.coffee/api/interpreter",
+    ];
 
-    try {
-      const overpassRes = await fetch("https://overpass-api.de/api/interpreter", {
+    async function tryEndpoint(url: string): Promise<{ elements: unknown[] }> {
+      const res = await fetch(url, {
         method: "POST",
         body: `data=${encodeURIComponent(overpassQuery)}`,
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        signal: AbortSignal.timeout(8000),
+        signal: AbortSignal.timeout(22000),
       });
-      const overpassData = await overpassRes.json();
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (!data || !Array.isArray(data.elements) || data.elements.length === 0) {
+        throw new Error("empty");
+      }
+      return data as { elements: unknown[] };
+    }
 
+    let overpassData: { elements?: unknown[] } | null = null;
+    try {
+      // Race mirrors — first non-empty response wins, others aborted
+      overpassData = await Promise.any(OVERPASS_ENDPOINTS.map(tryEndpoint));
+    } catch {
+      overpassData = null;
+    }
+
+    let places: NearbyPlace[] = [];
+    if (overpassData && overpassData.elements) {
       const seen = new Set<string>();
-
-      for (const el of overpassData.elements || []) {
+      for (const raw of overpassData.elements) {
+        const el = raw as {
+          tags?: Record<string, string>;
+          lat?: number;
+          lon?: number;
+          center?: { lat: number; lon: number };
+        };
         const name = el.tags?.name;
         if (!name || seen.has(name)) continue;
         seen.add(name);
@@ -80,9 +111,6 @@ export async function GET(req: NextRequest) {
         }
 
         if (el.tags?.railway === "station") {
-          // Extract metro line references from Overpass tags, with a
-          // hardcoded Paris Métro fallback since OSM station nodes
-          // rarely expose line info directly.
           let lines = extractMetroLines(el.tags);
           if (lines.length === 0) lines = getMetroLines(name);
           places.push({ type: "Métro", name, distance: dist, ...(lines.length > 0 ? { lines } : {}) });
@@ -94,13 +122,10 @@ export async function GET(req: NextRequest) {
       }
 
       places.sort((a, b) => (parseInt(a.distance) || 99) - (parseInt(b.distance) || 99));
-
-      const metros = places.filter((p) => p.type === "Métro").slice(0, 3);
-      const commerces = places.filter((p) => p.type === "Commerce").slice(0, 2);
+      const metros = places.filter((p) => p.type === "Métro").slice(0, 2);
+      const commerces = places.filter((p) => p.type === "Commerce").slice(0, 1);
       const parcs = places.filter((p) => p.type === "Parc").slice(0, 1);
       places = [...metros, ...commerces, ...parcs];
-    } catch {
-      // Overpass timeout — return just district, no nearby
     }
 
     return NextResponse.json({ places, district });
