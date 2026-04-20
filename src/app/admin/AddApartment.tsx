@@ -158,6 +158,8 @@ export default function AddApartment({ password, onSuccess }: { password: string
   const [suggestLoading, setSuggestLoading] = useState(false);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  // Tracks the latest nearby-fetch so stale responses don't overwrite fresh ones
+  const nearbyFetchIdRef = useRef(0);
 
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
@@ -185,25 +187,7 @@ export default function AddApartment({ password, onSuccess }: { password: string
       setNearbyError("Entrez une adresse plus complète");
       return;
     }
-    setNearbyLoading(true);
-    setNearbyError("");
-    setNearbyDone(false);
-    try {
-      const res = await fetch(`/api/nearby?address=${encodeURIComponent(fullAddress)}`);
-      const data = await res.json();
-      if (data.error) {
-        setNearbyError(data.error);
-      } else {
-        if (data.district) setDistrict(data.district);
-        if (data.places && data.places.length > 0) {
-          setNearbyRows(data.places);
-        }
-        setNearbyDone(true);
-      }
-    } catch {
-      setNearbyError("Erreur de connexion — réessayez");
-    }
-    setNearbyLoading(false);
+    return fetchNearbyFrom(fullAddress);
   }
 
   function handleFullAddress(value: string) {
@@ -264,21 +248,51 @@ export default function AddApartment({ password, onSuccess }: { password: string
 
   async function fetchNearbyFrom(address: string) {
     if (address.length < 5) return;
+    const myId = ++nearbyFetchIdRef.current;
     setNearbyLoading(true);
     setNearbyError("");
     setNearbyDone(false);
-    try {
+    // Wipe previous results immediately — stale rows from a prior address are worse than none
+    setNearbyRows([]);
+
+    async function attempt(): Promise<{
+      error?: string;
+      district?: string;
+      places?: { type: string; name: string; distance: string; lines?: string[] }[];
+    }> {
       const res = await fetch(`/api/nearby?address=${encodeURIComponent(address)}`);
-      const data = await res.json();
-      if (data.error) {
-        setNearbyError(data.error);
-      } else {
-        if (data.district) setDistrict(data.district);
-        if (data.places && data.places.length > 0) setNearbyRows(data.places);
-        setNearbyDone(true);
+      return res.json();
+    }
+
+    let data: Awaited<ReturnType<typeof attempt>> | null = null;
+    try {
+      data = await attempt();
+      // Retry once if Overpass silently returned nothing — the public endpoint
+      // has sporadic timeouts and a single retry usually recovers
+      if (data && !data.error && (!data.places || data.places.length === 0)) {
+        await new Promise((r) => setTimeout(r, 400));
+        if (nearbyFetchIdRef.current !== myId) return;
+        data = await attempt();
       }
     } catch {
-      setNearbyError("Erreur de connexion — réessayez");
+      if (nearbyFetchIdRef.current !== myId) return;
+      try {
+        data = await attempt();
+      } catch {
+        data = null;
+      }
+    }
+
+    if (nearbyFetchIdRef.current !== myId) return;
+
+    if (!data) {
+      setNearbyError("Erreur de connexion — cliquez Rechercher pour réessayer");
+    } else if (data.error) {
+      setNearbyError(data.error);
+    } else {
+      if (data.district) setDistrict(data.district);
+      if (data.places && data.places.length > 0) setNearbyRows(data.places);
+      setNearbyDone(true);
     }
     setNearbyLoading(false);
   }
