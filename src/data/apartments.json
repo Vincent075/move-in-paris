@@ -178,7 +178,8 @@
         "name": "Square Thomas Jefferson",
         "distance": "3 min"
       }
-    ]
+    ],
+    "hasElevator": true
   },
   {
     "slug": "2-chambres-chaillot-paris-16e",
