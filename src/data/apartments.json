@@ -808,8 +808,24 @@
       "Machine Nespresso"
     ],
     "photos": "2p-saint-germain-des-pres-paris-7e",
-    "images": [],
-    "nearby": []
+    "images": [
+      "/apartments/2p-saint-germain-des-pres-paris-7e/01.jpg",
+      "/apartments/2p-saint-germain-des-pres-paris-7e/02.jpg",
+      "/apartments/2p-saint-germain-des-pres-paris-7e/03.jpg",
+      "/apartments/2p-saint-germain-des-pres-paris-7e/04.jpg",
+      "/apartments/2p-saint-germain-des-pres-paris-7e/05.jpg",
+      "/apartments/2p-saint-germain-des-pres-paris-7e/06.jpg",
+      "/apartments/2p-saint-germain-des-pres-paris-7e/07.jpg",
+      "/apartments/2p-saint-germain-des-pres-paris-7e/08.jpg",
+      "/apartments/2p-saint-germain-des-pres-paris-7e/09.jpg",
+      "/apartments/2p-saint-germain-des-pres-paris-7e/10.jpg",
+      "/apartments/2p-saint-germain-des-pres-paris-7e/11.jpg",
+      "/apartments/2p-saint-germain-des-pres-paris-7e/12.jpg",
+      "/apartments/2p-saint-germain-des-pres-paris-7e/13.jpg",
+      "/apartments/2p-saint-germain-des-pres-paris-7e/14.jpg"
+    ],
+    "nearby": [],
+    "hasElevator": false
   },
   {
     "slug": "2p-charles-de-gaulle-etoile-paris-17e",
