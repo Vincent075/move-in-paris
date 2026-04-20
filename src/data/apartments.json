@@ -464,5 +464,62 @@
         "distance": "2 min"
       }
     ]
+  },
+  {
+    "slug": "2p-ternes-paris-17e",
+    "title": "2P Ternes",
+    "address": "Rue Rennequin, Paris 17e",
+    "district": "Paris 17e",
+    "surface": 36,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "1er étage",
+    "status": "À louer",
+    "description": "2 pièces entièrement meublé et équipé d'une surface\nd'environ 36 m². 1er étage avec ascenseur d'un\nimmeuble ancien.\nSalon avec canapé, table basse et SMART TV\nCuisine séparée moderne entièrement équipée\nEquipements : Four micro-onde, machine à laver, lave-\nvaisselle, machine à café Nespresso , grille-pain…\nChambre avec un lit 2 places et grands rangements.\nSalle d’eau avec douche et WC\nAppartement lumineux et proche de tout commodités.\nChauffage et eau chaude individuels electriques.",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Cuisine équipée",
+      "Linge de maison fourni",
+      "Digicode",
+      "Double vitrage",
+      "Bouilloire",
+      "Cafetière",
+      "Draps fournis",
+      "Fer à repasser",
+      "Lit Queen size",
+      "Smart TV",
+      "Serviettes fournies",
+      "Télévision 4K",
+      "Table à repasser",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Toaster",
+      "Lave-vaisselle",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Wifi",
+      "Lave-linge",
+      "Congélateur",
+      "Chauffage électrique individuel"
+    ],
+    "photos": "2p-ternes-paris-17e",
+    "images": [
+      "/apartments/2p-ternes-paris-17e/photo-1.jpg",
+      "/apartments/2p-ternes-paris-17e/photo-2.jpg",
+      "/apartments/2p-ternes-paris-17e/photo-3.jpg",
+      "/apartments/2p-ternes-paris-17e/photo-4.jpg",
+      "/apartments/2p-ternes-paris-17e/photo-5.jpg",
+      "/apartments/2p-ternes-paris-17e/photo-6.jpg",
+      "/apartments/2p-ternes-paris-17e/photo-7.jpg",
+      "/apartments/2p-ternes-paris-17e/photo-8.jpg",
+      "/apartments/2p-ternes-paris-17e/photo-9.jpg",
+      "/apartments/2p-ternes-paris-17e/photo-10.jpg",
+      "/apartments/2p-ternes-paris-17e/photo-11.jpg",
+      "/apartments/2p-ternes-paris-17e/photo-12.jpg"
+    ],
+    "nearby": []
   }
 ]
