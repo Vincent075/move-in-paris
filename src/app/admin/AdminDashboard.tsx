@@ -51,7 +51,7 @@ const AMENITIES: { fr: string; en: string }[] = [
   { fr: "Ménage hebdomadaire", en: "Weekly cleaning" },
   { fr: "Parking", en: "Parking" },
   { fr: "Cave", en: "Cellar" },
-];
+].sort((a, b) => a.fr.localeCompare(b.fr, "fr", { sensitivity: "base" }));
 
 interface Nearby {
   type: string;
@@ -100,6 +100,7 @@ export default function AdminDashboard() {
   const [message, setMessage] = useState({ type: "", text: "" });
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
+  const [customAmenity, setCustomAmenity] = useState("");
 
   async function fetchApartments() {
     setLoading(true);
@@ -223,23 +224,40 @@ export default function AdminDashboard() {
     setEditData({ ...editData, features: Array.from(fr), features_en: Array.from(en) });
   }
 
-  /** Features from apartments.json that aren't in the AMENITIES dictionary. */
-  function customFeaturesFr(): string[] {
-    const known = new Set(AMENITIES.map((a) => a.fr));
-    return (editData.features || []).filter((f) => !known.has(f));
-  }
-  function setCustomFeaturesFr(text: string) {
-    const customFr = text.split("\n").map((s) => s.trim()).filter(Boolean);
-    const customEn = text.split("\n").map((s) => s.trim()).filter(Boolean);
-    const known = new Set(AMENITIES.map((a) => a.fr));
-    const knownEn = new Set(AMENITIES.map((a) => a.en));
-    const keptFr = (editData.features || []).filter((f) => known.has(f));
-    const keptEn = (editData.features_en || []).filter((f) => knownEn.has(f));
-    setEditData({
-      ...editData,
-      features: [...keptFr, ...customFr],
-      features_en: [...keptEn, ...customEn],
+  /** Full amenities list for edit mode: dictionary + any custom features already
+   *  on the apartment (so they appear as toggleable checkboxes), sorted alpha. */
+  function mergedAmenities(): { fr: string; en: string }[] {
+    const byFr = new Map<string, { fr: string; en: string }>();
+    for (const a of AMENITIES) byFr.set(a.fr.toLowerCase(), a);
+    const existingFr = editData.features || [];
+    const existingEn = editData.features_en || [];
+    existingFr.forEach((fr, i) => {
+      const key = fr.toLowerCase();
+      if (!byFr.has(key)) byFr.set(key, { fr, en: existingEn[i] || fr });
     });
+    return Array.from(byFr.values()).sort((a, b) =>
+      a.fr.localeCompare(b.fr, "fr", { sensitivity: "base" }),
+    );
+  }
+
+  function addCustomAmenity() {
+    const raw = customAmenity.trim();
+    if (!raw) return;
+    const normalized = raw.charAt(0).toUpperCase() + raw.slice(1);
+    const key = normalized.toLowerCase();
+    const existing = AMENITIES.find((a) => a.fr.toLowerCase() === key);
+    const fr = existing ? existing.fr : normalized;
+    const en = existing ? existing.en : normalized; // auto-translated on save
+    const currentFr = editData.features || [];
+    if (!currentFr.some((f) => f.toLowerCase() === fr.toLowerCase())) {
+      const currentEn = editData.features_en || [];
+      setEditData({
+        ...editData,
+        features: [...currentFr, fr],
+        features_en: [...currentEn, en],
+      });
+    }
+    setCustomAmenity("");
   }
 
   function setCoverImage(idx: number) {
@@ -662,7 +680,7 @@ export default function AdminDashboard() {
                             <span className="text-xs text-[#6B6B6B]">{(editData.features || []).length} sélectionné{(editData.features || []).length > 1 ? "s" : ""}</span>
                           </div>
                           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-                            {AMENITIES.map((am) => {
+                            {mergedAmenities().map((am) => {
                               const checked = (editData.features || []).includes(am.fr);
                               return (
                                 <label key={am.fr} className={`flex items-center gap-2 px-3 py-2 border text-xs cursor-pointer transition-all ${checked ? "border-[#B88B58] bg-[#B88B58]/10 text-[#1A1A1A]" : "border-[#E8E4DF] text-[#6B6B6B] hover:border-[#B88B58]/50"}`}>
@@ -678,12 +696,22 @@ export default function AdminDashboard() {
                             })}
                           </div>
                           <div className="mt-4">
-                            <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Équipements personnalisés (un par ligne)</label>
-                            <textarea rows={3}
-                              value={customFeaturesFr().join("\n")}
-                              onChange={(e) => setCustomFeaturesFr(e.target.value)}
-                              placeholder="Ex: Piano à queue, Vue Tour Eiffel…"
-                              className="w-full px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none resize-y font-mono" />
+                            <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Ajouter un équipement oublié</label>
+                            <div className="flex gap-2">
+                              <input
+                                type="text"
+                                value={customAmenity}
+                                onChange={(e) => setCustomAmenity(e.target.value)}
+                                onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addCustomAmenity(); } }}
+                                placeholder="Ex: Piano à queue, Vue Tour Eiffel…"
+                                className="flex-1 px-3 py-2 border border-[#E8E4DF] text-sm focus:border-[#B88B58] focus:outline-none"
+                              />
+                              <button type="button" onClick={addCustomAmenity}
+                                className="px-4 py-2 text-xs bg-[#B88B58] text-[#0D0D0D] hover:bg-[#D4AF7A] uppercase tracking-wider whitespace-nowrap">
+                                + Ajouter
+                              </button>
+                            </div>
+                            <p className="text-[10px] text-[#6B6B6B] mt-1">La traduction EN est générée automatiquement à l&apos;enregistrement.</p>
                           </div>
                         </section>
 
