@@ -603,7 +603,7 @@
   },
   {
     "slug": "3p-madelaine-paris-8e",
-    "title": "3p Madelaine",
+    "title": "3 Pièces Madelaine",
     "address": "Rue Cambacérès, Paris 8e",
     "district": "Paris 8e",
     "surface": 60,
@@ -665,7 +665,8 @@
       "/apartments/3p-madelaine-paris-8e/photo-14.jpg",
       "/apartments/3p-madelaine-paris-8e/photo-15.jpg"
     ],
-    "nearby": []
+    "nearby": [],
+    "hasElevator": true
   },
   {
     "slug": "2p-ternes-3-paris-17e",
