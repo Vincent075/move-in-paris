@@ -598,7 +598,34 @@
       "/apartments/3p-ternes-paris-17e/photo-13.jpg",
       "/apartments/3p-ternes-paris-17e/photo-14.jpg"
     ],
-    "nearby": [],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Ternes",
+        "distance": "4 min",
+        "lines": [
+          "2"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Pereire",
+        "distance": "6 min",
+        "lines": [
+          "3"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Aldi",
+        "distance": "3 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Pierre Demours",
+        "distance": "4 min"
+      }
+    ],
     "hasElevator": true
   },
   {
