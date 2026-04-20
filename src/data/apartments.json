@@ -1064,7 +1064,35 @@
       "/apartments/2p-batignolles-paris-17e/photo-5.jpg",
       "/apartments/2p-batignolles-paris-17e/photo-6.jpg"
     ],
-    "nearby": [],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Villiers",
+        "distance": "5 min",
+        "lines": [
+          "2",
+          "3"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Malesherbes",
+        "distance": "5 min",
+        "lines": [
+          "3"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Monoprix",
+        "distance": "3 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square des Batignolles",
+        "distance": "5 min"
+      }
+    ],
     "hasElevator": false
   },
   {
