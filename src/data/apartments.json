@@ -282,7 +282,7 @@
   },
   {
     "slug": "2-pieces-chaillot-2-paris-16e",
-    "title": "2 pièces Chaillot #2",
+    "title": "2 Pièces Chaillot #2",
     "address": "Rue de Bassano, Paris 16e",
     "district": "Paris 16e",
     "surface": 65,
@@ -374,7 +374,8 @@
         "name": "Square Thomas Jefferson",
         "distance": "2 min"
       }
-    ]
+    ],
+    "hasElevator": true
   },
   {
     "slug": "2-pieces-porte-dauphine-paris-16e",
