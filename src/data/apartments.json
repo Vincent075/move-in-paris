@@ -973,7 +973,34 @@
       "/apartments/2p-charles-de-gaulle-etoile-paris-17e/photo-9.jpg",
       "/apartments/2p-charles-de-gaulle-etoile-paris-17e/photo-10.jpg"
     ],
-    "nearby": [],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Ternes",
+        "distance": "3 min",
+        "lines": [
+          "2"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Courcelles",
+        "distance": "4 min",
+        "lines": [
+          "2"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Aldi",
+        "distance": "3 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Promenade Gilberte Brossolette",
+        "distance": "6 min"
+      }
+    ],
     "hasElevator": true
   },
   {
