@@ -379,7 +379,7 @@
   },
   {
     "slug": "2-pieces-porte-dauphine-paris-16e",
-    "title": "2 pièces Porte Dauphine",
+    "title": "2 Pièces Porte Dauphine",
     "address": "Boulevard Flandrin, Paris 16e",
     "district": "Paris 16e",
     "surface": 32,
@@ -465,7 +465,8 @@
         "name": "Square Robert Schuman",
         "distance": "2 min"
       }
-    ]
+    ],
+    "hasElevator": false
   },
   {
     "slug": "2p-ternes-paris-17e",
