@@ -1337,7 +1337,37 @@
       "/apartments/2-pieces-ternes-2q-paris-17e/photo-11.jpg",
       "/apartments/2-pieces-ternes-2q-paris-17e/photo-12.jpg"
     ],
-    "nearby": []
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Argentine",
+        "distance": "3 min",
+        "lines": [
+          "1"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Charles de Gaulle — Étoile",
+        "distance": "5 min",
+        "lines": [
+          "1",
+          "2",
+          "6"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "G20",
+        "distance": "1 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Promenade Pereire",
+        "distance": "6 min"
+      }
+    ],
+    "hasElevator": true
   },
   {
     "slug": "2-pieces-montmartre-paris-18e",
