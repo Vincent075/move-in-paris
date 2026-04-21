@@ -198,11 +198,13 @@ export default function LandingContent() {
           <div className="absolute inset-0 bg-gradient-to-b from-noir-deep/35 via-noir-deep/30 to-noir-deep/85" />
         </div>
 
-        {/* Minimal top strip: just the logo since no site header */}
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-12 pt-4 md:pt-5 pb-0">
+        {/* Minimal top strip: just the logo since no site header.
+            -mt negatif pour compenser l'espace blanc integre dans le PNG
+            du logo (grosse marge transparente au-dessus du visuel). */}
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-12 pt-2 md:pt-3 pb-0">
           <Link href="/" className="inline-block">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/Logo-gold.png" alt="Move in Paris" className="h-40 md:h-56 w-auto -mb-4 md:-mb-6" />
+            <img src="/Logo-gold.png" alt="Move in Paris" className="h-40 md:h-56 w-auto -mt-10 md:-mt-14 -mb-8 md:-mb-12" />
           </Link>
         </div>
 
