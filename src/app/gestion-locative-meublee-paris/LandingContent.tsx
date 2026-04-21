@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
 import EstimationForm from "@/app/estimation/EstimationForm";
+import PartnerLogos from "@/components/PartnerLogos";
+import GoogleReviews from "@/components/GoogleReviews";
 
 // Same dynamic counters as the homepage (cf. src/components/WhyUs.tsx)
 const STATS_REFERENCE_DATE = Date.UTC(2026, 3, 18);
@@ -113,12 +114,6 @@ const STEPS = [
   },
 ];
 
-const CORPORATE_LOGOS = [
-  "axa", "danone", "linkedin", "engie", "renault", "vinci", "loreal",
-  "lvmh", "ocde", "pernod-ricard", "accenture", "dior", "goldman-sachs",
-  "sanofi", "technip-energies",
-];
-
 const TESTIMONIALS = [
   {
     name: "Isabelle R.",
@@ -187,13 +182,13 @@ export default function LandingContent() {
     <>
       {/* ========================== HERO ========================== */}
       <section className="relative overflow-hidden bg-noir-deep text-blanc">
-        {/* Backdrop */}
+        {/* Backdrop — filtre adouci pour garder la photo lisible */}
         <div className="absolute inset-0">
           <div
-            className="absolute inset-0 bg-cover bg-center opacity-50"
+            className="absolute inset-0 bg-cover bg-center opacity-85"
             style={{ backgroundImage: "url('/apartments/hero-salon.jpg')" }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-noir-deep/70 via-noir-deep/60 to-noir-deep/95" />
+          <div className="absolute inset-0 bg-gradient-to-b from-noir-deep/35 via-noir-deep/30 to-noir-deep/85" />
         </div>
 
         <div className="relative max-w-7xl mx-auto px-6 lg:px-12 pt-36 pb-24 md:pt-44 md:pb-32">
@@ -313,35 +308,16 @@ export default function LandingContent() {
         </div>
       </section>
 
-      {/* ========================== CLIENTÈLE ========================== */}
-      <section className="py-16 bg-noir-deep">
+      {/* ========================== ILS NOUS FONT CONFIANCE ========================== */}
+      <div className="bg-blanc-chaud pt-20 pb-4 text-center">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="text-center mb-10">
-            <span className="text-gold text-xs tracking-[0.3em] uppercase">Nos entreprises partenaires</span>
-            <h2 className="font-serif text-2xl md:text-3xl text-blanc mt-3">
-              Un loyer payé par des entreprises du CAC 40
-            </h2>
-          </div>
-          <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 opacity-80">
-            {CORPORATE_LOGOS.map((logo) => (
-              <div
-                key={logo}
-                className="aspect-[3/2] flex items-center justify-center bg-blanc/5 border border-blanc/10 p-4 hover:bg-blanc/10 transition-colors"
-              >
-                <Image
-                  src={`/logos/${logo}.svg`}
-                  alt={logo}
-                  width={80} height={40}
-                  className="max-h-10 w-auto opacity-70 brightness-0 invert"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = "none";
-                  }}
-                />
-              </div>
-            ))}
-          </div>
+          <span className="text-gold text-xs tracking-[0.3em] uppercase">Ils nous font confiance</span>
+          <h2 className="font-serif text-2xl md:text-3xl text-noir mt-3">
+            Un loyer payé par des sociétés du CAC 40
+          </h2>
         </div>
-      </section>
+      </div>
+      <PartnerLogos />
 
       {/* ========================== PROCESS ========================== */}
       <section className="py-24 bg-blanc-chaud">
@@ -376,33 +352,37 @@ export default function LandingContent() {
         </div>
       </section>
 
-      {/* ========================== TESTIMONIALS ========================== */}
+      {/* ========================== AVIS GOOGLE (5 étoiles uniquement) ========================== */}
       <section className="py-24 bg-blanc">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="text-center mb-16">
-            <span className="text-gold text-xs tracking-[0.3em] uppercase">Ils nous font confiance</span>
-            <h2 className="font-serif text-3xl md:text-4xl text-noir mt-3 mb-4">Témoignages de propriétaires</h2>
+          <div className="text-center mb-12">
+            <span className="text-gold text-xs tracking-[0.3em] uppercase">Avis Google vérifiés</span>
+            <h2 className="font-serif text-3xl md:text-4xl text-noir mt-3 mb-4">Ce que disent nos clients</h2>
             <div className="h-px w-16 bg-gold mx-auto" />
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {TESTIMONIALS.map((t, i) => (
-              <motion.article
-                key={t.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="p-8 bg-blanc-chaud border border-gris-clair/40"
-              >
-                <div className="flex text-gold mb-4">{"★★★★★".split("").map((s, idx) => <span key={idx}>{s}</span>)}</div>
-                <p className="text-noir font-light leading-relaxed italic">&ldquo;{t.quote}&rdquo;</p>
-                <div className="mt-6 pt-4 border-t border-gris-clair/50">
-                  <div className="font-serif text-noir">{t.name}</div>
-                  <div className="text-xs text-gris">{t.city}</div>
-                </div>
-              </motion.article>
-            ))}
-          </div>
+          <GoogleReviews
+            fallback={
+              <div className="grid md:grid-cols-3 gap-6">
+                {TESTIMONIALS.map((t, i) => (
+                  <motion.article
+                    key={t.name}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                    className="p-8 bg-blanc-chaud border border-gris-clair/40"
+                  >
+                    <div className="flex text-gold mb-4">{"★★★★★".split("").map((s, idx) => <span key={idx}>{s}</span>)}</div>
+                    <p className="text-noir font-light leading-relaxed italic">&ldquo;{t.quote}&rdquo;</p>
+                    <div className="mt-6 pt-4 border-t border-gris-clair/50">
+                      <div className="font-serif text-noir">{t.name}</div>
+                      <div className="text-xs text-gris">{t.city}</div>
+                    </div>
+                  </motion.article>
+                ))}
+              </div>
+            }
+          />
         </div>
       </section>
 
