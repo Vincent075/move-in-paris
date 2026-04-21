@@ -257,7 +257,9 @@ export default function LandingContent() {
             Estimation instantanée — gratuite et sans engagement
           </span>
           <h2 className="font-serif text-2xl md:text-3xl text-noir mt-2">
-            Votre loyer en bail société <span className="text-gold">en 60 secondes</span>
+            Votre loyer en bail société
+            <br />
+            <span className="text-gold">en 60 secondes</span>
           </h2>
         </div>
         {/* Anchor exactly where the form fields start, so the CTA scrolls here. */}

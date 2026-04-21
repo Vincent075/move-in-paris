@@ -620,7 +620,7 @@ export default function EstimationForm({
               </h2>
               <p className="text-gris text-sm mb-8">
                 {contactFirst
-                  ? "Vos coordonnées, puis l'étape 2 vous affiche immédiatement votre fourchette de loyer en bail société — proposition détaillée et plaquette Move in Paris envoyées dans la foulée par email. Un conseiller reste joignable si vous en avez besoin."
+                  ? "Proposition détaillée + plaquette envoyées dans la foulée par email."
                   : t("estimationPage.stepContactIntro")}
               </p>
 
