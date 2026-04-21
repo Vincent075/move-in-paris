@@ -620,7 +620,7 @@ export default function EstimationForm({
               </h2>
               <p className="text-gris text-sm mb-8">
                 {contactFirst
-                  ? "Proposition détaillée + plaquette envoyées dans la foulée par email."
+                  ? "Proposition détaillée et plaquette Move in Paris envoyées par email en quelques secondes."
                   : t("estimationPage.stepContactIntro")}
               </p>
 
