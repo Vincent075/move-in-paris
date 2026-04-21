@@ -13,7 +13,7 @@ export default function Hero() {
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: "url('/apartments/hero-salon.jpg')" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-noir-deep/35 via-noir-deep/25 to-noir-deep/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-noir-deep/20 via-noir-deep/15 to-noir-deep/70" />
       </div>
 
       {/* Content */}
