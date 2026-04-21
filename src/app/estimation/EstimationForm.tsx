@@ -616,11 +616,11 @@ export default function EstimationForm({
                 {contactFirst ? "Étape 1/2 — Vos coordonnées" : t("estimationPage.stepContactBadge")}
               </span>
               <h2 className="font-serif text-2xl md:text-3xl text-noir mt-2 mb-2">
-                {contactFirst ? "Un conseiller Move in Paris vous contacte en priorité" : t("estimationPage.stepContactTitle")}
+                {contactFirst ? "Votre estimation s'affiche juste après" : t("estimationPage.stepContactTitle")}
               </h2>
               <p className="text-gris text-sm mb-8">
                 {contactFirst
-                  ? "Renseignez vos coordonnées ci-dessous. À l'étape suivante, décrivez votre bien pour obtenir l'estimation instantanée + la proposition détaillée par email avec notre plaquette."
+                  ? "Vos coordonnées, puis l'étape 2 vous affiche immédiatement votre fourchette de loyer en bail société — proposition détaillée et plaquette Move in Paris envoyées dans la foulée par email. Un conseiller reste joignable si vous en avez besoin."
                   : t("estimationPage.stepContactIntro")}
               </p>
 
