@@ -159,7 +159,7 @@ export default function OwnerLandingPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       {/* No site header — landing focus on conversion, minimal chrome */}
-      <main>
+      <main className="overflow-x-hidden">
         <LandingContent />
       </main>
       <Footer />

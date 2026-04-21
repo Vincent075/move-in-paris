@@ -311,7 +311,7 @@ export default function EstimationForm({
   }
 
   return (
-    <section className={`${contactFirst ? "pt-2 pb-12" : "py-16 md:py-20"} bg-blanc`}>
+    <section className={`${contactFirst ? "pt-2 pb-12" : "py-16 md:py-20"} bg-blanc overflow-x-hidden`}>
       <div className="max-w-4xl mx-auto px-6 lg:px-12">
         {/* Progress dots — hidden in contactFirst (landing) mode per design */}
         {!contactFirst && (

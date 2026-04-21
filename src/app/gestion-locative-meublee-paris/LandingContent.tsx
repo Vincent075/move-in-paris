@@ -188,7 +188,7 @@ export default function LandingContent() {
   return (
     <>
       {/* ========================== HERO ========================== */}
-      <section className="relative overflow-hidden bg-noir-deep text-blanc">
+      <section className="relative overflow-x-hidden bg-noir-deep text-blanc">
         {/* Backdrop — filtre adouci pour garder la photo lisible */}
         <div className="absolute inset-0">
           <div
@@ -199,14 +199,14 @@ export default function LandingContent() {
         </div>
 
         {/* Minimal top strip: just the logo since no site header */}
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-12 pt-6 md:pt-8">
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-12 pt-4 md:pt-5 pb-0">
           <Link href="/" className="inline-block">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/Logo-gold.png" alt="Move in Paris" className="h-40 md:h-56 w-auto" />
+            <img src="/Logo-gold.png" alt="Move in Paris" className="h-40 md:h-56 w-auto -mb-4 md:-mb-6" />
           </Link>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-12 pt-4 pb-20 md:pt-6 md:pb-28">
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-12 pt-0 pb-20 md:pb-28">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -286,15 +286,9 @@ export default function LandingContent() {
         </div>
       </section>
 
-      {/* ========================== ILS NOUS FONT CONFIANCE ========================== */}
-      <div className="bg-blanc-chaud pt-20 pb-4 text-center">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <span className="text-gold text-xs tracking-[0.3em] uppercase">Ils nous font confiance</span>
-          <h2 className="font-serif text-2xl md:text-3xl text-noir mt-3">
-            Un loyer payé par des sociétés du CAC 40
-          </h2>
-        </div>
-      </div>
+      {/* ========================== ILS NOUS FONT CONFIANCE ==========================
+          PartnerLogos embeds its own "Ils nous font confiance pour loger leurs
+          collaborateurs" header — no separate wrapper needed. */}
       <PartnerLogos />
 
       {/* ========================== BENEFITS ========================== */}
