@@ -65,12 +65,12 @@ const BENEFITS = [
   {
     num: "01",
     title: "Service 100 % gratuit",
-    desc: "Zéro frais de gestion, zéro commission, zéro honoraire. Nous nous rémunérons exclusivement sur la marge dégagée auprès de notre clientèle corporate.",
+    desc: "Zéro frais de gestion, zéro commission, zéro honoraire. Nous nous rémunérons exclusivement sur la marge dégagée auprès de notre clientèle sociétés.",
   },
   {
     num: "02",
     title: "+30 % de revenus",
-    desc: "Jusqu'à 55 €/m² hors charges sur les segments premium (8e, 16e, 17e). Notre clientèle entreprise accepte un positionnement haut de gamme.",
+    desc: "Jusqu'à 55 €/m² hors charges sur les segments premium (8e, 16e, 17e). Notre clientèle sociétés accepte un positionnement haut de gamme.",
   },
   {
     num: "03",
@@ -97,15 +97,15 @@ const BENEFITS = [
 const STEPS = [
   {
     title: "Estimation instantanée",
-    desc: "Vous remplissez le formulaire en 60 secondes. Fourchette de loyer corporate affichée immédiatement à l'écran + email récapitulatif avec la proposition détaillée et notre plaquette de présentation.",
+    desc: "Vous remplissez le formulaire en 60 secondes. Fourchette de loyer en bail société affichée immédiatement à l'écran + email récapitulatif avec la proposition détaillée et notre plaquette de présentation.",
   },
   {
     title: "Visite & ameublement",
-    desc: "Nous visitons le bien, identifions les ajustements nécessaires et recommandons la décoration / ameublement pour répondre aux standards corporate.",
+    desc: "Nous visitons le bien, identifions les ajustements nécessaires et recommandons la décoration / ameublement pour répondre aux standards attendus par les locataires en bail société.",
   },
   {
     title: "Mise en location",
-    desc: "Photos professionnelles, diffusion auprès de notre portefeuille d'entreprises partenaires, sélection du locataire et signature du bail Code Civil.",
+    desc: "Photos professionnelles, diffusion auprès de notre portefeuille de sociétés partenaires, sélection du locataire et signature du bail société (Code Civil, art. 1714-1762).",
   },
   {
     title: "Gestion opérationnelle",
@@ -136,26 +136,26 @@ const TESTIMONIALS = [
     name: "Claire L.",
     city: "Propriétaire — Neuilly-sur-Seine",
     quote:
-      "J'étais sceptique sur le 'zéro frais' mais c'est réel. Pas de commission cachée. L'agence gagne sur sa marge corporate, moi j'ai le loyer net promis.",
+      "J'étais sceptique sur le 'zéro frais' mais c'est réel. Pas de commission cachée. L'agence gagne sur sa marge société, moi j'ai le loyer net promis.",
   },
 ];
 
 const FAQ = [
   {
     q: "Combien coûte la gestion locative Move in Paris ?",
-    a: "Notre service est 100 % gratuit pour les propriétaires : aucun frais de gestion, aucune commission, aucun honoraire. Nous nous rémunérons exclusivement sur la marge dégagée auprès de notre clientèle corporate — le loyer que vous recevez est celui que nous vous annonçons, net.",
+    a: "Notre service est 100 % gratuit pour les propriétaires : aucun frais de gestion, aucune commission, aucun honoraire. Nous nous rémunérons exclusivement sur la marge dégagée auprès de notre clientèle sociétés — le loyer que vous recevez est celui que nous vous annonçons, net.",
   },
   {
     q: "Quel type de bail signez-vous ?",
-    a: "Un bail Code Civil (articles 1714 à 1762 du Code civil) signé directement avec l'entreprise locataire. Ce cadre juridique est prévu pour la location meublée à usage corporate — il permet une grande souplesse contractuelle tout en offrant toutes les garanties du bail d'habitation classique.",
+    a: "Un bail société Code Civil (articles 1714 à 1762 du Code civil) signé directement avec la société locataire. Ce cadre juridique est prévu pour la location meublée à usage professionnel — il permet une grande souplesse contractuelle tout en offrant toutes les garanties du bail d'habitation classique.",
   },
   {
     q: "En combien de temps mon appartement sera-t-il loué ?",
-    a: "La plupart de nos biens trouvent preneur en moins de 15 jours. Notre clientèle corporate exprime des besoins en continu : directeurs en mission, cadres en relocation, expatriés, entreprises internationales logeant leurs collaborateurs. Sur certaines périodes de pic (rentrée, début d'année), le délai tombe à 3–5 jours.",
+    a: "La plupart de nos biens trouvent preneur en moins de 15 jours. Notre clientèle sociétés exprime des besoins en continu : directeurs en mission, cadres en relocation, expatriés, sociétés internationales logeant leurs collaborateurs. Sur certaines périodes de pic (rentrée, début d'année), le délai tombe à 3–5 jours.",
   },
   {
     q: "Mon appartement est-il assuré pendant la location ?",
-    a: "Oui, entièrement. Une assurance habitation multirisque couvre le bien sur toute la durée de la location. Le locataire corporate bénéficie également de la couverture responsabilité civile de son employeur.",
+    a: "Oui, entièrement. Une assurance habitation multirisque couvre le bien sur toute la durée de la location. Le locataire en bail société bénéficie également de la couverture responsabilité civile de son employeur.",
   },
   {
     q: "Puis-je confier un bien que je ne veux pas meubler moi-même ?",
@@ -208,7 +208,7 @@ export default function LandingContent() {
             </span>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.1]">
               Confiez votre appartement à l&apos;agence spécialisée en{" "}
-              <span className="text-gold">location meublée corporate</span> à Paris
+              <span className="text-gold">location meublée en bail société</span> à Paris
             </h1>
             <p className="mt-6 text-lg md:text-xl text-blanc/80 font-light max-w-2xl leading-relaxed">
               +30 % de revenus vs location classique, service 100 % gratuit, clientèle premium
@@ -267,7 +267,7 @@ export default function LandingContent() {
             Estimation instantanée — gratuite et sans engagement
           </span>
           <h2 className="font-serif text-3xl md:text-4xl text-noir mt-3 mb-3">
-            Votre loyer corporate en <span className="text-gold">60 secondes</span>
+            Votre loyer en bail société <span className="text-gold">en 60 secondes</span>
           </h2>
           <p className="text-sm md:text-base text-gris font-light max-w-2xl mx-auto">
             Résultat affiché immédiatement à l&apos;écran. Proposition détaillée et plaquette Move in Paris
@@ -468,7 +468,7 @@ export default function LandingContent() {
             <span className="text-gold">en 60 secondes</span>
           </h2>
           <p className="text-blanc/70 font-light max-w-2xl mx-auto mb-10">
-            Fourchette de loyer corporate affichée immédiatement + proposition détaillée
+            Fourchette de loyer en bail société affichée immédiatement + proposition détaillée
             et plaquette Move in Paris envoyées par email. Sans engagement, 0 € de frais.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -497,13 +497,13 @@ export default function LandingContent() {
           <p>
             <strong className="text-noir">Move in Paris — spécialiste de la gestion locative meublée à Paris.</strong>{" "}
             Notre agence accompagne les propriétaires bailleurs dans la mise en location de leurs appartements
-            auprès d&apos;une clientèle corporate premium (groupes du CAC 40, expatriés, cadres en relocation, diplomates)
+            auprès d&apos;une clientèle sociétés premium (groupes du CAC 40, expatriés, cadres en relocation, diplomates)
             dans les arrondissements les plus demandés :{" "}
             <Link href="/nos-appartements" className="text-gold hover:text-gold-dark">Paris 1er à 4e</Link>, 7e, 8e (Triangle d&apos;or, Madeleine, Champs-Élysées),
             16e (Trocadéro, Passy, Auteuil, Porte Dauphine), 17e (Batignolles, Monceau, Ternes, Étoile), ainsi que Neuilly-sur-Seine, Levallois-Perret et Boulogne-Billancourt.
           </p>
           <p>
-            Nos prestations incluent la mise en location meublée, le bail Code Civil corporate (art. 1714-1762),
+            Nos prestations incluent la mise en location meublée, le bail société Code Civil (art. 1714-1762),
             la gestion opérationnelle complète, le ménage hebdomadaire, l&apos;assistance technique 7j/7,
             le reporting trimestriel et l&apos;optimisation fiscale LMNP. Service 100 % gratuit pour les propriétaires.
           </p>

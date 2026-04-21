@@ -6,7 +6,7 @@ import LandingContent from "./LandingContent";
 const TITLE =
   "Gestion locative meublée à Paris — +30 % de revenus, 0 € de frais | Move in Paris";
 const DESCRIPTION =
-  "Confiez votre appartement meublé à l'agence parisienne spécialisée en location corporate. Clientèle premium (L'Oréal, LVMH, AXA, Sanofi), service 100 % gratuit, taux d'occupation +95 %. Estimation gratuite en 30 secondes.";
+  "Confiez votre appartement meublé à l'agence parisienne spécialisée en bail société (location meublée corporate). Clientèle premium (L'Oréal, LVMH, AXA, Sanofi), service 100 % gratuit, taux d'occupation +95 %. Estimation instantanée en 60 secondes.";
 const URL = "https://www.move-in-paris.com/gestion-locative-meublee-paris";
 const COVER = "https://www.move-in-paris.com/apartments/hero-salon.jpg";
 
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   keywords:
-    "gestion locative meublée Paris, location meublée corporate, confier appartement agence Paris, bail mobilité entreprise, LMNP Paris, location expatrié, agence location meublée haut de gamme Paris, gestion locative haut de gamme, location courte durée entreprise Paris, louer mon appartement Paris",
+    "gestion locative meublée Paris, location meublée corporate, bail société Paris, bail société location meublée, confier appartement agence Paris, bail mobilité entreprise, LMNP Paris, location expatrié, agence location meublée haut de gamme Paris, gestion locative haut de gamme, location courte durée entreprise Paris, louer mon appartement Paris",
   alternates: { canonical: URL },
   openGraph: {
     type: "website",
@@ -95,7 +95,7 @@ const jsonLd = {
           name: "Combien coûte la gestion locative Move in Paris ?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Notre service est 100 % gratuit pour les propriétaires : aucun frais de gestion, aucune commission. Nous nous rémunérons exclusivement sur la marge réalisée auprès de notre clientèle corporate.",
+            text: "Notre service est 100 % gratuit pour les propriétaires : aucun frais de gestion, aucune commission. Nous nous rémunérons exclusivement sur la marge réalisée auprès de notre clientèle sociétés.",
           },
         },
         {
@@ -103,7 +103,7 @@ const jsonLd = {
           name: "Quel type de bail signez-vous ?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Un bail Code Civil (articles 1714 à 1762) signé directement avec l'entreprise locataire (L'Oréal, LVMH, AXA, Sanofi…). Le loyer est payé par l'employeur, ce qui élimine le risque d'impayé.",
+            text: "Un bail société Code Civil (articles 1714 à 1762) signé directement avec la société locataire (L'Oréal, LVMH, AXA, Sanofi…). Le loyer est payé par l'employeur, ce qui élimine le risque d'impayé.",
           },
         },
         {
@@ -111,7 +111,7 @@ const jsonLd = {
           name: "En combien de temps mon appartement est-il loué ?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "La plupart de nos biens trouvent preneur en moins de 15 jours. Notre clientèle corporate exprime des besoins en continu : directeurs en mission, expatriés, cadres en relocation.",
+            text: "La plupart de nos biens trouvent preneur en moins de 15 jours. Notre clientèle sociétés exprime des besoins en continu : directeurs en mission, expatriés, cadres en relocation.",
           },
         },
         {
@@ -119,7 +119,7 @@ const jsonLd = {
           name: "Mon appartement est-il assuré pendant la location ?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Oui. Une assurance habitation multirisque couvre intégralement le bien pendant toute la durée de la location. Le locataire corporate est également couvert par son employeur.",
+            text: "Oui. Une assurance habitation multirisque couvre intégralement le bien pendant toute la durée de la location. Le locataire en bail société est également couvert par son employeur.",
           },
         },
         {
@@ -127,7 +127,7 @@ const jsonLd = {
           name: "Puis-je confier un bien que je ne veux pas meubler entièrement ?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Oui. Nous accompagnons aussi l'ameublement : évaluation sur place, liste de mobilier, partenariats avec des décorateurs et des distributeurs. La clientèle corporate attend un niveau d'équipement premium, nous le calibrons avec vous.",
+            text: "Oui. Nous accompagnons aussi l'ameublement : évaluation sur place, liste de mobilier, partenariats avec des décorateurs et des distributeurs. La clientèle sociétés attend un niveau d'équipement premium, nous le calibrons avec vous.",
           },
         },
         {
@@ -135,7 +135,7 @@ const jsonLd = {
           name: "Quelle rentabilité supplémentaire vs. une location nue ?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "En moyenne +30 % de revenus par rapport à une location nue classique, jusqu'à +55 €/m² sur les segments corporate du 8e, 16e et 17e arrondissement, avec le régime fiscal LMNP qui optimise l'imposition des revenus locatifs.",
+            text: "En moyenne +30 % de revenus par rapport à une location nue classique, jusqu'à +55 €/m² sur les segments premium du 8e, 16e et 17e arrondissement loués en bail société, avec le régime fiscal LMNP qui optimise l'imposition des revenus locatifs.",
           },
         },
         {
