@@ -356,6 +356,26 @@ export async function POST(req: NextRequest) {
           </div>`;
         break;
 
+      case "owner-lead-partial":
+        subject = `🔥 Lead partiel — ${fields.prenom} ${fields.nom} (à rappeler rapidement)`;
+        content = `
+          <div style="background-color:#FFF3E0;border-left:4px solid #B88B58;padding:14px 18px;margin-bottom:20px;">
+            <div style="font-size:12px;color:#6B6B6B;letter-spacing:1px;text-transform:uppercase;">⚡ Lead partiel depuis la landing</div>
+            <div style="font-size:14px;color:#1A1A1A;margin-top:6px;">Le prospect a validé l'étape 1 (coordonnées) mais n'a pas encore décrit son bien. À rappeler en priorité.</div>
+          </div>
+          <div style="font-family:Georgia,serif;font-size:16px;color:#B88B58;margin-bottom:12px;">Contact</div>
+          <table style="width:100%;border-collapse:collapse;">
+            ${row("Civilité", fields.civilite)}
+            ${row("Prénom", fields.prenom)}
+            ${row("Nom", fields.nom)}
+            ${row("Email", `<a href="mailto:${fields.email}" style="color:#B88B58;">${fields.email}</a>`)}
+            ${row("Téléphone", fields.telephone ? `<a href="tel:${fields.telephone}" style="color:#B88B58;">${fields.telephone}</a>` : "")}
+          </table>
+          <div style="margin-top:16px;padding:12px 20px;background-color:#0D0D0D;border-radius:4px;">
+            <div style="font-size:13px;color:#B88B58;">Source : landing /gestion-locative-meublee-paris — étape 1/2</div>
+          </div>`;
+        break;
+
       case "owner-lead":
         subject = `⭐ Lead propriétaire — ${fields.prenom} ${fields.nom} (${fields.adresse || "adresse n/c"})`;
         content = `
@@ -394,6 +414,7 @@ export async function POST(req: NextRequest) {
       visite: "Demande de visite",
       estimation: "Nouveau lead — Estimation de loyer",
       "owner-lead": "Nouveau lead propriétaire — Landing",
+      "owner-lead-partial": "⚡ Lead partiel — Landing (à rappeler)",
     };
 
     const result = await resend.emails.send({

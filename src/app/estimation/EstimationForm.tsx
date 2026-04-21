@@ -66,7 +66,9 @@ function matchFallbackCity(city?: string, postcode?: string): string | null {
 
 type Step = "property" | "contact" | "result";
 
-export default function EstimationForm() {
+export default function EstimationForm({
+  contactFirst = false,
+}: { contactFirst?: boolean } = {}) {
   const t = useT();
   const EPOCH_T: Record<Epoque, string> = {
     "Avant 1946": t("estimationPage.epochBefore1946"),
@@ -74,7 +76,7 @@ export default function EstimationForm() {
     "1971-1990": t("estimationPage.epoch1971_1990"),
     "Apres 1990": t("estimationPage.epochAfter1990"),
   };
-  const [step, setStep] = useState<Step>("property");
+  const [step, setStep] = useState<Step>(contactFirst ? "contact" : "property");
   const [submitting, setSubmitting] = useState(false);
 
   // Property fields
@@ -223,6 +225,53 @@ export default function EstimationForm() {
   const addressValid = !!quartier || !!fallbackCity;
   const canContinue = addressValid && !!rooms && !!surface && !!computation;
 
+  async function sendFullEstimation() {
+    await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        formType: "estimation",
+        civilite,
+        prenom,
+        nom,
+        email,
+        telephone,
+        adresse: address,
+        zone: zoneLabel || "",
+        quartier: quartier?.nom || "",
+        pieces: rooms,
+        surface,
+        epoch,
+        loyerMajore: computation?.loyerMajore,
+        loyerMIPMin: computation?.loyerMIPMin,
+        loyerMIPMax: computation?.loyerMIPMax,
+        pricePerM2: computation?.pricePerM2,
+      }),
+    });
+  }
+
+  // Sent when the lead completes step 1 (contact only) in contactFirst mode.
+  // This guarantees we capture the prospect's coordinates even if they
+  // abandon at the property step.
+  async function sendPartialLead() {
+    try {
+      await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          formType: "owner-lead-partial",
+          civilite,
+          prenom,
+          nom,
+          email,
+          telephone,
+        }),
+      });
+    } catch {
+      // Non-blocking: we continue the user flow even if partial send fails
+    }
+  }
+
   async function handleSubmitContact(e: React.FormEvent) {
     e.preventDefault();
     setErrorMsg("");
@@ -232,28 +281,28 @@ export default function EstimationForm() {
     }
     setSubmitting(true);
     try {
-      await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          formType: "estimation",
-          civilite,
-          prenom,
-          nom,
-          email,
-          telephone,
-          adresse: address,
-          zone: zoneLabel || "",
-          quartier: quartier?.nom || "",
-          pieces: rooms,
-          surface,
-          epoch,
-          loyerMajore: computation?.loyerMajore,
-          loyerMIPMin: computation?.loyerMIPMin,
-          loyerMIPMax: computation?.loyerMIPMax,
-          pricePerM2: computation?.pricePerM2,
-        }),
-      });
+      if (contactFirst) {
+        // Step 1 → 2: capture partial lead, then move to property step.
+        // Full estimation is sent at the property step submit.
+        await sendPartialLead();
+        setStep("property");
+      } else {
+        await sendFullEstimation();
+        setStep("result");
+      }
+    } catch {
+      setErrorMsg(t("estimationPage.errorRetry"));
+    }
+    setSubmitting(false);
+  }
+
+  // Final submit from the property step in contactFirst mode.
+  async function handleSubmitFromProperty() {
+    setErrorMsg("");
+    if (!canContinue) return;
+    setSubmitting(true);
+    try {
+      await sendFullEstimation();
       setStep("result");
     } catch {
       setErrorMsg(t("estimationPage.errorRetry"));
@@ -264,38 +313,40 @@ export default function EstimationForm() {
   return (
     <section className="py-16 md:py-20 bg-blanc">
       <div className="max-w-4xl mx-auto px-6 lg:px-12">
-        {/* Progress dots */}
-        <div className="flex items-center justify-center gap-3 mb-12">
-          {(["property", "contact", "result"] as Step[]).map((s, i) => {
-            const done =
-              (step === "contact" && s === "property") ||
-              (step === "result" && s !== "result");
-            const active = step === s;
-            return (
-              <div key={s} className="flex items-center gap-3">
-                <div
-                  className={`w-9 h-9 flex items-center justify-center text-xs font-medium transition-all ${
-                    active
-                      ? "bg-gold text-noir-deep"
-                      : done
-                      ? "bg-noir-deep text-gold"
-                      : "bg-gris-clair text-gris"
-                  }`}
-                  style={{ borderRadius: 10 }}
-                >
-                  {done ? "✓" : i + 1}
-                </div>
-                {i < 2 && (
+        {/* Progress dots — hidden in contactFirst (landing) mode per design */}
+        {!contactFirst && (
+          <div className="flex items-center justify-center gap-3 mb-12">
+            {(["property", "contact", "result"] as Step[]).map((s, i) => {
+              const done =
+                (step === "contact" && s === "property") ||
+                (step === "result" && s !== "result");
+              const active = step === s;
+              return (
+                <div key={s} className="flex items-center gap-3">
                   <div
-                    className={`h-px w-10 md:w-16 ${
-                      done ? "bg-gold" : "bg-gris-clair"
+                    className={`w-9 h-9 flex items-center justify-center text-xs font-medium transition-all ${
+                      active
+                        ? "bg-gold text-noir-deep"
+                        : done
+                        ? "bg-noir-deep text-gold"
+                        : "bg-gris-clair text-gris"
                     }`}
-                  />
-                )}
-              </div>
-            );
-          })}
-        </div>
+                    style={{ borderRadius: 10 }}
+                  >
+                    {done ? "✓" : i + 1}
+                  </div>
+                  {i < 2 && (
+                    <div
+                      className={`h-px w-10 md:w-16 ${
+                        done ? "bg-gold" : "bg-gris-clair"
+                      }`}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         <AnimatePresence mode="wait">
           {/* STEP 1 — Property info */}
@@ -309,11 +360,32 @@ export default function EstimationForm() {
               style={{ borderRadius: 10 }}
             >
               <span className="text-gold text-xs tracking-[0.3em] uppercase">
-                {t("estimationPage.stepPropertyBadge")}
+                {contactFirst ? "Étape 2/2 — Votre bien" : t("estimationPage.stepPropertyBadge")}
               </span>
-              <h2 className="font-serif text-2xl md:text-3xl text-noir mt-2 mb-8">
-                {t("estimationPage.stepPropertyTitle")}
+              <h2 className="font-serif text-2xl md:text-3xl text-noir mt-2 mb-4">
+                {contactFirst ? "Décrivez votre appartement" : t("estimationPage.stepPropertyTitle")}
               </h2>
+
+              {/* Contact recap when we arrive here in contactFirst mode */}
+              {contactFirst && (prenom || nom || email) && (
+                <div className="mb-6 p-4 bg-blanc border border-gris-clair/50 text-sm flex items-center justify-between flex-wrap gap-3" style={{ borderRadius: 10 }}>
+                  <div>
+                    <div className="text-[10px] uppercase tracking-[0.15em] text-gold mb-1">Vos coordonnées</div>
+                    <div className="text-noir">
+                      {prenom} {nom}
+                      {email ? <span className="text-gris"> — {email}</span> : null}
+                      {telephone ? <span className="text-gris"> — {telephone}</span> : null}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setStep("contact")}
+                    className="text-xs text-gold hover:text-gold-dark underline"
+                  >
+                    Modifier
+                  </button>
+                </div>
+              )}
 
               <div className="space-y-5">
                 <div ref={wrapperRef} className="relative">
@@ -441,17 +513,25 @@ export default function EstimationForm() {
 
               <button
                 type="button"
-                disabled={!canContinue}
-                onClick={() => setStep("contact")}
+                disabled={!canContinue || submitting}
+                onClick={contactFirst ? handleSubmitFromProperty : () => setStep("contact")}
                 className={`w-full mt-8 py-4 font-medium tracking-wider uppercase text-sm transition-all ${
-                  canContinue
+                  canContinue && !submitting
                     ? "bg-gold text-noir-deep hover:bg-gold-light"
                     : "bg-gris-clair text-gris cursor-not-allowed"
                 }`}
                 style={{ borderRadius: 10 }}
               >
-                {t("estimationPage.getEstimate")}
+                {submitting
+                  ? "Envoi en cours…"
+                  : contactFirst
+                  ? "Recevoir mon estimation"
+                  : t("estimationPage.getEstimate")}
               </button>
+
+              {errorMsg && contactFirst && (
+                <p className="text-red-500 text-xs mt-3 text-center">{errorMsg}</p>
+              )}
 
               <p className="text-xs text-gris mt-4 italic">
                 {t("estimationPage.calcNote")}
@@ -470,54 +550,58 @@ export default function EstimationForm() {
               style={{ borderRadius: 10 }}
             >
               <span className="text-gold text-xs tracking-[0.3em] uppercase">
-                {t("estimationPage.stepContactBadge")}
+                {contactFirst ? "Étape 1/2 — Vos coordonnées" : t("estimationPage.stepContactBadge")}
               </span>
               <h2 className="font-serif text-2xl md:text-3xl text-noir mt-2 mb-2">
-                {t("estimationPage.stepContactTitle")}
+                {contactFirst ? "Un conseiller Move in Paris vous contacte en priorité" : t("estimationPage.stepContactTitle")}
               </h2>
               <p className="text-gris text-sm mb-8">
-                {t("estimationPage.stepContactIntro")}
+                {contactFirst
+                  ? "Renseignez vos coordonnées ci-dessous. À l'étape suivante, décrivez votre bien pour obtenir l'estimation instantanée + la proposition détaillée par email avec notre plaquette."
+                  : t("estimationPage.stepContactIntro")}
               </p>
 
-              {/* Recap */}
-              <div
-                className="mb-6 p-5 bg-blanc border border-gris-clair/50 text-sm"
-                style={{ borderRadius: 10 }}
-              >
-                <div className="text-[10px] uppercase tracking-[0.15em] text-gold mb-2">
-                  {t("estimationPage.yourProperty")}
-                </div>
-                <div className="grid sm:grid-cols-2 gap-y-1 text-noir">
-                  <div>
-                    <span className="text-gris">{t("estimationPage.district")} :</span> {zoneLabel || "—"}
-                  </div>
-                  <div>
-                    <span className="text-gris">{t("estimationPage.surface")} :</span> {surface} m²
-                  </div>
-                  <div>
-                    <span className="text-gris">{t("estimationPage.rooms")} :</span>{" "}
-                    {rooms === "4"
-                      ? t("estimationPage.room4")
-                      : rooms === "1"
-                      ? t("estimationPage.roomStudio")
-                      : rooms === "2"
-                      ? t("estimationPage.room2")
-                      : rooms === "3"
-                      ? t("estimationPage.room3")
-                      : "—"}
-                  </div>
-                  <div>
-                    <span className="text-gris">{t("estimationPage.epoch")} :</span> {EPOCH_T[epoch]}
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setStep("property")}
-                  className="mt-3 text-xs text-gold hover:text-gold-dark underline"
+              {/* Property recap — only shown in default mode (property was filled first) */}
+              {!contactFirst && (
+                <div
+                  className="mb-6 p-5 bg-blanc border border-gris-clair/50 text-sm"
+                  style={{ borderRadius: 10 }}
                 >
-                  {t("estimationPage.modify")}
-                </button>
-              </div>
+                  <div className="text-[10px] uppercase tracking-[0.15em] text-gold mb-2">
+                    {t("estimationPage.yourProperty")}
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-y-1 text-noir">
+                    <div>
+                      <span className="text-gris">{t("estimationPage.district")} :</span> {zoneLabel || "—"}
+                    </div>
+                    <div>
+                      <span className="text-gris">{t("estimationPage.surface")} :</span> {surface} m²
+                    </div>
+                    <div>
+                      <span className="text-gris">{t("estimationPage.rooms")} :</span>{" "}
+                      {rooms === "4"
+                        ? t("estimationPage.room4")
+                        : rooms === "1"
+                        ? t("estimationPage.roomStudio")
+                        : rooms === "2"
+                        ? t("estimationPage.room2")
+                        : rooms === "3"
+                        ? t("estimationPage.room3")
+                        : "—"}
+                    </div>
+                    <div>
+                      <span className="text-gris">{t("estimationPage.epoch")} :</span> {EPOCH_T[epoch]}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setStep("property")}
+                    className="mt-3 text-xs text-gold hover:text-gold-dark underline"
+                  >
+                    {t("estimationPage.modify")}
+                  </button>
+                </div>
+              )}
 
               <form onSubmit={handleSubmitContact} className="space-y-5">
                 <div className="grid sm:grid-cols-3 gap-4">
@@ -612,7 +696,11 @@ export default function EstimationForm() {
                   }`}
                   style={{ borderRadius: 10 }}
                 >
-                  {submitting ? t("estimationPage.sending") : t("estimationPage.revealEstimate")}
+                  {submitting
+                    ? t("estimationPage.sending")
+                    : contactFirst
+                    ? "Suivant : décrire mon bien →"
+                    : t("estimationPage.revealEstimate")}
                 </button>
               </form>
             </motion.div>

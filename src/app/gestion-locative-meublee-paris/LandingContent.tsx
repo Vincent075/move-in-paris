@@ -195,7 +195,7 @@ export default function LandingContent() {
         <div className="relative max-w-7xl mx-auto px-6 lg:px-12 pt-6 md:pt-8">
           <Link href="/" className="inline-block">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/Logo-gold.png" alt="Move in Paris" className="h-14 md:h-16 w-auto" />
+            <img src="/Logo-gold.png" alt="Move in Paris" className="h-24 md:h-32 w-auto" />
           </Link>
         </div>
 
@@ -238,27 +238,6 @@ export default function LandingContent() {
           </motion.div>
         </div>
 
-        {/* KPIs — same live-incrementing counters as the homepage */}
-        <div className="relative border-t border-gold/20 bg-noir-deep/60 backdrop-blur-sm">
-          <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            {stats.map((stat, i) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <div className="font-serif text-3xl md:text-4xl text-gold font-bold">
-                  <AnimatedCounter target={stat.value} suffix={stat.suffix} formatted={stat.formatted} />
-                </div>
-                <div className="text-[10px] md:text-xs tracking-[0.15em] uppercase text-blanc/50 mt-1">
-                  {stat.label}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
       </section>
 
       {/* ========================== ESTIMATION (instantanée) ========================== */}
@@ -270,20 +249,43 @@ export default function LandingContent() {
           <h2 className="font-serif text-3xl md:text-4xl text-noir mt-3 mb-3">
             Votre loyer en bail société <span className="text-gold">en 60 secondes</span>
           </h2>
-          <p className="text-sm md:text-base text-gris font-light max-w-2xl mx-auto">
-            Résultat affiché immédiatement à l&apos;écran. Proposition détaillée et plaquette Move in Paris
-            envoyées par email en quelques secondes.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4 md:gap-6 mt-5 text-[11px] md:text-xs text-gris uppercase tracking-[0.15em]">
-            <span className="inline-flex items-center gap-1.5"><span className="text-gold">◆</span> Résultat immédiat</span>
-            <span className="inline-flex items-center gap-1.5"><span className="text-gold">◆</span> Email + plaquette PDF</span>
-            <span className="inline-flex items-center gap-1.5"><span className="text-gold">◆</span> 0 € de frais</span>
-            <span className="inline-flex items-center gap-1.5"><span className="text-gold">◆</span> Sans engagement</span>
-          </div>
         </div>
-        {/* Embedded estimation tool — same logic as /estimation page (instant result + email with proposal + plaquette) */}
-        <EstimationForm />
+        {/* Embedded estimation tool — contact-first flow with partial-lead capture */}
+        <EstimationForm contactFirst />
       </section>
+
+      {/* ========================== KPIs (déplacés après le form) ========================== */}
+      <section className="py-14 md:py-16 bg-noir-deep text-blanc">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          {stats.map((stat, i) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+            >
+              <div className="font-serif text-4xl md:text-5xl text-gold font-bold">
+                <AnimatedCounter target={stat.value} suffix={stat.suffix} formatted={stat.formatted} />
+              </div>
+              <div className="text-[10px] md:text-xs tracking-[0.15em] uppercase text-blanc/50 mt-2">
+                {stat.label}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* ========================== ILS NOUS FONT CONFIANCE ========================== */}
+      <div className="bg-blanc-chaud pt-20 pb-4 text-center">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <span className="text-gold text-xs tracking-[0.3em] uppercase">Ils nous font confiance</span>
+          <h2 className="font-serif text-2xl md:text-3xl text-noir mt-3">
+            Un loyer payé par des sociétés du CAC 40
+          </h2>
+        </div>
+      </div>
+      <PartnerLogos />
 
       {/* ========================== BENEFITS ========================== */}
       <section className="py-24 bg-blanc">
@@ -313,17 +315,6 @@ export default function LandingContent() {
           </div>
         </div>
       </section>
-
-      {/* ========================== ILS NOUS FONT CONFIANCE ========================== */}
-      <div className="bg-blanc-chaud pt-20 pb-4 text-center">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <span className="text-gold text-xs tracking-[0.3em] uppercase">Ils nous font confiance</span>
-          <h2 className="font-serif text-2xl md:text-3xl text-noir mt-3">
-            Un loyer payé par des sociétés du CAC 40
-          </h2>
-        </div>
-      </div>
-      <PartnerLogos />
 
       {/* ========================== PROCESS ========================== */}
       <section className="py-24 bg-blanc-chaud">
