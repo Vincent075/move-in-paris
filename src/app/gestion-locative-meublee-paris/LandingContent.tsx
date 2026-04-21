@@ -175,13 +175,13 @@ export default function LandingContent() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   function scrollToForm() {
-    const el = document.getElementById("owner-form");
-    if (!el) return;
-    // Compute precise top with a small breathing margin so the section
-    // title lands nicely in the viewport (scrollIntoView can be imprecise
-    // when there's CSS scroll-margin or dynamic layout settling).
-    const rect = el.getBoundingClientRect();
-    const top = rect.top + window.scrollY - 16;
+    // Scroll to the exact start of the form fields so the user sees
+    // immediately that only a few inputs are asked (step 1 = 4 fields).
+    // The mini title stays just above the viewport as a visible anchor.
+    const target = document.getElementById("form-fields") || document.getElementById("owner-form");
+    if (!target) return;
+    const rect = target.getBoundingClientRect();
+    const top = rect.top + window.scrollY - 8;
     window.scrollTo({ top, behavior: "smooth" });
   }
 
@@ -202,16 +202,17 @@ export default function LandingContent() {
         <div className="relative max-w-7xl mx-auto px-6 lg:px-12 pt-6 md:pt-8">
           <Link href="/" className="inline-block">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/Logo-gold.png" alt="Move in Paris" className="h-56 md:h-80 w-auto" />
+            <img src="/Logo-gold.png" alt="Move in Paris" className="h-40 md:h-56 w-auto" />
           </Link>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-12 pt-16 pb-20 md:pt-24 md:pb-28">
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-12 pt-4 pb-20 md:pt-6 md:pb-28">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="max-w-3xl"
+            className="max-w-3xl bg-noir-deep/55 backdrop-blur-[2px] p-7 md:p-10 border-l-2 border-gold"
+            style={{ borderRadius: 4 }}
           >
             <span className="inline-block text-gold text-xs tracking-[0.3em] uppercase mb-4">
               Propriétaires bailleurs — Paris
@@ -220,11 +221,11 @@ export default function LandingContent() {
               Confiez votre appartement à l&apos;agence spécialisée en{" "}
               <span className="text-gold">location meublée en bail société</span> à Paris
             </h1>
-            <p className="mt-6 text-base md:text-lg text-blanc/80 font-light max-w-2xl leading-relaxed">
+            <p className="mt-6 text-base md:text-lg text-blanc/85 font-light max-w-2xl leading-relaxed">
               Estimation instantanée en ligne — proposition + plaquette envoyées par email. <span className="text-blanc">0 € de frais.</span>
             </p>
 
-            <div className="mt-10 flex flex-col sm:flex-row gap-4">
+            <div className="mt-8 flex flex-col sm:flex-row gap-4">
               <button
                 type="button"
                 onClick={scrollToForm}
@@ -248,15 +249,17 @@ export default function LandingContent() {
       </section>
 
       {/* ========================== ESTIMATION (instantanée) ========================== */}
-      <section id="owner-form" className="py-12 md:py-16 bg-blanc-chaud scroll-mt-24">
-        <div className="max-w-5xl mx-auto px-6 lg:px-12 text-center mb-8">
-          <span className="text-gold text-xs tracking-[0.3em] uppercase">
+      <section id="owner-form" className="pt-8 md:pt-10 pb-2 bg-blanc-chaud">
+        <div className="max-w-5xl mx-auto px-6 lg:px-12 text-center mb-2">
+          <span className="text-gold text-[10px] tracking-[0.3em] uppercase">
             Estimation instantanée — gratuite et sans engagement
           </span>
-          <h2 className="font-serif text-3xl md:text-4xl text-noir mt-3 mb-3">
+          <h2 className="font-serif text-2xl md:text-3xl text-noir mt-2">
             Votre loyer en bail société <span className="text-gold">en 60 secondes</span>
           </h2>
         </div>
+        {/* Anchor exactly where the form fields start, so the CTA scrolls here. */}
+        <div id="form-fields" aria-hidden="true" />
         {/* Embedded estimation tool — contact-first flow with partial-lead capture */}
         <EstimationForm contactFirst />
       </section>
