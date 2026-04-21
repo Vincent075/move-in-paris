@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import EstimationForm from "@/app/estimation/EstimationForm";
 
 // Same dynamic counters as the homepage (cf. src/components/WhyUs.tsx)
 const STATS_REFERENCE_DATE = Date.UTC(2026, 3, 18);
@@ -95,8 +96,8 @@ const BENEFITS = [
 
 const STEPS = [
   {
-    title: "Estimation personnalisée",
-    desc: "Vous remplissez le formulaire en 30 secondes. Un conseiller vous recontacte sous 24 h ouvrées avec une fourchette de loyer corporate pour votre bien.",
+    title: "Estimation instantanée",
+    desc: "Vous remplissez le formulaire en 60 secondes. Fourchette de loyer corporate affichée immédiatement à l'écran + email récapitulatif avec la proposition détaillée et notre plaquette de présentation.",
   },
   {
     title: "Visite & ameublement",
@@ -176,45 +177,7 @@ const FAQ = [
 
 export default function LandingContent() {
   const stats = useLandingStats();
-  const [form, setForm] = useState({
-    prenom: "",
-    nom: "",
-    email: "",
-    telephone: "",
-    adresse: "",
-    surface: "",
-    pieces: "",
-    disponibilite: "",
-    message: "",
-  });
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [errorMsg, setErrorMsg] = useState("");
   const [openFaq, setOpenFaq] = useState<number | null>(0);
-
-  function update<K extends keyof typeof form>(key: K, value: string) {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setStatus("loading");
-    setErrorMsg("");
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ formType: "owner-lead", ...form }),
-      });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || "Erreur inconnue");
-      }
-      setStatus("success");
-    } catch (err) {
-      setStatus("error");
-      setErrorMsg(err instanceof Error ? err.message : "Erreur");
-    }
-  }
 
   function scrollToForm() {
     document.getElementById("owner-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -250,7 +213,7 @@ export default function LandingContent() {
             <p className="mt-6 text-lg md:text-xl text-blanc/80 font-light max-w-2xl leading-relaxed">
               +30 % de revenus vs location classique, service 100 % gratuit, clientèle premium
               (L&apos;Oréal, LVMH, AXA, Sanofi, Goldman Sachs).{" "}
-              <span className="text-blanc">Loyer payé par l&apos;employeur — zéro impayé.</span>
+              <span className="text-blanc">Estimation instantanée en ligne — proposition détaillée + plaquette envoyées par email.</span>
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row gap-4">
@@ -297,199 +260,28 @@ export default function LandingContent() {
         </div>
       </section>
 
-      {/* ========================== FORM ========================== */}
-      <section id="owner-form" className="py-20 bg-blanc-chaud scroll-mt-24">
-        <div className="max-w-5xl mx-auto px-6 lg:px-12">
-          <div className="grid lg:grid-cols-5 gap-10 items-start">
-            {/* Left: form */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="lg:col-span-3 bg-blanc p-8 md:p-10 border border-gris-clair/40 shadow-lg"
-            >
-              <span className="text-gold text-xs tracking-[0.3em] uppercase">
-                Estimation gratuite — sans engagement
-              </span>
-              <h2 className="font-serif text-2xl md:text-3xl text-noir mt-3 mb-2">
-                Recevez votre fourchette de loyer corporate en 24 h
-              </h2>
-              <p className="text-sm text-gris font-light mb-6">
-                Un conseiller vous recontacte sous 24 h ouvrées.
-              </p>
-
-              {status === "success" ? (
-                <div className="p-6 bg-gold/10 border-l-4 border-gold">
-                  <div className="font-serif text-lg text-noir mb-1">Merci, {form.prenom || "votre demande est bien reçue"}.</div>
-                  <p className="text-sm text-gris font-light">
-                    Un conseiller Move in Paris vous recontacte sous 24 h ouvrées au{" "}
-                    <strong className="text-noir">{form.telephone || "numéro fourni"}</strong>.
-                    <br />
-                    Besoin de nous joindre tout de suite ? <a href="tel:+33145200603" className="text-gold hover:text-gold-dark">01 45 20 06 03</a>
-                  </p>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[10px] text-gris uppercase tracking-[0.15em] mb-1.5">Prénom *</label>
-                      <input
-                        type="text" required value={form.prenom}
-                        onChange={(e) => update("prenom", e.target.value)}
-                        className="w-full px-3 py-2.5 border border-gris-clair bg-blanc text-sm focus:border-gold focus:outline-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] text-gris uppercase tracking-[0.15em] mb-1.5">Nom *</label>
-                      <input
-                        type="text" required value={form.nom}
-                        onChange={(e) => update("nom", e.target.value)}
-                        className="w-full px-3 py-2.5 border border-gris-clair bg-blanc text-sm focus:border-gold focus:outline-none"
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[10px] text-gris uppercase tracking-[0.15em] mb-1.5">Email *</label>
-                      <input
-                        type="email" required value={form.email}
-                        onChange={(e) => update("email", e.target.value)}
-                        className="w-full px-3 py-2.5 border border-gris-clair bg-blanc text-sm focus:border-gold focus:outline-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] text-gris uppercase tracking-[0.15em] mb-1.5">Téléphone *</label>
-                      <input
-                        type="tel" required value={form.telephone}
-                        onChange={(e) => update("telephone", e.target.value)}
-                        placeholder="06 __ __ __ __"
-                        className="w-full px-3 py-2.5 border border-gris-clair bg-blanc text-sm focus:border-gold focus:outline-none"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-[10px] text-gris uppercase tracking-[0.15em] mb-1.5">Adresse ou quartier du bien *</label>
-                    <input
-                      type="text" required value={form.adresse}
-                      onChange={(e) => update("adresse", e.target.value)}
-                      placeholder="Ex : rue de l'Étoile, Paris 17e"
-                      className="w-full px-3 py-2.5 border border-gris-clair bg-blanc text-sm focus:border-gold focus:outline-none"
-                    />
-                  </div>
-                  <div className="grid grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-[10px] text-gris uppercase tracking-[0.15em] mb-1.5">Surface (m²) *</label>
-                      <input
-                        type="number" required min={10} value={form.surface}
-                        onChange={(e) => update("surface", e.target.value)}
-                        placeholder="45"
-                        className="w-full px-3 py-2.5 border border-gris-clair bg-blanc text-sm focus:border-gold focus:outline-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] text-gris uppercase tracking-[0.15em] mb-1.5">Pièces *</label>
-                      <select
-                        required value={form.pieces}
-                        onChange={(e) => update("pieces", e.target.value)}
-                        className="w-full px-3 py-2.5 border border-gris-clair bg-blanc text-sm focus:border-gold focus:outline-none"
-                      >
-                        <option value="">—</option>
-                        <option value="1">Studio / 1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4+">4+</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-[10px] text-gris uppercase tracking-[0.15em] mb-1.5">Disponibilité</label>
-                      <select
-                        value={form.disponibilite}
-                        onChange={(e) => update("disponibilite", e.target.value)}
-                        className="w-full px-3 py-2.5 border border-gris-clair bg-blanc text-sm focus:border-gold focus:outline-none"
-                      >
-                        <option value="">—</option>
-                        <option value="immediat">Immédiate</option>
-                        <option value="1mois">Sous 1 mois</option>
-                        <option value="3mois">Sous 3 mois</option>
-                        <option value="plus">+ de 3 mois</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-[10px] text-gris uppercase tracking-[0.15em] mb-1.5">Message (facultatif)</label>
-                    <textarea
-                      rows={3} value={form.message}
-                      onChange={(e) => update("message", e.target.value)}
-                      placeholder="État du bien, mobilier déjà présent, contraintes particulières…"
-                      className="w-full px-3 py-2.5 border border-gris-clair bg-blanc text-sm focus:border-gold focus:outline-none resize-y"
-                    />
-                  </div>
-
-                  {status === "error" && (
-                    <p className="text-xs text-red-500">Erreur : {errorMsg}. Merci de réessayer ou de nous appeler au 01 45 20 06 03.</p>
-                  )}
-
-                  <button
-                    type="submit" disabled={status === "loading"}
-                    className={`w-full py-4 font-medium tracking-wider uppercase text-sm transition-all ${status === "loading" ? "bg-gris text-blanc cursor-wait" : "bg-gold text-noir-deep hover:bg-gold-light"}`}
-                  >
-                    {status === "loading" ? "Envoi en cours…" : "Recevoir mon estimation"}
-                  </button>
-                  <p className="text-[11px] text-gris font-light text-center">
-                    Vos données restent confidentielles. Nous ne vendons aucune information.
-                  </p>
-                </form>
-              )}
-            </motion.div>
-
-            {/* Right: trust panel */}
-            <motion.aside
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="lg:col-span-2 space-y-6"
-            >
-              <div className="bg-noir-deep text-blanc p-8">
-                <div className="flex items-center gap-3 mb-4">
-                  <svg className="w-6 h-6 text-gold" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <div className="font-serif text-lg">Pourquoi confier dès aujourd&apos;hui ?</div>
-                </div>
-                <ul className="space-y-3 text-sm text-blanc/80 font-light">
-                  <li className="flex gap-2">
-                    <span className="text-gold">◆</span>
-                    Un conseiller dédié vous rappelle sous <strong className="text-blanc">24 h ouvrées</strong>
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="text-gold">◆</span>
-                    Fourchette de loyer personnalisée (DRIHL + référence Move in Paris)
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="text-gold">◆</span>
-                    Sans engagement — vous choisissez après la visite
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="text-gold">◆</span>
-                    Délai moyen de mise en location : <strong className="text-blanc">15 jours</strong>
-                  </li>
-                </ul>
-              </div>
-              <div className="p-6 border border-gold/30 bg-blanc">
-                <div className="text-gold text-xs tracking-[0.3em] uppercase">Google Reviews</div>
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="font-serif text-3xl text-noir">4.8</span>
-                  <div className="flex text-gold">
-                    {"★★★★★".split("").map((s, i) => (
-                      <span key={i}>{s}</span>
-                    ))}
-                  </div>
-                </div>
-                <p className="text-xs text-gris mt-2">Avis vérifiés de propriétaires et locataires</p>
-              </div>
-            </motion.aside>
+      {/* ========================== ESTIMATION (instantanée) ========================== */}
+      <section id="owner-form" className="py-12 md:py-16 bg-blanc-chaud scroll-mt-24">
+        <div className="max-w-5xl mx-auto px-6 lg:px-12 text-center mb-8">
+          <span className="text-gold text-xs tracking-[0.3em] uppercase">
+            Estimation instantanée — gratuite et sans engagement
+          </span>
+          <h2 className="font-serif text-3xl md:text-4xl text-noir mt-3 mb-3">
+            Votre loyer corporate en <span className="text-gold">60 secondes</span>
+          </h2>
+          <p className="text-sm md:text-base text-gris font-light max-w-2xl mx-auto">
+            Résultat affiché immédiatement à l&apos;écran. Proposition détaillée et plaquette Move in Paris
+            envoyées par email en quelques secondes.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4 md:gap-6 mt-5 text-[11px] md:text-xs text-gris uppercase tracking-[0.15em]">
+            <span className="inline-flex items-center gap-1.5"><span className="text-gold">◆</span> Résultat immédiat</span>
+            <span className="inline-flex items-center gap-1.5"><span className="text-gold">◆</span> Email + plaquette PDF</span>
+            <span className="inline-flex items-center gap-1.5"><span className="text-gold">◆</span> 0 € de frais</span>
+            <span className="inline-flex items-center gap-1.5"><span className="text-gold">◆</span> Sans engagement</span>
           </div>
         </div>
+        {/* Embedded estimation tool — same logic as /estimation page (instant result + email with proposal + plaquette) */}
+        <EstimationForm />
       </section>
 
       {/* ========================== BENEFITS ========================== */}
@@ -671,14 +463,13 @@ export default function LandingContent() {
         <div className="relative max-w-4xl mx-auto px-6 lg:px-12 text-center">
           <span className="text-gold text-xs tracking-[0.3em] uppercase">Prêt à rentabiliser votre bien ?</span>
           <h2 className="font-serif text-3xl md:text-5xl mt-4 mb-6 leading-tight">
-            Estimation gratuite
+            Estimation instantanée
             <br />
-            <span className="text-gold">en 30 secondes</span>
+            <span className="text-gold">en 60 secondes</span>
           </h2>
           <p className="text-blanc/70 font-light max-w-2xl mx-auto mb-10">
-            Remplissez le formulaire ou appelez-nous directement.
-            Un conseiller Move in Paris revient vers vous sous 24 h ouvrées
-            avec une fourchette de loyer personnalisée.
+            Fourchette de loyer corporate affichée immédiatement + proposition détaillée
+            et plaquette Move in Paris envoyées par email. Sans engagement, 0 € de frais.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
