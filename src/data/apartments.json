@@ -879,7 +879,35 @@
       "/apartments/3p-saint-augustin-paris-8e/photo-11.jpg",
       "/apartments/3p-saint-augustin-paris-8e/photo-12.jpg"
     ],
-    "nearby": [],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Villiers",
+        "distance": "4 min",
+        "lines": [
+          "2",
+          "3"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Europe",
+        "distance": "4 min",
+        "lines": [
+          "3"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "G20",
+        "distance": "3 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Jardin de la Mairie du 8e",
+        "distance": "1 min"
+      }
+    ],
     "hasElevator": true
   },
   {
