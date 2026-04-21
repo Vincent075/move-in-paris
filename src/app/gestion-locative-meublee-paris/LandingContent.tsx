@@ -1,9 +1,64 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+
+// Same dynamic counters as the homepage (cf. src/components/WhyUs.tsx)
+const STATS_REFERENCE_DATE = Date.UTC(2026, 3, 18);
+const NIGHTS_PER_DAY = 55;
+const COLLAB_PER_DAY = 0.6;
+
+function AnimatedCounter({
+  target,
+  suffix = "",
+  formatted = false,
+}: {
+  target: number;
+  suffix?: string;
+  formatted?: boolean;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true });
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (!inView) return;
+    let start = 0;
+    const step = (ts: number) => {
+      if (!start) start = ts;
+      const progress = Math.min((ts - start) / 2000, 1);
+      setCount(Math.floor(progress * target));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [inView, target]);
+  return (
+    <span ref={ref}>
+      {formatted ? count.toLocaleString("fr-FR") : count}
+      {suffix}
+    </span>
+  );
+}
+
+function useLandingStats() {
+  const [stats, setStats] = useState([
+    { value: 117000, suffix: "+", label: "Nuits d'hébergement", formatted: true },
+    { value: 95, suffix: " %+", label: "Taux d'occupation", formatted: false },
+    { value: 3, suffix: " mois", label: "Durée moyenne de séjour", formatted: false },
+    { value: 1300, suffix: "+", label: "Collaborateurs accueillis", formatted: false },
+  ]);
+  useEffect(() => {
+    const days = Math.max(0, (Date.now() - STATS_REFERENCE_DATE) / 86_400_000);
+    setStats((prev) => [
+      { ...prev[0], value: 117000 + Math.floor(days * NIGHTS_PER_DAY) },
+      prev[1],
+      prev[2],
+      { ...prev[3], value: 1300 + Math.floor(days * COLLAB_PER_DAY) },
+    ]);
+  }, []);
+  return stats;
+}
 
 const BENEFITS = [
   {
@@ -120,6 +175,7 @@ const FAQ = [
 ];
 
 export default function LandingContent() {
+  const stats = useLandingStats();
   const [form, setForm] = useState({
     prenom: "",
     nom: "",
@@ -218,21 +274,24 @@ export default function LandingContent() {
           </motion.div>
         </div>
 
-        {/* Trust bar */}
+        {/* KPIs — same live-incrementing counters as the homepage */}
         <div className="relative border-t border-gold/20 bg-noir-deep/60 backdrop-blur-sm">
-          <div className="max-w-7xl mx-auto px-6 lg:px-12 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            {[
-              { label: "Frais de gestion", value: "0 €" },
-              { label: "Revenus vs location classique", value: "+30 %" },
-              { label: "Taux d'occupation", value: "95 %+" },
-              { label: "Nuitées logées", value: "60 000+" },
-            ].map((stat) => (
-              <div key={stat.label}>
-                <div className="font-serif text-2xl md:text-3xl text-gold">{stat.value}</div>
+          <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            {stats.map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+              >
+                <div className="font-serif text-3xl md:text-4xl text-gold font-bold">
+                  <AnimatedCounter target={stat.value} suffix={stat.suffix} formatted={stat.formatted} />
+                </div>
                 <div className="text-[10px] md:text-xs tracking-[0.15em] uppercase text-blanc/50 mt-1">
                   {stat.label}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
