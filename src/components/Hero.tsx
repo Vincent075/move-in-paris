@@ -7,13 +7,13 @@ export default function Hero() {
   const t = useT();
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background */}
+      {/* Background — filtre adouci pour garder la photo lisible */}
       <div className="absolute inset-0">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: "url('/apartments/hero-salon.jpg')" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-noir-deep/70 via-noir-deep/50 to-noir-deep/90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-noir-deep/35 via-noir-deep/25 to-noir-deep/80" />
       </div>
 
       {/* Content */}

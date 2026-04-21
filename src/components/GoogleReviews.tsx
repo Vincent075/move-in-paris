@@ -66,21 +66,6 @@ export default function GoogleReviews({ fallback }: { fallback?: React.ReactNode
 
   return (
     <>
-      {data.averageRating != null && data.totalReviews != null && (
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-3 bg-blanc border border-gris-clair/40 px-6 py-3">
-            <span className="font-serif text-3xl text-noir">{data.averageRating.toFixed(1)}</span>
-            <div className="flex text-gold text-lg">
-              {"★★★★★".split("").map((s, i) => <span key={i}>{s}</span>)}
-            </div>
-            <div className="text-left text-xs text-gris">
-              <div className="uppercase tracking-[0.15em] text-gold">Google Reviews</div>
-              <div>{data.totalReviews} avis vérifiés</div>
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className="grid md:grid-cols-3 gap-6">
         {data.reviews.slice(0, 6).map((r, i) => (
           <motion.article

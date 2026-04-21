@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import LandingContent from "./LandingContent";
 
@@ -159,7 +158,7 @@ export default function OwnerLandingPage() {
         // JSON-LD is injected as a string; React escapes keys safely but the payload is static.
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Header />
+      {/* No site header — landing focus on conversion, minimal chrome */}
       <main>
         <LandingContent />
       </main>

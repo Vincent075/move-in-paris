@@ -191,7 +191,15 @@ export default function LandingContent() {
           <div className="absolute inset-0 bg-gradient-to-b from-noir-deep/35 via-noir-deep/30 to-noir-deep/85" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-12 pt-36 pb-24 md:pt-44 md:pb-32">
+        {/* Minimal top strip: just the logo since no site header */}
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-12 pt-6 md:pt-8">
+          <Link href="/" className="inline-block">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/Logo-gold.png" alt="Move in Paris" className="h-14 md:h-16 w-auto" />
+          </Link>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-12 pt-16 pb-20 md:pt-24 md:pb-28">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -205,10 +213,8 @@ export default function LandingContent() {
               Confiez votre appartement à l&apos;agence spécialisée en{" "}
               <span className="text-gold">location meublée en bail société</span> à Paris
             </h1>
-            <p className="mt-6 text-lg md:text-xl text-blanc/80 font-light max-w-2xl leading-relaxed">
-              +30 % de revenus vs location classique, service 100 % gratuit, clientèle premium
-              (L&apos;Oréal, LVMH, AXA, Sanofi, Goldman Sachs).{" "}
-              <span className="text-blanc">Estimation instantanée en ligne — proposition détaillée + plaquette envoyées par email.</span>
+            <p className="mt-6 text-base md:text-lg text-blanc/80 font-light max-w-2xl leading-relaxed">
+              Estimation instantanée en ligne — proposition + plaquette envoyées par email. <span className="text-blanc">0 € de frais.</span>
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row gap-4">

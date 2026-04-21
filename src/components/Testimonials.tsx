@@ -164,6 +164,21 @@ function GoogleG({ className = "w-5 h-5" }: { className?: string }) {
   );
 }
 
+type ApiReview = {
+  author: string;
+  photo: string | null;
+  rating: number;
+  relative: string;
+  text: string;
+};
+
+function initialsOf(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[1][0]).toUpperCase();
+}
+
 export default function Testimonials() {
   const t = useT();
   const { locale } = useLocale();
@@ -172,8 +187,33 @@ export default function Testimonials() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setReviews(shuffle(fiveStarReviews));
-    setMounted(true);
+    let alive = true;
+    // Try to pull real 5-star Google reviews; fall back to the hardcoded list.
+    (async () => {
+      try {
+        const res = await fetch("/api/google-reviews");
+        const json = (await res.json()) as { reviews?: ApiReview[] };
+        if (!alive) return;
+        if (json.reviews && json.reviews.length > 0) {
+          const mapped: Review[] = json.reviews.map((r) => ({
+            author: r.author,
+            role: r.relative || "Avis Google",
+            initials: initialsOf(r.author),
+            quote: r.text,
+          }));
+          setReviews(shuffle(mapped));
+          setMounted(true);
+          return;
+        }
+      } catch {
+        /* swallow — use fallback */
+      }
+      if (alive) {
+        setReviews(shuffle(fiveStarReviews));
+        setMounted(true);
+      }
+    })();
+    return () => { alive = false; };
   }, []);
 
   const doubled = [...reviews, ...reviews];
