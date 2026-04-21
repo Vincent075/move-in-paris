@@ -1425,7 +1425,8 @@
       "/apartments/2-pieces-montmartre-paris-18e/photo-11.jpg",
       "/apartments/2-pieces-montmartre-paris-18e/photo-12.jpg"
     ],
-    "nearby": []
+    "nearby": [],
+    "hasElevator": true
   },
   {
     "slug": "rue-marbeuf-paris-8e",
