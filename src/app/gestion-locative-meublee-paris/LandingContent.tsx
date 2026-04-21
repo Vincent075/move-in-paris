@@ -175,7 +175,14 @@ export default function LandingContent() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   function scrollToForm() {
-    document.getElementById("owner-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const el = document.getElementById("owner-form");
+    if (!el) return;
+    // Compute precise top with a small breathing margin so the section
+    // title lands nicely in the viewport (scrollIntoView can be imprecise
+    // when there's CSS scroll-margin or dynamic layout settling).
+    const rect = el.getBoundingClientRect();
+    const top = rect.top + window.scrollY - 16;
+    window.scrollTo({ top, behavior: "smooth" });
   }
 
   return (
