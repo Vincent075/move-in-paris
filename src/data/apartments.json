@@ -1886,5 +1886,92 @@
         "distance": "2 min"
       }
     ]
+  },
+  {
+    "slug": "3-pieces-boissiere-paris-16e",
+    "title": "3 Pièces Boissière",
+    "address": "Villa Boissière, Paris 16e",
+    "district": "Paris 16e",
+    "surface": 88,
+    "rooms": 3,
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "floor": "1er étage",
+    "status": "À louer",
+    "description": "3 pièces d'une surface d'environ 88 m2\nAu 1er étage avec ascenseur si immeuble\nhaussmannien.\nEntrée, cuisine américaine entièrement équipée\nEquipement: Four traditionnel, lave-vaisselle, micro-\nondes, machine à café…\nSéjour avec canapé 2 places, table basse et TV écran\nplat.\n1ère chambre avec lit double et placard dans une rue\ncalme\n2ème chambre avec lit superposé et placard.\nSalle de bain avec douche et baignoire.\nBureau/dressing.\nChauffage individuel et eau chaude par GAZ.",
+    "features": [
+      "Aspirateur",
+      "Ascenseur",
+      "Baignoire",
+      "Bouilloire",
+      "Cafetière",
+      "Chauffage individuel gaz",
+      "Cuisine équipée",
+      "Digicode",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Gardien",
+      "Lave-linge séchant",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Lit superposé",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet point de Hongrie",
+      "Plaques de cuisson",
+      "Wifi",
+      "Toilettes séparées",
+      "Toaster",
+      "Smart TV",
+      "Table à repasser",
+      "Serviettes fournies",
+      "Réfrigérateur"
+    ],
+    "photos": "3-pieces-boissiere-paris-16e",
+    "images": [
+      "/apartments/3-pieces-boissiere-paris-16e/photo-1.jpg",
+      "/apartments/3-pieces-boissiere-paris-16e/photo-2.jpg",
+      "/apartments/3-pieces-boissiere-paris-16e/photo-3.jpg",
+      "/apartments/3-pieces-boissiere-paris-16e/photo-4.jpg",
+      "/apartments/3-pieces-boissiere-paris-16e/photo-5.jpg",
+      "/apartments/3-pieces-boissiere-paris-16e/photo-6.jpg",
+      "/apartments/3-pieces-boissiere-paris-16e/photo-7.jpg",
+      "/apartments/3-pieces-boissiere-paris-16e/photo-8.jpg",
+      "/apartments/3-pieces-boissiere-paris-16e/photo-9.jpg",
+      "/apartments/3-pieces-boissiere-paris-16e/photo-10.jpg",
+      "/apartments/3-pieces-boissiere-paris-16e/photo-11.jpg",
+      "/apartments/3-pieces-boissiere-paris-16e/photo-12.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Boissière",
+        "distance": "1 min",
+        "lines": [
+          "6"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Iéna",
+        "distance": "4 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Bio C' Bon",
+        "distance": "5 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Thomas Jefferson",
+        "distance": "4 min"
+      }
+    ]
   }
 ]
