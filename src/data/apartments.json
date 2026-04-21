@@ -1170,7 +1170,36 @@
       "/apartments/2p-tenres-1-paris-17e/photo-9.jpg",
       "/apartments/2p-tenres-1-paris-17e/photo-10.jpg"
     ],
-    "nearby": [],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Argentine",
+        "distance": "3 min",
+        "lines": [
+          "1"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Charles de Gaulle — Étoile",
+        "distance": "5 min",
+        "lines": [
+          "1",
+          "2",
+          "6"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "G20",
+        "distance": "1 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Promenade Pereire",
+        "distance": "6 min"
+      }
+    ],
     "hasElevator": true
   },
   {
