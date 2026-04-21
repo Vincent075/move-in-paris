@@ -356,6 +356,33 @@ export async function POST(req: NextRequest) {
           </div>`;
         break;
 
+      case "owner-lead":
+        subject = `⭐ Lead propriétaire — ${fields.prenom} ${fields.nom} (${fields.adresse || "adresse n/c"})`;
+        content = `
+          <div style="font-family:Georgia,serif;font-size:16px;color:#B88B58;margin-bottom:12px;">Propriétaire</div>
+          <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
+            ${row("Prénom", fields.prenom)}
+            ${row("Nom", fields.nom)}
+            ${row("Email", `<a href="mailto:${fields.email}" style="color:#B88B58;">${fields.email}</a>`)}
+            ${row("Téléphone", fields.telephone ? `<a href="tel:${fields.telephone}" style="color:#B88B58;">${fields.telephone}</a>` : "")}
+          </table>
+          <div style="font-family:Georgia,serif;font-size:16px;color:#B88B58;margin-bottom:12px;">Bien à louer</div>
+          <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
+            ${row("Adresse / quartier", fields.adresse)}
+            ${row("Surface", fields.surface ? fields.surface + " m²" : "")}
+            ${row("Pièces", fields.pieces)}
+            ${row("Disponibilité", fields.disponibilite)}
+          </table>
+          ${fields.message ? `
+          <div style="padding:20px;background-color:#F5F0EB;border-radius:4px;">
+            <div style="font-size:12px;color:#6B6B6B;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">Message</div>
+            <div style="font-size:14px;color:#1A1A1A;line-height:1.6;">${fields.message.replace(/\n/g, "<br/>")}</div>
+          </div>` : ""}
+          <div style="margin-top:16px;padding:12px 20px;background-color:#0D0D0D;border-radius:4px;">
+            <div style="font-size:13px;color:#B88B58;">Source : landing /gestion-locative-meublee-paris</div>
+          </div>`;
+        break;
+
       default:
         subject = "Nouveau message — Move in Paris";
         content = `<pre style="font-size:13px;">${JSON.stringify(fields, null, 2)}</pre>`;
@@ -366,6 +393,7 @@ export async function POST(req: NextRequest) {
       proposer: "Nouvelle proposition de bien",
       visite: "Demande de visite",
       estimation: "Nouveau lead — Estimation de loyer",
+      "owner-lead": "Nouveau lead propriétaire — Landing",
     };
 
     const result = await resend.emails.send({
