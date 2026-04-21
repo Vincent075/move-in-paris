@@ -353,9 +353,9 @@ export default function EstimationForm({
           {step === "property" && (
             <motion.div
               key="property"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
               className="bg-blanc-chaud p-8 md:p-12"
               style={{ borderRadius: 10 }}
             >
@@ -543,9 +543,9 @@ export default function EstimationForm({
           {step === "contact" && (
             <motion.div
               key="contact"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
               className="bg-blanc-chaud p-8 md:p-12"
               style={{ borderRadius: 10 }}
             >

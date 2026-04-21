@@ -30,6 +30,11 @@ body {
   background: var(--blanc);
   color: var(--noir);
   font-family: var(--font-inter), system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+html {
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4 {
