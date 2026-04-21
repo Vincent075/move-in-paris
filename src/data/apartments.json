@@ -1709,5 +1709,95 @@
       }
     ],
     "hasElevator": true
+  },
+  {
+    "slug": "2-pieces-porte-maillot-paris-16e",
+    "title": "2 Pièces Porte Maillot",
+    "address": " Rue Pergolèse, Paris 16e",
+    "district": "Paris 16e",
+    "surface": 62,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "5e étage",
+    "status": "À louer",
+    "description": "Grand 2 pièces très lumineux d’une surface d’environ\n62 m². Situé au 5ème étage avec ascenseur sur cour\ncalme. Entrée, grand séjour sur cour lumineuse sans\nvis-à-vis.\nCuisine séparée tout équipée.\nÉquipement: lave vaisselle, lave linge, grille pain,\ncafetière Nespresso ...\nGrande chambre à coucher lumineuse sur cour calme.\nSalle d’eau avec douche et baignoire.\nChauffage et eau chaude collectif.\nAppartement très calme et proche de toute\ncommodités. Vue tour Eiffel.",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Baignoire",
+      "Bouilloire",
+      "Canapé convertible",
+      "Chauffage collectif",
+      "Congélateur",
+      "Cuisine équipée",
+      "Digicode",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Gardien",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Table à repasser",
+      "Smart TV",
+      "Toaster",
+      "Toilettes séparées",
+      "Wifi",
+      "Volets roulants"
+    ],
+    "photos": "2-pieces-porte-maillot-paris-16e",
+    "images": [
+      "/apartments/2-pieces-porte-maillot-paris-16e/photo-1.jpg",
+      "/apartments/2-pieces-porte-maillot-paris-16e/photo-2.jpg",
+      "/apartments/2-pieces-porte-maillot-paris-16e/photo-3.jpg",
+      "/apartments/2-pieces-porte-maillot-paris-16e/photo-4.jpg",
+      "/apartments/2-pieces-porte-maillot-paris-16e/photo-5.jpg",
+      "/apartments/2-pieces-porte-maillot-paris-16e/photo-6.jpg",
+      "/apartments/2-pieces-porte-maillot-paris-16e/photo-7.jpg",
+      "/apartments/2-pieces-porte-maillot-paris-16e/photo-8.jpg",
+      "/apartments/2-pieces-porte-maillot-paris-16e/photo-9.jpg",
+      "/apartments/2-pieces-porte-maillot-paris-16e/photo-10.jpg",
+      "/apartments/2-pieces-porte-maillot-paris-16e/photo-11.jpg",
+      "/apartments/2-pieces-porte-maillot-paris-16e/photo-12.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Porte Dauphine",
+        "distance": "5 min",
+        "lines": [
+          "2"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Porte Maillot",
+        "distance": "6 min",
+        "lines": [
+          "1"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "monop'",
+        "distance": "4 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Anna de Noailles",
+        "distance": "4 min"
+      }
+    ]
   }
 ]
