@@ -1512,6 +1512,35 @@
       "/apartments/rue-marbeuf-paris-8e/photo-11.jpg",
       "/apartments/rue-marbeuf-paris-8e/photo-12.jpg"
     ],
-    "nearby": []
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Franklin D. Roosevelt",
+        "distance": "6 min",
+        "lines": [
+          "1",
+          "9"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Alma-Marceau",
+        "distance": "6 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Monoprix",
+        "distance": "3 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Brignole-Galliera",
+        "distance": "8 min"
+      }
+    ],
+    "hasElevator": true
   }
 ]
