@@ -967,7 +967,34 @@
       "/apartments/2p-saint-germain-des-pres-paris-7e/13.jpg",
       "/apartments/2p-saint-germain-des-pres-paris-7e/14.jpg"
     ],
-    "nearby": [],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Solférino",
+        "distance": "4 min",
+        "lines": [
+          "12"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Assemblée Nationale",
+        "distance": "5 min",
+        "lines": [
+          "12"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Monoprix",
+        "distance": "4 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Jardin des Tuileries",
+        "distance": "6 min"
+      }
+    ],
     "hasElevator": false,
     "features_en": [
       "Toaster",
