@@ -1425,7 +1425,34 @@
       "/apartments/2-pieces-montmartre-paris-18e/photo-11.jpg",
       "/apartments/2-pieces-montmartre-paris-18e/photo-12.jpg"
     ],
-    "nearby": [],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Guy Môquet",
+        "distance": "2 min",
+        "lines": [
+          "13"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Porte de Saint-Ouen",
+        "distance": "7 min",
+        "lines": [
+          "13"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "monop'",
+        "distance": "3 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Carpeaux",
+        "distance": "2 min"
+      }
+    ],
     "hasElevator": true
   },
   {
