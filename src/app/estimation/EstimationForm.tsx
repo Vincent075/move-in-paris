@@ -225,6 +225,88 @@ export default function EstimationForm({
   const addressValid = !!quartier || !!fallbackCity;
   const canContinue = addressValid && !!rooms && !!surface && !!computation;
 
+  // Partial lead capture: we DON'T send immediately when step 1 completes,
+  // to avoid sending 2 emails when the lead finishes the full estimation.
+  // Instead: arm a 90s timer + a page-unload beacon. If step 2 completes
+  // first, both are cancelled → only the full estimation email is sent.
+  const partialSentRef = useRef(false);
+  const partialTimerRef = useRef<number | null>(null);
+  const unloadHandlerRef = useRef<(() => void) | null>(null);
+  const visibilityHandlerRef = useRef<(() => void) | null>(null);
+
+  function buildPartialPayload() {
+    return JSON.stringify({
+      formType: "owner-lead-partial",
+      civilite,
+      prenom,
+      nom,
+      email,
+      telephone,
+    });
+  }
+
+  function sendPartialViaFetch() {
+    if (partialSentRef.current) return;
+    partialSentRef.current = true;
+    // Non-blocking
+    fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: buildPartialPayload(),
+    }).catch(() => {});
+  }
+
+  function sendPartialViaBeacon() {
+    if (partialSentRef.current) return;
+    if (typeof navigator === "undefined" || !navigator.sendBeacon) {
+      sendPartialViaFetch();
+      return;
+    }
+    partialSentRef.current = true;
+    const blob = new Blob([buildPartialPayload()], { type: "application/json" });
+    navigator.sendBeacon("/api/contact", blob);
+  }
+
+  function armPartialCapture() {
+    // 90s timer: if the user stays on page without completing step 2
+    partialTimerRef.current = window.setTimeout(sendPartialViaFetch, 90_000);
+    // Unload / visibility: if the user closes the tab / switches apps
+    const onUnload = () => sendPartialViaBeacon();
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden") sendPartialViaBeacon();
+    };
+    window.addEventListener("pagehide", onUnload);
+    document.addEventListener("visibilitychange", onVisibility);
+    unloadHandlerRef.current = onUnload;
+    visibilityHandlerRef.current = onVisibility;
+  }
+
+  function disarmPartialCapture() {
+    // Called when the user completes step 2 so the partial email is NOT sent.
+    partialSentRef.current = true;
+    if (partialTimerRef.current) {
+      clearTimeout(partialTimerRef.current);
+      partialTimerRef.current = null;
+    }
+    if (unloadHandlerRef.current) {
+      window.removeEventListener("pagehide", unloadHandlerRef.current);
+      unloadHandlerRef.current = null;
+    }
+    if (visibilityHandlerRef.current) {
+      document.removeEventListener("visibilitychange", visibilityHandlerRef.current);
+      visibilityHandlerRef.current = null;
+    }
+  }
+
+  // Cleanup any listeners / timer if the component unmounts
+  useEffect(() => {
+    return () => {
+      if (partialTimerRef.current) clearTimeout(partialTimerRef.current);
+      if (unloadHandlerRef.current) window.removeEventListener("pagehide", unloadHandlerRef.current);
+      if (visibilityHandlerRef.current) document.removeEventListener("visibilitychange", visibilityHandlerRef.current);
+    };
+  }, []);
+
   async function sendFullEstimation() {
     await fetch("/api/contact", {
       method: "POST",
@@ -250,28 +332,6 @@ export default function EstimationForm({
     });
   }
 
-  // Sent when the lead completes step 1 (contact only) in contactFirst mode.
-  // This guarantees we capture the prospect's coordinates even if they
-  // abandon at the property step.
-  async function sendPartialLead() {
-    try {
-      await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          formType: "owner-lead-partial",
-          civilite,
-          prenom,
-          nom,
-          email,
-          telephone,
-        }),
-      });
-    } catch {
-      // Non-blocking: we continue the user flow even if partial send fails
-    }
-  }
-
   async function handleSubmitContact(e: React.FormEvent) {
     e.preventDefault();
     setErrorMsg("");
@@ -282,9 +342,10 @@ export default function EstimationForm({
     setSubmitting(true);
     try {
       if (contactFirst) {
-        // Step 1 → 2: capture partial lead, then move to property step.
-        // Full estimation is sent at the property step submit.
-        await sendPartialLead();
+        // Step 1 → 2: we DON'T send the partial email now. We arm a
+        // 90s timer + unload beacon instead. If the user completes step 2
+        // quickly, we disarm and only the full estimation email is sent.
+        armPartialCapture();
         setStep("property");
       } else {
         await sendFullEstimation();
@@ -300,6 +361,8 @@ export default function EstimationForm({
   async function handleSubmitFromProperty() {
     setErrorMsg("");
     if (!canContinue) return;
+    // Cancel the partial send immediately — the lead is about to complete.
+    disarmPartialCapture();
     setSubmitting(true);
     try {
       await sendFullEstimation();
