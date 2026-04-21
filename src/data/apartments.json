@@ -712,7 +712,35 @@
       "/apartments/3p-madelaine-paris-8e/photo-14.jpg",
       "/apartments/3p-madelaine-paris-8e/photo-15.jpg"
     ],
-    "nearby": [],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Saint-Augustin",
+        "distance": "4 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Miromesnil",
+        "distance": "4 min",
+        "lines": [
+          "13",
+          "9"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Monoprix",
+        "distance": "3 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Marcel Pagnol",
+        "distance": "5 min"
+      }
+    ],
     "hasElevator": true
   },
   {
