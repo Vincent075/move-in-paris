@@ -2059,5 +2059,94 @@
         "distance": "3 min"
       }
     ]
+  },
+  {
+    "slug": "3-pieces-levallois-centre-levallois-perret",
+    "title": "3 Pièces Levallois Centre",
+    "address": "Rue Raspail, Levallois-Perret",
+    "district": "Levallois-Perret",
+    "surface": 75,
+    "rooms": 3,
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "floor": "4e étage",
+    "status": "À louer",
+    "description": "3 pièce d’une surface d’ environ 74 m2, en bon état\nAu 4eme étage avec ascenseur d’un immeuble\nmoderneUn séjour avec canapé convertible, une\ntable basse et un Tv écran plat.\nUne table à manger avec table et chaises.\nUne cuisine ouverte toute équipée et aménagée\nÉquipement : lave-vaisselle, four micro-onde, four,\nplaque , réfrigérateur, …\nUne chambre parentale avec un lit double, une\narmoire, une Tv donnant sur un balcon et un\nchambre enfant avec un lit simple et un bureau.\n.Salle de bain avec baignoire , machine à laver et WC\nséparé . Chauffage et eau chaude individuel\nélectrique.",
+    "features": [
+      "Aspirateur",
+      "Ascenseur",
+      "Baignoire",
+      "Balcon",
+      "Bouilloire",
+      "Cafetière",
+      "Canapé convertible",
+      "Chauffage individuel gaz",
+      "Cuisine équipée",
+      "Digicode",
+      "Double vitrage",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Interphone",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Micro-ondes",
+      "Parquet",
+      "Réfrigérateur",
+      "Plaques de cuisson",
+      "Serviettes fournies",
+      "Table à repasser",
+      "Smart TV",
+      "Toaster",
+      "Toilettes séparées",
+      "Volets roulants",
+      "Wifi",
+      "Lit simple"
+    ],
+    "photos": "3-pieces-levallois-centre-levallois-perret",
+    "images": [
+      "/apartments/3-pieces-levallois-centre-levallois-perret/photo-1.jpg",
+      "/apartments/3-pieces-levallois-centre-levallois-perret/photo-2.jpg",
+      "/apartments/3-pieces-levallois-centre-levallois-perret/photo-3.jpg",
+      "/apartments/3-pieces-levallois-centre-levallois-perret/photo-4.jpg",
+      "/apartments/3-pieces-levallois-centre-levallois-perret/photo-5.jpg",
+      "/apartments/3-pieces-levallois-centre-levallois-perret/photo-6.jpg",
+      "/apartments/3-pieces-levallois-centre-levallois-perret/photo-7.jpg",
+      "/apartments/3-pieces-levallois-centre-levallois-perret/photo-8.jpg",
+      "/apartments/3-pieces-levallois-centre-levallois-perret/photo-9.jpg",
+      "/apartments/3-pieces-levallois-centre-levallois-perret/photo-10.jpg",
+      "/apartments/3-pieces-levallois-centre-levallois-perret/photo-11.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Pont de Levallois - Bécon",
+        "distance": "10 min",
+        "lines": [
+          "3"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Anatole France",
+        "distance": "11 min",
+        "lines": [
+          "3"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Lidl",
+        "distance": "1 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Parc des 5 Continents - jardin européen",
+        "distance": "2 min"
+      }
+    ]
   }
 ]
