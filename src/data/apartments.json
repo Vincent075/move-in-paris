@@ -1542,5 +1542,87 @@
       }
     ],
     "hasElevator": true
+  },
+  {
+    "slug": "2-pieces-victor-hugo-paris-16e",
+    "title": "2 Pièces Victor Hugo",
+    "address": "Rue Gustave Courbet, Paris 16e",
+    "district": "Paris 16e",
+    "surface": 42,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "2e étage",
+    "status": "À louer",
+    "description": "2 pièces d’une surface d’environ 42 m² au 2ème étage\navec ascenseur.\nSalon 1 canapé 2 places et un canapé 3 places\nconvertible et télévision à écran plat. Cuisine séparée\ntout équipée.\nÉquipements : Lave-Vaisselle, machine à laver, cafetière\nNespresso, Four micro-ondes, bouilloire…\nChambre avec un lit double 140 * 200cm\nSalle d’eau avec douche et WC.\nGrande armoire\nSitué dans le quartier Très recherché de Victor Hugo.\nAppartement lumineux et très calme.\nChauffage et eau chaude individuels électriques.",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Bouilloire",
+      "Cafetière",
+      "Congélateur",
+      "Cuisine équipée",
+      "Digicode",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Interphone",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Table à repasser",
+      "Toaster",
+      "Wifi"
+    ],
+    "photos": "2-pieces-victor-hugo-paris-16e",
+    "images": [
+      "/apartments/2-pieces-victor-hugo-paris-16e/photo-1.jpg",
+      "/apartments/2-pieces-victor-hugo-paris-16e/photo-2.jpg",
+      "/apartments/2-pieces-victor-hugo-paris-16e/photo-3.jpg",
+      "/apartments/2-pieces-victor-hugo-paris-16e/photo-4.jpg",
+      "/apartments/2-pieces-victor-hugo-paris-16e/photo-5.jpg",
+      "/apartments/2-pieces-victor-hugo-paris-16e/photo-6.jpg",
+      "/apartments/2-pieces-victor-hugo-paris-16e/photo-7.jpg",
+      "/apartments/2-pieces-victor-hugo-paris-16e/photo-8.jpg",
+      "/apartments/2-pieces-victor-hugo-paris-16e/photo-9.jpg",
+      "/apartments/2-pieces-victor-hugo-paris-16e/photo-10.jpg",
+      "/apartments/2-pieces-victor-hugo-paris-16e/photo-11.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Rue de la Pompe",
+        "distance": "5 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Victor Hugo",
+        "distance": "6 min",
+        "lines": [
+          "2"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Monoprix",
+        "distance": "1 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Lamartine",
+        "distance": "6 min"
+      }
+    ]
   }
 ]
