@@ -195,7 +195,7 @@ export default function LandingContent() {
         <div className="relative max-w-7xl mx-auto px-6 lg:px-12 pt-6 md:pt-8">
           <Link href="/" className="inline-block">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/Logo-gold.png" alt="Move in Paris" className="h-24 md:h-32 w-auto" />
+            <img src="/Logo-gold.png" alt="Move in Paris" className="h-48 md:h-64 w-auto" />
           </Link>
         </div>
 
