@@ -3294,24 +3294,25 @@
       "Smart TV",
       "Table à repasser",
       "Toaster",
-      "Wifi"
+      "Wifi",
+      "Toilettes séparées"
     ],
     "photos": "2-pieces-faubourg-saint-martin-paris-10e",
     "images": [
-      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-1.jpg",
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-9.jpg",
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-12.jpg",
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-10.jpg",
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-13.jpg",
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-14.jpg",
       "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-2.jpg",
-      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-3.jpg",
       "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-4.jpg",
       "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-5.jpg",
       "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-6.jpg",
       "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-7.jpg",
       "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-8.jpg",
-      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-9.jpg",
-      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-10.jpg",
       "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-11.jpg",
-      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-12.jpg",
-      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-13.jpg",
-      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-14.jpg",
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-1.jpg",
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-3.jpg",
       "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-15.jpg"
     ],
     "nearby": [
@@ -3343,6 +3344,10 @@
         "name": "Square Alban Satragne",
         "distance": "1 min"
       }
+    ],
+    "hasElevator": true,
+    "features_en": [
+      "Separate toilet"
     ]
   }
 ]
