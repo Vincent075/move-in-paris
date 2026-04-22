@@ -2148,5 +2148,96 @@
         "distance": "2 min"
       }
     ]
+  },
+  {
+    "slug": "2-pieces-faubourg-du-roule-paris-8e",
+    "title": "2 Pièces Faubourg Du Roule",
+    "address": "Rue du Commandant Rivière, Paris 8e",
+    "district": "Paris 8e",
+    "surface": 60,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "6e étage",
+    "status": "À louer",
+    "description": "Grand 2 pièces entièrement refait à neuf situé au 6ème\nétage avec ascenseur sur cour\nEntièrement meublé et équipé d'une surface d'environ\n60 m2. Entrée avec coin bureau\nGrand séjour avec canapé 3 places, TV écran plasma et\ncoin salle à manger.\nCuisine américaine entièrement équipée.\nEquipement : Lave-vaisselle, réfrigérateur/congélateur,\nmachine à café nespresso, four traditionnel, four micro-\nonde, machine à laver séchante, toasteur...\nGrande chambre avec avec lit queen size, rangement.\nSalle d'eau avec douche et wc.\nNombreux rangements\nAppartement très Lumineux.\nClimatisation réversible.",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Bouilloire",
+      "Canapé convertible",
+      "Climatisation",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Digicode",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Gardien",
+      "Interphone",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Volets roulants",
+      "Wifi"
+    ],
+    "photos": "2-pieces-faubourg-du-roule-paris-8e",
+    "images": [
+      "/apartments/2-pieces-faubourg-du-roule-paris-8e/photo-1.jpg",
+      "/apartments/2-pieces-faubourg-du-roule-paris-8e/photo-2.jpg",
+      "/apartments/2-pieces-faubourg-du-roule-paris-8e/photo-3.jpg",
+      "/apartments/2-pieces-faubourg-du-roule-paris-8e/photo-4.jpg",
+      "/apartments/2-pieces-faubourg-du-roule-paris-8e/photo-5.jpg",
+      "/apartments/2-pieces-faubourg-du-roule-paris-8e/photo-6.jpg",
+      "/apartments/2-pieces-faubourg-du-roule-paris-8e/photo-7.jpg",
+      "/apartments/2-pieces-faubourg-du-roule-paris-8e/photo-8.jpg",
+      "/apartments/2-pieces-faubourg-du-roule-paris-8e/photo-9.jpg",
+      "/apartments/2-pieces-faubourg-du-roule-paris-8e/photo-10.jpg",
+      "/apartments/2-pieces-faubourg-du-roule-paris-8e/photo-11.jpg",
+      "/apartments/2-pieces-faubourg-du-roule-paris-8e/photo-12.jpg",
+      "/apartments/2-pieces-faubourg-du-roule-paris-8e/photo-13.jpg",
+      "/apartments/2-pieces-faubourg-du-roule-paris-8e/photo-14.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Saint-Philippe du Roule",
+        "distance": "1 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Franklin D. Roosevelt",
+        "distance": "5 min",
+        "lines": [
+          "1",
+          "9"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Monoprix",
+        "distance": "4 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Jardin de l’Hôtel Salomon de Rothschild",
+        "distance": "7 min"
+      }
+    ]
   }
 ]
