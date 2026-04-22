@@ -2714,7 +2714,20 @@
       "Wifi"
     ],
     "photos": "2-pieces-cardinet-1-paris-17e",
-    "images": [],
+    "images": [
+      "/apartments/2-pieces-cardinet-1-paris-17e/01.jpg",
+      "/apartments/2-pieces-cardinet-1-paris-17e/02.jpg",
+      "/apartments/2-pieces-cardinet-1-paris-17e/03.jpg",
+      "/apartments/2-pieces-cardinet-1-paris-17e/04.jpg",
+      "/apartments/2-pieces-cardinet-1-paris-17e/05.jpg",
+      "/apartments/2-pieces-cardinet-1-paris-17e/06.jpg",
+      "/apartments/2-pieces-cardinet-1-paris-17e/07.jpg",
+      "/apartments/2-pieces-cardinet-1-paris-17e/08.jpg",
+      "/apartments/2-pieces-cardinet-1-paris-17e/09.jpg",
+      "/apartments/2-pieces-cardinet-1-paris-17e/10.jpg",
+      "/apartments/2-pieces-cardinet-1-paris-17e/11.jpg",
+      "/apartments/2-pieces-cardinet-1-paris-17e/12.jpg"
+    ],
     "nearby": [
       {
         "type": "Métro",
@@ -2742,7 +2755,8 @@
         "name": "Square Alexis-Clerel de Tocqueville",
         "distance": "3 min"
       }
-    ]
+    ],
+    "hasElevator": true
   },
   {
     "slug": "2-pieces-pompes-paris-16e",
