@@ -3078,5 +3078,92 @@
         "distance": "4 min"
       }
     ]
+  },
+  {
+    "slug": "2-pieces-courcelles-paris-17e",
+    "title": "2 Pièces Courcelles ",
+    "address": "Rue de Chazelles, Paris 17e",
+    "district": "Paris 17e",
+    "surface": 43,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "6e étage",
+    "status": "À louer",
+    "description": "2 pièce d’une surface d’ environ 43 m2, refait à neuf.\nAu 6eme étage avec ascenseur d’un immeuble\nmoderne sécurisé avec gardien .\nUn séjour avec canapé convertible, une table basse et\nun Tv écran plat.\nUne table dinatoire avec chaises.\nUne cuisine semi-ouverte toute équipée et aménagée\nÉquipement : lave-vaisselle, four, plaque ,\nréfrigérateur, four micro-onde…\nUne chambre avec un lit double et du rangement.\nSalle d’eau avec baignoire et WC.\nUn cellier avec lave-linge séchant.\nUne terrasse privative de 20m2 ensoleillé\nChauffage collectif",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Cuisine équipée",
+      "Digicode",
+      "Terrasse",
+      "Bouilloire",
+      "Canapé convertible",
+      "Chauffage collectif",
+      "Double vitrage",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Gardien",
+      "Lave-linge",
+      "Sèche-linge",
+      "Linge de maison fourni",
+      "Lave-vaisselle",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Volets roulants",
+      "Wifi",
+      "Table à repasser",
+      "Smart TV",
+      "Serviettes fournies",
+      "Réfrigérateur"
+    ],
+    "photos": "2-pieces-courcelles-paris-17e",
+    "images": [
+      "/apartments/2-pieces-courcelles-paris-17e/photo-1.jpg",
+      "/apartments/2-pieces-courcelles-paris-17e/photo-2.jpg",
+      "/apartments/2-pieces-courcelles-paris-17e/photo-3.jpg",
+      "/apartments/2-pieces-courcelles-paris-17e/photo-4.jpg",
+      "/apartments/2-pieces-courcelles-paris-17e/photo-5.jpg",
+      "/apartments/2-pieces-courcelles-paris-17e/photo-6.jpg",
+      "/apartments/2-pieces-courcelles-paris-17e/photo-7.jpg",
+      "/apartments/2-pieces-courcelles-paris-17e/photo-8.jpg",
+      "/apartments/2-pieces-courcelles-paris-17e/photo-9.jpg",
+      "/apartments/2-pieces-courcelles-paris-17e/photo-10.jpg",
+      "/apartments/2-pieces-courcelles-paris-17e/photo-11.jpg",
+      "/apartments/2-pieces-courcelles-paris-17e/photo-12.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Courcelles",
+        "distance": "2 min",
+        "lines": [
+          "2"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Monceau",
+        "distance": "3 min",
+        "lines": [
+          "2"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Bio C' Bon",
+        "distance": "6 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Jardin de l’Hôtel Salomon de Rothschild",
+        "distance": "8 min"
+      }
+    ]
   }
 ]
