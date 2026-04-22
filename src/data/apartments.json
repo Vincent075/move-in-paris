@@ -3880,5 +3880,89 @@
         "distance": "6 min"
       }
     ]
+  },
+  {
+    "slug": "3-pieces-cardinet-paris-17e",
+    "title": "3 Pièces Cardinet",
+    "address": "Rue Nollet, Paris 17e",
+    "district": "Paris 17e",
+    "surface": 72,
+    "rooms": 3,
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "floor": "2e étage",
+    "status": "À louer",
+    "description": "3 pièces d’une surface d’ environ 72 m2, refait à neuf en\nJuillet 2023\nAu 2ème étage avec ascenseur d’un immeuble pierre de\ntaille avec gardien.\nUn séjour avec canapé 3 places, un fauteuil, une table\nbasse et un Tv écran plat.\nUn espace dinatoire avec table et chaises.\nUne cuisine ouverte toute équipée et aménagée\nÉquipement : lave-vaisselle, four, plaque , réfrigérateur,\nfour micro-onde…\nUne chambre avec un lit queen size et rangements avec\nsalle de bain attenante.\n2ème chambre avec lit queen size et rangements et salle de\nbain attenante.\nChauffage et eau chaude individuel au GAZ.",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Baignoire",
+      "Bouilloire",
+      "Cafetière",
+      "Chauffage individuel gaz",
+      "Cuisine équipée",
+      "Digicode",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Gardien",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Plaques de cuisson",
+      "Lave-linge séchant",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Toilettes séparées",
+      "Wifi"
+    ],
+    "photos": "3-pieces-cardinet-paris-17e",
+    "images": [
+      "/apartments/3-pieces-cardinet-paris-17e/photo-1.jpg",
+      "/apartments/3-pieces-cardinet-paris-17e/photo-2.jpg",
+      "/apartments/3-pieces-cardinet-paris-17e/photo-3.jpg",
+      "/apartments/3-pieces-cardinet-paris-17e/photo-4.jpg",
+      "/apartments/3-pieces-cardinet-paris-17e/photo-5.jpg",
+      "/apartments/3-pieces-cardinet-paris-17e/photo-6.jpg",
+      "/apartments/3-pieces-cardinet-paris-17e/photo-7.jpg",
+      "/apartments/3-pieces-cardinet-paris-17e/photo-8.jpg",
+      "/apartments/3-pieces-cardinet-paris-17e/photo-9.jpg",
+      "/apartments/3-pieces-cardinet-paris-17e/photo-10.jpg",
+      "/apartments/3-pieces-cardinet-paris-17e/photo-11.jpg",
+      "/apartments/3-pieces-cardinet-paris-17e/photo-12.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Pont Cardinet",
+        "distance": "2 min"
+      },
+      {
+        "type": "Métro",
+        "name": "Brochant",
+        "distance": "3 min",
+        "lines": [
+          "13"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Naturalia",
+        "distance": "1 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square des Batignolles",
+        "distance": "3 min"
+      }
+    ]
   }
 ]
