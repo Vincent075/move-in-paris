@@ -2322,5 +2322,92 @@
         "distance": "2 min"
       }
     ]
+  },
+  {
+    "slug": "3-pieces-ternes-7-paris-17e",
+    "title": "3 Pièces Ternes / 7",
+    "address": "Rue des Acacias, Paris 17e",
+    "district": "Paris 17e",
+    "surface": 61,
+    "rooms": 3,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "",
+    "status": "À louer",
+    "description": "3 pièce d’une surface d’ environ 61 m2, bon état.\nAu 7eme étage avec ascenseur d’un immeuble ancien\nUn séjour avec canapé, une table basse et un Tv\nécran plat.\nUne table à manger avec table et chaises.\nUne cuisine toute équipée et aménagée\nÉquipement : lave-vaisselle, four micro-onde, plaque ,\nréfrigérateur, lave-linge séchant…\nUne chambre avec un lit double et du rangement.\nUn bureau avec du rangement.\nSalle d’eau avec douche et WC .\nBalcon. Chauffage et eau chaude collectifs.",
+    "features": [
+      "Aspirateur",
+      "Bouilloire",
+      "Chauffage collectif",
+      "Cuisine équipée",
+      "Digicode",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Gardien",
+      "Interphone",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Wifi"
+    ],
+    "photos": "3-pieces-ternes-7-paris-17e",
+    "images": [
+      "/apartments/3-pieces-ternes-7-paris-17e/photo-1.jpg",
+      "/apartments/3-pieces-ternes-7-paris-17e/photo-2.jpg",
+      "/apartments/3-pieces-ternes-7-paris-17e/photo-3.jpg",
+      "/apartments/3-pieces-ternes-7-paris-17e/photo-4.jpg",
+      "/apartments/3-pieces-ternes-7-paris-17e/photo-5.jpg",
+      "/apartments/3-pieces-ternes-7-paris-17e/photo-6.jpg",
+      "/apartments/3-pieces-ternes-7-paris-17e/photo-7.jpg",
+      "/apartments/3-pieces-ternes-7-paris-17e/photo-8.jpg",
+      "/apartments/3-pieces-ternes-7-paris-17e/photo-9.jpg",
+      "/apartments/3-pieces-ternes-7-paris-17e/photo-10.jpg",
+      "/apartments/3-pieces-ternes-7-paris-17e/photo-11.jpg",
+      "/apartments/3-pieces-ternes-7-paris-17e/photo-12.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Ternes",
+        "distance": "5 min",
+        "lines": [
+          "2"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Charles de Gaulle — Étoile",
+        "distance": "5 min",
+        "lines": [
+          "1",
+          "2",
+          "6"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Monoprix",
+        "distance": "1 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Pierre Demours",
+        "distance": "4 min"
+      }
+    ]
   }
 ]
