@@ -2210,8 +2210,8 @@
     "photos": "2-pieces-faubourg-du-roule-paris-8e",
     "images": [
       "/apartments/2-pieces-faubourg-du-roule-paris-8e/photo-1.jpg",
-      "/apartments/2-pieces-faubourg-du-roule-paris-8e/photo-2.jpg",
       "/apartments/2-pieces-faubourg-du-roule-paris-8e/photo-3.jpg",
+      "/apartments/2-pieces-faubourg-du-roule-paris-8e/photo-2.jpg",
       "/apartments/2-pieces-faubourg-du-roule-paris-8e/photo-4.jpg",
       "/apartments/2-pieces-faubourg-du-roule-paris-8e/photo-5.jpg",
       "/apartments/2-pieces-faubourg-du-roule-paris-8e/photo-6.jpg",
@@ -2252,7 +2252,8 @@
         "name": "Jardin de l’Hôtel Salomon de Rothschild",
         "distance": "7 min"
       }
-    ]
+    ],
+    "hasElevator": true
   },
   {
     "slug": "2-pieces-cardinet-paris-17e",
