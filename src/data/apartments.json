@@ -3165,5 +3165,79 @@
         "distance": "8 min"
       }
     ]
+  },
+  {
+    "slug": "2-pieces-faubourg-montmartre-paris-9e",
+    "title": "2 Pièces Faubourg Montmartre",
+    "address": "Rue de Châteaudun, Paris 9e",
+    "district": "Paris 9e",
+    "surface": 53,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "5e étage",
+    "status": "À louer",
+    "description": "2 pièces d’une surface d’environ 53 m2, en bon état\nAu 5eme étage avec ascenseur sur cour d’un\nimmeuble ancien. Un séjour avec canapé d’angle 4\nplaces, une table basse et un Tv écran plat.\nBar dinatoire. Une cuisine toute équipée et\naménagée\nÉquipement : lave-vaisselle, four micro-onde, plaque,\nréfrigérateur, machine à café Nespresso\nMachine a laver et Machine sèche-linge.\nUne chambre avec un lit double et du rangement.\nSalle d’eau avec douche à l’italienne. WC séparés.\nChauffage et eau chaude individuel GAZ.",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Bouilloire",
+      "Chauffage individuel gaz",
+      "Cuisine équipée",
+      "Digicode",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Interphone",
+      "Lave-linge",
+      "Sèche-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Toilettes séparées",
+      "Wifi",
+      "Réfrigérateur"
+    ],
+    "photos": "2-pieces-faubourg-montmartre-paris-9e",
+    "images": [],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Notre-Dame de Lorette",
+        "distance": "2 min",
+        "lines": [
+          "12"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Le Peletier",
+        "distance": "2 min",
+        "lines": [
+          "7"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Monoprix",
+        "distance": "5 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Alex Biscarre",
+        "distance": "4 min"
+      }
+    ]
   }
 ]
