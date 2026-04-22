@@ -3432,5 +3432,108 @@
         "distance": "2 min"
       }
     ]
+  },
+  {
+    "slug": "4-pieces-sablons-neuilly-sur-seine",
+    "title": "4 Pièces Sablons",
+    "address": "Rue d'Armenonville, Neuilly-sur-Seine",
+    "district": "Neuilly-sur-Seine",
+    "surface": 110,
+    "rooms": 4,
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "floor": "3e étage",
+    "status": "À louer",
+    "description": "4 pièce d’une surface d’environ 110 m2, en très bon état\nAu 3eme étage avec ascenseur d’un immeuble ancien\nUn séjour avec canapé, une table basse et un Tv écran plat.\nUne table à manger avec table et chaises.\nUne cuisine toute équipée et aménagée\nÉquipement : lave-vaisselle, four micro-onde, plaque ,\nréfrigérateur, lave-linge, sèche-linge…\nUne chambre parentale avec un lit double, une salle de\nbain avec baignoire et un dressing.\nUne 2eme chambre avec un lit double et du rangement\nUne 3eme chambre avec un lit simple et un bureau\nSalle d’eau avec douche et WC séparé.\nbalcon\nChauffage individuel électrique.",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Baignoire",
+      "Balcon",
+      "Bouilloire",
+      "Cafetière",
+      "Chauffage électrique individuel",
+      "Cuisine équipée",
+      "Digicode",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Interphone",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit double",
+      "Lit Queen size",
+      "Lit simple",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Sèche-linge",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Toilettes séparées",
+      "Wifi"
+    ],
+    "photos": "4-pieces-sablons-neuilly-sur-seine",
+    "images": [
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-1.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-2.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-3.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-4.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-5.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-6.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-7.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-8.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-9.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-10.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-11.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-12.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-13.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-14.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-15.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-16.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-17.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-18.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-19.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-20.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-21.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-22.jpg",
+      "/apartments/4-pieces-sablons-neuilly-sur-seine/photo-23.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Les Sablons",
+        "distance": "6 min",
+        "lines": [
+          "1"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Porte Maillot",
+        "distance": "7 min",
+        "lines": [
+          "1"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Neuilly Cacher",
+        "distance": "3 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Marguerite Long",
+        "distance": "5 min"
+      }
+    ]
   }
 ]
