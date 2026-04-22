@@ -2582,5 +2582,95 @@
         "distance": "5 min"
       }
     ]
+  },
+  {
+    "slug": "2-pieces-terrasse-paris-16e",
+    "title": "2 Pièces Terrasse",
+    "address": "Rue de la Pompe, Paris 16e",
+    "district": "Paris 16e",
+    "surface": 37,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "7e étage",
+    "status": "À louer",
+    "description": "2 pièces d’une surface d’environ 37 m2, refait à neuf.\nAu 7eme étage avec ascenseur d’un immeuble\nmoderne sécurisé avec gardien.\nUn séjour avec canapé convertible, une table basse et\nun Tv écran plat.\nUne cuisine semi-ouverte toute équipée et aménagée\nÉquipement : lave-vaisselle, four, plaque,\nréfrigérateur, four micro-onde…\nUn espace nuit avec un lit double et du rangement.\nSalle d’eau avec baignoire et WC.\nUne terrasse privative ensoleillé avec vue Tour Effeil\nChauffage collectif",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Bouilloire",
+      "Canapé convertible",
+      "Chauffage collectif",
+      "Cuisine équipée",
+      "Digicode",
+      "Double vitrage",
+      "Draps fournis",
+      "Douche à l'italienne",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Gardien",
+      "Interphone",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Terrasse",
+      "Toaster",
+      "Toilettes séparées",
+      "Volets roulants",
+      "Wifi"
+    ],
+    "photos": "2-pieces-terrasse-paris-16e",
+    "images": [
+      "/apartments/2-pieces-terrasse-paris-16e/photo-1.jpg",
+      "/apartments/2-pieces-terrasse-paris-16e/photo-2.jpg",
+      "/apartments/2-pieces-terrasse-paris-16e/photo-3.jpg",
+      "/apartments/2-pieces-terrasse-paris-16e/photo-4.jpg",
+      "/apartments/2-pieces-terrasse-paris-16e/photo-5.jpg",
+      "/apartments/2-pieces-terrasse-paris-16e/photo-6.jpg",
+      "/apartments/2-pieces-terrasse-paris-16e/photo-7.jpg",
+      "/apartments/2-pieces-terrasse-paris-16e/photo-8.jpg",
+      "/apartments/2-pieces-terrasse-paris-16e/photo-9.jpg",
+      "/apartments/2-pieces-terrasse-paris-16e/photo-10.jpg",
+      "/apartments/2-pieces-terrasse-paris-16e/photo-11.jpg",
+      "/apartments/2-pieces-terrasse-paris-16e/photo-12.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Rue de la Pompe",
+        "distance": "4 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Victor Hugo",
+        "distance": "7 min",
+        "lines": [
+          "2"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Monoprix",
+        "distance": "2 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Lamartine",
+        "distance": "5 min"
+      }
+    ]
   }
 ]
