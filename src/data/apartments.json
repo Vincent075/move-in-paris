@@ -2743,5 +2743,88 @@
         "distance": "3 min"
       }
     ]
+  },
+  {
+    "slug": "2-pieces-pompes-paris-16e",
+    "title": "2 Pièces Pompes",
+    "address": "Rue de la Pompe, Paris 16e",
+    "district": "Paris 16e",
+    "surface": 45,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "1er étage",
+    "status": "À louer",
+    "description": "2 pièces de standing entièrement meublé et équipé\nd'une surface d'environ 45 m² Au 1er étage sans\nascenseur d'une immeuble ancien Décoration moderne\net contemporaine Salon avec canapé 2 places\nconvertible (vrai matelas) et TV écran plasma.\nChambre avec lit double et rangements Salle de bain\navec baignoire attenante à la chambre. WC séparés.\nCuisine séparée entièrement équipée Appartement\ndonnant sur rue calme.\nChauffage et eau chaude individuels électrique.\nNombreux commerces au pied de l'immeuble.",
+    "features": [
+      "Aspirateur",
+      "Bouilloire",
+      "Canapé convertible",
+      "Chauffage électrique individuel",
+      "Cuisine équipée",
+      "Digicode",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Lave-linge",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Wifi"
+    ],
+    "photos": "2-pieces-pompes-paris-16e",
+    "images": [
+      "/apartments/2-pieces-pompes-paris-16e/photo-1.jpg",
+      "/apartments/2-pieces-pompes-paris-16e/photo-2.jpg",
+      "/apartments/2-pieces-pompes-paris-16e/photo-3.jpg",
+      "/apartments/2-pieces-pompes-paris-16e/photo-4.jpg",
+      "/apartments/2-pieces-pompes-paris-16e/photo-5.jpg",
+      "/apartments/2-pieces-pompes-paris-16e/photo-6.jpg",
+      "/apartments/2-pieces-pompes-paris-16e/photo-7.jpg",
+      "/apartments/2-pieces-pompes-paris-16e/photo-8.jpg",
+      "/apartments/2-pieces-pompes-paris-16e/photo-9.jpg",
+      "/apartments/2-pieces-pompes-paris-16e/photo-10.jpg",
+      "/apartments/2-pieces-pompes-paris-16e/photo-11.jpg",
+      "/apartments/2-pieces-pompes-paris-16e/photo-12.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Rue de la Pompe",
+        "distance": "3 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "La Muette",
+        "distance": "7 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Auchan Supermarché",
+        "distance": "1 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Lamartine",
+        "distance": "3 min"
+      }
+    ]
   }
 ]
