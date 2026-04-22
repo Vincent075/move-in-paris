@@ -3708,5 +3708,89 @@
         "distance": "6 min"
       }
     ]
+  },
+  {
+    "slug": "2-pieces-acacias-paris-17e",
+    "title": "2 Pièces Acacias ",
+    "address": "Rue des Acacias, Paris 17e",
+    "district": "Paris 17e",
+    "surface": 40,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "1er étage",
+    "status": "À louer",
+    "description": "2 pièces meublées d’une surface d’environ 40 m2\n1er étage avec ascenseur, sur rue (double vitrage)\nEntrée, séjour avec canapé 2 places, TV écran plasma\nInternet-TV-Téléphone illimité\nCuisine tout équipée ouverte sur le séjour\nEquipement : Réfrigérateur, micro-onde, four\ntraditionnel, Hotte, machine à café Nespresso, petit\nélectroménager…\nChambre avec lit double\nSalle de bain attenante à la chambre avec baignoire\net WC Chauffage central\nQuartier ternes, nombreux commerces autour de l’appartement",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Baignoire",
+      "Bouilloire",
+      "Chauffage collectif",
+      "Cuisine équipée",
+      "Digicode",
+      "Double vitrage",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Gardien",
+      "Interphone",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Wifi"
+    ],
+    "photos": "2-pieces-acacias-paris-17e",
+    "images": [
+      "/apartments/2-pieces-acacias-paris-17e/photo-1.jpg",
+      "/apartments/2-pieces-acacias-paris-17e/photo-2.jpg",
+      "/apartments/2-pieces-acacias-paris-17e/photo-3.jpg",
+      "/apartments/2-pieces-acacias-paris-17e/photo-4.jpg",
+      "/apartments/2-pieces-acacias-paris-17e/photo-5.jpg",
+      "/apartments/2-pieces-acacias-paris-17e/photo-6.jpg",
+      "/apartments/2-pieces-acacias-paris-17e/photo-7.jpg",
+      "/apartments/2-pieces-acacias-paris-17e/photo-8.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Ternes",
+        "distance": "5 min",
+        "lines": [
+          "2"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Charles de Gaulle — Étoile",
+        "distance": "5 min",
+        "lines": [
+          "1",
+          "2",
+          "6"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Monoprix",
+        "distance": "1 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Pierre Demours",
+        "distance": "4 min"
+      }
+    ]
   }
 ]
