@@ -2672,5 +2672,76 @@
         "distance": "5 min"
       }
     ]
+  },
+  {
+    "slug": "2-pieces-cardinet-1-paris-17e",
+    "title": "2 Pièces Cardinet 1",
+    "address": "Rue de Tocqueville, Paris 17e",
+    "district": "Paris 17e",
+    "surface": 52,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "3e étage",
+    "status": "À louer",
+    "description": "2 pièces d’une surface d’environ 52 m2, en très état\nAu 3eme étage avec ascenseur sur cour d’un\nimmeuble ancien. Un séjour avec canapé 4 places,\nune table basse et un Tv écran plat.\nUne cuisine séparée toute équipée et aménagée avec\ntable dinatoire. Équipement : four mixte, plaque de\ncuisson induction, réfrigérateur, machine à café\nNespresso, Machine à laver.\nUne chambre avec un lit queen size (160*200cm)\net du rangement. Salle d’eau avec douche. WC\nséparés. Chauffage et eau chaude individuels\nélectriques.",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Bouilloire",
+      "Chauffage collectif",
+      "Cuisine équipée",
+      "Digicode",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Four",
+      "Gardien",
+      "Interphone",
+      "Lave-linge",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Wifi"
+    ],
+    "photos": "2-pieces-cardinet-1-paris-17e",
+    "images": [],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Wagram",
+        "distance": "7 min",
+        "lines": [
+          "3"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Malesherbes",
+        "distance": "8 min",
+        "lines": [
+          "3"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Franprix",
+        "distance": "4 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Alexis-Clerel de Tocqueville",
+        "distance": "3 min"
+      }
+    ]
   }
 ]
