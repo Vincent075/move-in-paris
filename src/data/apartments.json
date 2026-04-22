@@ -2909,5 +2909,91 @@
         "distance": "2 min"
       }
     ]
+  },
+  {
+    "slug": "2-pieces-wagram-paris-17e",
+    "title": "2 Pièces Wagram",
+    "address": "Rue Verniquet, Paris 17e",
+    "district": "Paris 17e",
+    "surface": 44,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "8e étage",
+    "status": "À louer",
+    "description": "2 pièces d’une surface d’environ 44 m2, en bon état\nAu 8eme étage avec ascenseur d’un immeuble ancien\nUn séjour avec canapé, une table basse et un Tv\nécran plat.\nUn mange debout avec chaises\nUne cuisine toute équipée et aménagée\nÉquipement : lave-vaisselle, four micro-onde, plaque,\nréfrigérateur, lave-linge.\nUne chambre avec un lit double une salle de bain\navec baignoire et WC séparé.\nTerrasse Vue Tour Eiffel\nChauffage individuelle.",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Baignoire",
+      "Bouilloire",
+      "Chauffage collectif",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Gardien",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Terrasse",
+      "Toaster",
+      "Toilettes séparées",
+      "Volets roulants",
+      "Wifi"
+    ],
+    "photos": "2-pieces-wagram-paris-17e",
+    "images": [
+      "/apartments/2-pieces-wagram-paris-17e/photo-1.jpg",
+      "/apartments/2-pieces-wagram-paris-17e/photo-2.jpg",
+      "/apartments/2-pieces-wagram-paris-17e/photo-3.jpg",
+      "/apartments/2-pieces-wagram-paris-17e/photo-4.jpg",
+      "/apartments/2-pieces-wagram-paris-17e/photo-5.jpg",
+      "/apartments/2-pieces-wagram-paris-17e/photo-6.jpg",
+      "/apartments/2-pieces-wagram-paris-17e/photo-7.jpg",
+      "/apartments/2-pieces-wagram-paris-17e/photo-8.jpg",
+      "/apartments/2-pieces-wagram-paris-17e/photo-9.jpg",
+      "/apartments/2-pieces-wagram-paris-17e/photo-10.jpg",
+      "/apartments/2-pieces-wagram-paris-17e/photo-11.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Pereire",
+        "distance": "5 min",
+        "lines": [
+          "3"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Wagram",
+        "distance": "6 min",
+        "lines": [
+          "3"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Naturalia",
+        "distance": "4 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Jardin André-Ulmann",
+        "distance": "3 min"
+      }
+    ]
   }
 ]
