@@ -3253,5 +3253,96 @@
       }
     ],
     "hasElevator": true
+  },
+  {
+    "slug": "2-pieces-faubourg-saint-martin-paris-10e",
+    "title": "2 Pièces Faubourg Saint Martin",
+    "address": "Rue de Paradis, Paris 10e",
+    "district": "Paris 10e",
+    "surface": 49,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "5e étage",
+    "status": "À louer",
+    "description": "2 pièce d’une surface d’ environ 49 m2, en bon état\nAu 5eme étage avec ascenseur d’un immeuble ancien\nUn séjour avec canapé , une table basse et un Tv\nécran plat.\nUne table à manger avec table et chaises.\nUne cuisine toute équipée et aménagée\nÉquipement : lave-vaisselle, four micro-onde, plaque ,\nréfrigérateur, lave-linge…\nUne chambre avec un lit double et du rangement.\nSalle d’eau avec douche et WC .\nChauffage individuel Gaz.",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Bouilloire",
+      "Chauffage électrique individuel",
+      "Cuisine équipée",
+      "Digicode",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Gardien",
+      "Interphone",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Wifi"
+    ],
+    "photos": "2-pieces-faubourg-saint-martin-paris-10e",
+    "images": [
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-1.jpg",
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-2.jpg",
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-3.jpg",
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-4.jpg",
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-5.jpg",
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-6.jpg",
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-7.jpg",
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-8.jpg",
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-9.jpg",
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-10.jpg",
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-11.jpg",
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-12.jpg",
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-13.jpg",
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-14.jpg",
+      "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-15.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Château d'Eau",
+        "distance": "3 min",
+        "lines": [
+          "4"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Gare de l'Est",
+        "distance": "4 min",
+        "lines": [
+          "4",
+          "5",
+          "7"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Monoprix",
+        "distance": "1 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Alban Satragne",
+        "distance": "1 min"
+      }
+    ]
   }
 ]
