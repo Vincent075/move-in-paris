@@ -3210,7 +3210,20 @@
       "Réfrigérateur"
     ],
     "photos": "2-pieces-faubourg-montmartre-paris-9e",
-    "images": [],
+    "images": [
+      "/apartments/2-pieces-faubourg-montmartre-paris-9e/01.jpg",
+      "/apartments/2-pieces-faubourg-montmartre-paris-9e/02.jpg",
+      "/apartments/2-pieces-faubourg-montmartre-paris-9e/03.jpg",
+      "/apartments/2-pieces-faubourg-montmartre-paris-9e/04.jpg",
+      "/apartments/2-pieces-faubourg-montmartre-paris-9e/05.jpg",
+      "/apartments/2-pieces-faubourg-montmartre-paris-9e/06.jpg",
+      "/apartments/2-pieces-faubourg-montmartre-paris-9e/07.jpg",
+      "/apartments/2-pieces-faubourg-montmartre-paris-9e/08.jpg",
+      "/apartments/2-pieces-faubourg-montmartre-paris-9e/09.jpg",
+      "/apartments/2-pieces-faubourg-montmartre-paris-9e/10.jpg",
+      "/apartments/2-pieces-faubourg-montmartre-paris-9e/11.jpg",
+      "/apartments/2-pieces-faubourg-montmartre-paris-9e/12.jpg"
+    ],
     "nearby": [
       {
         "type": "Métro",
@@ -3238,6 +3251,7 @@
         "name": "Square Alex Biscarre",
         "distance": "4 min"
       }
-    ]
+    ],
+    "hasElevator": true
   }
 ]
