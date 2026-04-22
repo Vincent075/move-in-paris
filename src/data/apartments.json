@@ -3964,5 +3964,91 @@
         "distance": "3 min"
       }
     ]
+  },
+  {
+    "slug": "2-pieces-montorgeuil-paris-1er",
+    "title": "2 Pièces Montorgeuil",
+    "address": "Rue Montorgueil, Paris 1er",
+    "district": "Paris 1er",
+    "surface": 48,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "3e étage",
+    "status": "À louer",
+    "description": "2 pièces de standing entièrement meublé et équipé d'une surface d'environ 48 m².\n \nAu 3ème étage sans ascenseur d'une immeuble ancien Décoration moderne et contemporaine\n \nSalon avec canapé 2 places convertible et TV écran plasma. Cuisine ouverte entièrement équipée.\n \nChambre avec lit double et rangements.\nSalle d’eau avec douche. WC séparés.\n \nAppartement donnant sur rue calme.\n \nChauffage et eau chaude individuel électrique\nNombreux commerces au pied de l'immeuble.",
+    "features": [
+      "Aspirateur",
+      "Bouilloire",
+      "Cafetière",
+      "Chauffage individuel gaz",
+      "Cuisine équipée",
+      "Digicode",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Interphone",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Toilettes séparées",
+      "Wifi"
+    ],
+    "photos": "2-pieces-montorgeuil-paris-1er",
+    "images": [
+      "/apartments/2-pieces-montorgeuil-paris-1er/photo-1.jpg",
+      "/apartments/2-pieces-montorgeuil-paris-1er/photo-2.jpg",
+      "/apartments/2-pieces-montorgeuil-paris-1er/photo-3.jpg",
+      "/apartments/2-pieces-montorgeuil-paris-1er/photo-4.jpg",
+      "/apartments/2-pieces-montorgeuil-paris-1er/photo-5.jpg",
+      "/apartments/2-pieces-montorgeuil-paris-1er/photo-6.jpg",
+      "/apartments/2-pieces-montorgeuil-paris-1er/photo-7.jpg",
+      "/apartments/2-pieces-montorgeuil-paris-1er/photo-8.jpg",
+      "/apartments/2-pieces-montorgeuil-paris-1er/photo-9.jpg",
+      "/apartments/2-pieces-montorgeuil-paris-1er/photo-10.jpg",
+      "/apartments/2-pieces-montorgeuil-paris-1er/photo-11.jpg",
+      "/apartments/2-pieces-montorgeuil-paris-1er/photo-12.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Les Halles",
+        "distance": "2 min",
+        "lines": [
+          "4"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Étienne Marcel",
+        "distance": "2 min",
+        "lines": [
+          "4"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Naturalia",
+        "distance": "1 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Jardin Nelson Mandela",
+        "distance": "3 min"
+      }
+    ]
   }
 ]
