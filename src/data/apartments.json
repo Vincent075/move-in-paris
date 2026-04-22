@@ -4050,5 +4050,93 @@
         "distance": "3 min"
       }
     ]
+  },
+  {
+    "slug": "2-pieces-rue-de-la-pompe-paris-16e",
+    "title": "2 Pièces Rue de la Pompe",
+    "address": "Rue de la Pompe, Paris 16e",
+    "district": "Paris 16e",
+    "surface": 52,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "1er étage",
+    "status": "À louer",
+    "description": "2 pièces d’une surface d’environ 52 m2, en bon état\nAu 1er étage avec ascenseur d’un immeuble ancien\nUn séjour avec canapé, une table basse et un Tv\nécran plat.\nUne table à manger et chaises.\nUne cuisine toute équipée et aménagée\nÉquipement : lave-vaisselle, four micro-onde, plaque,\nréfrigérateur, lave-linge séchant…\nUne chambre avec un lit double et du rangement.\nSalle d’eau avec douche et WC séparé.\nChauffage individuel.",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Bouilloire",
+      "Cafetière",
+      "Chauffage électrique individuel",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Interphone",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Télévision 4K",
+      "Toaster",
+      "Toilettes séparées",
+      "Wifi",
+      "Digicode",
+      "Parquet"
+    ],
+    "photos": "2-pieces-rue-de-la-pompe-paris-16e",
+    "images": [
+      "/apartments/2-pieces-rue-de-la-pompe-paris-16e/photo-1.jpg",
+      "/apartments/2-pieces-rue-de-la-pompe-paris-16e/photo-2.jpg",
+      "/apartments/2-pieces-rue-de-la-pompe-paris-16e/photo-3.jpg",
+      "/apartments/2-pieces-rue-de-la-pompe-paris-16e/photo-4.jpg",
+      "/apartments/2-pieces-rue-de-la-pompe-paris-16e/photo-5.jpg",
+      "/apartments/2-pieces-rue-de-la-pompe-paris-16e/photo-6.jpg",
+      "/apartments/2-pieces-rue-de-la-pompe-paris-16e/photo-7.jpg",
+      "/apartments/2-pieces-rue-de-la-pompe-paris-16e/photo-8.jpg",
+      "/apartments/2-pieces-rue-de-la-pompe-paris-16e/photo-9.jpg",
+      "/apartments/2-pieces-rue-de-la-pompe-paris-16e/photo-10.jpg",
+      "/apartments/2-pieces-rue-de-la-pompe-paris-16e/photo-11.jpg",
+      "/apartments/2-pieces-rue-de-la-pompe-paris-16e/photo-12.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Victor Hugo",
+        "distance": "4 min",
+        "lines": [
+          "2"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Porte Dauphine",
+        "distance": "6 min",
+        "lines": [
+          "2"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Monoprix",
+        "distance": "3 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Place du Maréchal de Lattre de Tassigny",
+        "distance": "7 min"
+      }
+    ]
   }
 ]
