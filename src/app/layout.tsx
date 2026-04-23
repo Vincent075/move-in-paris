@@ -32,11 +32,20 @@ export async function generateMetadata(): Promise<Metadata> {
       alternateLocale: [ogLocaleAlternate],
       title: messages.meta.title,
       description: messages.meta.description,
+      images: [
+        {
+          url: "/apartments/hero-salon.jpg",
+          width: 1200,
+          height: 630,
+          alt: "Move in Paris — location meublée corporate à Paris",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: messages.meta.title,
       description: messages.meta.description,
+      images: ["/apartments/hero-salon.jpg"],
     },
   };
 }
