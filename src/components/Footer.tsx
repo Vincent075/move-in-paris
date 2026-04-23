@@ -31,7 +31,7 @@ export default function Footer() {
                 className="h-40 w-auto"
               />
             </LogoLink>
-            <p className="text-blanc/40 text-sm font-light leading-relaxed max-w-xs">
+            <p className="text-blanc/70 text-sm font-light leading-relaxed max-w-xs">
               {t("footer.tagline")}
             </p>
           </div>

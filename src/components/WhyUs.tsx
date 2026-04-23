@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 import PartnerLogos from "./PartnerLogos";
@@ -116,13 +117,16 @@ export default function WhyUs() {
               transition={{ duration: 0.8 }}
               className="relative"
             >
-              <div
-                className="aspect-[4/5] bg-cover bg-center"
-                style={{
-                  backgroundImage:
-                    "url('/apartments/salon-haussmann.jpg')",
-                }}
-              />
+              <div className="relative aspect-[4/5] overflow-hidden">
+                <Image
+                  src="/apartments/salon-haussmann.jpg"
+                  alt=""
+                  fill
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                  className="object-cover object-center"
+                  aria-hidden="true"
+                />
+              </div>
               <div className="absolute -bottom-6 -right-6 w-48 h-48 border-2 border-gold" />
             </motion.div>
 

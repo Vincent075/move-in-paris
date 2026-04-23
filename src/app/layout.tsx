@@ -17,12 +17,25 @@ const inter = Inter({
   weight: ["300", "400", "500", "600"],
 });
 
+function resolveMetadataBase(): URL {
+  // Pendant la migration : DNS move-in-paris.com pointe encore vers OVH/WordPress.
+  // Tant que la bascule DNS n'est pas faite, on utilise le domaine Vercel stable
+  // pour que og:image soit fetchable par les plateformes sociales (Facebook,
+  // LinkedIn, WhatsApp, etc.). Dès que DNS switche, la variable d'env
+  // NEXT_PUBLIC_PROD_URL peut être basculée vers move-in-paris.com.
+  const override = process.env.NEXT_PUBLIC_PROD_URL;
+  if (override) return new URL(override);
+  const vercelProd = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  if (vercelProd) return new URL(`https://${vercelProd}`);
+  return new URL("https://www.move-in-paris.com");
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const { locale, messages } = await getMessages();
   const ogLocale = locale === "en" ? "en_US" : "fr_FR";
   const ogLocaleAlternate = locale === "en" ? "fr_FR" : "en_US";
   return {
-    metadataBase: new URL("https://www.move-in-paris.com"),
+    metadataBase: resolveMetadataBase(),
     title: messages.meta.title,
     description: messages.meta.description,
     openGraph: {

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { useT } from "@/i18n/LocaleProvider";
 
@@ -17,9 +18,14 @@ export default function PageHero({ title, subtitle, breadcrumb, image }: PageHer
     return (
       <section className="relative h-[65vh] lg:h-[75vh] overflow-hidden">
         {/* Background image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url('${image}')` }}
+        <Image
+          src={image}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+          aria-hidden="true"
         />
         {/* Gradient overlay : sombre en haut pour le header, sombre en bas pour le texte */}
         <div className="absolute inset-0 bg-gradient-to-b from-noir-deep/70 via-noir-deep/30 to-noir-deep/85" />

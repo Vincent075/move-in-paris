@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import apartmentsDataRaw from "@/data/apartments.json";
 import type { ApartmentRecord } from "@/data/apartment-types";
 import { usePickField, useT } from "@/i18n/LocaleProvider";
@@ -135,10 +136,15 @@ export default function ApartmentsList() {
               {/* Image */}
               <Link href={`/appartement/${apt.slug}`}>
                 <div className="relative aspect-[4/3] overflow-hidden">
-                  <div
-                    className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-700"
-                    style={{ backgroundImage: `url('${apt.images[0]}')` }}
-                  />
+                  {apt.images[0] && (
+                    <Image
+                      src={apt.images[0]}
+                      alt={pick<string>(apt as unknown as Record<string, unknown>, "title")}
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                      className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                    />
+                  )}
                   <div className="absolute bottom-4 right-4 bg-noir-deep/60 text-blanc text-xs px-2 py-1">
                     {apt.images.length} photos
                   </div>

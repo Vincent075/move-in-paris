@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import EstimationForm from "@/app/estimation/EstimationForm";
 import PartnerLogos from "@/components/PartnerLogos";
 import GoogleReviews from "@/components/GoogleReviews";
@@ -191,9 +192,14 @@ export default function LandingContent() {
       <section className="relative overflow-x-hidden bg-noir-deep text-blanc">
         {/* Backdrop — filtre adouci pour garder la photo lisible */}
         <div className="absolute inset-0">
-          <div
-            className="absolute inset-0 bg-cover bg-center opacity-85"
-            style={{ backgroundImage: "url('/apartments/hero-salon.jpg')" }}
+          <Image
+            src="/apartments/hero-salon.jpg"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center opacity-85"
+            aria-hidden="true"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-noir-deep/35 via-noir-deep/30 to-noir-deep/85" />
         </div>

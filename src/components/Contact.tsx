@@ -143,25 +143,25 @@ export default function Contact() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-xs text-gris uppercase tracking-wider mb-2">{t("contact.firstName")}</label>
-                    <input name="prenom" type="text" required className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors" />
+                    <label htmlFor="contact-prenom" className="block text-xs text-gris uppercase tracking-wider mb-2">{t("contact.firstName")}</label>
+                    <input id="contact-prenom" name="prenom" type="text" required autoComplete="given-name" className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors" />
                   </div>
                   <div>
-                    <label className="block text-xs text-gris uppercase tracking-wider mb-2">{t("contact.lastName")}</label>
-                    <input name="nom" type="text" required className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors" />
+                    <label htmlFor="contact-nom" className="block text-xs text-gris uppercase tracking-wider mb-2">{t("contact.lastName")}</label>
+                    <input id="contact-nom" name="nom" type="text" required autoComplete="family-name" className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors" />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs text-gris uppercase tracking-wider mb-2">{t("contact.email")}</label>
-                  <input name="email" type="email" required className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors" />
+                  <label htmlFor="contact-email" className="block text-xs text-gris uppercase tracking-wider mb-2">{t("contact.email")}</label>
+                  <input id="contact-email" name="email" type="email" required autoComplete="email" className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors" />
                 </div>
                 <div>
-                  <label className="block text-xs text-gris uppercase tracking-wider mb-2">{t("contact.phone")}</label>
-                  <input name="telephone" type="tel" className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors" />
+                  <label htmlFor="contact-telephone" className="block text-xs text-gris uppercase tracking-wider mb-2">{t("contact.phone")}</label>
+                  <input id="contact-telephone" name="telephone" type="tel" autoComplete="tel" className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors" />
                 </div>
                 <div>
-                  <label className="block text-xs text-gris uppercase tracking-wider mb-2">{t("contact.profile")}</label>
-                  <select name="profil" className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors">
+                  <label htmlFor="contact-profil" className="block text-xs text-gris uppercase tracking-wider mb-2">{t("contact.profile")}</label>
+                  <select id="contact-profil" name="profil" className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors">
                     <option value="">{t("contact.selectPrompt")}</option>
                     <option value="entreprise">{t("contact.profileCompany")}</option>
                     <option value="expatrie">{t("contact.profileExpat")}</option>
@@ -170,8 +170,8 @@ export default function Contact() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs text-gris uppercase tracking-wider mb-2">{t("contact.message")}</label>
-                  <textarea name="message" rows={4} required className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors resize-none" />
+                  <label htmlFor="contact-message" className="block text-xs text-gris uppercase tracking-wider mb-2">{t("contact.message")}</label>
+                  <textarea id="contact-message" name="message" rows={4} required className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors resize-none" />
                 </div>
                 <button type="submit" disabled={loading}
                   className={`w-full py-4 font-medium tracking-wider uppercase text-sm transition-all duration-300 ${loading ? "bg-gris text-blanc" : "bg-gold text-noir-deep hover:bg-gold-light"}`}>

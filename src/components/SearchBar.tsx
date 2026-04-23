@@ -49,8 +49,9 @@ export default function SearchBar() {
         <div className="bg-white shadow-2xl shadow-noir-deep/15 p-2.5 flex flex-col md:flex-row items-stretch border border-gris-clair/30">
           {/* Localisation */}
           <div className="flex-1 px-5 py-3.5 border-b md:border-b-0 md:border-r border-gris-clair/20">
-            <div className="text-[10px] text-gold uppercase tracking-[0.15em] font-semibold mb-1.5">{t("searchBar.location")}</div>
+            <label htmlFor="search-loc" className="block text-[10px] text-gold-dark uppercase tracking-[0.15em] font-semibold mb-1.5">{t("searchBar.location")}</label>
             <select
+              id="search-loc"
               value={loc}
               onChange={(e) => setLoc(e.target.value)}
               className="w-full bg-transparent text-noir text-sm font-medium focus:outline-none cursor-pointer border-0 p-0"
@@ -61,8 +62,9 @@ export default function SearchBar() {
 
           {/* Type */}
           <div className="flex-1 px-5 py-3.5 border-b md:border-b-0 md:border-r border-gris-clair/20">
-            <div className="text-[10px] text-gold uppercase tracking-[0.15em] font-semibold mb-1.5">{t("searchBar.type")}</div>
+            <label htmlFor="search-type" className="block text-[10px] text-gold-dark uppercase tracking-[0.15em] font-semibold mb-1.5">{t("searchBar.type")}</label>
             <select
+              id="search-type"
               value={type}
               onChange={(e) => setType(e.target.value)}
               className="w-full bg-transparent text-noir text-sm font-medium focus:outline-none cursor-pointer border-0 p-0"
@@ -73,8 +75,9 @@ export default function SearchBar() {
 
           {/* Surface min */}
           <div className="flex-1 px-5 py-3.5 border-b md:border-b-0 md:border-r border-gris-clair/20">
-            <div className="text-[10px] text-gold uppercase tracking-[0.15em] font-semibold mb-1.5">{t("searchBar.surfaceMin")}</div>
+            <label htmlFor="search-surface-min" className="block text-[10px] text-gold-dark uppercase tracking-[0.15em] font-semibold mb-1.5">{t("searchBar.surfaceMin")}</label>
             <input
+              id="search-surface-min"
               type="text"
               value={surfaceMin}
               onChange={(e) => setSurfaceMin(e.target.value)}
@@ -85,8 +88,9 @@ export default function SearchBar() {
 
           {/* Surface max */}
           <div className="flex-1 px-5 py-3.5 border-b md:border-b-0 md:border-r border-gris-clair/20">
-            <div className="text-[10px] text-gold uppercase tracking-[0.15em] font-semibold mb-1.5">{t("searchBar.surfaceMax")}</div>
+            <label htmlFor="search-surface-max" className="block text-[10px] text-gold-dark uppercase tracking-[0.15em] font-semibold mb-1.5">{t("searchBar.surfaceMax")}</label>
             <input
+              id="search-surface-max"
               type="text"
               value={surfaceMax}
               onChange={(e) => setSurfaceMax(e.target.value)}

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { usePickField, useT } from "@/i18n/LocaleProvider";
 import apartmentsData from "@/data/apartments.json";
 
@@ -98,10 +99,15 @@ export default function LatestApartments() {
             >
               {/* Image */}
               <div className="relative aspect-[4/3] overflow-hidden mb-4">
-                <div
-                  className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-700"
-                  style={{ backgroundImage: `url('${apt.images[0] ?? ""}')` }}
-                />
+                {apt.images[0] && (
+                  <Image
+                    src={apt.images[0]}
+                    alt={pick<string>(apt as unknown as Record<string, unknown>, "title")}
+                    fill
+                    sizes="(min-width: 768px) 320px, 280px"
+                    className="object-cover object-center group-hover:scale-110 transition-transform duration-700"
+                  />
+                )}
                 <div className="absolute inset-0 bg-noir-deep/0 group-hover:bg-noir-deep/20 transition-all duration-500" />
               </div>
 
