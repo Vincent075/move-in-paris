@@ -82,10 +82,13 @@ export function proxy(request: NextRequest) {
 
 // Only run the proxy on paths that could be old WP URLs. Everything
 // else (static assets, API routes, the new site's own pages) skips
-// straight through for performance.
+// straight through for performance. With `skipTrailingSlashRedirect:
+// true` in next.config.ts, Next.js does NOT auto-strip trailing
+// slashes before reaching the matcher, so we list both variants
+// explicitly (or use wildcards) to be safe.
 export const config = {
   matcher: [
-    // Old static pages
+    // Old static pages (both with and without trailing slash)
     "/our-apartments",
     "/our-apartments/",
     "/about-move-in-paris",
@@ -110,14 +113,30 @@ export const config = {
     "/comments/feed",
     "/comments/feed/",
     "/wp-login.php",
-    // Old patterns
+    // Old patterns — both the bare prefix and deeper paths (with/without trailing slash)
+    "/property",
+    "/property/",
     "/property/:path*",
+    "/properties",
+    "/properties/",
     "/properties/:path*",
+    "/property-feature",
+    "/property-feature/",
     "/property-feature/:path*",
+    "/property-city",
+    "/property-city/",
     "/property-city/:path*",
+    "/property-status",
+    "/property-status/",
     "/property-status/:path*",
+    "/property-type",
+    "/property-type/",
     "/property-type/:path*",
+    "/page",
+    "/page/",
     "/page/:path*",
+    "/wp-admin",
+    "/wp-admin/",
     "/wp-admin/:path*",
   ],
 };
