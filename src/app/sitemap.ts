@@ -8,6 +8,7 @@ const apartments = apartmentsDataRaw as ApartmentRecord[];
 const STATIC_ROUTES: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"] }[] = [
   { path: "", priority: 1.0, changeFrequency: "weekly" },
   { path: "/nos-appartements", priority: 0.95, changeFrequency: "daily" },
+  { path: "/gestion-locative-meublee-paris", priority: 0.93, changeFrequency: "monthly" },
   { path: "/location-corporate-paris", priority: 0.92, changeFrequency: "monthly" },
   { path: "/location-meublee-entreprise", priority: 0.92, changeFrequency: "monthly" },
   { path: "/location-meublee-expatrie-paris", priority: 0.92, changeFrequency: "monthly" },
