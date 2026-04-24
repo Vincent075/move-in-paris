@@ -69,9 +69,17 @@ const organizationLd = {
   name: "Move in Paris",
   url: "https://www.move-in-paris.com",
   logo: "https://www.move-in-paris.com/Logo-gold.png",
-  description: "Agence parisienne spécialisée dans la location meublée haut de gamme pour entreprises et expatriés.",
+  description: "Agence parisienne spécialisée dans la location meublée haut de gamme pour entreprises, sociétés et expatriés.",
   areaServed: { "@type": "City", name: "Paris" },
   address: { "@type": "PostalAddress", addressLocality: "Paris", addressCountry: "FR" },
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "4.8",
+    bestRating: "5",
+    worstRating: "1",
+    ratingCount: "61",
+    reviewCount: "61",
+  },
 };
 
 export default async function RootLayout({

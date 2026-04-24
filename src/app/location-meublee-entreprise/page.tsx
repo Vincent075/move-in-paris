@@ -5,12 +5,12 @@ import PageHero from "@/components/PageHero";
 import SEOLanding, { buildFaqLd, type SEOLandingFAQ } from "@/components/SEOLanding";
 
 export const metadata: Metadata = {
-  title: "Location meublée pour entreprise à Paris — Appartements société | Move in Paris",
-  description: "Vous cherchez à louer un appartement meublé à Paris pour votre entreprise ou votre société ? Move in Paris propose une solution clé en main : sélection sur-mesure, bail société, loyer tout inclus, gestion 100 % déléguée.",
+  title: "Location meublée société & entreprise Paris — Bail société | Move in Paris",
+  description: "Location meublée société à Paris : louez un appartement meublé au nom de votre société (SAS, SARL, SCI…) avec bail société, facturation entreprise et gestion 100 % déléguée. Solution clé en main pour entreprises et organisations.",
   alternates: { canonical: "https://www.move-in-paris.com/location-meublee-entreprise" },
   openGraph: {
-    title: "Location meublée pour entreprise à Paris | Move in Paris",
-    description: "Solution clé en main pour louer un appartement meublé à Paris au nom de votre société.",
+    title: "Location meublée société & entreprise à Paris | Move in Paris",
+    description: "Louez un appartement meublé à Paris au nom de votre société : bail société, facture entreprise, gestion clé en main.",
     url: "https://www.move-in-paris.com/location-meublee-entreprise",
   },
 };
@@ -58,14 +58,14 @@ export default function Page() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
         />
         <PageHero
-          title="Location meublée pour entreprise à Paris"
-          subtitle="Louez un ou plusieurs appartements meublés au nom de votre société. Bail simplifié, loyer tout inclus, gestion 100 % déléguée — votre service RH n'a plus rien à faire."
-          breadcrumb="Location entreprise"
+          title="Location meublée société & entreprise à Paris"
+          subtitle="Louez un ou plusieurs appartements meublés au nom de votre société. Bail société simplifié, loyer tout inclus, gestion 100 % déléguée — votre service RH n'a plus rien à faire."
+          breadcrumb="Location société"
           image="/apartments/salon-bibliotheque.jpg"
         />
         <SEOLanding
-          eyebrow="Location appartement société"
-          intro="Louer un appartement meublé à Paris au nom d'une entreprise demande un cadre juridique adapté, des garanties spécifiques et une gestion administrative efficace. Move in Paris propose depuis 2018 une solution dédiée aux personnes morales (SAS, SARL, SA, SCI, organismes internationaux) : un parc d'appartements parisiens haut de gamme, un bail société sécurisé, un loyer 100 % charges comprises facturable en compte de charges, et une gestion opérationnelle entièrement déléguée."
+          eyebrow="Location meublée société"
+          intro="La location meublée société à Paris est notre cœur de métier. Louer un appartement meublé au nom d'une société ou d'une entreprise demande un cadre juridique adapté, des garanties spécifiques et une gestion administrative efficace. Move in Paris propose depuis 2018 une solution dédiée aux personnes morales (SAS, SARL, SA, SCI, associations, organismes internationaux) : un parc d'appartements parisiens haut de gamme, un bail société sécurisé, un loyer 100 % charges comprises facturable au nom de la société, et une gestion opérationnelle entièrement déléguée."
           highlights={[
             { title: "Bail au nom de la société", text: "L'entreprise est juridiquement locataire. Sécurité maximale pour les deux parties, simplicité comptable totale." },
             { title: "Facturation entreprise", text: "Facture mensuelle au nom de la société, déductible IS, intégrable directement en comptabilité." },
@@ -73,7 +73,7 @@ export default function Page() {
           ]}
           sections={[
             {
-              title: "Pourquoi louer un appartement meublé au nom de votre entreprise ?",
+              title: "Pourquoi louer un appartement meublé au nom de votre société ou entreprise ?",
               body: (
                 <>
                   <p>
@@ -97,7 +97,7 @@ export default function Page() {
               ),
             },
             {
-              title: "Cadre juridique du bail société",
+              title: "Cadre juridique de la location meublée société",
               body: (
                 <>
                   <p>
@@ -139,8 +139,8 @@ export default function Page() {
             },
           ]}
           faqs={faqs}
-          ctaTitle="Besoin d'un appartement au nom de votre entreprise ?"
-          ctaText="Décrivez-nous votre besoin (1 ou plusieurs appartements). Notre équipe corporate vous répond sous 24h."
+          ctaTitle="Besoin d'un appartement au nom de votre société ?"
+          ctaText="Décrivez-nous votre besoin de location meublée société (1 ou plusieurs appartements). Notre équipe corporate vous répond sous 24h."
           ctaHref="/contact"
           ctaLabel="Demander un devis société"
           relatedLinks={[
