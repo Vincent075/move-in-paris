@@ -6,8 +6,8 @@ const ICON = new URL("../src/app/icon.png", import.meta.url).pathname;
 const APPLE = new URL("../src/app/apple-icon.png", import.meta.url).pathname;
 const OLD_ICO = new URL("../src/app/favicon.ico", import.meta.url).pathname;
 
-// Monogramme gold sur fond sombre pour lisibilité universelle (clair ET sombre)
-const NOIR_DEEP = { r: 18, g: 18, b: 18 };
+// Monogramme gold sur fond blanc (demande client)
+const BG = { r: 255, g: 255, b: 255 };
 
 async function buildIcon(size, outputPath) {
   // Trim marges -> puis crop top square pour garder SEULEMENT le monogramme
@@ -36,7 +36,7 @@ async function buildIcon(size, outputPath) {
       width: size,
       height: size,
       channels: 4,
-      background: { ...NOIR_DEEP, alpha: 1 },
+      background: { ...BG, alpha: 1 },
     },
   })
     .composite([{ input: logoResized, gravity: "center" }])
