@@ -80,15 +80,40 @@
     "titleLine1": "L'excellence au service",
     "titleLine2": "de votre projet",
     "stats": [
-      { "value": 117000, "suffix": "+", "label": "Nuits d'hébergement" },
-      { "value": 95, "suffix": "%+", "label": "Taux d'occupation" },
-      { "value": 3, "suffix": " mois", "label": "Durée moyenne de séjour" },
-      { "value": 1300, "suffix": "+", "label": "Collaborateurs accueillis" }
+      {
+        "value": 117000,
+        "suffix": "+",
+        "label": "Nuits d'hébergement"
+      },
+      {
+        "value": 95,
+        "suffix": "%+",
+        "label": "Taux d'occupation"
+      },
+      {
+        "value": 3,
+        "suffix": " mois",
+        "label": "Durée moyenne de séjour"
+      },
+      {
+        "value": 1300,
+        "suffix": "+",
+        "label": "Collaborateurs accueillis"
+      }
     ],
     "reasons": [
-      { "title": "Loyers garantis par l'employeur", "text": "Notre clientèle est exclusivement corporate : grandes entreprises, institutions internationales. Les loyers sont garantis par l'employeur — zéro impayé." },
-      { "title": "Rentabilité supérieure", "text": "En moyenne +30% de revenus supplémentaires par rapport à une location classique. Jusqu'à 55€/m² en bail corporate." },
-      { "title": "Interlocuteur unique et responsable", "text": "Move in Paris est votre seul contact et assume l'entière responsabilité de l'état de votre bien. Assistance technique 7j/7." }
+      {
+        "title": "Loyers garantis par l'employeur",
+        "text": "Notre clientèle est exclusivement corporate : grandes entreprises, institutions internationales. Les loyers sont garantis par l'employeur — zéro impayé."
+      },
+      {
+        "title": "Rentabilité supérieure",
+        "text": "En moyenne +30% de revenus supplémentaires par rapport à une location classique. Jusqu'à 55€/m² en bail corporate."
+      },
+      {
+        "title": "Interlocuteur unique et responsable",
+        "text": "Move in Paris est votre seul contact et assume l'entière responsabilité de l'état de votre bien. Assistance technique 7j/7."
+      }
     ]
   },
   "testimonials": {
@@ -215,12 +240,30 @@
     "engagementsEyebrow": "Nos engagements",
     "engagementsTitle": "6 raisons de nous faire confiance",
     "engagements": [
-      { "title": "Appartements de qualité", "desc": "Nous veillons au maintien d'un haut niveau de qualité : chaque appartement est régulièrement contrôlé et conservé dans l'état que vous nous avez confié." },
-      { "title": "Interlocuteur unique", "desc": "Move in Paris est votre seul contact et assume l'entière responsabilité de l'état de votre bien. Un seul responsable, zéro complexité." },
-      { "title": "Assistance technique 7j/7", "desc": "Nos locataires bénéficient d'une assistance technique 7j/7. Chaque problème est traité immédiatement, votre bien est préservé en permanence." },
-      { "title": "Ménage inclus", "desc": "Un ménage hebdomadaire est assuré par notre personnel qualifié et salarié. Votre appartement est entretenu en continu, sans aucun frais pour vous." },
-      { "title": "Clientèle corporate premium", "desc": "Grandes entreprises, institutions internationales et leurs collaborateurs expatriés. Les loyers sont garantis par l'employeur — zéro impayé." },
-      { "title": "Gestion opérationnelle complète", "desc": "Suivi technique, interventions, coordination des réparations. Vous n'avez rien à gérer, nous nous occupons de tout." }
+      {
+        "title": "Appartements de qualité",
+        "desc": "Nous veillons au maintien d'un haut niveau de qualité : chaque appartement est régulièrement contrôlé et conservé dans l'état que vous nous avez confié."
+      },
+      {
+        "title": "Interlocuteur unique",
+        "desc": "Move in Paris est votre seul contact et assume l'entière responsabilité de l'état de votre bien. Un seul responsable, zéro complexité."
+      },
+      {
+        "title": "Assistance technique 7j/7",
+        "desc": "Nos locataires bénéficient d'une assistance technique 7j/7. Chaque problème est traité immédiatement, votre bien est préservé en permanence."
+      },
+      {
+        "title": "Ménage inclus",
+        "desc": "Un ménage hebdomadaire est assuré par notre personnel qualifié et salarié. Votre appartement est entretenu en continu, sans aucun frais pour vous."
+      },
+      {
+        "title": "Clientèle corporate premium",
+        "desc": "Grandes entreprises, institutions internationales et leurs collaborateurs expatriés. Les loyers sont garantis par l'employeur — zéro impayé."
+      },
+      {
+        "title": "Gestion opérationnelle complète",
+        "desc": "Suivi technique, interventions, coordination des réparations. Vous n'avez rien à gérer, nous nous occupons de tout."
+      }
     ],
     "statsLabels": [
       "Nuits d'hébergement",
@@ -260,22 +303,58 @@
     "avantagesEyebrow": "Vos avantages",
     "avantagesTitle": "Pourquoi nous confier votre bien",
     "avantages": [
-      { "title": "Service 100 % gratuit", "desc": "Aucun frais de mise en location, aucun honoraire de gestion, aucune commission sur votre loyer. Vous percevez 100 % du loyer convenu au contrat, sans la moindre déduction. Nous nous rémunérons exclusivement auprès de nos clients corporate." },
-      { "title": "Loyer tout inclus", "desc": "Le loyer que vous percevez chaque mois est charges comprises : électricité, gaz, internet + TV + Canal+, charges d'immeuble, entretien chaudière, taxe d'enlèvement des ordures. Aucune régularisation, aucune facture surprise. Tout est pris en charge dans notre modèle." },
-      { "title": "Clientèle corporate premium", "desc": "Grandes entreprises, institutions internationales et collaborateurs expatriés. Chaque dossier est vérifié : solvabilité, employeur, garanties. Loyers garantis par l'employeur — zéro impayé." },
-      { "title": "Rentabilité supérieure", "desc": "En moyenne +30 % de revenus supplémentaires vs location classique. Jusqu'à 55 €/m² en bail corporate, avec un régime fiscal avantageux (LMNP)." },
-      { "title": "Gestion Opérationnelle", "desc": "État des lieux, entretien, ménage, petits travaux, relation locataire, comptabilité : nous gérons absolument tout sans aucune implication de votre part." },
-      { "title": "Taux d'occupation optimal", "desc": "Grâce à notre réseau d'entreprises et d'agences de relocation, nous maintenons un taux d'occupation supérieur à 95 % sur l'ensemble de notre parc." },
-      { "title": "Bail sécurisé", "desc": "Baux Code Civil (articles 1714-1762), assurance multirisques habitation incluse, diagnostics à jour. Votre investissement est juridiquement protégé à chaque instant." },
-      { "title": "Reporting trimestriel", "desc": "Chaque trimestre, recevez un reporting détaillé : revenus, charges, interventions. Visibilité totale sur la performance de votre bien." }
+      {
+        "title": "Service 100 % gratuit",
+        "desc": "Aucun frais de mise en location, aucun honoraire de gestion, aucune commission sur votre loyer. Vous percevez 100 % du loyer convenu au contrat, sans la moindre déduction. Nous nous rémunérons exclusivement auprès de nos clients corporate."
+      },
+      {
+        "title": "Loyer tout inclus",
+        "desc": "Le loyer que vous percevez chaque mois est charges comprises : électricité, gaz, internet + TV + Canal+, charges d'immeuble, entretien chaudière, taxe d'enlèvement des ordures. Aucune régularisation, aucune facture surprise. Tout est pris en charge dans notre modèle."
+      },
+      {
+        "title": "Clientèle corporate premium",
+        "desc": "Grandes entreprises, institutions internationales et collaborateurs expatriés. Chaque dossier est vérifié : solvabilité, employeur, garanties. Loyers garantis par l'employeur — zéro impayé."
+      },
+      {
+        "title": "Rentabilité supérieure",
+        "desc": "En moyenne +30 % de revenus supplémentaires vs location classique. Jusqu'à 55 €/m² en bail corporate, avec un régime fiscal avantageux (LMNP)."
+      },
+      {
+        "title": "Gestion Opérationnelle",
+        "desc": "État des lieux, entretien, ménage, petits travaux, relation locataire, comptabilité : nous gérons absolument tout sans aucune implication de votre part."
+      },
+      {
+        "title": "Taux d'occupation optimal",
+        "desc": "Grâce à notre réseau d'entreprises et d'agences de relocation, nous maintenons un taux d'occupation supérieur à 95 % sur l'ensemble de notre parc."
+      },
+      {
+        "title": "Bail sécurisé",
+        "desc": "Baux Code Civil (articles 1714-1762), assurance multirisques habitation incluse, diagnostics à jour. Votre investissement est juridiquement protégé à chaque instant."
+      },
+      {
+        "title": "Reporting trimestriel",
+        "desc": "Chaque trimestre, recevez un reporting détaillé : revenus, charges, interventions. Visibilité totale sur la performance de votre bien."
+      }
     ],
     "processEyebrow": "Comment ça marche",
     "processTitle": "Un processus simple",
     "process": [
-      { "title": "Estimation gratuite", "desc": "Nous visitons votre bien et vous proposons une estimation de loyer basée sur le marché." },
-      { "title": "Mise en valeur", "desc": "Photos professionnelles, annonce optimisée, diffusion auprès de notre réseau corporate." },
-      { "title": "Sélection locataire", "desc": "Vérification complète de chaque candidature. Vous validez le profil retenu." },
-      { "title": "Gestion complète", "desc": "Bail, état des lieux, ménage, maintenance, comptabilité. Vous n'avez rien à faire." }
+      {
+        "title": "Estimation gratuite",
+        "desc": "Nous visitons votre bien et vous proposons une estimation de loyer basée sur le marché."
+      },
+      {
+        "title": "Mise en valeur",
+        "desc": "Photos professionnelles, annonce optimisée, diffusion auprès de notre réseau corporate."
+      },
+      {
+        "title": "Sélection locataire",
+        "desc": "Vérification complète de chaque candidature. Vous validez le profil retenu."
+      },
+      {
+        "title": "Gestion complète",
+        "desc": "Bail, état des lieux, ménage, maintenance, comptabilité. Vous n'avez rien à faire."
+      }
     ],
     "ctaTitle": "Prêt à nous confier votre bien ?",
     "ctaSubtitle": "Remplissez notre formulaire et nous vous recontactons sous 24h pour une estimation gratuite.",
@@ -444,46 +523,91 @@
     "cguPreambuleP1": "Les présentes Conditions Générales d'Utilisation (ci-après « CGU ») ont pour objet de définir les modalités et conditions dans lesquelles Move in Paris, société éditrice du site www.move-in-paris.com, met à disposition ses services en ligne, ainsi que les droits et obligations de toute personne accédant au site (ci-après « l'Utilisateur »).",
     "cguPreambuleP2": "L'accès et l'utilisation du site impliquent l'acceptation pleine et entière des présentes CGU. Move in Paris se réserve le droit de modifier les présentes CGU à tout moment. Les conditions applicables sont celles en vigueur au moment de la navigation sur le site.",
     "cguSections": [
-      { "title": "Article 1 — Objet", "paragraphs": [
-        "Le site www.move-in-paris.com est un site vitrine et de mise en relation ayant pour objet de présenter les services de l'agence Move in Paris, spécialisée dans la location d'appartements meublés à Paris à destination des entreprises, des cadres en mobilité professionnelle et des expatriés.",
-        "Le site permet notamment aux utilisateurs de consulter les appartements disponibles, de soumettre des demandes de renseignements via les formulaires de contact, et de prendre connaissance des services proposés par l'agence."
-      ]},
-      { "title": "Article 2 — Accès au site", "subsections": [
-        { "title": "2.1 Conditions d'accès", "text": "Le site www.move-in-paris.com est accessible gratuitement à tout utilisateur disposant d'un accès à Internet. Tous les frais supportés par l'Utilisateur pour accéder au service (matériel informatique, logiciels, connexion Internet, etc.) sont à sa charge exclusive." },
-        { "title": "2.2 Disponibilité du site", "text": "Move in Paris met en œuvre les moyens nécessaires pour assurer la continuité de l'accès au site. Toutefois, Move in Paris ne peut garantir une disponibilité continue du site et se réserve le droit de le suspendre temporairement pour des raisons de maintenance, de mise à jour, de sécurité ou pour tout autre motif technique ou commercial, sans que cette interruption ouvre droit à une quelconque indemnité pour l'Utilisateur." },
-        { "title": "2.3 Comportement de l'Utilisateur", "text": "L'Utilisateur s'engage à utiliser le site de manière loyale, conformément à son objet et aux dispositions légales et réglementaires en vigueur. Il s'engage notamment à ne pas utiliser le site à des fins illicites, à ne pas tenter d'en perturber le fonctionnement et à ne pas collecter ou stocker des données personnelles concernant d'autres utilisateurs." }
-      ]},
-      { "title": "Article 3 — Propriété intellectuelle", "paragraphs": [
-        "L'ensemble des contenus présents sur le site www.move-in-paris.com (textes, images, photographies, vidéos, sons, logos, icônes, mise en forme graphique, base de données, architecture du site, etc.) est protégé par le droit d'auteur, le droit des marques et plus généralement par la législation française et internationale relative à la propriété intellectuelle.",
-        "Ces contenus sont la propriété exclusive de Move in Paris ou font l'objet de licences accordées à Move in Paris par leurs propriétaires respectifs. Toute reproduction, modification, publication, adaptation de tout ou partie des éléments du site, quel que soit le moyen ou le procédé utilisé, est interdite, sauf autorisation écrite préalable de Move in Paris.",
-        "Tout manquement à cette disposition constituera une contrefaçon susceptible d'entraîner des poursuites civiles et pénales conformément aux dispositions du Code de la propriété intellectuelle."
-      ]},
-      { "title": "Article 4 — Données personnelles", "paragraphs": [
-        "Dans le cadre de l'utilisation du site, Move in Paris est amenée à collecter des données personnelles vous concernant, notamment lorsque vous remplissez un formulaire de contact ou de demande d'information.",
-        "Move in Paris traite ces données personnelles en qualité de responsable de traitement, dans le respect du Règlement Général sur la Protection des Données (RGPD) n° 2016/679 du 27 avril 2016 et de la loi n° 78-17 du 6 janvier 1978 relative à l'informatique, aux fichiers et aux libertés. Pour toute information sur le traitement de vos données personnelles, veuillez consulter notre Politique de confidentialité."
-      ]},
-      { "title": "Article 5 — Cookies", "paragraphs": [
-        "Le site www.move-in-paris.com est susceptible d'utiliser des cookies ou technologies similaires pour améliorer l'expérience de navigation de l'Utilisateur, réaliser des statistiques de visites et analyser l'audience du site.",
-        "Un cookie est un petit fichier texte stocké sur le terminal de l'Utilisateur lors de la visite d'un site internet. Il permet au site de mémoriser des informations sur la visite (pages consultées, durée de visite, préférences de l'utilisateur, etc.).",
-        "Conformément à la réglementation applicable, les cookies non strictement nécessaires au fonctionnement du site ne sont déposés qu'avec votre consentement. Vous pouvez paramétrer votre navigateur pour refuser les cookies ou pour être alerté lors de leur dépôt. Pour plus d'informations, consultez notre Politique de confidentialité."
-      ]},
-      { "title": "Article 6 — Limitation de responsabilité", "subsections": [
-        { "title": "6.1 Contenu du site", "text": "Move in Paris s'efforce d'assurer l'exactitude et la mise à jour des informations publiées sur le site. Toutefois, les informations diffusées sur ce site sont présentées à titre indicatif et non exhaustif. Move in Paris ne peut garantir leur exhaustivité, leur exactitude ni leur mise à jour et décline toute responsabilité pour toute imprécision, inexactitude ou omission." },
-        { "title": "6.2 Disponibilité du site et des informations", "text": "Move in Paris ne saurait être tenue responsable des dommages directs ou indirects, quelles qu'en soient les causes, origines, nature ou conséquences, résultant de l'accès au site ou de l'impossibilité d'y accéder, de l'utilisation du site ou de l'utilisation qui en est faite par des tiers." },
-        { "title": "6.3 Sites tiers", "text": "Le site peut contenir des liens hypertextes vers des sites tiers. Move in Paris décline toute responsabilité quant au contenu de ces sites, qui ne sont pas sous son contrôle, et ne saurait être tenue responsable des dommages directs ou indirects résultant de l'accès à ces sites." }
-      ]},
-      { "title": "Article 7 — Droit applicable et règlement des litiges", "paragraphs": [
-        "Les présentes CGU sont régies, interprétées et appliquées conformément au droit français, à l'exclusion de tout autre système juridique.",
-        "En cas de litige relatif à l'interprétation ou à l'exécution des présentes CGU, les parties s'engagent à tenter de régler leur différend à l'amiable avant tout recours judiciaire.",
-        "À défaut de résolution amiable, tout litige sera soumis à la compétence exclusive des tribunaux français compétents, et notamment du Tribunal de Commerce de Paris."
-      ]},
-      { "title": "Article 8 — Modification des CGU", "paragraphs": [
-        "Move in Paris se réserve le droit de modifier à tout moment les présentes CGU sans préavis. Les modifications entrent en vigueur dès leur mise en ligne sur le site. Il appartient à l'Utilisateur de consulter régulièrement les CGU afin de prendre connaissance des éventuelles modifications.",
-        "La poursuite de l'utilisation du site par l'Utilisateur après toute modification des CGU vaut acceptation de ces modifications."
-      ]},
-      { "title": "Article 9 — Contact", "paragraphs": [
-        "Pour toute question relative aux présentes CGU ou à l'utilisation du site, vous pouvez contacter Move in Paris par email à l'adresse contact@move-in-paris.com ou par courrier à l'adresse suivante : Move in Paris, 26, rue de l'Étoile, 75017 Paris."
-      ]}
+      {
+        "title": "Article 1 — Objet",
+        "paragraphs": [
+          "Le site www.move-in-paris.com est un site vitrine et de mise en relation ayant pour objet de présenter les services de l'agence Move in Paris, spécialisée dans la location d'appartements meublés à Paris à destination des entreprises, des cadres en mobilité professionnelle et des expatriés.",
+          "Le site permet notamment aux utilisateurs de consulter les appartements disponibles, de soumettre des demandes de renseignements via les formulaires de contact, et de prendre connaissance des services proposés par l'agence."
+        ]
+      },
+      {
+        "title": "Article 2 — Accès au site",
+        "subsections": [
+          {
+            "title": "2.1 Conditions d'accès",
+            "text": "Le site www.move-in-paris.com est accessible gratuitement à tout utilisateur disposant d'un accès à Internet. Tous les frais supportés par l'Utilisateur pour accéder au service (matériel informatique, logiciels, connexion Internet, etc.) sont à sa charge exclusive."
+          },
+          {
+            "title": "2.2 Disponibilité du site",
+            "text": "Move in Paris met en œuvre les moyens nécessaires pour assurer la continuité de l'accès au site. Toutefois, Move in Paris ne peut garantir une disponibilité continue du site et se réserve le droit de le suspendre temporairement pour des raisons de maintenance, de mise à jour, de sécurité ou pour tout autre motif technique ou commercial, sans que cette interruption ouvre droit à une quelconque indemnité pour l'Utilisateur."
+          },
+          {
+            "title": "2.3 Comportement de l'Utilisateur",
+            "text": "L'Utilisateur s'engage à utiliser le site de manière loyale, conformément à son objet et aux dispositions légales et réglementaires en vigueur. Il s'engage notamment à ne pas utiliser le site à des fins illicites, à ne pas tenter d'en perturber le fonctionnement et à ne pas collecter ou stocker des données personnelles concernant d'autres utilisateurs."
+          }
+        ]
+      },
+      {
+        "title": "Article 3 — Propriété intellectuelle",
+        "paragraphs": [
+          "L'ensemble des contenus présents sur le site www.move-in-paris.com (textes, images, photographies, vidéos, sons, logos, icônes, mise en forme graphique, base de données, architecture du site, etc.) est protégé par le droit d'auteur, le droit des marques et plus généralement par la législation française et internationale relative à la propriété intellectuelle.",
+          "Ces contenus sont la propriété exclusive de Move in Paris ou font l'objet de licences accordées à Move in Paris par leurs propriétaires respectifs. Toute reproduction, modification, publication, adaptation de tout ou partie des éléments du site, quel que soit le moyen ou le procédé utilisé, est interdite, sauf autorisation écrite préalable de Move in Paris.",
+          "Tout manquement à cette disposition constituera une contrefaçon susceptible d'entraîner des poursuites civiles et pénales conformément aux dispositions du Code de la propriété intellectuelle."
+        ]
+      },
+      {
+        "title": "Article 4 — Données personnelles",
+        "paragraphs": [
+          "Dans le cadre de l'utilisation du site, Move in Paris est amenée à collecter des données personnelles vous concernant, notamment lorsque vous remplissez un formulaire de contact ou de demande d'information.",
+          "Move in Paris traite ces données personnelles en qualité de responsable de traitement, dans le respect du Règlement Général sur la Protection des Données (RGPD) n° 2016/679 du 27 avril 2016 et de la loi n° 78-17 du 6 janvier 1978 relative à l'informatique, aux fichiers et aux libertés. Pour toute information sur le traitement de vos données personnelles, veuillez consulter notre Politique de confidentialité."
+        ]
+      },
+      {
+        "title": "Article 5 — Cookies",
+        "paragraphs": [
+          "Le site www.move-in-paris.com est susceptible d'utiliser des cookies ou technologies similaires pour améliorer l'expérience de navigation de l'Utilisateur, réaliser des statistiques de visites et analyser l'audience du site.",
+          "Un cookie est un petit fichier texte stocké sur le terminal de l'Utilisateur lors de la visite d'un site internet. Il permet au site de mémoriser des informations sur la visite (pages consultées, durée de visite, préférences de l'utilisateur, etc.).",
+          "Conformément à la réglementation applicable, les cookies non strictement nécessaires au fonctionnement du site ne sont déposés qu'avec votre consentement. Vous pouvez paramétrer votre navigateur pour refuser les cookies ou pour être alerté lors de leur dépôt. Pour plus d'informations, consultez notre Politique de confidentialité."
+        ]
+      },
+      {
+        "title": "Article 6 — Limitation de responsabilité",
+        "subsections": [
+          {
+            "title": "6.1 Contenu du site",
+            "text": "Move in Paris s'efforce d'assurer l'exactitude et la mise à jour des informations publiées sur le site. Toutefois, les informations diffusées sur ce site sont présentées à titre indicatif et non exhaustif. Move in Paris ne peut garantir leur exhaustivité, leur exactitude ni leur mise à jour et décline toute responsabilité pour toute imprécision, inexactitude ou omission."
+          },
+          {
+            "title": "6.2 Disponibilité du site et des informations",
+            "text": "Move in Paris ne saurait être tenue responsable des dommages directs ou indirects, quelles qu'en soient les causes, origines, nature ou conséquences, résultant de l'accès au site ou de l'impossibilité d'y accéder, de l'utilisation du site ou de l'utilisation qui en est faite par des tiers."
+          },
+          {
+            "title": "6.3 Sites tiers",
+            "text": "Le site peut contenir des liens hypertextes vers des sites tiers. Move in Paris décline toute responsabilité quant au contenu de ces sites, qui ne sont pas sous son contrôle, et ne saurait être tenue responsable des dommages directs ou indirects résultant de l'accès à ces sites."
+          }
+        ]
+      },
+      {
+        "title": "Article 7 — Droit applicable et règlement des litiges",
+        "paragraphs": [
+          "Les présentes CGU sont régies, interprétées et appliquées conformément au droit français, à l'exclusion de tout autre système juridique.",
+          "En cas de litige relatif à l'interprétation ou à l'exécution des présentes CGU, les parties s'engagent à tenter de régler leur différend à l'amiable avant tout recours judiciaire.",
+          "À défaut de résolution amiable, tout litige sera soumis à la compétence exclusive des tribunaux français compétents, et notamment du Tribunal de Commerce de Paris."
+        ]
+      },
+      {
+        "title": "Article 8 — Modification des CGU",
+        "paragraphs": [
+          "Move in Paris se réserve le droit de modifier à tout moment les présentes CGU sans préavis. Les modifications entrent en vigueur dès leur mise en ligne sur le site. Il appartient à l'Utilisateur de consulter régulièrement les CGU afin de prendre connaissance des éventuelles modifications.",
+          "La poursuite de l'utilisation du site par l'Utilisateur après toute modification des CGU vaut acceptation de ces modifications."
+        ]
+      },
+      {
+        "title": "Article 9 — Contact",
+        "paragraphs": [
+          "Pour toute question relative aux présentes CGU ou à l'utilisation du site, vous pouvez contacter Move in Paris par email à l'adresse contact@move-in-paris.com ou par courrier à l'adresse suivante : Move in Paris, 26, rue de l'Étoile, 75017 Paris."
+        ]
+      }
     ],
     "privacyTitle": "Politique de confidentialité",
     "privacyBreadcrumb": "Politique de confidentialité",
@@ -492,40 +616,84 @@
     "privacyPreambuleP1": "Move in Paris accorde une importance primordiale à la protection de vos données personnelles et au respect de votre vie privée. La présente Politique de Confidentialité a pour objet de vous informer de manière transparente sur la collecte, l'utilisation, la conservation et la protection des données personnelles que nous traitons dans le cadre de nos services.",
     "privacyPreambuleP2": "Cette politique est conforme au Règlement Général sur la Protection des Données (RGPD) n° 2016/679 du 27 avril 2016 et à la loi n° 78-17 du 6 janvier 1978 modifiée relative à l'informatique, aux fichiers et aux libertés.",
     "privacySections": [
-      { "title": "Responsable du traitement", "paragraphs": [
-        "Les données personnelles collectées sur le site www.move-in-paris.com sont traitées par Move in Paris, dont les coordonnées sont les suivantes :",
-        "Move in Paris — SAS — 26, rue de l'Étoile, 75017 Paris — contact@move-in-paris.com — +33 1 45 20 06 03"
-      ]},
-      { "title": "Données collectées et finalités du traitement", "paragraphs": [
-        "Nous collectons uniquement les données strictement nécessaires à nos finalités : coordonnées (nom, prénom, email, téléphone), informations relatives à votre bien (adresse, surface, type) dans le cadre d'une demande d'estimation, contenu des messages adressés via nos formulaires, données de navigation (cookies, adresse IP) à des fins statistiques et d'amélioration du service.",
-        "Ces données sont collectées pour répondre à vos demandes, gérer la relation contractuelle, vous adresser des informations commerciales avec votre consentement, et améliorer notre site."
-      ]},
-      { "title": "Base légale du traitement", "paragraphs": [
-        "Les traitements sont fondés sur votre consentement, sur l'exécution de mesures précontractuelles prises à votre demande, sur l'exécution d'un contrat ou sur notre intérêt légitime à développer notre activité et améliorer nos services."
-      ]},
-      { "title": "Destinataires des données", "paragraphs": [
-        "Vos données personnelles sont destinées exclusivement aux équipes habilitées de Move in Paris. Elles peuvent être transmises à nos sous-traitants techniques (hébergeur, fournisseur d'email, prestataire comptable) dans la stricte mesure nécessaire à l'exécution de leurs missions et dans le respect de leurs obligations de confidentialité. Vos données ne sont jamais vendues à des tiers."
-      ]},
-      { "title": "Durée de conservation", "paragraphs": [
-        "Données de prospection : 3 ans à compter du dernier contact. Données contractuelles : durée du contrat + 5 ans (durée de prescription légale). Données comptables : 10 ans. Cookies : 13 mois maximum."
-      ]},
-      { "title": "Sécurité des données", "paragraphs": [
-        "Move in Paris met en œuvre les mesures techniques et organisationnelles appropriées pour garantir la sécurité de vos données personnelles et éviter toute perte, altération, divulgation ou accès non autorisés : chiffrement HTTPS, hébergement sécurisé, accès restreint aux équipes habilitées, sauvegardes régulières."
-      ]},
-      { "title": "Vos droits", "paragraphs": [
-        "Conformément au RGPD, vous disposez des droits suivants : accès à vos données, rectification, effacement, limitation du traitement, portabilité, opposition et retrait du consentement à tout moment. Pour exercer ces droits, contactez-nous à contact@move-in-paris.com en justifiant de votre identité.",
-        "Vous disposez également du droit d'introduire une réclamation auprès de la CNIL (Commission Nationale de l'Informatique et des Libertés) via www.cnil.fr si vous estimez que vos droits ne sont pas respectés."
-      ]},
-      { "title": "Cookies", "paragraphs": [
-        "Notre site utilise des cookies strictement nécessaires au fonctionnement (non soumis à consentement) ainsi que, sous réserve de votre consentement, des cookies de mesure d'audience. Vous pouvez à tout moment paramétrer vos préférences dans votre navigateur."
-      ]},
-      { "title": "Modification de la politique", "paragraphs": [
-        "Move in Paris se réserve le droit de modifier la présente Politique de Confidentialité à tout moment. Toute modification sera publiée sur le site et entrera en vigueur immédiatement. Nous vous invitons à la consulter régulièrement."
-      ]},
-      { "title": "Contact", "paragraphs": [
-        "Pour toute question relative à la protection de vos données personnelles, contactez-nous à l'adresse contact@move-in-paris.com ou par courrier : Move in Paris, 26, rue de l'Étoile, 75017 Paris."
-      ]}
+      {
+        "title": "Responsable du traitement",
+        "paragraphs": [
+          "Les données personnelles collectées sur le site www.move-in-paris.com sont traitées par Move in Paris, dont les coordonnées sont les suivantes :",
+          "Move in Paris — SAS — 26, rue de l'Étoile, 75017 Paris — contact@move-in-paris.com — +33 1 45 20 06 03"
+        ]
+      },
+      {
+        "title": "Données collectées et finalités du traitement",
+        "paragraphs": [
+          "Nous collectons uniquement les données strictement nécessaires à nos finalités : coordonnées (nom, prénom, email, téléphone), informations relatives à votre bien (adresse, surface, type) dans le cadre d'une demande d'estimation, contenu des messages adressés via nos formulaires, données de navigation (cookies, adresse IP) à des fins statistiques et d'amélioration du service.",
+          "Ces données sont collectées pour répondre à vos demandes, gérer la relation contractuelle, vous adresser des informations commerciales avec votre consentement, et améliorer notre site."
+        ]
+      },
+      {
+        "title": "Base légale du traitement",
+        "paragraphs": [
+          "Les traitements sont fondés sur votre consentement, sur l'exécution de mesures précontractuelles prises à votre demande, sur l'exécution d'un contrat ou sur notre intérêt légitime à développer notre activité et améliorer nos services."
+        ]
+      },
+      {
+        "title": "Destinataires des données",
+        "paragraphs": [
+          "Vos données personnelles sont destinées exclusivement aux équipes habilitées de Move in Paris. Elles peuvent être transmises à nos sous-traitants techniques (hébergeur, fournisseur d'email, prestataire comptable) dans la stricte mesure nécessaire à l'exécution de leurs missions et dans le respect de leurs obligations de confidentialité. Vos données ne sont jamais vendues à des tiers."
+        ]
+      },
+      {
+        "title": "Durée de conservation",
+        "paragraphs": [
+          "Données de prospection : 3 ans à compter du dernier contact. Données contractuelles : durée du contrat + 5 ans (durée de prescription légale). Données comptables : 10 ans. Cookies : 13 mois maximum."
+        ]
+      },
+      {
+        "title": "Sécurité des données",
+        "paragraphs": [
+          "Move in Paris met en œuvre les mesures techniques et organisationnelles appropriées pour garantir la sécurité de vos données personnelles et éviter toute perte, altération, divulgation ou accès non autorisés : chiffrement HTTPS, hébergement sécurisé, accès restreint aux équipes habilitées, sauvegardes régulières."
+        ]
+      },
+      {
+        "title": "Vos droits",
+        "paragraphs": [
+          "Conformément au RGPD, vous disposez des droits suivants : accès à vos données, rectification, effacement, limitation du traitement, portabilité, opposition et retrait du consentement à tout moment. Pour exercer ces droits, contactez-nous à contact@move-in-paris.com en justifiant de votre identité.",
+          "Vous disposez également du droit d'introduire une réclamation auprès de la CNIL (Commission Nationale de l'Informatique et des Libertés) via www.cnil.fr si vous estimez que vos droits ne sont pas respectés."
+        ]
+      },
+      {
+        "title": "Cookies",
+        "paragraphs": [
+          "Notre site utilise des cookies strictement nécessaires au fonctionnement (non soumis à consentement) ainsi que, sous réserve de votre consentement, des cookies de mesure d'audience. Vous pouvez à tout moment paramétrer vos préférences dans votre navigateur."
+        ]
+      },
+      {
+        "title": "Modification de la politique",
+        "paragraphs": [
+          "Move in Paris se réserve le droit de modifier la présente Politique de Confidentialité à tout moment. Toute modification sera publiée sur le site et entrera en vigueur immédiatement. Nous vous invitons à la consulter régulièrement."
+        ]
+      },
+      {
+        "title": "Contact",
+        "paragraphs": [
+          "Pour toute question relative à la protection de vos données personnelles, contactez-nous à l'adresse contact@move-in-paris.com ou par courrier : Move in Paris, 26, rue de l'Étoile, 75017 Paris."
+        ]
+      }
     ],
     "contentNotice": "Les textes officiels (mentions légales, CGU, politique de confidentialité) sont aussi disponibles en français. Pour toute question, contactez-nous."
+  },
+  "trip": {
+    "title": "Calculer votre trajet",
+    "placeholder": "Votre bureau, école, ou point d’intérêt…",
+    "loading": "Chargement de la recherche…",
+    "calculate": "Calculer",
+    "calculating": "Calcul…",
+    "transit": "Transports",
+    "bicycling": "Vélo",
+    "driving": "Voiture",
+    "notAvailable": "Non disponible",
+    "hint": "Saisissez une adresse pour voir le temps de trajet en transport, vélo et voiture.",
+    "errorNoRoute": "Aucun itinéraire trouvé pour cette destination. Essayez une adresse plus précise.",
+    "errorGeneric": "Erreur lors du calcul de l’itinéraire. Réessayez dans un instant."
   }
 }

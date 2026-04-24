@@ -80,15 +80,40 @@
     "titleLine1": "Excellence at the service",
     "titleLine2": "of your project",
     "stats": [
-      { "value": 117000, "suffix": "+", "label": "Nights hosted" },
-      { "value": 95, "suffix": "%+", "label": "Occupancy rate" },
-      { "value": 3, "suffix": " months", "label": "Average stay length" },
-      { "value": 1300, "suffix": "+", "label": "Employees hosted" }
+      {
+        "value": 117000,
+        "suffix": "+",
+        "label": "Nights hosted"
+      },
+      {
+        "value": 95,
+        "suffix": "%+",
+        "label": "Occupancy rate"
+      },
+      {
+        "value": 3,
+        "suffix": " months",
+        "label": "Average stay length"
+      },
+      {
+        "value": 1300,
+        "suffix": "+",
+        "label": "Employees hosted"
+      }
     ],
     "reasons": [
-      { "title": "Rent guaranteed by employers", "text": "Our clientele is exclusively corporate: major companies and international institutions. Rent is underwritten by the employer — zero unpaid rent." },
-      { "title": "Superior yield", "text": "On average +30% extra revenue compared to a standard lease. Up to €55/m² on corporate leases." },
-      { "title": "Single, accountable contact", "text": "Move in Paris is your only point of contact and takes full responsibility for the condition of your property. 7/7 technical assistance." }
+      {
+        "title": "Rent guaranteed by employers",
+        "text": "Our clientele is exclusively corporate: major companies and international institutions. Rent is underwritten by the employer — zero unpaid rent."
+      },
+      {
+        "title": "Superior yield",
+        "text": "On average +30% extra revenue compared to a standard lease. Up to €55/m² on corporate leases."
+      },
+      {
+        "title": "Single, accountable contact",
+        "text": "Move in Paris is your only point of contact and takes full responsibility for the condition of your property. 7/7 technical assistance."
+      }
     ]
   },
   "testimonials": {
@@ -215,12 +240,30 @@
     "engagementsEyebrow": "Our commitments",
     "engagementsTitle": "6 reasons to trust us",
     "engagements": [
-      { "title": "Quality apartments", "desc": "We maintain a high standard of quality: every apartment is regularly inspected and kept in the condition you entrusted to us." },
-      { "title": "Single point of contact", "desc": "Move in Paris is your only contact and takes full responsibility for the condition of your property. One accountable partner, zero complexity." },
-      { "title": "7/7 technical assistance", "desc": "Our tenants benefit from 7/7 technical assistance. Every issue is handled immediately, your property is preserved at all times." },
-      { "title": "Cleaning included", "desc": "Weekly housekeeping is provided by our qualified in-house staff. Your apartment is continuously maintained, at no cost to you." },
-      { "title": "Premium corporate clientele", "desc": "Major companies, international institutions and their expatriate employees. Rent is guaranteed by the employer — zero unpaid rent." },
-      { "title": "Full operational management", "desc": "Technical follow-up, interventions, repair coordination. You have nothing to manage — we take care of everything." }
+      {
+        "title": "Quality apartments",
+        "desc": "We maintain a high standard of quality: every apartment is regularly inspected and kept in the condition you entrusted to us."
+      },
+      {
+        "title": "Single point of contact",
+        "desc": "Move in Paris is your only contact and takes full responsibility for the condition of your property. One accountable partner, zero complexity."
+      },
+      {
+        "title": "7/7 technical assistance",
+        "desc": "Our tenants benefit from 7/7 technical assistance. Every issue is handled immediately, your property is preserved at all times."
+      },
+      {
+        "title": "Cleaning included",
+        "desc": "Weekly housekeeping is provided by our qualified in-house staff. Your apartment is continuously maintained, at no cost to you."
+      },
+      {
+        "title": "Premium corporate clientele",
+        "desc": "Major companies, international institutions and their expatriate employees. Rent is guaranteed by the employer — zero unpaid rent."
+      },
+      {
+        "title": "Full operational management",
+        "desc": "Technical follow-up, interventions, repair coordination. You have nothing to manage — we take care of everything."
+      }
     ],
     "statsLabels": [
       "Nights hosted",
@@ -260,22 +303,58 @@
     "avantagesEyebrow": "Your benefits",
     "avantagesTitle": "Why entrust us your property",
     "avantages": [
-      { "title": "100% free service", "desc": "No listing fees, no management fees, no commission on your rent. You receive 100% of the agreed rent, with zero deductions. We're paid exclusively by our corporate clients." },
-      { "title": "All-inclusive rent", "desc": "The rent you receive each month is charges-included: electricity, gas, internet + TV + Canal+, building charges, boiler maintenance, waste tax. No adjustments, no surprise invoices. Everything is covered by our model." },
-      { "title": "Premium corporate clientele", "desc": "Major companies, international institutions and expatriate employees. Each file is vetted: solvency, employer, guarantees. Rent guaranteed by the employer — zero unpaid rent." },
-      { "title": "Superior yield", "desc": "On average +30% extra revenue vs standard rental. Up to €55/m² on corporate leases, with a favorable tax regime (LMNP)." },
-      { "title": "Operational management", "desc": "Inventory, maintenance, cleaning, small works, tenant relations, accounting: we handle absolutely everything with zero involvement on your part." },
-      { "title": "Optimal occupancy rate", "desc": "Thanks to our network of companies and relocation agencies, we maintain an occupancy rate above 95% across our portfolio." },
-      { "title": "Secure lease", "desc": "Civil Code leases (articles 1714-1762), comprehensive home insurance included, up-to-date surveys. Your investment is legally protected at every moment." },
-      { "title": "Quarterly reporting", "desc": "Every quarter, receive a detailed report: revenue, charges, interventions. Full visibility on your property's performance." }
+      {
+        "title": "100% free service",
+        "desc": "No listing fees, no management fees, no commission on your rent. You receive 100% of the agreed rent, with zero deductions. We're paid exclusively by our corporate clients."
+      },
+      {
+        "title": "All-inclusive rent",
+        "desc": "The rent you receive each month is charges-included: electricity, gas, internet + TV + Canal+, building charges, boiler maintenance, waste tax. No adjustments, no surprise invoices. Everything is covered by our model."
+      },
+      {
+        "title": "Premium corporate clientele",
+        "desc": "Major companies, international institutions and expatriate employees. Each file is vetted: solvency, employer, guarantees. Rent guaranteed by the employer — zero unpaid rent."
+      },
+      {
+        "title": "Superior yield",
+        "desc": "On average +30% extra revenue vs standard rental. Up to €55/m² on corporate leases, with a favorable tax regime (LMNP)."
+      },
+      {
+        "title": "Operational management",
+        "desc": "Inventory, maintenance, cleaning, small works, tenant relations, accounting: we handle absolutely everything with zero involvement on your part."
+      },
+      {
+        "title": "Optimal occupancy rate",
+        "desc": "Thanks to our network of companies and relocation agencies, we maintain an occupancy rate above 95% across our portfolio."
+      },
+      {
+        "title": "Secure lease",
+        "desc": "Civil Code leases (articles 1714-1762), comprehensive home insurance included, up-to-date surveys. Your investment is legally protected at every moment."
+      },
+      {
+        "title": "Quarterly reporting",
+        "desc": "Every quarter, receive a detailed report: revenue, charges, interventions. Full visibility on your property's performance."
+      }
     ],
     "processEyebrow": "How it works",
     "processTitle": "A simple process",
     "process": [
-      { "title": "Free estimate", "desc": "We visit your property and provide a rent estimate based on the market." },
-      { "title": "Marketing", "desc": "Professional photos, optimized listing, distribution to our corporate network." },
-      { "title": "Tenant selection", "desc": "Complete vetting of every application. You validate the chosen profile." },
-      { "title": "Full management", "desc": "Lease, inventory, cleaning, maintenance, accounting. You have nothing to do." }
+      {
+        "title": "Free estimate",
+        "desc": "We visit your property and provide a rent estimate based on the market."
+      },
+      {
+        "title": "Marketing",
+        "desc": "Professional photos, optimized listing, distribution to our corporate network."
+      },
+      {
+        "title": "Tenant selection",
+        "desc": "Complete vetting of every application. You validate the chosen profile."
+      },
+      {
+        "title": "Full management",
+        "desc": "Lease, inventory, cleaning, maintenance, accounting. You have nothing to do."
+      }
     ],
     "ctaTitle": "Ready to entrust us your property?",
     "ctaSubtitle": "Fill out our form and we'll get back to you within 24 hours with a free estimate.",
@@ -444,46 +523,91 @@
     "cguPreambuleP1": "These Terms of Use (hereinafter \"ToU\") define the terms and conditions under which Move in Paris, the publisher of the website www.move-in-paris.com, makes its online services available, as well as the rights and obligations of any person accessing the site (hereinafter the \"User\").",
     "cguPreambuleP2": "Accessing and using the website implies full and complete acceptance of these ToU. Move in Paris reserves the right to modify these ToU at any time. The applicable terms are those in force at the time of browsing the site.",
     "cguSections": [
-      { "title": "Article 1 — Purpose", "paragraphs": [
-        "The website www.move-in-paris.com is a showcase and matchmaking site intended to present the services of Move in Paris, an agency specializing in furnished apartment rentals in Paris for companies, relocating executives and expatriates.",
-        "The site allows users to view available apartments, submit inquiries via contact forms, and learn about the services offered by the agency."
-      ]},
-      { "title": "Article 2 — Access to the site", "subsections": [
-        { "title": "2.1 Access conditions", "text": "The website www.move-in-paris.com is freely accessible to any user with Internet access. All costs incurred by the User to access the service (computer equipment, software, Internet connection, etc.) are their sole responsibility." },
-        { "title": "2.2 Availability of the site", "text": "Move in Paris implements the necessary means to ensure continuous access to the site. However, Move in Paris cannot guarantee continuous availability and reserves the right to temporarily suspend the site for maintenance, updates, security or any other technical or commercial reason, without this interruption giving rise to any compensation for the User." },
-        { "title": "2.3 User behavior", "text": "The User agrees to use the site fairly, in accordance with its purpose and applicable legal and regulatory provisions. In particular, the User agrees not to use the site for illegal purposes, not to attempt to disrupt its operation, and not to collect or store personal data concerning other users." }
-      ]},
-      { "title": "Article 3 — Intellectual property", "paragraphs": [
-        "All content on the website www.move-in-paris.com (text, images, photographs, videos, sounds, logos, icons, graphic layout, databases, site architecture, etc.) is protected by copyright, trademark law and more generally by French and international legislation on intellectual property.",
-        "This content is the exclusive property of Move in Paris or is subject to licenses granted to Move in Paris by their respective owners. Any reproduction, modification, publication, adaptation of all or part of the site elements, by any means or process, is prohibited except with prior written authorization from Move in Paris.",
-        "Any breach of this provision will constitute counterfeiting liable to civil and criminal prosecution in accordance with the provisions of the French Intellectual Property Code."
-      ]},
-      { "title": "Article 4 — Personal data", "paragraphs": [
-        "As part of using the site, Move in Paris may collect personal data about you, particularly when you fill out a contact form or information request.",
-        "Move in Paris processes this personal data as data controller, in compliance with the General Data Protection Regulation (GDPR) No. 2016/679 of 27 April 2016 and French law No. 78-17 of 6 January 1978 on data protection. For any information on the processing of your personal data, please consult our Privacy policy."
-      ]},
-      { "title": "Article 5 — Cookies", "paragraphs": [
-        "The website www.move-in-paris.com may use cookies or similar technologies to improve the User's browsing experience, produce visit statistics and analyze the audience of the site.",
-        "A cookie is a small text file stored on the User's device when visiting a website. It allows the site to remember information about the visit (pages viewed, visit duration, user preferences, etc.).",
-        "In accordance with applicable regulations, cookies not strictly necessary for the functioning of the site are only placed with your consent. You can configure your browser to refuse cookies or be notified when they are placed. For more information, consult our Privacy policy."
-      ]},
-      { "title": "Article 6 — Limitation of liability", "subsections": [
-        { "title": "6.1 Site content", "text": "Move in Paris strives to ensure the accuracy and updating of information published on the site. However, the information provided on this site is presented for informational and non-exhaustive purposes. Move in Paris cannot guarantee its completeness, accuracy or updating and declines all liability for any imprecision, inaccuracy or omission." },
-        { "title": "6.2 Availability of the site and information", "text": "Move in Paris cannot be held liable for any direct or indirect damages, regardless of their causes, origins, nature or consequences, resulting from access to the site or inability to access it, use of the site or use made of it by third parties." },
-        { "title": "6.3 Third-party sites", "text": "The site may contain hyperlinks to third-party sites. Move in Paris declines all responsibility for the content of these sites, which are not under its control, and cannot be held liable for any direct or indirect damages resulting from access to these sites." }
-      ]},
-      { "title": "Article 7 — Applicable law and dispute resolution", "paragraphs": [
-        "These ToU are governed, interpreted and applied in accordance with French law, to the exclusion of any other legal system.",
-        "In the event of a dispute relating to the interpretation or execution of these ToU, the parties undertake to attempt to resolve their dispute amicably before any legal action.",
-        "Failing an amicable resolution, any dispute will be submitted to the exclusive jurisdiction of the competent French courts, in particular the Paris Commercial Court."
-      ]},
-      { "title": "Article 8 — Modification of the ToU", "paragraphs": [
-        "Move in Paris reserves the right to modify these ToU at any time without notice. Modifications take effect as soon as they are published on the site. It is the User's responsibility to consult the ToU regularly to be aware of any modifications.",
-        "Continued use of the site by the User after any modification of the ToU constitutes acceptance of these modifications."
-      ]},
-      { "title": "Article 9 — Contact", "paragraphs": [
-        "For any question regarding these ToU or use of the site, you can contact Move in Paris by email at contact@move-in-paris.com or by mail at: Move in Paris, 26, rue de l'Étoile, 75017 Paris."
-      ]}
+      {
+        "title": "Article 1 — Purpose",
+        "paragraphs": [
+          "The website www.move-in-paris.com is a showcase and matchmaking site intended to present the services of Move in Paris, an agency specializing in furnished apartment rentals in Paris for companies, relocating executives and expatriates.",
+          "The site allows users to view available apartments, submit inquiries via contact forms, and learn about the services offered by the agency."
+        ]
+      },
+      {
+        "title": "Article 2 — Access to the site",
+        "subsections": [
+          {
+            "title": "2.1 Access conditions",
+            "text": "The website www.move-in-paris.com is freely accessible to any user with Internet access. All costs incurred by the User to access the service (computer equipment, software, Internet connection, etc.) are their sole responsibility."
+          },
+          {
+            "title": "2.2 Availability of the site",
+            "text": "Move in Paris implements the necessary means to ensure continuous access to the site. However, Move in Paris cannot guarantee continuous availability and reserves the right to temporarily suspend the site for maintenance, updates, security or any other technical or commercial reason, without this interruption giving rise to any compensation for the User."
+          },
+          {
+            "title": "2.3 User behavior",
+            "text": "The User agrees to use the site fairly, in accordance with its purpose and applicable legal and regulatory provisions. In particular, the User agrees not to use the site for illegal purposes, not to attempt to disrupt its operation, and not to collect or store personal data concerning other users."
+          }
+        ]
+      },
+      {
+        "title": "Article 3 — Intellectual property",
+        "paragraphs": [
+          "All content on the website www.move-in-paris.com (text, images, photographs, videos, sounds, logos, icons, graphic layout, databases, site architecture, etc.) is protected by copyright, trademark law and more generally by French and international legislation on intellectual property.",
+          "This content is the exclusive property of Move in Paris or is subject to licenses granted to Move in Paris by their respective owners. Any reproduction, modification, publication, adaptation of all or part of the site elements, by any means or process, is prohibited except with prior written authorization from Move in Paris.",
+          "Any breach of this provision will constitute counterfeiting liable to civil and criminal prosecution in accordance with the provisions of the French Intellectual Property Code."
+        ]
+      },
+      {
+        "title": "Article 4 — Personal data",
+        "paragraphs": [
+          "As part of using the site, Move in Paris may collect personal data about you, particularly when you fill out a contact form or information request.",
+          "Move in Paris processes this personal data as data controller, in compliance with the General Data Protection Regulation (GDPR) No. 2016/679 of 27 April 2016 and French law No. 78-17 of 6 January 1978 on data protection. For any information on the processing of your personal data, please consult our Privacy policy."
+        ]
+      },
+      {
+        "title": "Article 5 — Cookies",
+        "paragraphs": [
+          "The website www.move-in-paris.com may use cookies or similar technologies to improve the User's browsing experience, produce visit statistics and analyze the audience of the site.",
+          "A cookie is a small text file stored on the User's device when visiting a website. It allows the site to remember information about the visit (pages viewed, visit duration, user preferences, etc.).",
+          "In accordance with applicable regulations, cookies not strictly necessary for the functioning of the site are only placed with your consent. You can configure your browser to refuse cookies or be notified when they are placed. For more information, consult our Privacy policy."
+        ]
+      },
+      {
+        "title": "Article 6 — Limitation of liability",
+        "subsections": [
+          {
+            "title": "6.1 Site content",
+            "text": "Move in Paris strives to ensure the accuracy and updating of information published on the site. However, the information provided on this site is presented for informational and non-exhaustive purposes. Move in Paris cannot guarantee its completeness, accuracy or updating and declines all liability for any imprecision, inaccuracy or omission."
+          },
+          {
+            "title": "6.2 Availability of the site and information",
+            "text": "Move in Paris cannot be held liable for any direct or indirect damages, regardless of their causes, origins, nature or consequences, resulting from access to the site or inability to access it, use of the site or use made of it by third parties."
+          },
+          {
+            "title": "6.3 Third-party sites",
+            "text": "The site may contain hyperlinks to third-party sites. Move in Paris declines all responsibility for the content of these sites, which are not under its control, and cannot be held liable for any direct or indirect damages resulting from access to these sites."
+          }
+        ]
+      },
+      {
+        "title": "Article 7 — Applicable law and dispute resolution",
+        "paragraphs": [
+          "These ToU are governed, interpreted and applied in accordance with French law, to the exclusion of any other legal system.",
+          "In the event of a dispute relating to the interpretation or execution of these ToU, the parties undertake to attempt to resolve their dispute amicably before any legal action.",
+          "Failing an amicable resolution, any dispute will be submitted to the exclusive jurisdiction of the competent French courts, in particular the Paris Commercial Court."
+        ]
+      },
+      {
+        "title": "Article 8 — Modification of the ToU",
+        "paragraphs": [
+          "Move in Paris reserves the right to modify these ToU at any time without notice. Modifications take effect as soon as they are published on the site. It is the User's responsibility to consult the ToU regularly to be aware of any modifications.",
+          "Continued use of the site by the User after any modification of the ToU constitutes acceptance of these modifications."
+        ]
+      },
+      {
+        "title": "Article 9 — Contact",
+        "paragraphs": [
+          "For any question regarding these ToU or use of the site, you can contact Move in Paris by email at contact@move-in-paris.com or by mail at: Move in Paris, 26, rue de l'Étoile, 75017 Paris."
+        ]
+      }
     ],
     "privacyTitle": "Privacy policy",
     "privacyBreadcrumb": "Privacy policy",
@@ -492,40 +616,84 @@
     "privacyPreambuleP1": "Move in Paris attaches paramount importance to the protection of your personal data and respect for your privacy. This Privacy Policy aims to inform you transparently about the collection, use, retention and protection of the personal data we process as part of our services.",
     "privacyPreambuleP2": "This policy complies with the General Data Protection Regulation (GDPR) No. 2016/679 of 27 April 2016 and the French Data Protection Act No. 78-17 of 6 January 1978 as amended.",
     "privacySections": [
-      { "title": "Data controller", "paragraphs": [
-        "The personal data collected on the website www.move-in-paris.com is processed by Move in Paris, whose details are as follows:",
-        "Move in Paris — SAS — 26, rue de l'Étoile, 75017 Paris — contact@move-in-paris.com — +33 1 45 20 06 03"
-      ]},
-      { "title": "Data collected and purposes of processing", "paragraphs": [
-        "We only collect data strictly necessary for our purposes: contact details (first name, last name, email, phone), information relating to your property (address, surface, type) as part of an estimate request, content of messages sent via our forms, browsing data (cookies, IP address) for statistical and service improvement purposes.",
-        "This data is collected to respond to your requests, manage the contractual relationship, send you commercial information with your consent, and improve our site."
-      ]},
-      { "title": "Legal basis for processing", "paragraphs": [
-        "Processing is based on your consent, on pre-contractual measures taken at your request, on the performance of a contract, or on our legitimate interest in developing our business and improving our services."
-      ]},
-      { "title": "Data recipients", "paragraphs": [
-        "Your personal data is intended exclusively for authorized Move in Paris teams. It may be transmitted to our technical subcontractors (host, email provider, accounting provider) strictly to the extent necessary for the execution of their missions and in compliance with their confidentiality obligations. Your data is never sold to third parties."
-      ]},
-      { "title": "Data retention period", "paragraphs": [
-        "Prospecting data: 3 years from the last contact. Contract data: contract duration + 5 years (legal prescription period). Accounting data: 10 years. Cookies: 13 months maximum."
-      ]},
-      { "title": "Data security", "paragraphs": [
-        "Move in Paris implements appropriate technical and organizational measures to ensure the security of your personal data and avoid any loss, alteration, unauthorized disclosure or access: HTTPS encryption, secure hosting, restricted access to authorized teams, regular backups."
-      ]},
-      { "title": "Your rights", "paragraphs": [
-        "In accordance with the GDPR, you have the following rights: access to your data, rectification, erasure, restriction of processing, portability, objection and withdrawal of consent at any time. To exercise these rights, contact us at contact@move-in-paris.com with proof of identity.",
-        "You also have the right to lodge a complaint with the CNIL (the French Data Protection Authority) via www.cnil.fr if you consider that your rights are not respected."
-      ]},
-      { "title": "Cookies", "paragraphs": [
-        "Our site uses cookies strictly necessary for its functioning (not subject to consent) as well as, subject to your consent, audience measurement cookies. You can at any time set your preferences in your browser."
-      ]},
-      { "title": "Policy modification", "paragraphs": [
-        "Move in Paris reserves the right to modify this Privacy Policy at any time. Any modification will be published on the site and will take effect immediately. We invite you to consult it regularly."
-      ]},
-      { "title": "Contact", "paragraphs": [
-        "For any question relating to the protection of your personal data, contact us at contact@move-in-paris.com or by mail: Move in Paris, 26, rue de l'Étoile, 75017 Paris."
-      ]}
+      {
+        "title": "Data controller",
+        "paragraphs": [
+          "The personal data collected on the website www.move-in-paris.com is processed by Move in Paris, whose details are as follows:",
+          "Move in Paris — SAS — 26, rue de l'Étoile, 75017 Paris — contact@move-in-paris.com — +33 1 45 20 06 03"
+        ]
+      },
+      {
+        "title": "Data collected and purposes of processing",
+        "paragraphs": [
+          "We only collect data strictly necessary for our purposes: contact details (first name, last name, email, phone), information relating to your property (address, surface, type) as part of an estimate request, content of messages sent via our forms, browsing data (cookies, IP address) for statistical and service improvement purposes.",
+          "This data is collected to respond to your requests, manage the contractual relationship, send you commercial information with your consent, and improve our site."
+        ]
+      },
+      {
+        "title": "Legal basis for processing",
+        "paragraphs": [
+          "Processing is based on your consent, on pre-contractual measures taken at your request, on the performance of a contract, or on our legitimate interest in developing our business and improving our services."
+        ]
+      },
+      {
+        "title": "Data recipients",
+        "paragraphs": [
+          "Your personal data is intended exclusively for authorized Move in Paris teams. It may be transmitted to our technical subcontractors (host, email provider, accounting provider) strictly to the extent necessary for the execution of their missions and in compliance with their confidentiality obligations. Your data is never sold to third parties."
+        ]
+      },
+      {
+        "title": "Data retention period",
+        "paragraphs": [
+          "Prospecting data: 3 years from the last contact. Contract data: contract duration + 5 years (legal prescription period). Accounting data: 10 years. Cookies: 13 months maximum."
+        ]
+      },
+      {
+        "title": "Data security",
+        "paragraphs": [
+          "Move in Paris implements appropriate technical and organizational measures to ensure the security of your personal data and avoid any loss, alteration, unauthorized disclosure or access: HTTPS encryption, secure hosting, restricted access to authorized teams, regular backups."
+        ]
+      },
+      {
+        "title": "Your rights",
+        "paragraphs": [
+          "In accordance with the GDPR, you have the following rights: access to your data, rectification, erasure, restriction of processing, portability, objection and withdrawal of consent at any time. To exercise these rights, contact us at contact@move-in-paris.com with proof of identity.",
+          "You also have the right to lodge a complaint with the CNIL (the French Data Protection Authority) via www.cnil.fr if you consider that your rights are not respected."
+        ]
+      },
+      {
+        "title": "Cookies",
+        "paragraphs": [
+          "Our site uses cookies strictly necessary for its functioning (not subject to consent) as well as, subject to your consent, audience measurement cookies. You can at any time set your preferences in your browser."
+        ]
+      },
+      {
+        "title": "Policy modification",
+        "paragraphs": [
+          "Move in Paris reserves the right to modify this Privacy Policy at any time. Any modification will be published on the site and will take effect immediately. We invite you to consult it regularly."
+        ]
+      },
+      {
+        "title": "Contact",
+        "paragraphs": [
+          "For any question relating to the protection of your personal data, contact us at contact@move-in-paris.com or by mail: Move in Paris, 26, rue de l'Étoile, 75017 Paris."
+        ]
+      }
     ],
     "contentNotice": "The official legal texts (legal notice, terms of use, privacy policy) are also available in French. For any questions, please contact us."
+  },
+  "trip": {
+    "title": "Calculate your commute",
+    "placeholder": "Your office, school, or point of interest…",
+    "loading": "Loading search…",
+    "calculate": "Calculate",
+    "calculating": "Calculating…",
+    "transit": "Transit",
+    "bicycling": "Bike",
+    "driving": "Car",
+    "notAvailable": "Not available",
+    "hint": "Enter a destination to see travel times by transit, bike, and car.",
+    "errorNoRoute": "No route found for this destination. Try a more specific address.",
+    "errorGeneric": "Error calculating the route. Please try again in a moment."
   }
 }

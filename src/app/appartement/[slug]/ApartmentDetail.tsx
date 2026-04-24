@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePickField, useT } from "@/i18n/LocaleProvider";
 import { getFeatureIcon } from "@/lib/featureIcons";
 import { MetroLineBadge, resolveMetroLines } from "@/lib/metroLines";
+import TripCalculator from "@/components/TripCalculator";
 
 function VisitForm({ title }: { title: string }) {
   const t = useT();
@@ -389,6 +390,15 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                     );
                   })}
                 </div>
+              </motion.div>
+
+              {/* Trip calculator */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.55 }}
+              >
+                <TripCalculator origin={`${address}, Paris, France`} />
               </motion.div>
             </div>
 
