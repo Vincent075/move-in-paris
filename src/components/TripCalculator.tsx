@@ -428,7 +428,7 @@ export default function TripCalculator({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="trip-modes-row flex sm:grid sm:grid-cols-3 gap-3 sm:gap-4 overflow-x-auto sm:overflow-x-visible scrollbar-hide pb-1"
+            className="trip-modes-row flex sm:grid sm:grid-cols-3 gap-3 sm:gap-4 w-full max-w-full overflow-x-auto sm:overflow-x-visible scrollbar-hide pb-1"
           >
             <ModeCard
               mode="transit"
