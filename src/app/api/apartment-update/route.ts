@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { translateApartment } from "@/lib/translate";
+import { translateApartment, isTranslateError } from "@/lib/translate";
 
 const REPO_OWNER = "Vincent075";
 const REPO_NAME = "move-in-paris";
@@ -81,7 +81,7 @@ export async function PUT(req: NextRequest) {
         floor: String(merged.floor ?? ""),
         features: Array.isArray(merged.features) ? merged.features : [],
       });
-      if (translated) {
+      if (!isTranslateError(translated)) {
         apartments[index].title_en = translated.title_en;
         apartments[index].description_en = translated.description_en;
         apartments[index].floor_en = translated.floor_en;

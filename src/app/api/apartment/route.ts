@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { translateApartment } from "@/lib/translate";
+import { translateApartment, isTranslateError } from "@/lib/translate";
 
 const REPO_OWNER = "Vincent075";
 const REPO_NAME = "move-in-paris";
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
         ? (apartment.features as string[])
         : [],
     });
-    if (translated) {
+    if (!isTranslateError(translated)) {
       apartment.title_en = translated.title_en;
       apartment.description_en = translated.description_en;
       apartment.floor_en = translated.floor_en;

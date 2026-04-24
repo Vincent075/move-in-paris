@@ -210,7 +210,17 @@
     "sending": "Sending…",
     "sendRequest": "Send my request",
     "orCall": "Or call us directly",
-    "mapTitle": "Location - {title}"
+    "mapTitle": "Location - {title}",
+    "nearbyType": {
+      "Métro": "Metro",
+      "Commerce": "Shop",
+      "Parc": "Park",
+      "RER": "RER",
+      "RER / Métro": "RER / Metro"
+    },
+    "mapBack": "← Back to map",
+    "photoPrev": "Previous photo",
+    "photoNext": "Next photo"
   },
   "apartmentsPage": {
     "breadcrumbHome": "Home",

@@ -180,14 +180,14 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
           {/* Arrows — desktop only */}
           <button
             onClick={(e) => { e.stopPropagation(); setCurrentImage((p) => (p - 1 + apt.images.length) % apt.images.length); }}
-            aria-label="Photo précédente"
+            aria-label={t("apartment.photoPrev")}
             className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-noir-deep/60 backdrop-blur-sm text-blanc items-center justify-center hover:bg-gold transition-colors z-20"
           >
             &#8249;
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); setCurrentImage((p) => (p + 1) % apt.images.length); }}
-            aria-label="Photo suivante"
+            aria-label={t("apartment.photoNext")}
             className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-noir-deep/60 backdrop-blur-sm text-blanc items-center justify-center hover:bg-gold transition-colors z-20"
           >
             &#8250;
@@ -372,7 +372,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                       onClick={() => setTripRoute(null)}
                       className="absolute top-3 right-3 bg-white/95 backdrop-blur text-noir text-xs font-medium px-3 py-2 shadow-lg hover:bg-white transition-colors"
                     >
-                      ← Retour à la carte
+                      {t("apartment.mapBack")}
                     </button>
                   )}
                 </div>
@@ -409,7 +409,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                       <div key={i} className="flex items-center justify-between py-3 border-b border-gris-clair/50 last:border-0">
                         <div className="flex items-center gap-3 flex-1 min-w-0">
                           <span className="px-2 py-1 bg-gold/10 text-gold text-[10px] uppercase tracking-wider font-medium flex-shrink-0">
-                            {n.type}
+                            {t(`apartment.nearbyType.${n.type}`, n.type)}
                           </span>
                           <span className="text-noir text-sm">{n.name}</span>
                           {lines.length > 0 && (

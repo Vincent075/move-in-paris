@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { translateApartment } from "@/lib/translate";
+import { translateApartment, isTranslateError } from "@/lib/translate";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     features?: string[];
   } | null;
 
-  if (!body) return NextResponse.json({ error: "invalid body" }, { status: 400 });
+  if (!body) return NextResponse.json({ error: "invalid_body" }, { status: 400 });
 
   try {
     const out = await translateApartment({
@@ -26,15 +26,21 @@ export async function POST(req: NextRequest) {
       floor: body.floor ?? "",
       features: Array.isArray(body.features) ? body.features : [],
     });
-    if (!out) {
-      return NextResponse.json(
-        { error: "translation_failed" },
-        { status: 500 },
-      );
+
+    if (isTranslateError(out)) {
+      const status = out.kind === "no_key" ? 503 : 500;
+      const detail =
+        out.kind === "no_key"
+          ? "ANTHROPIC_API_KEY absente sur Vercel"
+          : out.kind === "api_error"
+            ? `API Claude: ${out.message}`
+            : `Réponse invalide: ${out.message}`;
+      return NextResponse.json({ error: detail }, { status });
     }
+
     return NextResponse.json(out);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({ error: `Erreur serveur: ${message}` }, { status: 500 });
   }
 }
