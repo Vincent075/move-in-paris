@@ -7,8 +7,9 @@ import { usePickField, useT } from "@/i18n/LocaleProvider";
 import { getFeatureIcon } from "@/lib/featureIcons";
 import { MetroLineBadge, resolveMetroLines } from "@/lib/metroLines";
 import TripCalculator from "@/components/TripCalculator";
+import { getApartmentReference } from "@/lib/apartmentRef";
 
-function VisitForm({ title }: { title: string }) {
+function VisitForm({ title, reference }: { title: string; reference: string }) {
   const t = useT();
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
@@ -20,6 +21,7 @@ function VisitForm({ title }: { title: string }) {
     const data = {
       formType: "visite",
       appartement: title,
+      reference,
       nom: (form.elements.namedItem("nom") as HTMLInputElement).value,
       email: (form.elements.namedItem("email") as HTMLInputElement).value,
       telephone: (form.elements.namedItem("telephone") as HTMLInputElement).value,
@@ -66,6 +68,7 @@ function VisitForm({ title }: { title: string }) {
 
 interface ApartmentProps {
   apartment: {
+    slug: string;
     title: string;
     title_en?: string;
     address: string;
@@ -92,12 +95,14 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
   const pick = usePickField();
   const [currentImage, setCurrentImage] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [tripRoute, setTripRoute] = useState<{ destination: string; mode: "transit" | "bicycling" | "driving" } | null>(null);
   const apt = apartment;
   const title = pick<string>(apt, "title");
   const address = pick<string>(apt, "address");
   const floor = pick<string>(apt, "floor");
   const description = pick<string>(apt, "description");
   const features = pick<string[]>(apt, "features", []);
+  const reference = useMemo(() => getApartmentReference(apt.slug), [apt.slug]);
   const sortedFeatures = useMemo(
     () => [...features].sort((a, b) => a.localeCompare(b, "fr", { sensitivity: "base" })),
     [features],
@@ -252,7 +257,10 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                   </span>
                   {title}
                 </h1>
-                <p className="text-gris text-lg font-light mb-8">{address}</p>
+                <p className="text-gris text-lg font-light mb-2">{address}</p>
+                <p className="text-gris/70 text-xs tracking-[0.2em] uppercase font-medium mb-8">
+                  Réf. <span className="text-gold-dark">{reference}</span>
+                </p>
               </motion.div>
 
               {/* Key stats */}
@@ -342,9 +350,14 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
               >
                 <h2 className="font-serif text-2xl text-noir mb-4">{t("apartment.location")}</h2>
                 <div className="h-px w-12 bg-gold mb-6" />
-                <div className="aspect-[16/9] bg-gris-clair overflow-hidden">
+                <div className="aspect-[16/9] bg-gris-clair overflow-hidden relative">
                   <iframe
-                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(address + ", France")}&zoom=15`}
+                    key={tripRoute ? `dir-${tripRoute.destination}-${tripRoute.mode}` : "place"}
+                    src={
+                      tripRoute
+                        ? `https://www.google.com/maps/embed/v1/directions?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&origin=${encodeURIComponent(address + ", Paris, France")}&destination=${encodeURIComponent(tripRoute.destination)}&mode=${tripRoute.mode}`
+                        : `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(address + ", France")}&zoom=15`
+                    }
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
@@ -353,6 +366,15 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                     referrerPolicy="no-referrer-when-downgrade"
                     title={t("apartment.mapTitle").replace("{title}", apt.title)}
                   />
+                  {tripRoute && (
+                    <button
+                      type="button"
+                      onClick={() => setTripRoute(null)}
+                      className="absolute top-3 right-3 bg-white/95 backdrop-blur text-noir text-xs font-medium px-3 py-2 shadow-lg hover:bg-white transition-colors"
+                    >
+                      ← Retour à la carte
+                    </button>
+                  )}
                 </div>
               </motion.div>
 
@@ -363,7 +385,10 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                 transition={{ delay: 0.45 }}
                 className="mb-10"
               >
-                <TripCalculator origin={`${address}, Paris, France`} />
+                <TripCalculator
+                  origin={`${address}, Paris, France`}
+                  onTripCalculated={(destination, mode) => setTripRoute({ destination, mode })}
+                />
               </motion.div>
 
               {/* Nearby */}
@@ -445,7 +470,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                   transition={{ delay: 0.3 }}
                   className="bg-blanc-chaud border border-gris-clair/50 p-8"
                 >
-                  <VisitForm title={title} />
+                  <VisitForm title={title} reference={reference} />
                   <div className="mt-6 pt-6 border-t border-gris-clair/50 text-center">
                     <p className="text-xs text-gris mb-2">{t("apartment.orCall")}</p>
                     <a href="tel:+33145200603" className="text-gold font-serif text-lg hover:text-gold-dark transition-colors">

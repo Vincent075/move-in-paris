@@ -82,3 +82,9 @@ Pas d'accents, pas de majuscules, des tirets à la place des espaces.
 - `"À louer"` → badge doré
 - `"Disponible"` → badge doré
 - `"Loué"` → badge gris
+
+## La référence de l'appartement
+
+Pas besoin de t'en occuper : une référence unique (ex. `MIP-7A3F91`) est **générée automatiquement** à partir du slug de l'appartement. Elle apparaît sous l'adresse sur la fiche, et elle est incluse dans les emails de demande de visite.
+
+Tant que tu ne changes pas le slug d'un appart existant, sa référence reste la même.

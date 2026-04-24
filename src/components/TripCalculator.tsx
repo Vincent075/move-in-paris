@@ -66,6 +66,8 @@ function ModeCard({
   data,
   loading,
   delay,
+  selected,
+  onSelect,
 }: {
   mode: Mode;
   icon: React.ReactNode;
@@ -73,14 +75,23 @@ function ModeCard({
   data: LegSummary | null | undefined;
   loading: boolean;
   delay: number;
+  selected: boolean;
+  onSelect?: () => void;
 }) {
   const t = useT();
+  const clickable = !!onSelect && !!data && !loading;
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.4 }}
-      className="bg-blanc border border-gris-clair/60 p-5 sm:p-6 flex flex-col items-center text-center min-h-[168px]"
+      onClick={clickable ? onSelect : undefined}
+      role={clickable ? "button" : undefined}
+      tabIndex={clickable ? 0 : undefined}
+      onKeyDown={clickable ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSelect?.(); } } : undefined}
+      className={`bg-blanc p-5 sm:p-6 flex flex-col items-center text-center min-h-[168px] transition-colors ${
+        selected ? "border-2 border-gold" : "border border-gris-clair/60"
+      } ${clickable ? "cursor-pointer hover:border-gold" : ""}`}
     >
       <div className="w-11 h-11 flex items-center justify-center rounded-full bg-gold/10 text-gold mb-3">
         {icon}
@@ -144,7 +155,13 @@ const ICON_CAR = (
   </svg>
 );
 
-export default function TripCalculator({ origin }: { origin: string }) {
+export default function TripCalculator({
+  origin,
+  onTripCalculated,
+}: {
+  origin: string;
+  onTripCalculated?: (destination: string, mode: Mode) => void;
+}) {
   const t = useT();
   const inputRef = useRef<HTMLInputElement>(null);
   const [destination, setDestination] = useState<string>("");
@@ -152,6 +169,7 @@ export default function TripCalculator({ origin }: { origin: string }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [autocompleteReady, setAutocompleteReady] = useState(true);
+  const [selectedMode, setSelectedMode] = useState<Mode>("transit");
 
   useEffect(() => {
     const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY;
@@ -196,6 +214,7 @@ export default function TripCalculator({ origin }: { origin: string }) {
     if (!dest) return;
     setLoading(true);
     setError(null);
+    setData(null);
     try {
       const params = new URLSearchParams({ origin, destination: dest });
       const res = await fetch(`/api/directions?${params.toString()}`);
@@ -203,9 +222,14 @@ export default function TripCalculator({ origin }: { origin: string }) {
         const body = (await res.json().catch(() => ({}))) as { error?: string };
         setError(body.error === "no_route_found" ? "no_route" : "generic");
         setData(null);
-      } else {
-        const body = (await res.json()) as DirectionsResponse;
-        setData(body);
+        return;
+      }
+      const body = (await res.json()) as DirectionsResponse;
+      setData(body);
+      // Pick the first available mode for the map (prefer user's current selection)
+      const preferred = body[selectedMode] ? selectedMode : body.transit ? "transit" : body.bicycling ? "bicycling" : body.driving ? "driving" : null;
+      if (preferred) {
+        onTripCalculated?.(dest, preferred);
       }
     } catch {
       setError("generic");
@@ -213,6 +237,11 @@ export default function TripCalculator({ origin }: { origin: string }) {
     } finally {
       setLoading(false);
     }
+  }
+
+  function handleSelectMode(mode: Mode, dest: string) {
+    setSelectedMode(mode);
+    onTripCalculated?.(dest, mode);
   }
 
   const hasResults = loading || data;
@@ -288,6 +317,8 @@ export default function TripCalculator({ origin }: { origin: string }) {
               data={data?.transit}
               loading={loading}
               delay={0}
+              selected={selectedMode === "transit"}
+              onSelect={() => handleSelectMode("transit", destination || inputRef.current?.value || "")}
             />
             <ModeCard
               mode="bicycling"
@@ -296,6 +327,8 @@ export default function TripCalculator({ origin }: { origin: string }) {
               data={data?.bicycling}
               loading={loading}
               delay={0.08}
+              selected={selectedMode === "bicycling"}
+              onSelect={() => handleSelectMode("bicycling", destination || inputRef.current?.value || "")}
             />
             <ModeCard
               mode="driving"
@@ -304,6 +337,8 @@ export default function TripCalculator({ origin }: { origin: string }) {
               data={data?.driving}
               loading={loading}
               delay={0.16}
+              selected={selectedMode === "driving"}
+              onSelect={() => handleSelectMode("driving", destination || inputRef.current?.value || "")}
             />
           </motion.div>
         )}
