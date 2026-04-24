@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useT } from "@/i18n/LocaleProvider";
 
@@ -187,6 +188,34 @@ export default function TripCalculator({
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [showPredictions, setShowPredictions] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [searching, setSearching] = useState(false);
+  const [searchedQuery, setSearchedQuery] = useState("");
+  const [dropdownRect, setDropdownRect] = useState<{ top: number; left: number; width: number } | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!showPredictions) return;
+    function updatePosition() {
+      if (!inputRef.current) return;
+      const rect = inputRef.current.getBoundingClientRect();
+      setDropdownRect({
+        top: rect.bottom + window.scrollY + 4,
+        left: rect.left + window.scrollX,
+        width: rect.width,
+      });
+    }
+    updatePosition();
+    window.addEventListener("scroll", updatePosition, true);
+    window.addEventListener("resize", updatePosition);
+    return () => {
+      window.removeEventListener("scroll", updatePosition, true);
+      window.removeEventListener("resize", updatePosition);
+    };
+  }, [showPredictions, predictions]);
 
   useEffect(() => {
     const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY;
@@ -228,16 +257,19 @@ export default function TripCalculator({
   function fetchPredictions(input: string) {
     if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
     const trimmed = input.trim();
+    setSearchedQuery(trimmed);
     if (!trimmed) {
       setPredictions([]);
+      setSearching(false);
       return;
     }
     const service = autocompleteServiceRef.current;
     if (!service) {
-      // Remember input to fetch once the service is ready
       pendingInputRef.current = trimmed;
+      setSearching(true);
       return;
     }
+    setSearching(true);
     debounceTimerRef.current = setTimeout(() => {
       const seq = ++requestSeqRef.current;
       service.getPlacePredictions(
@@ -249,7 +281,14 @@ export default function TripCalculator({
         (preds, status) => {
           if (seq !== requestSeqRef.current) return;
           const okStatus = window.google?.maps?.places?.PlacesServiceStatus?.OK ?? "OK";
-          if (status !== okStatus || !preds) {
+          const zeroStatus = window.google?.maps?.places?.PlacesServiceStatus?.ZERO_RESULTS ?? "ZERO_RESULTS";
+          setSearching(false);
+          if (status !== okStatus && status !== zeroStatus) {
+            console.warn("[TripCalculator] Places API status:", status);
+            setPredictions([]);
+            return;
+          }
+          if (!preds) {
             setPredictions([]);
             return;
           }
@@ -358,48 +397,11 @@ export default function TripCalculator({
             }}
             className="w-full pl-10 pr-4 py-3 border border-gris-clair bg-blanc text-noir text-base sm:text-sm focus:border-gold focus:outline-none transition-colors"
           />
-          <AnimatePresence>
-            {showPredictions && predictions.length > 0 && (
-              <motion.ul
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.15 }}
-                className="absolute left-0 right-0 top-full mt-1 z-50 bg-white shadow-2xl shadow-noir-deep/20 border border-gris-clair/40 max-h-[320px] overflow-y-auto py-1.5"
-              >
-                {predictions.map((pred, i) => {
-                  const highlighted = i === highlightedIndex;
-                  return (
-                    <li
-                      key={pred.place_id}
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        selectPrediction(pred);
-                      }}
-                      onMouseEnter={() => setHighlightedIndex(i)}
-                      className={`px-4 py-2.5 text-sm cursor-pointer transition-colors ${
-                        highlighted ? "bg-blanc-chaud" : "hover:bg-blanc-chaud"
-                      }`}
-                    >
-                      <div className="text-noir font-medium truncate">
-                        {pred.structured_formatting?.main_text ?? pred.description}
-                      </div>
-                      {pred.structured_formatting?.secondary_text && (
-                        <div className="text-gris text-xs truncate">
-                          {pred.structured_formatting.secondary_text}
-                        </div>
-                      )}
-                    </li>
-                  );
-                })}
-              </motion.ul>
-            )}
-          </AnimatePresence>
         </div>
         <button
           type="submit"
           disabled={loading}
-          className={`px-6 py-3 font-medium tracking-wider uppercase text-xs whitespace-nowrap transition-all duration-300 ${
+          className={`w-full sm:w-auto px-6 py-3 font-medium tracking-wider uppercase text-xs whitespace-nowrap transition-all duration-300 ${
             loading
               ? "bg-gris-clair text-gris cursor-not-allowed"
               : "bg-noir-deep text-blanc hover:bg-gold hover:text-noir-deep"
@@ -408,6 +410,83 @@ export default function TripCalculator({
           {loading ? t("trip.calculating") : t("trip.calculate")}
         </button>
       </form>
+
+      {/* Predictions dropdown rendered via portal to body to avoid any CSS clipping */}
+      {mounted && showPredictions && dropdownRect &&
+        createPortal(
+          <div
+            data-trip-dropdown
+            style={{
+              position: "absolute",
+              top: dropdownRect.top,
+              left: dropdownRect.left,
+              width: dropdownRect.width,
+              zIndex: 9999,
+            }}
+            onMouseDown={(e) => e.preventDefault()}
+          >
+            <AnimatePresence>
+              {predictions.length > 0 ? (
+                <motion.ul
+                  key="list"
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.15 }}
+                  className="bg-white shadow-2xl shadow-noir-deep/25 border border-gris-clair/40 max-h-[280px] overflow-y-auto py-1.5"
+                >
+                  {predictions.map((pred, i) => {
+                    const highlighted = i === highlightedIndex;
+                    return (
+                      <li
+                        key={pred.place_id}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          selectPrediction(pred);
+                        }}
+                        onMouseEnter={() => setHighlightedIndex(i)}
+                        className={`px-4 py-2.5 text-sm cursor-pointer transition-colors ${
+                          highlighted ? "bg-blanc-chaud" : "hover:bg-blanc-chaud"
+                        }`}
+                      >
+                        <div className="text-noir font-medium truncate">
+                          {pred.structured_formatting?.main_text ?? pred.description}
+                        </div>
+                        {pred.structured_formatting?.secondary_text && (
+                          <div className="text-gris text-xs truncate">
+                            {pred.structured_formatting.secondary_text}
+                          </div>
+                        )}
+                      </li>
+                    );
+                  })}
+                </motion.ul>
+              ) : searching && searchedQuery.length > 0 ? (
+                <motion.div
+                  key="searching"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="bg-white shadow-2xl shadow-noir-deep/25 border border-gris-clair/40 px-4 py-3 text-sm text-gris italic"
+                >
+                  {t("trip.searching")}
+                </motion.div>
+              ) : !searching && searchedQuery.length > 1 ? (
+                <motion.div
+                  key="noresults"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="bg-white shadow-2xl shadow-noir-deep/25 border border-gris-clair/40 px-4 py-3 text-sm text-gris"
+                >
+                  {t("trip.noSuggestion")}
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
+          </div>,
+          document.body,
+        )
+      }
 
       <AnimatePresence mode="wait">
         {error && (

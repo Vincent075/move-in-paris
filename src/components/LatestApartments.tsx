@@ -90,12 +90,12 @@ export default function LatestApartments() {
         }
       `}</style>
       <div className="relative carousel-container">
-        <div className="flex gap-6 carousel-track pl-6 md:pl-0">
+        <div className="flex gap-4 md:gap-6 carousel-track px-5 md:px-0">
           {doubled.map((apt, i) => (
             <Link
               key={i}
               href={apt.slug ? `/appartement/${apt.slug}` : "/nos-appartements"}
-              className="flex-shrink-0 w-[280px] md:w-[320px] group carousel-item"
+              className="flex-shrink-0 w-[78vw] max-w-[280px] md:w-[320px] group carousel-item"
             >
               {/* Image */}
               <div className="relative aspect-[4/3] overflow-hidden mb-4">

@@ -225,7 +225,7 @@
     "allBedrooms": "Indifférent",
     "elevator": "Ascenseur",
     "concierge": "Gardien",
-    "metroMax": "Proximité métro",
+    "metroLine": "Ligne de métro",
     "no": "Indifférent",
     "yes": "Oui",
     "foundSingular": "appartement trouvé",
@@ -702,6 +702,8 @@
     "driving": "Voiture",
     "notAvailable": "Non disponible",
     "hint": "Saisissez une adresse pour voir le temps de trajet en transport, vélo et voiture.",
+    "searching": "Recherche en cours…",
+    "noSuggestion": "Aucune suggestion. Tapez plus de caractères ou essayez une adresse proche.",
     "errorNoRoute": "Aucun itinéraire trouvé pour cette destination. Essayez une adresse plus précise.",
     "errorGeneric": "Erreur lors du calcul de l’itinéraire. Réessayez dans un instant."
   }

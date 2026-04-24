@@ -77,14 +77,16 @@ html {
   scrollbar-width: none;
 }
 
-/* Mobile swipe rows (iOS momentum + snap) */
+/* Mobile swipe rows (iOS momentum + touch gesture) */
 .trip-modes-row,
-.services-row {
+.services-row,
+.carousel-container {
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
 }
 @media (max-width: 639px) {
   .trip-modes-row {
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: x proximity;
   }
   .trip-modes-row > * {
     scroll-snap-align: start;
@@ -92,7 +94,7 @@ html {
 }
 @media (max-width: 767px) {
   .services-row {
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: x proximity;
     scroll-padding-left: 1.5rem;
   }
   .services-row > * {

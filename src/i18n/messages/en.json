@@ -225,7 +225,7 @@
     "allBedrooms": "Any",
     "elevator": "Elevator",
     "concierge": "Concierge",
-    "metroMax": "Metro proximity",
+    "metroLine": "Metro line",
     "no": "Any",
     "yes": "Yes",
     "foundSingular": "apartment found",
@@ -702,6 +702,8 @@
     "driving": "Car",
     "notAvailable": "Not available",
     "hint": "Enter a destination to see travel times by transit, bike, and car.",
+    "searching": "Searching…",
+    "noSuggestion": "No suggestion yet. Type more characters or try a nearby address.",
     "errorNoRoute": "No route found for this destination. Try a more specific address.",
     "errorGeneric": "Error calculating the route. Please try again in a moment."
   }

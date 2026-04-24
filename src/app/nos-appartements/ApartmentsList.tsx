@@ -8,13 +8,9 @@ import apartmentsDataRaw from "@/data/apartments.json";
 import type { ApartmentRecord } from "@/data/apartment-types";
 import { usePickField, useT } from "@/i18n/LocaleProvider";
 import Dropdown from "@/components/Dropdown";
+import { resolveMetroLines } from "@/lib/metroLines";
 
 const apartmentsData = apartmentsDataRaw as ApartmentRecord[];
-
-function parseMinutes(distance: string): number {
-  const m = distance.match(/(\d+)\s*min/i);
-  return m ? parseInt(m[1], 10) : 99;
-}
 
 function hasFeature(apt: ApartmentRecord, keyword: string): boolean {
   const needle = keyword.toLowerCase();
@@ -22,6 +18,21 @@ function hasFeature(apt: ApartmentRecord, keyword: string): boolean {
   if (apt.description?.toLowerCase().includes(needle)) return true;
   return false;
 }
+
+function getApartmentMetroLines(apt: ApartmentRecord): Set<string> {
+  const out = new Set<string>();
+  for (const n of apt.nearby || []) {
+    if (n.type !== "Métro" && n.type !== "RER" && n.type !== "RER / Métro") continue;
+    const lines = resolveMetroLines(n.name, n.lines);
+    for (const line of lines) out.add(line);
+  }
+  return out;
+}
+
+const ALL_METRO_LINES = [
+  "1", "2", "3", "3BIS", "4", "5", "6", "7", "7BIS", "8", "9", "10", "11", "12", "13", "14",
+  "RER A", "RER B", "RER C", "RER D", "RER E",
+];
 
 export default function ApartmentsList() {
   const t = useT();
@@ -62,9 +73,10 @@ export default function ApartmentsList() {
   ];
   const metroList = [
     { value: "all", label: t("apartmentsPage.no") },
-    { value: "3", label: "≤ 3 min" },
-    { value: "5", label: "≤ 5 min" },
-    { value: "10", label: "≤ 10 min" },
+    ...ALL_METRO_LINES.map((l) => ({
+      value: l,
+      label: l.startsWith("RER ") ? l : `M${l.toLowerCase().replace("bis", "ᵇ")}`,
+    })),
   ];
 
   const [selectedLocation, setSelectedLocation] = useState(ALL);
@@ -75,7 +87,7 @@ export default function ApartmentsList() {
   const [bedrooms, setBedrooms] = useState("all");
   const [elevator, setElevator] = useState("no");
   const [concierge, setConcierge] = useState("no");
-  const [metroMax, setMetroMax] = useState("all");
+  const [metroLine, setMetroLine] = useState("all");
 
   const filtered = apartmentsData.filter((apt) => {
     if (selectedLocation !== ALL && apt.district !== selectedLocation) {
@@ -96,14 +108,9 @@ export default function ApartmentsList() {
     }
     if (elevator === "yes" && !hasFeature(apt, "ascenseur")) return false;
     if (concierge === "yes" && !hasFeature(apt, "gardien")) return false;
-    if (metroMax !== "all") {
-      const max = parseInt(metroMax);
-      const closest = Math.min(
-        ...apt.nearby
-          .filter((n) => n.type === "Métro" || n.type === "RER" || n.type === "RER / Métro")
-          .map((n) => parseMinutes(n.distance)),
-      );
-      if (closest > max) return false;
+    if (metroLine !== "all") {
+      const lines = getApartmentMetroLines(apt);
+      if (!lines.has(metroLine)) return false;
     }
     return true;
   });
@@ -222,10 +229,10 @@ export default function ApartmentsList() {
                     flush={false}
                   />
                   <Dropdown
-                    label={t("apartmentsPage.metroMax")}
-                    value={metroMax}
+                    label={t("apartmentsPage.metroLine")}
+                    value={metroLine}
                     options={metroList}
-                    onChange={setMetroMax}
+                    onChange={setMetroLine}
                     flush={false}
                   />
                   <Dropdown

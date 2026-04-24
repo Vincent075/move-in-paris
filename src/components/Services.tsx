@@ -75,7 +75,7 @@ export default function Services() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.15 }}
-              className="shrink-0 w-[80%] sm:w-[60%] md:w-auto group p-7 lg:p-10 bg-blanc-chaud/50 hover:bg-blanc-chaud border border-gris-clair/50 hover:border-gold/30 transition-all duration-500 text-center"
+              className="shrink-0 w-[82vw] max-w-[380px] md:w-auto md:max-w-none group p-7 lg:p-10 bg-blanc-chaud/50 hover:bg-blanc-chaud border border-gris-clair/50 hover:border-gold/30 transition-all duration-500 text-center"
             >
               <div className="text-gold mb-6 group-hover:scale-110 transition-transform duration-300 flex justify-center">
                 {service.icon}
