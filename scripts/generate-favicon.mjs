@@ -24,7 +24,7 @@ async function buildIcon(size, outputPath) {
     .extract({ left: cropLeft, top: 0, width: cropSize, height: cropSize })
     .toBuffer();
 
-  const padding = Math.round(size * 0.28);
+  const padding = Math.round(size * 0.22);
   const inner = size - padding * 2;
 
   const logoResized = await sharp(monogram)
