@@ -84,8 +84,10 @@ export default function LatestApartments() {
           scroll-padding-left: 1.5rem;
         }
         .carousel-container::-webkit-scrollbar { display: none; }
+        .carousel-item { scroll-margin-left: 1.5rem; }
         @media (min-width: 768px) {
           .carousel-container { scroll-padding-left: 3rem; }
+          .carousel-item { scroll-margin-left: 0; }
         }
         @media (pointer: coarse) {
           .carousel-track { animation: none; }
@@ -94,7 +96,7 @@ export default function LatestApartments() {
         }
       `}</style>
       <div className="relative carousel-container">
-        <div className="flex gap-4 md:gap-6 carousel-track px-5 md:px-0">
+        <div className="flex gap-4 md:gap-6 carousel-track pl-6 pr-5 md:px-0 [&>*:first-child]:ml-0">
           {doubled.map((apt, i) => (
             <Link
               key={i}
