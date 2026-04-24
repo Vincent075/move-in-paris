@@ -81,8 +81,12 @@ export default function LatestApartments() {
           overflow-x: auto;
           -webkit-overflow-scrolling: touch;
           scrollbar-width: none;
+          scroll-padding-left: 1.5rem;
         }
         .carousel-container::-webkit-scrollbar { display: none; }
+        @media (min-width: 768px) {
+          .carousel-container { scroll-padding-left: 3rem; }
+        }
         @media (pointer: coarse) {
           .carousel-track { animation: none; }
           .carousel-container { scroll-snap-type: x mandatory; }
