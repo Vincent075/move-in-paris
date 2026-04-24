@@ -56,7 +56,7 @@ function ModeCard({
       role={clickable ? "button" : undefined}
       tabIndex={clickable ? 0 : undefined}
       onKeyDown={clickable ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSelect?.(); } } : undefined}
-      className={`bg-blanc px-4 py-4 sm:p-6 flex flex-row sm:flex-col items-center sm:text-center gap-4 sm:gap-0 snap-start shrink-0 w-[260px] sm:w-auto transition-colors ${
+      className={`bg-blanc px-4 py-4 sm:p-6 flex flex-row sm:flex-col items-center sm:text-center gap-4 sm:gap-0 snap-start shrink-0 w-[70vw] max-w-[260px] sm:w-auto sm:max-w-none transition-colors ${
         selected ? "border-2 border-gold" : "border border-gris-clair/60"
       } ${clickable ? "cursor-pointer hover:border-gold" : ""}`}
     >

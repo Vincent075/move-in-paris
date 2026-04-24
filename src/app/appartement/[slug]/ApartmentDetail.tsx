@@ -243,9 +243,9 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
       {/* Content */}
       <section className="py-12 bg-blanc">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="grid lg:grid-cols-[1fr_380px] gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_380px] gap-12">
             {/* Left - Details */}
-            <div className="min-w-0">
+            <div className="min-w-0 overflow-hidden">
               {/* Title & address */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
