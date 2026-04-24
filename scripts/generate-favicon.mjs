@@ -1,7 +1,7 @@
 import sharp from "sharp";
 import { writeFile, unlink, stat } from "node:fs/promises";
 
-const SRC = new URL("../public/Logo-gold.png", import.meta.url).pathname;
+const SRC = new URL("../public/monogram.png", import.meta.url).pathname;
 const ICON = new URL("../src/app/icon.png", import.meta.url).pathname;
 const APPLE = new URL("../src/app/apple-icon.png", import.meta.url).pathname;
 const OLD_ICO = new URL("../src/app/favicon.ico", import.meta.url).pathname;
@@ -10,24 +10,12 @@ const OLD_ICO = new URL("../src/app/favicon.ico", import.meta.url).pathname;
 const BG = { r: 255, g: 255, b: 255 };
 
 async function buildIcon(size, outputPath) {
-  // 1) Trim tout le whitespace du fichier source
-  const trimmed = await sharp(SRC).trim().toBuffer();
-  const tmeta = await sharp(trimmed).metadata();
-
-  // 2) Crop la zone haute qui contient UNIQUEMENT le monogramme
-  //    (le texte MOVE IN PARIS est en bas, ~40% de la hauteur).
-  const cropHeight = Math.round(tmeta.height * 0.58);
-  const monoBand = await sharp(trimmed)
-    .extract({ left: 0, top: 0, width: tmeta.width, height: cropHeight })
-    .toBuffer();
-
-  // 3) Trim CE crop pour enlever toute marge blanche/transparente autour
-  //    des pixels du monogramme. Résultat = boîte serrée sur le monogramme.
-  const tight = await sharp(monoBand).trim({ threshold: 10 }).toBuffer();
+  // Source = monogramme propre (public/monogram.png), déjà sans texte.
+  // Trim pour enlever le whitespace autour → boîte serrée.
+  const tight = await sharp(SRC).trim({ threshold: 10 }).toBuffer();
   const tightMeta = await sharp(tight).metadata();
 
-  // 4) Place sur fond carré, avec un petit padding pour ne pas coller aux bords
-  const padding = Math.round(size * 0.3);
+  const padding = Math.round(size * 0.1);
   const inner = size - padding * 2;
 
   // Conserve le ratio du monogramme dans le carré inner
