@@ -27,7 +27,7 @@ async function buildIcon(size, outputPath) {
   const tightMeta = await sharp(tight).metadata();
 
   // 4) Place sur fond carré, avec un petit padding pour ne pas coller aux bords
-  const padding = Math.round(size * 0.2);
+  const padding = Math.round(size * 0.3);
   const inner = size - padding * 2;
 
   // Conserve le ratio du monogramme dans le carré inner
