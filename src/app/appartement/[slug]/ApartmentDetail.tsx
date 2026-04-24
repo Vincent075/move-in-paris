@@ -356,6 +356,16 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                 </div>
               </motion.div>
 
+              {/* Trip calculator */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.45 }}
+                className="mb-10"
+              >
+                <TripCalculator origin={`${address}, Paris, France`} />
+              </motion.div>
+
               {/* Nearby */}
               <motion.div
                 initial={{ opacity: 0 }}
@@ -390,15 +400,6 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                     );
                   })}
                 </div>
-              </motion.div>
-
-              {/* Trip calculator */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.55 }}
-              >
-                <TripCalculator origin={`${address}, Paris, France`} />
               </motion.div>
             </div>
 

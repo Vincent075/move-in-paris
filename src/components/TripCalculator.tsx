@@ -151,15 +151,21 @@ export default function TripCalculator({ origin }: { origin: string }) {
   const [data, setData] = useState<DirectionsResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [autocompleteReady, setAutocompleteReady] = useState(false);
+  const [autocompleteReady, setAutocompleteReady] = useState(true);
 
   useEffect(() => {
     const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY;
-    if (!key) return;
+    if (!key) {
+      setAutocompleteReady(true);
+      return;
+    }
     let cancelled = false;
     loadGoogleMaps(key)
       .then(() => {
-        if (cancelled || !inputRef.current || !window.google?.maps?.places) return;
+        if (cancelled || !inputRef.current || !window.google?.maps?.places) {
+          setAutocompleteReady(true);
+          return;
+        }
         const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
           componentRestrictions: { country: "fr" },
           fields: ["formatted_address", "name"],
@@ -236,17 +242,16 @@ export default function TripCalculator({ origin }: { origin: string }) {
           <input
             ref={inputRef}
             type="text"
-            placeholder={autocompleteReady ? t("trip.placeholder") : t("trip.loading")}
-            disabled={!autocompleteReady}
+            placeholder={t("trip.placeholder")}
             onChange={(e) => setDestination(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors disabled:bg-gris-clair/20 disabled:text-gris"
+            className="w-full pl-10 pr-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors"
           />
         </div>
         <button
           type="submit"
-          disabled={loading || !autocompleteReady}
+          disabled={loading}
           className={`px-6 py-3 font-medium tracking-wider uppercase text-xs whitespace-nowrap transition-all duration-300 ${
-            loading || !autocompleteReady
+            loading
               ? "bg-gris-clair text-gris cursor-not-allowed"
               : "bg-noir-deep text-blanc hover:bg-gold hover:text-noir-deep"
           }`}
