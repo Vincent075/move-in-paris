@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import ApartmentDetail from "./ApartmentDetail";
 import apartmentsDataRaw from "@/data/apartments.json";
 import type { ApartmentRecord } from "@/data/apartment-types";
+import { resolveOgCover } from "@/lib/og-cover";
 
 const apartmentsData = apartmentsDataRaw as ApartmentRecord[];
 
@@ -17,7 +18,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!apt) return { title: "Appartement non trouvé" };
   const title = `Location meublée ${apt.district} — ${apt.title}, ${apt.surface}m² | Move in Paris`;
   const description = `Location meublée à Paris ${apt.district} : ${apt.title}, ${apt.surface}m², ${apt.bedrooms} chambre(s). Appartement meublé haut de gamme pour location corporate et expatriés. ${apt.description.slice(0, 110)}...`;
-  const cover = apt.images && apt.images.length > 0 ? apt.images[0] : "/Logo-gold.png";
+  // Cover convention: images[0] is the card thumbnail in the listing AND the OG image shared on WhatsApp/Facebook/Twitter.
+  const coverPath = apt.images && apt.images.length > 0 ? apt.images[0] : "/Logo-gold.png";
+  const cover = resolveOgCover(coverPath, apt.title);
   const canonical = `https://www.move-in-paris.com/appartement/${apt.slug}`;
   return {
     title,
@@ -30,13 +33,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       url: canonical,
       title,
       description,
-      images: [{ url: cover, width: 1200, height: 630, alt: apt.title }],
+      images: [cover],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [cover],
+      images: [cover.url],
     },
   };
 }
