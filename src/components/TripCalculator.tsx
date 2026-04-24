@@ -174,6 +174,7 @@ export default function TripCalculator({
   useEffect(() => {
     const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY;
     if (!key) {
+      console.warn("[TripCalculator] NEXT_PUBLIC_GOOGLE_MAPS_KEY missing — autocomplete disabled");
       setAutocompleteReady(true);
       return;
     }
@@ -200,7 +201,8 @@ export default function TripCalculator({
         });
         setAutocompleteReady(true);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.warn("[TripCalculator] Google Places autocomplete failed to load:", err);
         setAutocompleteReady(true);
       });
     return () => {
