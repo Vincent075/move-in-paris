@@ -4391,18 +4391,18 @@
     ],
     "photos": "3-pieces-ecole-militaire-paris-7e",
     "images": [
-      "/apartments/3-pieces-ecole-militaire-paris-7e/photo-1.jpg",
-      "/apartments/3-pieces-ecole-militaire-paris-7e/photo-2.jpg",
-      "/apartments/3-pieces-ecole-militaire-paris-7e/photo-3.jpg",
-      "/apartments/3-pieces-ecole-militaire-paris-7e/photo-4.jpg",
-      "/apartments/3-pieces-ecole-militaire-paris-7e/photo-5.jpg",
-      "/apartments/3-pieces-ecole-militaire-paris-7e/photo-6.jpg",
-      "/apartments/3-pieces-ecole-militaire-paris-7e/photo-7.jpg",
       "/apartments/3-pieces-ecole-militaire-paris-7e/photo-8.jpg",
-      "/apartments/3-pieces-ecole-militaire-paris-7e/photo-9.jpg",
-      "/apartments/3-pieces-ecole-militaire-paris-7e/photo-10.jpg",
       "/apartments/3-pieces-ecole-militaire-paris-7e/photo-11.jpg",
-      "/apartments/3-pieces-ecole-militaire-paris-7e/photo-12.jpg"
+      "/apartments/3-pieces-ecole-militaire-paris-7e/photo-12.jpg",
+      "/apartments/3-pieces-ecole-militaire-paris-7e/photo-9.jpg",
+      "/apartments/3-pieces-ecole-militaire-paris-7e/photo-3.jpg",
+      "/apartments/3-pieces-ecole-militaire-paris-7e/photo-10.jpg",
+      "/apartments/3-pieces-ecole-militaire-paris-7e/photo-6.jpg",
+      "/apartments/3-pieces-ecole-militaire-paris-7e/photo-2.jpg",
+      "/apartments/3-pieces-ecole-militaire-paris-7e/photo-1.jpg",
+      "/apartments/3-pieces-ecole-militaire-paris-7e/photo-7.jpg",
+      "/apartments/3-pieces-ecole-militaire-paris-7e/photo-4.jpg",
+      "/apartments/3-pieces-ecole-militaire-paris-7e/photo-5.jpg"
     ],
     "nearby": [
       {
@@ -4432,6 +4432,7 @@
         "name": "Jardin du Potager",
         "distance": "3 min"
       }
-    ]
+    ],
+    "hasElevator": false
   }
 ]
