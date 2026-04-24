@@ -125,9 +125,9 @@ export default function LatestApartments() {
           ))}
         </div>
 
-        {/* Fade edges */}
-        <div className="absolute top-0 left-0 w-24 h-full bg-gradient-to-r from-blanc to-transparent pointer-events-none z-10" />
-        <div className="absolute top-0 right-0 w-24 h-full bg-gradient-to-l from-blanc to-transparent pointer-events-none z-10" />
+        {/* Fade edges — desktop only (on touch, the carousel is swipable and the fade looks like a broken border) */}
+        <div className="hidden md:block absolute top-0 left-0 w-24 h-full bg-gradient-to-r from-blanc to-transparent pointer-events-none z-10" />
+        <div className="hidden md:block absolute top-0 right-0 w-24 h-full bg-gradient-to-l from-blanc to-transparent pointer-events-none z-10" />
       </div>
 
       {/* Mobile CTA */}

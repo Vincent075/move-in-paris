@@ -315,16 +315,16 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
               >
                 <h2 className="font-serif text-2xl text-noir mb-4">{t("apartment.equipment")}</h2>
                 <div className="h-px w-12 bg-gold mb-6" />
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-2">
                   {sortedFeatures.map((f, i) => {
                     const hide = !featuresExpanded && i >= FEATURES_COLLAPSED;
                     return (
                       <div
                         key={f}
-                        className={`items-center gap-3 py-2 ${hide ? "hidden" : "flex"}`}
+                        className={`items-center gap-2 py-1.5 ${hide ? "hidden" : "flex"}`}
                       >
                         {getFeatureIcon(f)}
-                        <span className="text-gris text-sm">{f}</span>
+                        <span className="text-gris text-[13px] leading-tight">{f}</span>
                       </div>
                     );
                   })}

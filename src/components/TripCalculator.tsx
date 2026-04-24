@@ -25,48 +25,6 @@ type Prediction = {
   structured_formatting?: { main_text: string; secondary_text?: string };
 };
 
-type AutocompleteServiceInstance = {
-  getPlacePredictions: (
-    req: {
-      input: string;
-      componentRestrictions?: { country: string | string[] };
-      types?: string[];
-      bounds?: { north: number; south: number; east: number; west: number };
-    },
-    cb: (predictions: Prediction[] | null, status: string) => void,
-  ) => void;
-};
-
-declare global {
-  interface Window {
-    google?: {
-      maps?: {
-        places?: {
-          AutocompleteService: new () => AutocompleteServiceInstance;
-          PlacesServiceStatus?: { OK: string };
-        };
-      };
-    };
-    __mipGmapsLoading?: Promise<void>;
-  }
-}
-
-function loadGoogleMaps(key: string): Promise<void> {
-  if (typeof window === "undefined") return Promise.resolve();
-  if (window.google?.maps?.places) return Promise.resolve();
-  if (window.__mipGmapsLoading) return window.__mipGmapsLoading;
-  window.__mipGmapsLoading = new Promise((resolve, reject) => {
-    const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places&loading=async&language=fr&region=FR`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error("gmaps_load_failed"));
-    document.head.appendChild(script);
-  });
-  return window.__mipGmapsLoading;
-}
-
 function ModeCard({
   mode,
   icon,
@@ -97,24 +55,25 @@ function ModeCard({
       role={clickable ? "button" : undefined}
       tabIndex={clickable ? 0 : undefined}
       onKeyDown={clickable ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSelect?.(); } } : undefined}
-      className={`bg-blanc p-5 sm:p-6 flex flex-col items-center text-center min-h-[168px] transition-colors ${
+      className={`bg-blanc px-4 py-4 sm:p-6 flex flex-row sm:flex-col items-center sm:text-center gap-4 sm:gap-0 snap-start shrink-0 w-[260px] sm:w-auto transition-colors ${
         selected ? "border-2 border-gold" : "border border-gris-clair/60"
       } ${clickable ? "cursor-pointer hover:border-gold" : ""}`}
     >
-      <div className="w-11 h-11 flex items-center justify-center rounded-full bg-gold/10 text-gold mb-3">
+      <div className="w-10 h-10 sm:w-11 sm:h-11 shrink-0 flex items-center justify-center rounded-full bg-gold/10 text-gold sm:mb-3">
         {icon}
       </div>
+      <div className="flex flex-col items-start sm:items-center sm:text-center">
       <span className="text-[10px] tracking-[0.22em] uppercase text-gris font-medium">{label}</span>
 
       {loading ? (
-        <div className="mt-3 flex flex-col items-center gap-2 w-full">
-          <div className="h-7 w-20 bg-gris-clair/70 animate-pulse" />
+        <div className="mt-2 sm:mt-3 flex flex-col sm:items-center gap-2 w-full">
+          <div className="h-6 sm:h-7 w-20 bg-gris-clair/70 animate-pulse" />
           <div className="h-3 w-14 bg-gris-clair/50 animate-pulse" />
         </div>
       ) : data ? (
         <>
-          <div className="font-serif text-3xl sm:text-[2rem] leading-none text-noir mt-3 tabular-nums">
-            {data.durationMinutes} <span className="text-base text-gris font-sans font-light">min</span>
+          <div className="font-serif text-2xl sm:text-[2rem] leading-none text-noir mt-1 sm:mt-3 tabular-nums">
+            {data.durationMinutes} <span className="text-sm sm:text-base text-gris font-sans font-light">min</span>
           </div>
           {mode === "transit" && data.steps && data.steps.length > 0 && (
             <div className="mt-4 flex flex-wrap items-center justify-center gap-1">
@@ -132,6 +91,7 @@ function ModeCard({
       ) : (
         <div className="mt-3 text-sm text-gris font-light">{t("trip.notAvailable")}</div>
       )}
+      </div>
     </motion.div>
   );
 }
@@ -173,7 +133,6 @@ export default function TripCalculator({
   const t = useT();
   const inputRef = useRef<HTMLInputElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const autocompleteServiceRef = useRef<AutocompleteServiceInstance | null>(null);
   const requestSeqRef = useRef(0);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [destination, setDestination] = useState<string>("");
@@ -184,26 +143,6 @@ export default function TripCalculator({
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [showPredictions, setShowPredictions] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
-
-  useEffect(() => {
-    const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY;
-    if (!key) {
-      console.warn("[TripCalculator] NEXT_PUBLIC_GOOGLE_MAPS_KEY missing — autocomplete disabled");
-      return;
-    }
-    let cancelled = false;
-    loadGoogleMaps(key)
-      .then(() => {
-        if (cancelled || !window.google?.maps?.places?.AutocompleteService) return;
-        autocompleteServiceRef.current = new window.google.maps.places.AutocompleteService();
-      })
-      .catch((err) => {
-        console.warn("[TripCalculator] Google Places autocomplete failed to load:", err);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   useEffect(() => {
     if (!showPredictions) return;
@@ -223,27 +162,23 @@ export default function TripCalculator({
       setPredictions([]);
       return;
     }
-    debounceTimerRef.current = setTimeout(() => {
-      const service = autocompleteServiceRef.current;
-      if (!service) return;
+    debounceTimerRef.current = setTimeout(async () => {
       const seq = ++requestSeqRef.current;
-      service.getPlacePredictions(
-        {
-          input: trimmed,
-          componentRestrictions: { country: "fr" },
-          bounds: { north: 49.25, south: 48.12, east: 3.56, west: 1.44 },
-        },
-        (preds, status) => {
-          if (seq !== requestSeqRef.current) return; // stale response, ignore
-          const okStatus = window.google?.maps?.places?.PlacesServiceStatus?.OK ?? "OK";
-          if (status !== okStatus || !preds) {
-            setPredictions([]);
-            return;
-          }
-          setPredictions(preds.slice(0, 5));
-          setHighlightedIndex(-1);
-        },
-      );
+      try {
+        const res = await fetch(`/api/places-autocomplete?input=${encodeURIComponent(trimmed)}`);
+        if (seq !== requestSeqRef.current) return; // stale response
+        if (!res.ok) {
+          setPredictions([]);
+          return;
+        }
+        const body = (await res.json()) as { predictions?: Prediction[] };
+        if (seq !== requestSeqRef.current) return;
+        setPredictions(body.predictions ?? []);
+        setHighlightedIndex(-1);
+      } catch {
+        if (seq !== requestSeqRef.current) return;
+        setPredictions([]);
+      }
     }, 150);
   }
 
@@ -343,7 +278,7 @@ export default function TripCalculator({
                 setShowPredictions(false);
               }
             }}
-            className="w-full pl-10 pr-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors"
+            className="w-full pl-10 pr-4 py-3 border border-gris-clair bg-blanc text-noir text-base sm:text-sm focus:border-gold focus:outline-none transition-colors"
           />
           <AnimatePresence>
             {showPredictions && predictions.length > 0 && (
@@ -415,7 +350,7 @@ export default function TripCalculator({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4"
+            className="flex sm:grid sm:grid-cols-3 gap-3 sm:gap-4 overflow-x-auto snap-x snap-mandatory -mx-6 px-6 sm:mx-0 sm:px-0 sm:overflow-x-visible scrollbar-hide"
           >
             <ModeCard
               mode="transit"
