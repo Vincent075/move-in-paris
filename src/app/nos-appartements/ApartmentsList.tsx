@@ -8,7 +8,7 @@ import apartmentsDataRaw from "@/data/apartments.json";
 import type { ApartmentRecord } from "@/data/apartment-types";
 import { usePickField, useT } from "@/i18n/LocaleProvider";
 import Dropdown from "@/components/Dropdown";
-import { resolveMetroLines } from "@/lib/metroLines";
+import { MetroLineBadge, resolveMetroLines } from "@/lib/metroLines";
 
 const apartmentsData = apartmentsDataRaw as ApartmentRecord[];
 
@@ -33,6 +33,22 @@ const ALL_METRO_LINES = [
   "1", "2", "3", "3BIS", "4", "5", "6", "7", "7BIS", "8", "9", "10", "11", "12", "13", "14",
   "RER A", "RER B", "RER C", "RER D", "RER E",
 ];
+
+function matchesLocation(selected: string, all: string, district: string): boolean {
+  if (selected === all) return true;
+  if (selected === district) return true;
+  // Range like "Paris 1er - 4e" / "Paris 9e - 11e"
+  const range = selected.match(/^Paris\s+(\d+)(?:er|e)\s*-\s*(\d+)e$/i);
+  if (range) {
+    const min = parseInt(range[1]);
+    const max = parseInt(range[2]);
+    const d = district.match(/^Paris\s+(\d+)(?:er|e)$/i);
+    if (!d) return false;
+    const n = parseInt(d[1]);
+    return n >= min && n <= max;
+  }
+  return false;
+}
 
 export default function ApartmentsList() {
   const t = useT();
@@ -73,10 +89,19 @@ export default function ApartmentsList() {
   ];
   const metroList = [
     { value: "all", label: t("apartmentsPage.no") },
-    ...ALL_METRO_LINES.map((l) => ({
-      value: l,
-      label: l.startsWith("RER ") ? l : `M${l.toLowerCase().replace("bis", "ᵇ")}`,
-    })),
+    ...ALL_METRO_LINES.map((l) => {
+      const label = l.startsWith("RER ") ? l : `M${l.toLowerCase().replace("bis", "ᵇ")}`;
+      return {
+        value: l,
+        label,
+        display: (
+          <span className="inline-flex items-center gap-2">
+            <MetroLineBadge line={l} />
+            <span>{label}</span>
+          </span>
+        ),
+      };
+    }),
   ];
 
   const [selectedLocation, setSelectedLocation] = useState(ALL);
@@ -86,14 +111,10 @@ export default function ApartmentsList() {
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const [bedrooms, setBedrooms] = useState("all");
   const [elevator, setElevator] = useState("no");
-  const [concierge, setConcierge] = useState("no");
   const [metroLine, setMetroLine] = useState("all");
 
   const filtered = apartmentsData.filter((apt) => {
-    if (selectedLocation !== ALL && apt.district !== selectedLocation) {
-      // also accept when location is a range that includes the district
-      if (!selectedLocation.includes(apt.district)) return false;
-    }
+    if (!matchesLocation(selectedLocation, ALL, apt.district)) return false;
     if (selectedType !== "all") {
       if (selectedType === "studio" && apt.rooms !== 1) return false;
       if (selectedType === "2" && apt.rooms !== 2) return false;
@@ -107,7 +128,6 @@ export default function ApartmentsList() {
       if (bedrooms !== "3+" && apt.bedrooms !== parseInt(bedrooms)) return false;
     }
     if (elevator === "yes" && !hasFeature(apt, "ascenseur")) return false;
-    if (concierge === "yes" && !hasFeature(apt, "gardien")) return false;
     if (metroLine !== "all") {
       const lines = getApartmentMetroLines(apt);
       if (!lines.has(metroLine)) return false;
@@ -220,7 +240,7 @@ export default function ApartmentsList() {
                 transition={{ duration: 0.25 }}
                 className="overflow-hidden border-t border-gris-clair/30 bg-blanc-chaud/40"
               >
-                <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   <Dropdown
                     label={t("apartmentsPage.bedrooms")}
                     value={bedrooms}
@@ -240,13 +260,6 @@ export default function ApartmentsList() {
                     value={elevator}
                     options={ynList}
                     onChange={setElevator}
-                    flush={false}
-                  />
-                  <Dropdown
-                    label={t("apartmentsPage.concierge")}
-                    value={concierge}
-                    options={ynList}
-                    onChange={setConcierge}
                     flush={false}
                   />
                 </div>

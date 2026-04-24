@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -23,7 +23,7 @@ function Chevron({ open }: { open: boolean }) {
   );
 }
 
-export type DropdownOption = { value: string; label: string };
+export type DropdownOption = { value: string; label: string; display?: ReactNode };
 
 export default function Dropdown({
   label,
@@ -48,7 +48,9 @@ export default function Dropdown({
   const normalized: DropdownOption[] = options.map((o) =>
     typeof o === "string" ? { value: o, label: o } : o,
   );
-  const currentLabel = normalized.find((o) => o.value === value)?.label ?? value;
+  const currentOption = normalized.find((o) => o.value === value);
+  const currentLabel = currentOption?.label ?? value;
+  const currentDisplay = currentOption?.display;
 
   useEffect(() => {
     setMounted(true);
@@ -111,7 +113,9 @@ export default function Dropdown({
           <span className="text-[10px] text-gold-dark uppercase tracking-[0.15em] font-semibold mb-1.5">
             {label}
           </span>
-          <span className="text-noir text-sm font-medium truncate">{currentLabel}</span>
+          <span className="text-noir text-sm font-medium truncate flex items-center gap-2">
+            {currentDisplay ?? currentLabel}
+          </span>
         </span>
         <span className="text-gris-clair group-hover:text-gold transition-colors shrink-0">
           <Chevron open={open} />
@@ -144,13 +148,13 @@ export default function Dropdown({
                         onChange(opt.value);
                         setOpen(false);
                       }}
-                      className={`px-5 py-2.5 text-sm cursor-pointer transition-colors ${
+                      className={`px-5 py-2.5 text-sm cursor-pointer transition-colors flex items-center gap-2 ${
                         selected
                           ? "bg-gold/10 text-noir font-medium"
                           : "text-noir hover:bg-blanc-chaud"
                       }`}
                     >
-                      {opt.label}
+                      {opt.display ?? opt.label}
                     </li>
                   );
                 })}
