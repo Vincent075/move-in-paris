@@ -29,20 +29,11 @@ export default function PartnerLogos() {
   return (
     <section className="py-16 bg-blanc-chaud overflow-hidden border-t border-b border-noir/5">
       <div className="max-w-7xl mx-auto px-6 lg:px-12 mb-10 text-center">
-        <motion.span
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="text-gold text-xs tracking-[0.3em] uppercase"
-        >
-          {t("partners.eyebrow")}
-        </motion.span>
         <motion.h3
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="font-serif text-2xl md:text-3xl text-noir mt-3"
+          className="font-serif text-2xl md:text-3xl text-noir"
         >
           {t("partners.title")}
         </motion.h3>
