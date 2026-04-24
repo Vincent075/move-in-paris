@@ -102,6 +102,27 @@ export default function AdminDashboard() {
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
   const [customAmenity, setCustomAmenity] = useState("");
   const [translating, setTranslating] = useState(false);
+
+  const SESSION_KEY = "mip_admin_session";
+  const SESSION_TTL_MS = 24 * 60 * 60 * 1000; // 24 h
+
+  // Restore session on mount
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(SESSION_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as { u: string; p: string; e: number };
+      if (!parsed || typeof parsed.e !== "number" || Date.now() > parsed.e) {
+        localStorage.removeItem(SESSION_KEY);
+        return;
+      }
+      setUsername(parsed.u);
+      setPassword(parsed.p);
+      setAuthenticated(true);
+    } catch {
+      /* ignore corrupt session */
+    }
+  }, []);
   const [nearbyDetecting, setNearbyDetecting] = useState(false);
   const [nearbyDetectMsg, setNearbyDetectMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
   const editNearbyFetchIdRef = useRef(0);
@@ -466,6 +487,14 @@ export default function AdminDashboard() {
         body: JSON.stringify({ username, password }),
       });
       if (res.ok) {
+        try {
+          localStorage.setItem(
+            SESSION_KEY,
+            JSON.stringify({ u: username, p: password, e: Date.now() + SESSION_TTL_MS }),
+          );
+        } catch {
+          /* storage disabled */
+        }
         setAuthenticated(true);
       } else {
         const data = await res.json().catch(() => ({}));
@@ -518,7 +547,20 @@ export default function AdminDashboard() {
               <p className="text-white/40 text-xs">{apartments.length} appartement{apartments.length > 1 ? "s" : ""}</p>
             </div>
           </div>
-          <a href="/" className="text-[#B88B58] text-sm hover:text-[#D4AF7A]">← Retour au site</a>
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => {
+                try { localStorage.removeItem(SESSION_KEY); } catch { /* ignore */ }
+                setAuthenticated(false);
+                setPassword("");
+              }}
+              className="text-white/50 text-xs hover:text-white transition-colors"
+            >
+              Déconnexion
+            </button>
+            <a href="/" className="text-[#B88B58] text-sm hover:text-[#D4AF7A]">← Retour au site</a>
+          </div>
         </div>
       </div>
 
