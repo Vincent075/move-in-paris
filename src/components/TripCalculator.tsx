@@ -26,48 +26,6 @@ type Prediction = {
   structured_formatting?: { main_text: string; secondary_text?: string };
 };
 
-type AutocompleteServiceInstance = {
-  getPlacePredictions: (
-    req: {
-      input: string;
-      componentRestrictions?: { country: string | string[] };
-      types?: string[];
-      bounds?: { north: number; south: number; east: number; west: number };
-    },
-    cb: (predictions: Prediction[] | null, status: string) => void,
-  ) => void;
-};
-
-declare global {
-  interface Window {
-    google?: {
-      maps?: {
-        places?: {
-          AutocompleteService: new () => AutocompleteServiceInstance;
-          PlacesServiceStatus?: { OK: string; ZERO_RESULTS: string };
-        };
-      };
-    };
-    __mipGmapsLoading?: Promise<void>;
-  }
-}
-
-function loadGoogleMaps(key: string): Promise<void> {
-  if (typeof window === "undefined") return Promise.resolve();
-  if (window.google?.maps?.places) return Promise.resolve();
-  if (window.__mipGmapsLoading) return window.__mipGmapsLoading;
-  window.__mipGmapsLoading = new Promise((resolve, reject) => {
-    const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places&loading=async&language=fr&region=FR`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error("gmaps_load_failed"));
-    document.head.appendChild(script);
-  });
-  return window.__mipGmapsLoading;
-}
-
 function ModeCard({
   mode,
   icon,
@@ -176,10 +134,8 @@ export default function TripCalculator({
   const t = useT();
   const inputRef = useRef<HTMLInputElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const autocompleteServiceRef = useRef<AutocompleteServiceInstance | null>(null);
   const requestSeqRef = useRef(0);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const pendingInputRef = useRef<string>("");
   const [destination, setDestination] = useState<string>("");
   const [data, setData] = useState<DirectionsResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -218,32 +174,6 @@ export default function TripCalculator({
   }, [showPredictions, predictions]);
 
   useEffect(() => {
-    const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY;
-    if (!key) {
-      console.warn("[TripCalculator] NEXT_PUBLIC_GOOGLE_MAPS_KEY missing — autocomplete disabled");
-      return;
-    }
-    let cancelled = false;
-    loadGoogleMaps(key)
-      .then(() => {
-        if (cancelled || !window.google?.maps?.places?.AutocompleteService) return;
-        autocompleteServiceRef.current = new window.google.maps.places.AutocompleteService();
-        // If user already started typing before service loaded, run the query now
-        if (pendingInputRef.current) {
-          fetchPredictions(pendingInputRef.current);
-          pendingInputRef.current = "";
-        }
-      })
-      .catch((err) => {
-        console.warn("[TripCalculator] Google Places failed to load:", err);
-      });
-    return () => {
-      cancelled = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
     if (!showPredictions) return;
     function handleClick(e: MouseEvent) {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
@@ -263,40 +193,31 @@ export default function TripCalculator({
       setSearching(false);
       return;
     }
-    const service = autocompleteServiceRef.current;
-    if (!service) {
-      pendingInputRef.current = trimmed;
-      setSearching(true);
-      return;
-    }
     setSearching(true);
-    debounceTimerRef.current = setTimeout(() => {
+    debounceTimerRef.current = setTimeout(async () => {
       const seq = ++requestSeqRef.current;
-      service.getPlacePredictions(
-        {
-          input: trimmed,
-          componentRestrictions: { country: "fr" },
-          bounds: { north: 49.25, south: 48.12, east: 3.56, west: 1.44 },
-        },
-        (preds, status) => {
-          if (seq !== requestSeqRef.current) return;
-          const okStatus = window.google?.maps?.places?.PlacesServiceStatus?.OK ?? "OK";
-          const zeroStatus = window.google?.maps?.places?.PlacesServiceStatus?.ZERO_RESULTS ?? "ZERO_RESULTS";
-          setSearching(false);
-          if (status !== okStatus && status !== zeroStatus) {
-            console.warn("[TripCalculator] Places API status:", status);
-            setPredictions([]);
-            return;
-          }
-          if (!preds) {
-            setPredictions([]);
-            return;
-          }
-          setPredictions(preds.slice(0, 5));
-          setHighlightedIndex(-1);
-        },
-      );
-    }, 120);
+      try {
+        const res = await fetch(`/api/places-autocomplete?input=${encodeURIComponent(trimmed)}`);
+        if (seq !== requestSeqRef.current) return;
+        setSearching(false);
+        if (!res.ok) {
+          setPredictions([]);
+          return;
+        }
+        const body = (await res.json()) as { predictions?: Prediction[]; error?: string };
+        if (seq !== requestSeqRef.current) return;
+        if (body.error) {
+          console.warn("[TripCalculator] places-autocomplete error:", body.error);
+        }
+        setPredictions((body.predictions ?? []).slice(0, 5));
+        setHighlightedIndex(-1);
+      } catch (err) {
+        if (seq !== requestSeqRef.current) return;
+        setSearching(false);
+        setPredictions([]);
+        console.warn("[TripCalculator] autocomplete fetch failed:", err);
+      }
+    }, 180);
   }
 
   function selectPrediction(pred: Prediction) {
