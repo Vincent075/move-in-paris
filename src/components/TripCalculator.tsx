@@ -19,23 +19,31 @@ type DirectionsResponse = {
 
 type Mode = "transit" | "bicycling" | "driving";
 
+type Prediction = {
+  place_id: string;
+  description: string;
+  structured_formatting?: { main_text: string; secondary_text?: string };
+};
+
+type AutocompleteServiceInstance = {
+  getPlacePredictions: (
+    req: {
+      input: string;
+      componentRestrictions?: { country: string | string[] };
+      types?: string[];
+      bounds?: { north: number; south: number; east: number; west: number };
+    },
+    cb: (predictions: Prediction[] | null, status: string) => void,
+  ) => void;
+};
+
 declare global {
   interface Window {
     google?: {
       maps?: {
         places?: {
-          Autocomplete: new (
-            input: HTMLInputElement,
-            opts: {
-              bounds?: { north: number; south: number; east: number; west: number };
-              componentRestrictions?: { country: string | string[] };
-              fields?: string[];
-              types?: string[];
-            },
-          ) => {
-            addListener: (event: string, cb: () => void) => void;
-            getPlace: () => { formatted_address?: string; name?: string };
-          };
+          AutocompleteService: new () => AutocompleteServiceInstance;
+          PlacesServiceStatus?: { OK: string };
         };
       };
     };
@@ -164,51 +172,78 @@ export default function TripCalculator({
 }) {
   const t = useT();
   const inputRef = useRef<HTMLInputElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const autocompleteServiceRef = useRef<AutocompleteServiceInstance | null>(null);
   const [destination, setDestination] = useState<string>("");
   const [data, setData] = useState<DirectionsResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [autocompleteReady, setAutocompleteReady] = useState(true);
   const [selectedMode, setSelectedMode] = useState<Mode>("transit");
+  const [predictions, setPredictions] = useState<Prediction[]>([]);
+  const [showPredictions, setShowPredictions] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
   useEffect(() => {
     const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY;
     if (!key) {
       console.warn("[TripCalculator] NEXT_PUBLIC_GOOGLE_MAPS_KEY missing — autocomplete disabled");
-      setAutocompleteReady(true);
       return;
     }
     let cancelled = false;
     loadGoogleMaps(key)
       .then(() => {
-        if (cancelled || !inputRef.current || !window.google?.maps?.places) {
-          setAutocompleteReady(true);
-          return;
-        }
-        const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
-          componentRestrictions: { country: "fr" },
-          fields: ["formatted_address", "name"],
-          bounds: { north: 49.25, south: 48.12, east: 3.56, west: 1.44 },
-          types: ["geocode", "establishment"],
-        });
-        autocomplete.addListener("place_changed", () => {
-          const place = autocomplete.getPlace();
-          const address = place.formatted_address ?? place.name ?? "";
-          if (address) {
-            setDestination(address);
-            if (inputRef.current) inputRef.current.value = address;
-          }
-        });
-        setAutocompleteReady(true);
+        if (cancelled || !window.google?.maps?.places?.AutocompleteService) return;
+        autocompleteServiceRef.current = new window.google.maps.places.AutocompleteService();
       })
       .catch((err) => {
         console.warn("[TripCalculator] Google Places autocomplete failed to load:", err);
-        setAutocompleteReady(true);
       });
     return () => {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (!showPredictions) return;
+    function handleClick(e: MouseEvent) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+        setShowPredictions(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [showPredictions]);
+
+  function fetchPredictions(input: string) {
+    const service = autocompleteServiceRef.current;
+    if (!service || !input || input.length < 2) {
+      setPredictions([]);
+      return;
+    }
+    service.getPlacePredictions(
+      {
+        input,
+        componentRestrictions: { country: "fr" },
+        bounds: { north: 49.25, south: 48.12, east: 3.56, west: 1.44 },
+      },
+      (preds, status) => {
+        const okStatus = window.google?.maps?.places?.PlacesServiceStatus?.OK ?? "OK";
+        if (status !== okStatus || !preds) {
+          setPredictions([]);
+          return;
+        }
+        setPredictions(preds.slice(0, 5));
+        setHighlightedIndex(-1);
+      },
+    );
+  }
+
+  function selectPrediction(pred: Prediction) {
+    setDestination(pred.description);
+    if (inputRef.current) inputRef.current.value = pred.description;
+    setPredictions([]);
+    setShowPredictions(false);
+  }
 
   async function handleCalculate(e?: React.FormEvent) {
     e?.preventDefault();
@@ -254,7 +289,7 @@ export default function TripCalculator({
       <div className="h-px w-12 bg-gold mb-6" />
 
       <form onSubmit={handleCalculate} className="flex flex-col sm:flex-row gap-3 mb-6">
-        <div className="relative flex-1">
+        <div ref={wrapperRef} className="relative flex-1">
           <svg
             width="16"
             height="16"
@@ -265,7 +300,7 @@ export default function TripCalculator({
             strokeLinecap="round"
             strokeLinejoin="round"
             aria-hidden="true"
-            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gris"
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gris z-10 pointer-events-none"
           >
             <path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z" />
             <circle cx="12" cy="10" r="3" />
@@ -274,9 +309,70 @@ export default function TripCalculator({
             ref={inputRef}
             type="text"
             placeholder={t("trip.placeholder")}
-            onChange={(e) => setDestination(e.target.value)}
+            autoComplete="off"
+            onChange={(e) => {
+              const v = e.target.value;
+              setDestination(v);
+              fetchPredictions(v);
+              setShowPredictions(true);
+            }}
+            onFocus={() => {
+              if (predictions.length > 0) setShowPredictions(true);
+            }}
+            onKeyDown={(e) => {
+              if (!showPredictions || predictions.length === 0) return;
+              if (e.key === "ArrowDown") {
+                e.preventDefault();
+                setHighlightedIndex((i) => Math.min(i + 1, predictions.length - 1));
+              } else if (e.key === "ArrowUp") {
+                e.preventDefault();
+                setHighlightedIndex((i) => Math.max(i - 1, 0));
+              } else if (e.key === "Enter" && highlightedIndex >= 0) {
+                e.preventDefault();
+                selectPrediction(predictions[highlightedIndex]);
+              } else if (e.key === "Escape") {
+                setShowPredictions(false);
+              }
+            }}
             className="w-full pl-10 pr-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors"
           />
+          <AnimatePresence>
+            {showPredictions && predictions.length > 0 && (
+              <motion.ul
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.15 }}
+                className="absolute left-0 right-0 top-full mt-1 z-50 bg-white shadow-2xl shadow-noir-deep/20 border border-gris-clair/40 max-h-[320px] overflow-y-auto py-1.5"
+              >
+                {predictions.map((pred, i) => {
+                  const highlighted = i === highlightedIndex;
+                  return (
+                    <li
+                      key={pred.place_id}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        selectPrediction(pred);
+                      }}
+                      onMouseEnter={() => setHighlightedIndex(i)}
+                      className={`px-4 py-2.5 text-sm cursor-pointer transition-colors ${
+                        highlighted ? "bg-blanc-chaud" : "hover:bg-blanc-chaud"
+                      }`}
+                    >
+                      <div className="text-noir font-medium truncate">
+                        {pred.structured_formatting?.main_text ?? pred.description}
+                      </div>
+                      {pred.structured_formatting?.secondary_text && (
+                        <div className="text-gris text-xs truncate">
+                          {pred.structured_formatting.secondary_text}
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
+              </motion.ul>
+            )}
+          </AnimatePresence>
         </div>
         <button
           type="submit"
