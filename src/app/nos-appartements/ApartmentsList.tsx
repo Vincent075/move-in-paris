@@ -123,9 +123,10 @@ export default function ApartmentsList() {
         {/* Search bar — same visual language as home */}
         <form
           onSubmit={handleSearch}
-          className="mb-12 -mt-16 lg:-mt-24 relative z-20"
+          className="mb-12 -mt-16 lg:-mt-24 relative z-20 bg-white shadow-2xl shadow-noir-deep/15 border border-gris-clair/30 overflow-hidden"
         >
-          <div className="bg-white shadow-2xl shadow-noir-deep/15 p-2.5 flex flex-col md:flex-row items-stretch border border-gris-clair/30">
+          {/* Row 1: primary filters + search */}
+          <div className="p-2.5 flex flex-col md:flex-row items-stretch">
             <Dropdown
               label={t("searchBar.location")}
               value={selectedLocation}
@@ -138,7 +139,7 @@ export default function ApartmentsList() {
               options={typesList}
               onChange={setSelectedType}
             />
-            <div className="flex-1 md:border-r border-gris-clair/20 px-5 py-3.5">
+            <div className="flex-1 border-b md:border-b-0 md:border-r border-gris-clair/20 px-5 py-3.5">
               <label htmlFor="surface-min" className="block text-[10px] text-gold-dark uppercase tracking-[0.15em] font-semibold mb-1.5">
                 {t("searchBar.surfaceMin")} ({t("common.surfaceUnit")})
               </label>
@@ -150,10 +151,10 @@ export default function ApartmentsList() {
                 value={surfaceMin}
                 onChange={(e) => setSurfaceMin(e.target.value.replace(/\D/g, ""))}
                 placeholder="25"
-                className="w-full bg-transparent text-noir text-sm font-medium focus:outline-none border-0 p-0 placeholder:text-gris/40"
+                className="w-full bg-transparent text-noir text-base sm:text-sm font-medium focus:outline-none border-0 p-0 placeholder:text-gris/40"
               />
             </div>
-            <div className="flex-1 md:border-r border-gris-clair/20 px-5 py-3.5">
+            <div className="flex-1 border-b md:border-b-0 md:border-r border-gris-clair/20 px-5 py-3.5">
               <label htmlFor="surface-max" className="block text-[10px] text-gold-dark uppercase tracking-[0.15em] font-semibold mb-1.5">
                 {t("searchBar.surfaceMax")} ({t("common.surfaceUnit")})
               </label>
@@ -165,12 +166,12 @@ export default function ApartmentsList() {
                 value={surfaceMax}
                 onChange={(e) => setSurfaceMax(e.target.value.replace(/\D/g, ""))}
                 placeholder="150"
-                className="w-full bg-transparent text-noir text-sm font-medium focus:outline-none border-0 p-0 placeholder:text-gris/40"
+                className="w-full bg-transparent text-noir text-base sm:text-sm font-medium focus:outline-none border-0 p-0 placeholder:text-gris/40"
               />
             </div>
             <button
               type="submit"
-              className="bg-gold hover:bg-noir-deep text-noir-deep hover:text-blanc px-10 py-4 md:py-3 flex items-center justify-center gap-2.5 transition-all duration-300 font-semibold text-sm tracking-[0.15em] uppercase group"
+              className="bg-gold-light hover:bg-gold text-noir-deep px-10 py-4 md:py-3 flex items-center justify-center gap-2.5 transition-all duration-300 font-semibold text-sm tracking-[0.15em] uppercase group"
             >
               <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
@@ -179,23 +180,30 @@ export default function ApartmentsList() {
             </button>
           </div>
 
-          {/* Advanced trigger */}
-          <div className="flex justify-end mt-3">
+          {/* Advanced inline trigger */}
+          <div className="border-t border-gris-clair/30">
             <button
               type="button"
               onClick={toggleAdvanced}
               aria-expanded={advancedOpen}
-              className="text-xs text-gold hover:text-gold-dark transition-colors uppercase tracking-[0.15em] font-semibold flex items-center gap-1.5"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 text-xs text-gold-dark hover:text-gold hover:bg-blanc-chaud transition-colors uppercase tracking-[0.15em] font-semibold"
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-200 ${advancedOpen ? "rotate-45" : ""}`}>
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="4" y1="6" x2="20" y2="6" />
+                <circle cx="9" cy="6" r="2" fill="var(--blanc)" />
+                <line x1="4" y1="12" x2="20" y2="12" />
+                <circle cx="15" cy="12" r="2" fill="var(--blanc)" />
+                <line x1="4" y1="18" x2="20" y2="18" />
+                <circle cx="7" cy="18" r="2" fill="var(--blanc)" />
               </svg>
               {advancedOpen ? t("apartmentsPage.advancedHide") : t("apartmentsPage.advanced")}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-200 ${advancedOpen ? "rotate-180" : ""}`}>
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
             </button>
           </div>
 
-          {/* Advanced panel */}
+          {/* Advanced panel - integrated */}
           <AnimatePresence initial={false}>
             {advancedOpen && (
               <motion.div
@@ -203,9 +211,9 @@ export default function ApartmentsList() {
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.25 }}
-                className="overflow-hidden"
+                className="overflow-hidden border-t border-gris-clair/30 bg-blanc-chaud/40"
               >
-                <div className="mt-3 bg-white shadow-2xl shadow-noir-deep/10 border border-gris-clair/30 p-4 grid grid-cols-2 lg:grid-cols-4 gap-2">
+                <div className="p-4 grid grid-cols-2 lg:grid-cols-4 gap-3">
                   <Dropdown
                     label={t("apartmentsPage.bedrooms")}
                     value={bedrooms}

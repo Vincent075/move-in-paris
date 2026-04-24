@@ -90,7 +90,7 @@ export default function LatestApartments() {
         }
       `}</style>
       <div className="relative carousel-container">
-        <div className="flex gap-6 carousel-track">
+        <div className="flex gap-6 carousel-track pl-6 md:pl-0">
           {doubled.map((apt, i) => (
             <Link
               key={i}

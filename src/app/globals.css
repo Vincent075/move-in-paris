@@ -77,3 +77,26 @@ html {
   scrollbar-width: none;
 }
 
+/* Mobile swipe rows (iOS momentum + snap) */
+.trip-modes-row,
+.services-row {
+  -webkit-overflow-scrolling: touch;
+}
+@media (max-width: 639px) {
+  .trip-modes-row {
+    scroll-snap-type: x mandatory;
+  }
+  .trip-modes-row > * {
+    scroll-snap-align: start;
+  }
+}
+@media (max-width: 767px) {
+  .services-row {
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 1.5rem;
+  }
+  .services-row > * {
+    scroll-snap-align: start;
+  }
+}
+

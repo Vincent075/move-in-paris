@@ -37,9 +37,9 @@ export default function Services() {
   }));
   return (
     <section id="services" className="pt-[calc(1rem+0.5cm)] pb-28 bg-blanc">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+      <div className="max-w-7xl mx-auto">
         {/* Section header */}
-        <div className="text-center mb-14">
+        <div className="text-center mb-14 px-6 lg:px-12">
           <motion.span
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -66,8 +66,8 @@ export default function Services() {
           />
         </div>
 
-        {/* Services grid */}
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+        {/* Services — swipable row on mobile, 2-col grid on desktop */}
+        <div className="services-row flex md:grid md:grid-cols-2 gap-5 md:gap-8 lg:gap-12 overflow-x-auto md:overflow-x-visible scrollbar-hide px-6 md:px-12">
           {services.map((service, i) => (
             <motion.div
               key={service.title}
@@ -75,7 +75,7 @@ export default function Services() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.15 }}
-              className="group p-8 lg:p-10 bg-blanc-chaud/50 hover:bg-blanc-chaud border border-gris-clair/50 hover:border-gold/30 transition-all duration-500 text-center"
+              className="shrink-0 w-[80%] sm:w-[60%] md:w-auto group p-7 lg:p-10 bg-blanc-chaud/50 hover:bg-blanc-chaud border border-gris-clair/50 hover:border-gold/30 transition-all duration-500 text-center"
             >
               <div className="text-gold mb-6 group-hover:scale-110 transition-transform duration-300 flex justify-center">
                 {service.icon}
