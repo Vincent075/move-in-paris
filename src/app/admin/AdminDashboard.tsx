@@ -101,6 +101,7 @@ export default function AdminDashboard() {
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
   const [customAmenity, setCustomAmenity] = useState("");
+  const [translating, setTranslating] = useState(false);
   const [nearbyDetecting, setNearbyDetecting] = useState(false);
   const [nearbyDetectMsg, setNearbyDetectMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
   const editNearbyFetchIdRef = useRef(0);
@@ -157,6 +158,47 @@ export default function AdminDashboard() {
         fetchApartments();
       }
     } catch { /* ignore */ }
+  }
+
+  async function handleAutoTranslate() {
+    const title = (editData.title || "").trim();
+    const description = (editData.description || "").trim();
+    if (!title && !description) {
+      setMessage({ type: "error", text: "Renseignez au moins le titre et la description en français d'abord." });
+      return;
+    }
+    setTranslating(true);
+    setMessage({ type: "", text: "" });
+    try {
+      const res = await fetch(`/api/translate-apartment?password=${encodeURIComponent(password)}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
+          description,
+          floor: editData.floor || "",
+          features: editData.features || [],
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        setMessage({ type: "error", text: `Échec traduction: ${data.error ?? res.status}` });
+        return;
+      }
+      setEditData({
+        ...editData,
+        title_en: data.title_en,
+        description_en: data.description_en,
+        floor_en: data.floor_en,
+        features_en: data.features_en,
+      });
+      setMessage({ type: "success", text: "Traduction anglaise générée. Relisez et enregistrez." });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setMessage({ type: "error", text: `Erreur: ${msg}` });
+    } finally {
+      setTranslating(false);
+    }
   }
 
   function startEdit(apt: Apartment) {
@@ -704,7 +746,39 @@ export default function AdminDashboard() {
 
                         {/* ========== Descriptions FR / EN ========== */}
                         <section className="border-t border-[#E8E4DF] pt-6">
-                          <h4 className="font-serif text-sm text-[#1A1A1A] uppercase tracking-[0.15em] mb-3">Descriptions</h4>
+                          <div className="flex items-end justify-between mb-3 flex-wrap gap-3">
+                            <div>
+                              <h4 className="font-serif text-sm text-[#1A1A1A] uppercase tracking-[0.15em]">Descriptions</h4>
+                              <p className="text-xs text-[#6B6B6B] mt-0.5">Traduit titre, description, étage et équipements en une fois.</p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={handleAutoTranslate}
+                              disabled={translating}
+                              className={`inline-flex items-center gap-2 px-4 py-2 text-xs uppercase tracking-[0.15em] font-semibold border transition-all ${
+                                translating
+                                  ? "border-[#E8E4DF] text-[#6B6B6B] cursor-not-allowed"
+                                  : "border-[#B88B58] text-[#B88B58] hover:bg-[#B88B58] hover:text-white"
+                              }`}
+                            >
+                              {translating ? (
+                                <>
+                                  <svg className="w-3.5 h-3.5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <circle cx="12" cy="12" r="9" opacity="0.25" />
+                                    <path d="M21 12a9 9 0 0 1-9 9" strokeLinecap="round" />
+                                  </svg>
+                                  Traduction en cours…
+                                </>
+                              ) : (
+                                <>
+                                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M5 8h10M9 4v4M5 8c0 3 4 8 6 8M17 20l4-10 4 10M18 17h6" transform="translate(-2)" />
+                                  </svg>
+                                  Traduire en anglais
+                                </>
+                              )}
+                            </button>
+                          </div>
                           <div className="grid md:grid-cols-2 gap-4">
                             <div>
                               <label className="block text-xs text-[#6B6B6B] uppercase tracking-wider mb-1">Description (FR)</label>
