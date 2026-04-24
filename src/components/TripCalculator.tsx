@@ -174,6 +174,8 @@ export default function TripCalculator({
   const inputRef = useRef<HTMLInputElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const autocompleteServiceRef = useRef<AutocompleteServiceInstance | null>(null);
+  const requestSeqRef = useRef(0);
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [destination, setDestination] = useState<string>("");
   const [data, setData] = useState<DirectionsResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -215,27 +217,34 @@ export default function TripCalculator({
   }, [showPredictions]);
 
   function fetchPredictions(input: string) {
-    const service = autocompleteServiceRef.current;
-    if (!service || !input || input.length < 2) {
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    const trimmed = input.trim();
+    if (!trimmed) {
       setPredictions([]);
       return;
     }
-    service.getPlacePredictions(
-      {
-        input,
-        componentRestrictions: { country: "fr" },
-        bounds: { north: 49.25, south: 48.12, east: 3.56, west: 1.44 },
-      },
-      (preds, status) => {
-        const okStatus = window.google?.maps?.places?.PlacesServiceStatus?.OK ?? "OK";
-        if (status !== okStatus || !preds) {
-          setPredictions([]);
-          return;
-        }
-        setPredictions(preds.slice(0, 5));
-        setHighlightedIndex(-1);
-      },
-    );
+    debounceTimerRef.current = setTimeout(() => {
+      const service = autocompleteServiceRef.current;
+      if (!service) return;
+      const seq = ++requestSeqRef.current;
+      service.getPlacePredictions(
+        {
+          input: trimmed,
+          componentRestrictions: { country: "fr" },
+          bounds: { north: 49.25, south: 48.12, east: 3.56, west: 1.44 },
+        },
+        (preds, status) => {
+          if (seq !== requestSeqRef.current) return; // stale response, ignore
+          const okStatus = window.google?.maps?.places?.PlacesServiceStatus?.OK ?? "OK";
+          if (status !== okStatus || !preds) {
+            setPredictions([]);
+            return;
+          }
+          setPredictions(preds.slice(0, 5));
+          setHighlightedIndex(-1);
+        },
+      );
+    }, 150);
   }
 
   function selectPrediction(pred: Prediction) {
