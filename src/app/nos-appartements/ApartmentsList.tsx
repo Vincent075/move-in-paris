@@ -130,7 +130,7 @@ export default function ApartmentsList() {
         {/* Search bar — same visual language as home */}
         <form
           onSubmit={handleSearch}
-          className="mb-12 -mt-16 lg:-mt-24 relative z-20 bg-white shadow-2xl shadow-noir-deep/15 border border-gris-clair/30 overflow-hidden"
+          className="mb-12 -mt-16 lg:-mt-24 relative z-20 bg-white shadow-2xl shadow-noir-deep/15 border border-gris-clair/30"
         >
           {/* Row 1: primary filters + search */}
           <div className="p-2.5 flex flex-col md:flex-row items-stretch">
@@ -220,7 +220,7 @@ export default function ApartmentsList() {
                 transition={{ duration: 0.25 }}
                 className="overflow-hidden border-t border-gris-clair/30 bg-blanc-chaud/40"
               >
-                <div className="p-4 grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                   <Dropdown
                     label={t("apartmentsPage.bedrooms")}
                     value={bedrooms}

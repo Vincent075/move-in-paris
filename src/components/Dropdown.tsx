@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 function Chevron({ open }: { open: boolean }) {
@@ -38,7 +39,11 @@ export default function Dropdown({
   flush?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [rect, setRect] = useState<{ top: number; left: number; width: number } | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLUListElement>(null);
 
   const normalized: DropdownOption[] = options.map((o) =>
     typeof o === "string" ? { value: o, label: o } : o,
@@ -46,11 +51,32 @@ export default function Dropdown({
   const currentLabel = normalized.find((o) => o.value === value)?.label ?? value;
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!open) return;
+    function update() {
+      if (!buttonRef.current) return;
+      const r = buttonRef.current.getBoundingClientRect();
+      setRect({ top: r.bottom + window.scrollY + 4, left: r.left + window.scrollX, width: r.width });
+    }
+    update();
+    window.addEventListener("scroll", update, true);
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update, true);
+      window.removeEventListener("resize", update);
+    };
+  }, [open]);
+
+  useEffect(() => {
     if (!open) return;
     function handleClick(e: MouseEvent) {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
+      const t = e.target as Node;
+      if (rootRef.current?.contains(t)) return;
+      if (menuRef.current?.contains(t)) return;
+      setOpen(false);
     }
     function handleKey(e: KeyboardEvent) {
       if (e.key === "Escape") setOpen(false);
@@ -74,6 +100,7 @@ export default function Dropdown({
   return (
     <div ref={rootRef} className={wrapperClass}>
       <button
+        ref={buttonRef}
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="listbox"
@@ -91,40 +118,47 @@ export default function Dropdown({
         </span>
       </button>
 
-      <AnimatePresence>
-        {open && (
-          <motion.ul
-            role="listbox"
-            initial={{ opacity: 0, y: -6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.15 }}
-            className="absolute left-0 right-0 top-full mt-1 z-50 bg-white shadow-2xl shadow-noir-deep/20 border border-gris-clair/40 max-h-[320px] overflow-y-auto py-1.5"
-          >
-            {normalized.map((opt) => {
-              const selected = opt.value === value;
-              return (
-                <li
-                  key={opt.value}
-                  role="option"
-                  aria-selected={selected}
-                  onClick={() => {
-                    onChange(opt.value);
-                    setOpen(false);
-                  }}
-                  className={`px-5 py-2.5 text-sm cursor-pointer transition-colors ${
-                    selected
-                      ? "bg-gold/10 text-noir font-medium"
-                      : "text-noir hover:bg-blanc-chaud"
-                  }`}
-                >
-                  {opt.label}
-                </li>
-              );
-            })}
-          </motion.ul>
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {open && rect && (
+              <motion.ul
+                ref={menuRef}
+                role="listbox"
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.15 }}
+                style={{ position: "absolute", top: rect.top, left: rect.left, width: rect.width, zIndex: 9999 }}
+                className="bg-white shadow-2xl shadow-noir-deep/25 border border-gris-clair/40 max-h-[320px] overflow-y-auto py-1.5"
+              >
+                {normalized.map((opt) => {
+                  const selected = opt.value === value;
+                  return (
+                    <li
+                      key={opt.value}
+                      role="option"
+                      aria-selected={selected}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        onChange(opt.value);
+                        setOpen(false);
+                      }}
+                      className={`px-5 py-2.5 text-sm cursor-pointer transition-colors ${
+                        selected
+                          ? "bg-gold/10 text-noir font-medium"
+                          : "text-noir hover:bg-blanc-chaud"
+                      }`}
+                    >
+                      {opt.label}
+                    </li>
+                  );
+                })}
+              </motion.ul>
+            )}
+          </AnimatePresence>,
+          document.body,
         )}
-      </AnimatePresence>
     </div>
   );
 }
