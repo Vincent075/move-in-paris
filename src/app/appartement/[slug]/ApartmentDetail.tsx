@@ -9,7 +9,7 @@ import { MetroLineBadge, resolveMetroLines } from "@/lib/metroLines";
 import TripCalculator from "@/components/TripCalculator";
 import { getApartmentReference } from "@/lib/apartmentRef";
 
-function VisitForm({ title, reference }: { title: string; reference: string }) {
+function VisitForm({ title, reference, slug }: { title: string; reference: string; slug: string }) {
   const t = useT();
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
@@ -22,6 +22,7 @@ function VisitForm({ title, reference }: { title: string; reference: string }) {
       formType: "visite",
       appartement: title,
       reference,
+      slug,
       nom: (form.elements.namedItem("nom") as HTMLInputElement).value,
       email: (form.elements.namedItem("email") as HTMLInputElement).value,
       telephone: (form.elements.namedItem("telephone") as HTMLInputElement).value,
@@ -470,7 +471,7 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                   transition={{ delay: 0.3 }}
                   className="bg-blanc-chaud border border-gris-clair/50 p-8"
                 >
-                  <VisitForm title={title} reference={reference} />
+                  <VisitForm title={title} reference={reference} slug={apt.slug} />
                   <div className="mt-6 pt-6 border-t border-gris-clair/50 text-center">
                     <p className="text-xs text-gris mb-2">{t("apartment.orCall")}</p>
                     <a href="tel:+33145200603" className="text-gold font-serif text-lg hover:text-gold-dark transition-colors">

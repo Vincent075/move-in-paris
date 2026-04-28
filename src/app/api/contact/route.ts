@@ -309,23 +309,27 @@ export async function POST(req: NextRequest) {
           </div>` : ""}`;
         break;
 
-      case "visite":
+      case "visite": {
+        const apartmentUrl = fields.slug ? `https://www.move-in-paris.com/appartement/${fields.slug}` : "";
         subject = `🔑 Demande de visite — ${fields.appartement}`;
         content = `
           <div style="background-color:#0D0D0D;padding:16px 20px;margin-bottom:20px;border-radius:4px;">
-            <div style="font-size:12px;color:#B88B58;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Appartement</div>
-            <div style="font-family:Georgia,serif;font-size:20px;color:#ffffff;">${fields.appartement}</div>
+            <div style="font-size:12px;color:#B88B58;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Appartement${fields.reference ? ` — réf. ${fields.reference}` : ""}</div>
+            <div style="font-family:Georgia,serif;font-size:20px;color:#ffffff;margin-bottom:${apartmentUrl ? "10px" : "0"};">${fields.appartement}</div>
+            ${apartmentUrl ? `<a href="${apartmentUrl}" style="display:inline-block;color:#B88B58;font-size:13px;text-decoration:none;border-bottom:1px solid #B88B58;padding-bottom:1px;">→ Voir la fiche de l'appartement</a>` : ""}
           </div>
           <table style="width:100%;border-collapse:collapse;">
             ${row("Nom", fields.nom)}
             ${row("Email", `<a href="mailto:${fields.email}" style="color:#B88B58;">${fields.email}</a>`)}
             ${row("Téléphone", fields.telephone ? `<a href="tel:${fields.telephone}" style="color:#B88B58;">${fields.telephone}</a>` : "")}
+            ${apartmentUrl ? row("Lien fiche", `<a href="${apartmentUrl}" style="color:#B88B58;">${apartmentUrl}</a>`) : ""}
           </table>
           <div style="margin-top:24px;padding:20px;background-color:#F5F0EB;border-radius:4px;">
             <div style="font-size:12px;color:#6B6B6B;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">Message</div>
             <div style="font-size:14px;color:#1A1A1A;line-height:1.6;">${(fields.message || "").replace(/\n/g, "<br/>")}</div>
           </div>`;
         break;
+      }
 
       case "estimation":
         subject = `💰 Lead estimation — ${fields.prenom} ${fields.nom} (${fields.zone})`;
