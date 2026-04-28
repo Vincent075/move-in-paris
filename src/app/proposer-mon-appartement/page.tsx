@@ -10,6 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: messages.submitPage.metaTitle,
     description: messages.submitPage.metaDescription,
+    alternates: { canonical: "https://www.move-in-paris.com/proposer-mon-appartement" },
   };
 }
 

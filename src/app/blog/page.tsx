@@ -53,14 +53,14 @@ export default async function BlogListPage() {
     publisher: {
       "@type": "Organization",
       name: "Move in Paris",
-      url: "https://move-in-paris.vercel.app",
+      url: "https://www.move-in-paris.com",
     },
     blogPost: articles.map((a) => ({
       "@type": "BlogPosting",
       headline: a.title,
       description: a.excerpt,
       datePublished: a.date,
-      url: `https://move-in-paris.vercel.app/blog/${a.slug}`,
+      url: `https://www.move-in-paris.com/blog/${a.slug}`,
       author: { "@type": "Organization", name: a.author },
     })),
   };

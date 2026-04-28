@@ -4,6 +4,7 @@ import Hero from "@/components/Hero";
 import SearchBar from "@/components/SearchBar";
 import LatestApartments from "@/components/LatestApartments";
 import Services from "@/components/Services";
+import CorporateCallout from "@/components/CorporateCallout";
 import WhyUs from "@/components/WhyUs";
 import Testimonials from "@/components/Testimonials";
 import Contact from "@/components/Contact";
@@ -22,6 +23,7 @@ export default function Home() {
         <SearchBar />
         <LatestApartments />
         <Services />
+        <CorporateCallout />
         <WhyUs />
         <Testimonials />
         <Contact />

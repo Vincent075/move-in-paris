@@ -76,12 +76,13 @@ export default async function ArticlePage({
     .filter((a) => a.tags.some((t) => article.tags.includes(t)))
     .slice(0, 3);
 
+  const SITE_URL = "https://www.move-in-paris.com";
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: article.title,
     description: article.metaDescription,
-    image: `https://move-in-paris.vercel.app${article.image}`,
+    image: `${SITE_URL}${article.image}`,
     datePublished: article.date,
     dateModified: article.date,
     author: { "@type": "Organization", name: article.author },
@@ -90,14 +91,24 @@ export default async function ArticlePage({
       name: "Move in Paris",
       logo: {
         "@type": "ImageObject",
-        url: "https://move-in-paris.vercel.app/Logo-gold.png",
+        url: `${SITE_URL}/Logo-gold.png`,
       },
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://move-in-paris.vercel.app/blog/${article.slug}`,
+      "@id": `${SITE_URL}/blog/${article.slug}`,
     },
     keywords: article.tags.join(", "),
+  };
+
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Accueil", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blog` },
+      { "@type": "ListItem", position: 3, name: article.title, item: `${SITE_URL}/blog/${article.slug}` },
+    ],
   };
 
   return (
@@ -107,6 +118,10 @@ export default async function ArticlePage({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
         />
 
         {/* Hero image */}

@@ -3,10 +3,12 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import SEOLanding, { buildFaqLd, type SEOLandingFAQ } from "@/components/SEOLanding";
+import TrustStripB2B from "@/components/TrustStripB2B";
+import BailComparisonTable from "@/components/BailComparisonTable";
 
 export const metadata: Metadata = {
   title: "Location meublée société & entreprise Paris — Bail société | Move in Paris",
-  description: "Location meublée société à Paris : louez un appartement meublé au nom de votre société (SAS, SARL, SCI…) avec bail société, facturation entreprise et gestion 100 % déléguée. Solution clé en main pour entreprises et organisations.",
+  description: "Location meublée société à Paris : appartement meublé au nom de votre société (SAS, SARL, SCI). Bail société, facture entreprise, gestion 100% déléguée.",
   alternates: { canonical: "https://www.move-in-paris.com/location-meublee-entreprise" },
   openGraph: {
     title: "Location meublée société & entreprise à Paris | Move in Paris",
@@ -48,6 +50,38 @@ const faqs: SEOLandingFAQ[] = [
 
 const faqLd = buildFaqLd(faqs);
 
+const breadcrumbLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Accueil", item: "https://www.move-in-paris.com" },
+    { "@type": "ListItem", position: 2, name: "Location meublée société", item: "https://www.move-in-paris.com/location-meublee-entreprise" },
+  ],
+};
+
+const serviceLd = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  serviceType: "Location meublée société et entreprise",
+  name: "Location meublée société à Paris",
+  description: "Location d'appartements meublés haut de gamme à Paris au nom d'une société (SAS, SARL, SCI, association, organisme international) avec bail société, facturation entreprise et gestion 100 % déléguée.",
+  provider: {
+    "@type": "RealEstateAgent",
+    name: "Move in Paris",
+    url: "https://www.move-in-paris.com",
+    address: { "@type": "PostalAddress", streetAddress: "26 rue de l'Étoile", postalCode: "75017", addressLocality: "Paris", addressCountry: "FR" },
+    telephone: "+33145200603",
+  },
+  areaServed: { "@type": "City", name: "Paris" },
+  audience: { "@type": "BusinessAudience", audienceType: "Entreprises, sociétés, organismes internationaux" },
+  url: "https://www.move-in-paris.com/location-meublee-entreprise",
+  offers: {
+    "@type": "Offer",
+    description: "Bail société clé en main, gestion 100 % déléguée, ménage hebdomadaire inclus, facture mensuelle au nom de la société.",
+    availability: "https://schema.org/InStock",
+  },
+};
+
 export default function Page() {
   return (
     <>
@@ -57,12 +91,21 @@ export default function Page() {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceLd) }}
+        />
         <PageHero
           title="Location meublée société & entreprise à Paris"
           subtitle="Louez un ou plusieurs appartements meublés au nom de votre société. Bail société simplifié, loyer tout inclus, gestion 100 % déléguée — votre service RH n'a plus rien à faire."
           breadcrumb="Location société"
           image="/apartments/salon-bibliotheque.jpg"
         />
+        <TrustStripB2B />
         <SEOLanding
           eyebrow="Location meublée société"
           intro="La location meublée société à Paris est notre cœur de métier. Louer un appartement meublé au nom d'une société ou d'une entreprise demande un cadre juridique adapté, des garanties spécifiques et une gestion administrative efficace. Move in Paris propose depuis 2018 une solution dédiée aux personnes morales (SAS, SARL, SA, SCI, associations, organismes internationaux) : un parc d'appartements parisiens haut de gamme, un bail société sécurisé, un loyer 100 % charges comprises facturable au nom de la société, et une gestion opérationnelle entièrement déléguée."
@@ -93,6 +136,20 @@ export default function Page() {
                     <li><strong>Flexibilité de durée</strong> adaptée aux missions, projets, mutations</li>
                     <li><strong>Possibilité de loger plusieurs collaborateurs successifs</strong> sans renégocier le bail</li>
                   </ul>
+                </>
+              ),
+            },
+            {
+              title: "Bail société, bail mobilité, bail Code civil : quelle différence ?",
+              body: (
+                <>
+                  <p>
+                    Trois cadres juridiques existent en France pour louer un appartement meublé à une entreprise ou pour un usage corporate. Le choix dépend de la nature du locataire (personne morale ou physique), de la durée du séjour et de l'usage du bien.
+                  </p>
+                  <BailComparisonTable />
+                  <p>
+                    Chez Move in Paris, <strong>le bail société est notre format par défaut</strong> pour toute entreprise qui souhaite loger un ou plusieurs collaborateurs à Paris : il offre la liberté contractuelle maximale, une déductibilité IS totale et une facturation directe au nom de la société. Le bail mobilité est réservé aux locataires physiques (étudiants, mutations courtes), et le bail Code civil s'applique à des situations de logement de fonction ou d'usage mixte.
+                  </p>
                 </>
               ),
             },
@@ -144,6 +201,11 @@ export default function Page() {
           ctaHref="/contact"
           ctaLabel="Demander un devis société"
           relatedLinks={[
+            { href: "/location-meublee-entreprise-paris-8e", label: "Location société Paris 8e" },
+            { href: "/location-meublee-entreprise-paris-16e", label: "Location société Paris 16e" },
+            { href: "/location-meublee-entreprise-paris-17e", label: "Location société Paris 17e" },
+            { href: "/location-meublee-entreprise-la-defense", label: "Location société La Défense" },
+            { href: "/location-meublee-entreprise-neuilly", label: "Location société Neuilly" },
             { href: "/nos-appartements", label: "Voir nos appartements" },
             { href: "/location-corporate-paris", label: "Location corporate à Paris" },
             { href: "/location-meublee-expatrie-paris", label: "Location pour expatriés" },

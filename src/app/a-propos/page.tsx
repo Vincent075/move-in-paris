@@ -11,6 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: messages.about.metaTitle,
     description: messages.about.metaDescription,
+    alternates: { canonical: "https://www.move-in-paris.com/a-propos" },
   };
 }
 
