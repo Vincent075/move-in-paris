@@ -9,8 +9,9 @@ import Dropdown from "@/components/Dropdown";
 export default function SearchBar() {
   const router = useRouter();
   const t = useT();
+  const ALL_LOCATIONS = t("searchBar.allCities");
   const locations = [
-    t("searchBar.allCities"),
+    ALL_LOCATIONS,
     "Paris 1er - 4e",
     "Paris 5e - 7e",
     "Paris 8e",
@@ -24,17 +25,21 @@ export default function SearchBar() {
     "Boulogne",
   ];
   const types = [
-    t("searchBar.allTypes"),
-    t("searchBar.studio"),
-    t("searchBar.twoRooms"),
-    t("searchBar.threeRooms"),
-    t("searchBar.fourRoomsPlus"),
+    { value: "all", label: t("searchBar.allTypes") },
+    { value: "studio", label: t("searchBar.studio") },
+    { value: "2", label: t("searchBar.twoRooms") },
+    { value: "3", label: t("searchBar.threeRooms") },
+    { value: "4+", label: t("searchBar.fourRoomsPlus") },
   ];
-  const [loc, setLoc] = useState(locations[0]);
-  const [type, setType] = useState(types[0]);
+  const [loc, setLoc] = useState(ALL_LOCATIONS);
+  const [type, setType] = useState("all");
 
   function handleSearch() {
-    router.push("/nos-appartements");
+    const params = new URLSearchParams();
+    if (loc && loc !== ALL_LOCATIONS) params.set("location", loc);
+    if (type && type !== "all") params.set("type", type);
+    const query = params.toString();
+    router.push(query ? `/nos-appartements?${query}` : "/nos-appartements");
   }
 
   return (

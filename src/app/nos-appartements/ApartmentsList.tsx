@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import apartmentsDataRaw from "@/data/apartments.json";
 import type { ApartmentRecord } from "@/data/apartment-types";
 import { usePickField, useT } from "@/i18n/LocaleProvider";
@@ -104,8 +105,20 @@ export default function ApartmentsList() {
     }),
   ];
 
-  const [selectedLocation, setSelectedLocation] = useState(ALL);
-  const [selectedType, setSelectedType] = useState("all");
+  const searchParams = useSearchParams();
+  const initialLocation = (() => {
+    const fromUrl = searchParams.get("location");
+    if (fromUrl && locations.includes(fromUrl)) return fromUrl;
+    return ALL;
+  })();
+  const initialType = (() => {
+    const fromUrl = searchParams.get("type");
+    if (fromUrl && typesList.some((t) => t.value === fromUrl)) return fromUrl;
+    return "all";
+  })();
+
+  const [selectedLocation, setSelectedLocation] = useState(initialLocation);
+  const [selectedType, setSelectedType] = useState(initialType);
   const [surfaceMin, setSurfaceMin] = useState("");
   const [surfaceMax, setSurfaceMax] = useState("");
   const [advancedOpen, setAdvancedOpen] = useState(false);
