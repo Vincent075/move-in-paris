@@ -5,6 +5,16 @@ type TranslateInput = {
   description: string;
   floor: string;
   features: string[];
+  /**
+   * Actual number of bedrooms (canonical, set by admin).
+   * Source of truth for English translation: in French "X pièces" counts the
+   * living room as 1 piece, but the apartment can have a double living room
+   * or other configurations, so we never compute bedrooms from pièces — we
+   * use the bedrooms field directly.
+   */
+  bedrooms?: number;
+  /** Number of "pièces" (rooms in the French sense). For context only. */
+  rooms?: number;
 };
 
 type TranslateOutput = {
@@ -26,6 +36,14 @@ const SYSTEM_PROMPT =
   "- Units: 'm²' → 'sqm'.\n" +
   "- Floors: 'rez-de-chaussée' → 'ground floor', '1er étage' → '1st floor', '2e étage' → '2nd floor', '3e étage' → '3rd floor', and so on.\n" +
   "- Keep proper nouns untouched: street names, Paris districts (Batignolles, Chaillot, Passy, Auteuil, Marais...). 'Paris 17e' can become 'Paris 17th arrondissement'.\n" +
+  "- BEDROOM COUNT IS CRITICAL. In French, 'X pièces' counts the living room as 1 piece (so '2 pièces' often = 1 bedroom + 1 living room). BUT some apartments have a double living room, so the formula bedrooms = pièces - 1 is NOT always correct. The input includes a 'bedrooms' field that is the canonical, admin-validated number of bedrooms. ALWAYS use the bedrooms field as source of truth for the English title and description. Examples:\n" +
+  "    French '2 pièces' with bedrooms=1 → English '1-bedroom apartment'.\n" +
+  "    French '4 pièces' with bedrooms=2 → English '2-bedroom apartment' (apartment has a double living room).\n" +
+  "    French '4 pièces' with bedrooms=3 → English '3-bedroom apartment'.\n" +
+  "    French 'X chambres' with bedrooms=Y → use Y as the English bedroom count (the title may even say 'X chambres' with Y different).\n" +
+  "    bedrooms=0 → 'studio'.\n" +
+  "- For the title, use the format '{N}-Bedroom Apartment {Neighborhood}' (or 'Studio {Neighborhood}' if bedrooms=0). Example: French '2 Pièces Batignolles' with bedrooms=1 → English '1-Bedroom Apartment Batignolles'.\n" +
+  "- For the description, when re-stating the apartment type at the start, use the bedrooms count not the pièces count. Example: French description starting with '4 pièces de standing d'environ 105 m²...' with bedrooms=2 → English description starting with '2-bedroom high-end apartment of approximately 105 sqm...'.\n" +
   "- Common features glossary (use EXACTLY these mappings):\n" +
   "    Wifi → Wifi ; Lave-linge → Washing machine ; Sèche-linge → Dryer ; Four → Oven ; Four traditionnel → Traditional oven ; Micro-ondes / Four micro-onde → Microwave ; Réfrigérateur → Refrigerator ; Congélateur → Freezer ; Lave-vaisselle → Dishwasher ; Cuisine équipée → Equipped kitchen ; Plaques de cuisson → Cooktop ; Bouilloire → Kettle ; Toaster / Grille-pain → Toaster ; Machine Nespresso → Nespresso machine ; Aspirateur → Vacuum cleaner ; Fer à repasser → Iron ; Table à repasser → Ironing board ; Sèche-cheveux → Hair dryer ; Télévision 4K / Smart TV → Smart TV ; Double vitrage → Double glazing ; Parquet point de Hongrie → Herringbone parquet ; Ascenseur → Elevator ; Digicode → Keypad entry ; Interphone → Intercom ; Gardien → Concierge ; Fibre optique → Fiber optic internet ; Chauffage électrique individuel → Individual electric heating ; Douche à l'italienne → Walk-in shower ; Climatisation → Air conditioning ; Balcon → Balcony ; Terrasse → Terrace ; Cave → Cellar ; Parking → Parking.\n" +
   "Return ONLY valid JSON with no preamble, no code fences, no commentary.";

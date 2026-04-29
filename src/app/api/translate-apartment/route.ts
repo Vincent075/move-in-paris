@@ -15,6 +15,8 @@ export async function POST(req: NextRequest) {
     description?: string;
     floor?: string;
     features?: string[];
+    bedrooms?: number;
+    rooms?: number;
   } | null;
 
   if (!body) return NextResponse.json({ error: "invalid_body" }, { status: 400 });
@@ -25,6 +27,8 @@ export async function POST(req: NextRequest) {
       description: body.description ?? "",
       floor: body.floor ?? "",
       features: Array.isArray(body.features) ? body.features : [],
+      bedrooms: typeof body.bedrooms === "number" ? body.bedrooms : undefined,
+      rooms: typeof body.rooms === "number" ? body.rooms : undefined,
     });
 
     if (isTranslateError(out)) {

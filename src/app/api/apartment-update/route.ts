@@ -80,6 +80,8 @@ export async function PUT(req: NextRequest) {
         description: String(merged.description ?? ""),
         floor: String(merged.floor ?? ""),
         features: Array.isArray(merged.features) ? merged.features : [],
+        bedrooms: typeof merged.bedrooms === "number" ? merged.bedrooms : undefined,
+        rooms: typeof merged.rooms === "number" ? merged.rooms : undefined,
       });
       if (!isTranslateError(translated)) {
         apartments[index].title_en = translated.title_en;

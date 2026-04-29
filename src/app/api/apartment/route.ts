@@ -63,6 +63,8 @@ export async function POST(req: NextRequest) {
       features: Array.isArray(apartment.features)
         ? (apartment.features as string[])
         : [],
+      bedrooms: typeof apartment.bedrooms === "number" ? apartment.bedrooms : undefined,
+      rooms: typeof apartment.rooms === "number" ? apartment.rooms : undefined,
     });
     if (!isTranslateError(translated)) {
       apartment.title_en = translated.title_en;

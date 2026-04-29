@@ -199,6 +199,8 @@ export default function AdminDashboard() {
           description,
           floor: editData.floor || "",
           features: editData.features || [],
+          bedrooms: typeof editData.bedrooms === "number" ? editData.bedrooms : undefined,
+          rooms: typeof editData.rooms === "number" ? editData.rooms : undefined,
         }),
       });
       const data = await res.json();
