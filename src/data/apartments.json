@@ -6252,6 +6252,88 @@
       "Separate toilet",
       "Wi-Fi"
     ],
-    "description_en": "2-bedroom apartment with a surface area of approximately 66 sqm, completely renovated.\nOn the 1st floor with elevator in a recent building.\nA living room with sofa, coffee table and flat-screen TV and a dining area.\nA fully equipped and fitted kitchen.\nEquipment: dishwasher, microwave, cooktop, refrigerator, washing machine, dryer, etc.\nA master bedroom with a double bed and storage.\n2nd bedroom with 2 single beds (possibility to convert to double).\nBathroom with bathtub and a separate toilet.\nReversible air conditioning (hot/cold).\nBalcony.\nIndividual electric heating."
+    "description_en": "2-bedroom apartment with a surface of approximately 66 sqm, renovated\nOn the 1st floor with elevator access of a immeuble récent\na Living room with sofa, a coffee table and a flat-screen TV and\na dining area\nA fully fitted and equipped kitchen\nEquipment: dishwasher, microwave oven, cooktop,\nrefrigerator, lave-linge, sèche-linge…\na Bedroom parentale with a double bed and of the rangement.\n2eme Bedroom with 2 single bed (possibilité double).\nBathroom with bathtub and a separate toilet.\nClimatiseur réversible (chaud / froid)\nbalcony.\nChauffage individuel électrique."
+  },
+  {
+    "slug": "3-pieces-pont-de-neuilly-neuilly-sur-seine",
+    "title": "3 Pieces Pont de Neuilly",
+    "address": "bis Boulevard du Général Leclerc, Neuilly-sur-Seine",
+    "district": "Neuilly-sur-Seine",
+    "surface": 80,
+    "rooms": 3,
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "floor": "8e étage",
+    "status": "À louer",
+    "description": "3 pièces pièce de standing d’une surface d’environ 80\nm2.\nAu 6eme étage avec ascenseur d’un immeuble\nmoderne.\nUn séjour avec grand canapé 4 places, 2 fauteuil,\ntable basse, Tv ecran plat et coin salle à manger,\nMaster bedroom avec lit double (160x200cm) et du\nrangement.\n2ème chambre avec 2 lits simples et rangements.\nSalle de bain avec baignoire et double vasque. WC\nséparés.\nCuisine ouverte toute équipée et aménagée.\nÉquipement : lave-linge, four, four micro-onde, lave-\nvaisselle, plaque , réfrigérateur, machine à laver\nséchante.\nUne terrasse sans vis-à-vis, vue dégager sur seine.\nChauffage et eau chaude collectif.",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Cuisine équipée",
+      "Deux lit simple",
+      "Baignoire",
+      "Balcon",
+      "Bouilloire",
+      "Cafetière",
+      "Chauffage collectif",
+      "Congélateur",
+      "Double vitrage",
+      "Draps fournis",
+      "Fer à repasser",
+      "Four",
+      "Lave-linge séchant",
+      "Lave-vaisselle",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Parking",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Terrasse",
+      "Toaster",
+      "Toilettes séparées",
+      "Volets roulants",
+      "Wifi"
+    ],
+    "photos": "3-pieces-pont-de-neuilly-neuilly-sur-seine",
+    "images": [
+      "/apartments/3-pieces-pont-de-neuilly-neuilly-sur-seine/photo-1.jpg",
+      "/apartments/3-pieces-pont-de-neuilly-neuilly-sur-seine/photo-2.jpg",
+      "/apartments/3-pieces-pont-de-neuilly-neuilly-sur-seine/photo-3.jpg",
+      "/apartments/3-pieces-pont-de-neuilly-neuilly-sur-seine/photo-4.jpg",
+      "/apartments/3-pieces-pont-de-neuilly-neuilly-sur-seine/photo-5.jpg",
+      "/apartments/3-pieces-pont-de-neuilly-neuilly-sur-seine/photo-6.jpg",
+      "/apartments/3-pieces-pont-de-neuilly-neuilly-sur-seine/photo-7.jpg",
+      "/apartments/3-pieces-pont-de-neuilly-neuilly-sur-seine/photo-8.jpg",
+      "/apartments/3-pieces-pont-de-neuilly-neuilly-sur-seine/photo-9.jpg",
+      "/apartments/3-pieces-pont-de-neuilly-neuilly-sur-seine/photo-10.jpg",
+      "/apartments/3-pieces-pont-de-neuilly-neuilly-sur-seine/photo-11.jpg",
+      "/apartments/3-pieces-pont-de-neuilly-neuilly-sur-seine/photo-12.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Esplanade de La Défense",
+        "distance": "8 min",
+        "lines": [
+          "1"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Primeur x Éthique",
+        "distance": "5 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square de l'Eau Albienne",
+        "distance": "1 min"
+      }
+    ],
+    "hasElevator": true
   }
 ]
