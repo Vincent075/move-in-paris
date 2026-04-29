@@ -5,6 +5,7 @@ import PageHero from "@/components/PageHero";
 import SEOLanding, { buildFaqLd, type SEOLandingFAQ } from "@/components/SEOLanding";
 import TrustStripB2B from "@/components/TrustStripB2B";
 import BailComparisonTable from "@/components/BailComparisonTable";
+import BailDureesTable from "@/components/BailDureesTable";
 
 export type QuartierConfig = {
   slug: string;
@@ -76,7 +77,7 @@ export default function QuartierLanding({ config }: { config: QuartierConfig }) 
           eyebrow={`Location meublée société · ${config.shortName}`}
           intro={config.intro}
           highlights={[
-            { title: "Bail au nom de la société", text: "L'entreprise est juridiquement locataire. Sécurité maximale, simplicité comptable totale." },
+            { title: "Court, moyen et long terme", text: "Missions de 1 mois ou mutations de 3 ans : un cadre juridique unique, le bail société. 100 % gratuit pour le propriétaire." },
             { title: "Facture entreprise", text: "Facture mensuelle au nom de la société, déductible IS, intégrable directement en comptabilité." },
             { title: `Localisation ${config.shortName}`, text: config.positioning },
           ]}
@@ -89,6 +90,20 @@ export default function QuartierLanding({ config }: { config: QuartierConfig }) 
                   <p>{config.businessReason}</p>
                   <h3>Profil de séjour typique</h3>
                   <p>{config.typicalProfile}</p>
+                </>
+              ),
+            },
+            {
+              title: `Court, moyen ou long terme à ${config.name}`,
+              body: (
+                <>
+                  <p>
+                    Move in Paris loge à {config.name} aussi bien des collaborateurs en mission courte (audits, intégrations, due diligence) que des cadres expatriés en mutation longue (1 à 3 ans). Le cadre juridique est le même — un <strong>bail société</strong> souscrit au nom de votre personne morale — mais les frais et le dépôt de garantie diffèrent selon la durée.
+                  </p>
+                  <BailDureesTable />
+                  <p>
+                    Notre service est <strong>100 % gratuit pour le propriétaire bailleur</strong>, quelle que soit la durée du bail. Côté entreprise locataire : zéro frais sur les missions courtes et moyennes, 12,5 % HT du loyer annuel uniquement sur les baux longue durée (plus de 12 mois), avec un dépôt de garantie de 2 mois reversé intégralement au propriétaire.
+                  </p>
                 </>
               ),
             },
@@ -114,10 +129,10 @@ export default function QuartierLanding({ config }: { config: QuartierConfig }) 
                     Notre offre <Link href="/location-meublee-entreprise">location meublée société</Link> couvre tous les arrondissements de Paris intra-muros et la première couronne d&apos;affaires (La Défense, Neuilly, Levallois). Chaque appartement est inspecté, équipé selon nos standards corporate (literie 5*, wifi fibre 1 Gb, vaisselle complète, ménage hebdomadaire inclus), et mis à disposition sous 7 à 14 jours après signature.
                   </p>
                   <ul>
-                    <li><strong>Service 100 % gratuit</strong> pour l&apos;entreprise locataire — zéro frais de dossier, zéro commission</li>
+                    <li><strong>Service 100 % gratuit pour le propriétaire</strong> — quelle que soit la durée du bail</li>
+                    <li><strong>Honoraires entreprise locataire</strong> : 0 € en court/moyen terme, 12,5 % HT du loyer annuel en long terme</li>
+                    <li><strong>Assistance technique 7j/7 incluse</strong> — bénéficie aussi indirectement au propriétaire (zéro gestion opérationnelle)</li>
                     <li><strong>Bail société signé en 5 minutes</strong> via DocuSign</li>
-                    <li><strong>Pas de dépôt de garantie</strong> requis pour les contrats inférieurs à 9 mois</li>
-                    <li><strong>Préavis 15 jours</strong> à l&apos;initiative de l&apos;entreprise</li>
                     <li><strong>Account manager dédié</strong> pour les entreprises gérant 5+ appartements simultanés</li>
                   </ul>
                   <p>

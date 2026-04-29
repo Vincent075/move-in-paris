@@ -1,5 +1,425 @@
 [
   {
+    "slug": "guide-bail-societe-paris-2026",
+    "title": "Bail société à Paris : le guide complet 2026 (court, moyen et long terme)",
+    "excerpt": "Tout ce qu'une entreprise doit savoir avant de louer un appartement parisien au nom de sa société : cadre juridique, frais réels, dépôt de garantie, fiscalité, signature et durées. Avec cas pratiques chiffrés.",
+    "category": "Location société",
+    "readTime": 14,
+    "date": "2026-04-29",
+    "author": "Move in Paris",
+    "image": "/apartments/salon-bibliotheque.jpg",
+    "tags": [
+      "Bail société",
+      "Location meublée société",
+      "Corporate",
+      "Paris",
+      "Réglementation"
+    ],
+    "metaDescription": "Guide complet du bail société à Paris en 2026 : cadre juridique, frais (0 € court terme, 12,5 % long terme), dépôt de garantie, fiscalité, signature, cas pratiques. Par Move in Paris.",
+    "content": [
+      {
+        "type": "p",
+        "text": "Si vous lisez ces lignes, c'est probablement qu'une question concrète est posée chez vous : faut-il signer le bail au nom de l'entreprise ? Au nom du collaborateur ? Et qu'est-ce que ça change vraiment, en pratique, pour une mission de trois mois ou pour une expatriation de deux ans ?"
+      },
+      {
+        "type": "p",
+        "text": "Chez Move in Paris, on signe ce type de bail tous les jours depuis 2018. On voit défiler des DRH de grands groupes, des Office Managers de scale-ups, des secrétaires de direction, des cabinets de relocation. Et on s'aperçoit qu'il y a énormément de confusion autour de ce que recouvre vraiment le « bail société ». Beaucoup d'idées reçues, quelques pièges, et une économie réelle qu'on rate quand on choisit le mauvais format."
+      },
+      {
+        "type": "p",
+        "text": "Cet article fait le tour complet du sujet. On y parle juridique sans jargon, on chiffre les frais réels (les nôtres et ceux du marché), on explique pourquoi le court terme et le long terme suivent des logiques différentes, et on liste les pièges qu'on voit revenir le plus souvent."
+      },
+      {
+        "type": "h2",
+        "text": "Qu'est-ce qu'un bail société, juridiquement ?"
+      },
+      {
+        "type": "p",
+        "text": "Première chose à clarifier : le « bail société » n'est pas un type de bail à part entière, dans le sens où vous ne le trouverez pas dans une rubrique dédiée du Code civil. C'est un usage du marché. Concrètement, il s'agit d'un bail de logement de fonction soumis aux articles 1714 à 1762 du Code civil — autrement dit, hors loi du 6 juillet 1989 (la loi qui encadre les baux d'habitation classiques) et hors loi ELAN/ALUR."
+      },
+      {
+        "type": "p",
+        "text": "Pourquoi cette sortie du droit commun ? Parce que la loi de 1989 protège la résidence principale du locataire. Or, dans un bail société, l'occupant n'est pas un particulier qui s'installe pour vivre — c'est l'entreprise qui héberge un de ses collaborateurs dans le cadre de ses fonctions. Le logement est l'accessoire d'un contrat de travail ou d'une mission, pas le centre de vie permanent du salarié."
+      },
+      {
+        "type": "p",
+        "text": "Concrètement, ça donne trois libertés clés :"
+      },
+      {
+        "type": "p",
+        "text": "Liberté de durée. Vous pouvez signer pour un mois, neuf mois, deux ans, trois ans. Pas de durée minimale légale, pas de tacite reconduction obligatoire. C'est ce qui rend ce format compatible avec une mission d'audit, une intégration post-acquisition, une mutation longue ou un poste de direction."
+      },
+      {
+        "type": "p",
+        "text": "Liberté de loyer. Le bail société n'entre pas dans le périmètre de l'encadrement parisien (le fameux loyer de référence majoré). Le propriétaire et l'entreprise négocient librement le montant, ce qui permet d'aligner le tarif sur la qualité réelle du bien et sur la durée d'engagement."
+      },
+      {
+        "type": "p",
+        "text": "Liberté de préavis. Quinze jours côté entreprise pour les contrats courts et moyens, trois mois sur les baux longue durée. Pas de préavis légal de six mois imposé comme dans le bail loi de 1989. En pratique, c'est ce qui permet d'avoir un dispositif vraiment réactif quand un projet s'arrête plus tôt que prévu — ou inversement, quand il faut prolonger."
+      },
+      {
+        "type": "p",
+        "text": "Le contrat lui-même fait généralement entre 8 et 15 pages. On y trouve l'identification précise de la personne morale locataire (raison sociale, SIREN, siège, signataire mandaté avec son Kbis de moins de trois mois), la désignation nominative du ou des occupants, l'objet précis du logement (logement de fonction, résidence à titre temporaire d'un collaborateur en mission), la durée, le loyer, les charges, les conditions de sortie, l'état des lieux, l'inventaire mobilier."
+      },
+      {
+        "type": "h2",
+        "text": "Qui peut signer un bail société ?"
+      },
+      {
+        "type": "p",
+        "text": "Toute personne morale, française ou étrangère, peut être locataire d'un bail société : SAS, SA, SARL, SCI familiale, EURL, association loi 1901, organisme international (OCDE, OTAN, UNESCO), ambassade, consulat, fondation, groupement d'intérêt économique. La forme juridique exacte importe peu — ce qui compte, c'est qu'il y ait une entité juridique distincte des personnes physiques qui occupent le logement."
+      },
+      {
+        "type": "p",
+        "text": "Le signataire doit être mandaté pour engager la société. En général c'est le président, le gérant, le directeur général, ou un collaborateur disposant d'une délégation de pouvoir formalisée. On nous demande parfois si une simple lettre de mission suffit : la réponse est non, il faut soit une mention statutaire (extrait Kbis), soit un pouvoir spécifique signé par le représentant légal."
+      },
+      {
+        "type": "p",
+        "text": "Cas particulier : la SCI familiale. C'est une question qu'on reçoit très souvent. Une SCI peut techniquement signer un bail société pour loger un de ses associés — mais attention au montage. Si l'associé occupe à titre gratuit ou à loyer minoré, l'administration fiscale peut requalifier en avantage en nature, voire en abus de droit. Mieux vaut consulter un notaire avant de structurer ce type de schéma."
+      },
+      {
+        "type": "h2",
+        "text": "Les cinq cas où un bail société s'impose"
+      },
+      {
+        "type": "p",
+        "text": "On voit revenir cinq grandes typologies de besoins. Les voici, par ordre de fréquence dans nos dossiers."
+      },
+      {
+        "type": "h3",
+        "text": "1. La mission courte d'un consultant ou auditeur"
+      },
+      {
+        "type": "p",
+        "text": "Cabinets de conseil et Big Four envoient régulièrement des équipes en mission de 1 à 6 mois. Audit annuel, due diligence M&A, intégration post-acquisition, projet de transformation digitale. Le bail société permet de loger le consultant dans un appartement décent près du client, à un coût bien inférieur à celui d'un hôtel longue durée. La facture mensuelle au nom de la société entre directement en frais professionnels."
+      },
+      {
+        "type": "h3",
+        "text": "2. L'expatriation longue d'un cadre"
+      },
+      {
+        "type": "p",
+        "text": "Une mutation de 12 à 36 mois pour un Country Manager, un VP régional, un partner de cabinet. La famille suit, les enfants vont à l'école internationale, le conjoint cherche du travail localement. Le bail société sécurise les trois ans tout en donnant à l'entreprise la souplesse d'écourter en cas de retour anticipé."
+      },
+      {
+        "type": "h3",
+        "text": "3. Le logement de fonction permanent d'un dirigeant"
+      },
+      {
+        "type": "p",
+        "text": "Un PDG, un membre du COMEX, un haut fonctionnaire détaché. Le bail société dure plusieurs années consécutives, parfois reconduit indéfiniment, et le logement fait partie intégrante du package de rémunération. La déductibilité IS du loyer pour l'entreprise est un des arguments forts du dispositif."
+      },
+      {
+        "type": "h3",
+        "text": "4. La rotation d'équipes (cabinets de conseil, ESN, banques d'affaires)"
+      },
+      {
+        "type": "p",
+        "text": "C'est notre cas d'usage le plus volumique. Un cabinet d'audit ou de conseil signe un bail société sur un appartement parisien, et y fait tourner plusieurs collaborateurs successifs au fil des missions. Avenant rapide pour changer d'occupant, pas de redoul de signature complet à chaque rotation. Économie d'échelle considérable sur le coût d'hébergement de l'année."
+      },
+      {
+        "type": "h3",
+        "text": "5. L'accueil d'un client VIP ou d'un intervenant externe"
+      },
+      {
+        "type": "p",
+        "text": "Cas plus rare mais réel : une banque d'affaires loge un dirigeant étranger en mission de plusieurs semaines, ou un cabinet de conseil héberge un client venu pour un projet de transformation. Le bail société permet de désigner un occupant qui n'est pas formellement salarié, à condition de respecter quelques précautions juridiques."
+      },
+      {
+        "type": "h2",
+        "text": "Court terme, moyen terme, long terme : la mécanique réelle des frais"
+      },
+      {
+        "type": "p",
+        "text": "C'est le sujet où il y a le plus de confusion sur le marché parisien, et probablement le plus d'écart entre les agences. Voici comment ça fonctionne chez nous, sans flou ni petits caractères."
+      },
+      {
+        "type": "h3",
+        "text": "Le service est toujours gratuit pour le propriétaire"
+      },
+      {
+        "type": "p",
+        "text": "Quelle que soit la durée du bail — un mois ou trois ans — Move in Paris ne facture jamais d'honoraires au propriétaire bailleur. Le service est 100 % gratuit côté propriétaire. Et ce n'est pas un argument marketing : c'est notre modèle économique structurel depuis le démarrage de l'agence."
+      },
+      {
+        "type": "p",
+        "text": "Le propriétaire bénéficie en plus, sans frais supplémentaire, de l'assistance technique 7 jours sur 7 que nous apportons à l'occupant. Plomberie, chauffage, électroménager, internet, ménage : toutes les interventions courantes sont prises en charge par nos équipes et notre réseau d'artisans. C'est un gain de temps et de tranquillité énorme pour le propriétaire — la gestion opérationnelle est entièrement déléguée."
+      },
+      {
+        "type": "h3",
+        "text": "Sur les baux courts et moyen terme (jusqu'à 12 mois) : 0 € pour tout le monde"
+      },
+      {
+        "type": "p",
+        "text": "C'est le format dominant chez nous. Une entreprise qui loge un collaborateur pour 1 à 12 mois paie le loyer mensuel, point. Aucun honoraire d'agence, aucune commission, aucun frais de dossier, aucun dépôt de garantie. La facture mensuelle au nom de la société entre directement en frais professionnels déductibles, et la trésorerie de l'entreprise n'est pas immobilisée."
+      },
+      {
+        "type": "p",
+        "text": "Pourquoi ce choix ? Parce que sur ce segment, ce qui compte c'est la fluidité opérationnelle. Un consultant en mission de trois mois ne devrait pas se demander ce qu'il va lui rester du dépôt à la fin, et son employeur n'a pas envie de gérer une retenue de garantie pour un dossier court. On a fait le pari que la confiance et la simplicité valaient mieux que la garantie financière sur ces durées."
+      },
+      {
+        "type": "h3",
+        "text": "Sur les baux longue durée (plus de 12 mois) : 12,5 % HT du loyer annuel + 2 mois de dépôt"
+      },
+      {
+        "type": "p",
+        "text": "Au-delà de 12 mois, le contrat change de logique économique. Le bail engage durablement l'appartement, et le propriétaire bailleur a besoin d'une garantie financière classique. Ici, deux choses :"
+      },
+      {
+        "type": "p",
+        "text": "L'entreprise locataire règle des honoraires d'agence de 12,5 % HT du loyer annuel — un seul versement, pas de coût caché derrière. Pour une location à 3 000 € par mois sur 24 mois, ça fait 36 000 € de loyer annuel × 12,5 % = 4 500 € HT d'honoraires sur la durée totale du contrat. C'est la rémunération de Move in Paris pour la curation du bien, la rédaction du bail, l'état des lieux, le suivi opérationnel et l'assistance technique sur toute la durée."
+      },
+      {
+        "type": "p",
+        "text": "Et l'entreprise verse un dépôt de garantie de 2 mois de loyer, qui est intégralement reversé au propriétaire bailleur. Move in Paris ne le conserve pas — il sécurise directement le propriétaire, comme dans n'importe quel bail classique. Ce dépôt est restitué en fin de bail si l'état des lieux de sortie est conforme à l'inventaire d'entrée."
+      },
+      {
+        "type": "p",
+        "text": "Pourquoi cette différence avec le court terme ? Parce qu'un bail de 24 mois engage plus, expose plus, et nécessite un travail opérationnel continu. Mais le propriétaire reste toujours gratuit. C'est l'entreprise locataire qui assume le coût du service — ce qui est cohérent avec le fait que c'est elle qui en bénéficie le plus directement."
+      },
+      {
+        "type": "h2",
+        "text": "Le rôle du dépôt de garantie sur les baux longs"
+      },
+      {
+        "type": "p",
+        "text": "Le dépôt de garantie est probablement la question qui revient le plus souvent côté DRH. À quoi sert-il vraiment, qui le détient, est-il restitué automatiquement ?"
+      },
+      {
+        "type": "p",
+        "text": "Sa fonction est simple : couvrir d'éventuels manquements de l'entreprise locataire à ses obligations. Loyers impayés (rare avec une entreprise solvable, mais ça peut arriver en cas de procédure collective), dégradations au-delà de l'usure normale, charges non régularisées en fin de bail. Sans dépôt, le propriétaire bailleur prend un risque économique réel sur un engagement long."
+      },
+      {
+        "type": "p",
+        "text": "Chez Move in Paris, ce dépôt est encaissé à la signature du bail et reversé sous 5 jours ouvrés au propriétaire. L'entreprise locataire reçoit une attestation. À la sortie, après réalisation de l'état des lieux et régularisation des charges, le propriétaire restitue le dépôt sous deux mois maximum (délai légal pour les baux soumis au Code civil)."
+      },
+      {
+        "type": "p",
+        "text": "Quelques points pratiques que les DRH ne connaissent pas toujours :"
+      },
+      {
+        "type": "p",
+        "text": "Le dépôt n'est pas pris sur la trésorerie courante de l'entreprise — c'est un actif inscrit au bilan, qui revient en fin de bail. Comptablement, c'est neutre sur les 24 ou 36 mois. C'est juste une immobilisation temporaire."
+      },
+      {
+        "type": "p",
+        "text": "Le montant peut être négocié dans certains cas : si l'entreprise est solidement notée (Big Four, CAC 40, banque d'affaires de premier rang), le propriétaire peut accepter un dépôt réduit à 1 mois. C'est rare mais pas inédit — on a vu plusieurs dossiers se conclure ainsi avec des sociétés notoirement très solvables."
+      },
+      {
+        "type": "h2",
+        "text": "Fiscalité : ce qui se passe côté IS et TVA"
+      },
+      {
+        "type": "p",
+        "text": "C'est un sujet où on voit beaucoup d'erreurs, donc autant le clarifier sans détours."
+      },
+      {
+        "type": "p",
+        "text": "Côté impôt sur les sociétés : le loyer payé par l'entreprise pour loger un salarié dans le cadre de ses fonctions est intégralement déductible du résultat fiscal en charges externes. C'est une dépense liée à l'exploitation, sans aucun retraitement à faire. Les honoraires d'agence (les fameux 12,5 % sur le long terme) suivent le même régime — déductibles à 100 %."
+      },
+      {
+        "type": "p",
+        "text": "Côté TVA : la location de logement nu ou meublé est en principe exonérée de TVA, en application de l'article 261 D du Code général des impôts. La facture mensuelle est donc HT = TTC, et l'entreprise locataire ne récupère pas de TVA dessus. C'est neutre puisqu'il n'y en a pas."
+      },
+      {
+        "type": "p",
+        "text": "Cas particulier à surveiller : si la prestation bascule en para-hôtellerie (avec accueil quotidien, petit-déjeuner servi, ménage tous les jours, fourniture de linge), la TVA s'applique alors à 10 %. Notre offre standard — avec ménage hebdomadaire et pas d'accueil quotidien — reste hors champ TVA. Si vous avez besoin de vérifier le statut exact de votre dossier, votre expert-comptable peut le confirmer en quelques minutes."
+      },
+      {
+        "type": "p",
+        "text": "Et l'avantage en nature pour le salarié occupant ? C'est l'autre question fréquente. La règle : si le logement est strictement de fonction (lié à la mission, occupation temporaire, salarié non installé là à titre principal), il n'y a pas constitution d'avantage en nature. Si l'occupation devient permanente et que le salarié n'a pas d'autre résidence principale, l'URSSAF peut requalifier. Dans 95 % de nos dossiers, on est dans le premier cas — mais il faut documenter la situation, et idéalement maintenir une résidence d'origine en France ou à l'étranger."
+      },
+      {
+        "type": "h2",
+        "text": "La signature : ce qu'il faut prévoir côté entreprise"
+      },
+      {
+        "type": "p",
+        "text": "On nous demande souvent combien de temps prend la signature. La réponse honnête : quelques minutes en moyenne pour la partie administrative, plus le temps que prend votre service juridique interne pour relire — ça dépend des organisations."
+      },
+      {
+        "type": "p",
+        "text": "Côté pièces, voici ce qu'il faut côté entreprise pour signer un bail société chez nous :"
+      },
+      {
+        "type": "p",
+        "text": "Un Kbis de moins de trois mois. C'est la pièce d'identité de l'entreprise. Disponible en quelques clics sur infogreffe.fr ou via votre service juridique."
+      },
+      {
+        "type": "p",
+        "text": "Une pièce d'identité du signataire (président, gérant, directeur général, ou collaborateur disposant d'une délégation de pouvoir). On accepte CNI, passeport, titre de séjour."
+      },
+      {
+        "type": "p",
+        "text": "Si le signataire n'est pas le représentant légal direct, un pouvoir spécifique daté et signé par le président ou le gérant. Une délégation de signature standardisée fait l'affaire dans la plupart des cas."
+      },
+      {
+        "type": "p",
+        "text": "L'identité de l'occupant principal (CNI ou passeport). C'est lui qui sera désigné nommément au bail. Si plusieurs collaborateurs occupent successivement, on liste les profils types et un avenant simple permet de basculer."
+      },
+      {
+        "type": "p",
+        "text": "Côté Move in Paris, on prépare le bail standardisé en moins d'une heure après réception des pièces, on l'envoie par DocuSign pour signature électronique, et le règlement se fait par virement à terme à échoir. Pas de chèque de caution, pas de dossier locatif type loi de 1989 (on ne demande pas les bulletins de salaire du collaborateur, c'est l'entreprise qui se porte garante)."
+      },
+      {
+        "type": "h2",
+        "text": "Combien ça coûte vraiment ? Trois cas pratiques chiffrés"
+      },
+      {
+        "type": "p",
+        "text": "Pour rendre tout ça concret, voici trois scénarios qu'on a vraiment traités cette année."
+      },
+      {
+        "type": "h3",
+        "text": "Cas n°1 : audit Big Four, 3 mois, studio à Étoile"
+      },
+      {
+        "type": "p",
+        "text": "Studio meublé de 32 m² près de la place de l'Étoile, loyer 2 200 € par mois charges comprises. Mission de 3 mois pour une auditrice senior dans le cadre de la clôture annuelle d'un client. Bail société courte durée."
+      },
+      {
+        "type": "p",
+        "text": "Coût total entreprise : 3 × 2 200 = 6 600 €. Pas d'honoraires d'agence, pas de dépôt de garantie. Comparé à un hôtel 4 étoiles équivalent à 220 €/nuit × 90 nuits = 19 800 €, l'économie est de 13 200 € sur la mission. Et l'auditrice a un vrai appartement avec cuisine équipée, plutôt qu'une chambre d'hôtel."
+      },
+      {
+        "type": "h3",
+        "text": "Cas n°2 : intégration post-acquisition, 9 mois, 2 pièces à Madeleine"
+      },
+      {
+        "type": "p",
+        "text": "Deux pièces de 48 m² près de la Madeleine, loyer 3 100 €/mois charges comprises. Cabinet de conseil M&A qui détache un manager senior pour piloter l'intégration d'une filiale en cours de rachat. Bail société moyen terme."
+      },
+      {
+        "type": "p",
+        "text": "Coût total entreprise : 9 × 3 100 = 27 900 €. Pas d'honoraires, pas de dépôt. Le manager est logé à 5 minutes du siège du client. À noter : un avenant a permis de prolonger 3 mois supplémentaires en cours de bail, pour la phase de stabilisation post-fusion."
+      },
+      {
+        "type": "h3",
+        "text": "Cas n°3 : mutation expatriée, 24 mois, 4 pièces familial à Trocadéro"
+      },
+      {
+        "type": "p",
+        "text": "Quatre pièces de 110 m² avec vue sur la Tour Eiffel, loyer 6 800 €/mois charges comprises. Mutation d'un Country Manager américain et de sa famille (conjoint + 2 enfants scolarisés à l'EIB Victor-Hugo). Bail société longue durée 24 mois."
+      },
+      {
+        "type": "p",
+        "text": "Loyer total sur 24 mois : 24 × 6 800 = 163 200 €. Honoraires Move in Paris : 12,5 % du loyer annuel = 12,5 % × (12 × 6 800) = 10 200 € HT. Dépôt de garantie : 2 × 6 800 = 13 600 €, intégralement reversés au propriétaire et restitués en fin de bail. Coût total cash sur 24 mois : 163 200 € de loyer + 10 200 € d'honoraires = 173 400 €. Le dépôt de garantie est un actif au bilan, neutre sur le résultat."
+      },
+      {
+        "type": "h2",
+        "text": "Les pièges à éviter"
+      },
+      {
+        "type": "p",
+        "text": "On accumule beaucoup de dossiers depuis 2018, et on voit revenir les mêmes erreurs. En voici cinq dont on aimerait vraiment vous épargner."
+      },
+      {
+        "type": "h3",
+        "text": "Piège 1 : signer un bail loi de 1989 en pensant que c'est plus protecteur"
+      },
+      {
+        "type": "p",
+        "text": "C'est l'erreur la plus coûteuse. Un DRH bien intentionné qui se dit « la loi de 1989 protège plus, prenons ce format pour notre cadre expatrié ». Sauf que la loi de 1989 protège le locataire, pas l'entreprise. Préavis de 6 mois, encadrement strict des résiliations, durée minimale, encadrement des loyers à Paris. Vous perdez toute la flexibilité dont vous avez besoin pour gérer un collaborateur en mobilité. Le bail société est précisément l'outil adapté."
+      },
+      {
+        "type": "h3",
+        "text": "Piège 2 : oublier la délégation de signature"
+      },
+      {
+        "type": "p",
+        "text": "Le DAF veut signer mais il n'est pas le représentant légal. Sans délégation formelle, le bail peut être contesté juridiquement. Toujours vérifier que la personne qui signe a bien le pouvoir d'engager la société, soit par mention statutaire, soit par pouvoir spécifique."
+      },
+      {
+        "type": "h3",
+        "text": "Piège 3 : sous-estimer le coût d'un hôtel longue durée"
+      },
+      {
+        "type": "p",
+        "text": "On voit régulièrement des dossiers où l'entreprise commence par loger un consultant en hôtel le temps de « réfléchir », et finit par y rester 3 mois à 250 € la nuit. Coût final : 22 500 € pour un confort très moyen, contre 6 600 € pour un vrai appartement. Le bail société court terme n'a pas d'engagement de minimum — autant le mettre en place dès le début."
+      },
+      {
+        "type": "h3",
+        "text": "Piège 4 : ne pas anticiper l'avenant de changement d'occupant"
+      },
+      {
+        "type": "p",
+        "text": "Sur les baux long terme, le collaborateur initial finit parfois par quitter l'entreprise ou changer de poste. Beaucoup de clients ne savent pas qu'un simple avenant suffit pour désigner un nouvel occupant — on le rédige en 24 heures et le bail continue. Inutile de résilier et redoul tout. C'est un gain de temps et d'argent considérable sur les durées longues."
+      },
+      {
+        "type": "h3",
+        "text": "Piège 5 : confondre encadrement parisien et bail société"
+      },
+      {
+        "type": "p",
+        "text": "Beaucoup d'entreprises pensent que tous les loyers parisiens sont plafonnés. Faux dans le cadre du bail société : l'encadrement (loyer de référence majoré de la DRIHL) ne s'applique qu'aux baux loi de 1989. Sur le bail société, le loyer est libre. C'est ce qui explique que les loyers corporate parisiens soient 15 à 30 % au-dessus des références d'encadrement — et c'est légalement parfaitement justifié."
+      },
+      {
+        "type": "h2",
+        "text": "Comment Move in Paris simplifie le bail société en 2026"
+      },
+      {
+        "type": "p",
+        "text": "Notre métier depuis 2018, c'est de rendre ce dispositif aussi simple à utiliser que possible pour les entreprises. Concrètement, ça donne quoi ?"
+      },
+      {
+        "type": "p",
+        "text": "On a un parc de plus de 50 appartements parisiens curés à la main, du studio executive au 5 pièces familial. Tous équipés selon des standards corporate identiques (literie 5 étoiles, wifi fibre 1 Gb, vaisselle complète, ménage hebdomadaire inclus). Tous éligibles au bail société. Tous disponibles sous 7 à 14 jours après signature."
+      },
+      {
+        "type": "p",
+        "text": "On a un bail société standardisé, validé juridiquement par notre cabinet conseil, qui couvre toutes les durées de 1 mois à 3 ans+. La signature se fait par DocuSign, en quelques minutes une fois les pièces réunies."
+      },
+      {
+        "type": "p",
+        "text": "On a un account manager dédié pour les entreprises qui gèrent plusieurs appartements en simultané (typiquement les cabinets d'audit, les Big Four, les banques d'affaires en mode mission équipe). Reporting consolidé mensuel, facturation centralisée, suivi opérationnel mutualisé."
+      },
+      {
+        "type": "p",
+        "text": "Et on a une grille de coûts limpide : 0 € pour le propriétaire toujours, 0 € pour l'entreprise sur le court et moyen terme, 12,5 % HT du loyer annuel sur le long terme, dépôt de garantie de 2 mois reversé intégralement au propriétaire sur les baux longs. Pas de petits caractères, pas de surprise en cours de bail."
+      },
+      {
+        "type": "h2",
+        "text": "Renouveler, prolonger, résilier : la fin du bail"
+      },
+      {
+        "type": "p",
+        "text": "Le bail société peut se terminer de plusieurs façons. Bien comprendre les options avant la signature évite des surprises six ou douze mois plus tard."
+      },
+      {
+        "type": "p",
+        "text": "Résiliation à l'initiative de l'entreprise. C'est le mode le plus fréquent. Préavis de 15 jours sur les baux courts et moyens, 3 mois sur les baux longs. La notification se fait par email recommandé ou lettre recommandée avec accusé de réception. État des lieux de sortie organisé sur place."
+      },
+      {
+        "type": "p",
+        "text": "Prolongation tacite ou avenant. Si l'entreprise et le propriétaire sont d'accord, on signe un avenant de prolongation pour la durée souhaitée. C'est plus rapide qu'un nouveau bail complet. Particulièrement utile sur les missions où la durée initiale a été fixée prudemment et où on souhaite continuer."
+      },
+      {
+        "type": "p",
+        "text": "Changement d'occupant. Le bail reste, l'occupant change. Avenant simple qui désigne le nouveau collaborateur. Pas de relocation, pas d'état des lieux intermédiaire. Pratique pour les cabinets en mode mission longue qui font tourner plusieurs équipes."
+      },
+      {
+        "type": "p",
+        "text": "Résiliation à l'initiative du propriétaire. Très rare en pratique. Possible uniquement aux échéances contractuelles, avec préavis. Le bail société protège l'entreprise locataire pendant toute la durée engagée — un propriétaire ne peut pas reprendre son bien en cours de contrat sans motif sérieux."
+      },
+      {
+        "type": "h2",
+        "text": "Pour aller plus loin"
+      },
+      {
+        "type": "p",
+        "text": "Si vous avez un projet concret de location société à Paris — une mission qui démarre, une mutation à anticiper, une stratégie d'hébergement à mettre en place pour vos collaborateurs en mobilité — l'équipe Move in Paris est joignable pour échanger sans engagement. On vous propose une short-list d'appartements selon vos critères, on vous explique le bail société dans le détail, on vous fait une simulation chiffrée. Sous 24 heures, par téléphone ou par visio."
+      },
+      {
+        "type": "p",
+        "text": "Vous pouvez aussi consulter nos pages dédiées pour les arrondissements et zones d'affaires les plus demandés : Paris 8e, Paris 16e, Paris 17e, La Défense, Neuilly-sur-Seine. Chaque page liste les appartements disponibles en bail société, avec les budgets indicatifs et les profils typiques de séjour."
+      },
+      {
+        "type": "p",
+        "text": "Bon à savoir, on a aussi rédigé un guide complémentaire qui compare les différentes structures juridiques (société classique, entreprise au sens large, SCI familiale) pour choisir le bon montage selon votre situation. Et un autre sur le bail Code civil hors champ ALUR pour les cas plus spécifiques de logement de fonction."
+      }
+    ]
+  },
+  {
     "slug": "lmnp-2026-nouveautes-fiscales-proprietaires-parisiens",
     "title": "LMNP en 2026 : toutes les nouveautés fiscales pour les propriétaires parisiens",
     "excerpt": "Plafonds revisités, amortissement en sursis, réintégration à la revente : voici ce qui change pour le statut Loueur en Meublé Non Professionnel en 2026.",
@@ -8,20 +428,57 @@
     "date": "2026-04-14",
     "author": "Move in Paris",
     "image": "/apartments/salon-haussmann.jpg",
-    "tags": ["LMNP", "Fiscalité", "Propriétaires"],
+    "tags": [
+      "LMNP",
+      "Fiscalité",
+      "Propriétaires"
+    ],
     "metaDescription": "LMNP 2026 : nouveautés fiscales, plafonds, amortissement, réintégration à la revente. Guide complet pour propriétaires parisiens en location meublée.",
     "content": [
-      {"type": "p", "text": "La Loi de Finances 2026 a apporté plusieurs ajustements au régime de la Location Meublée Non Professionnelle (LMNP). Si vous êtes propriétaire d'un bien meublé à Paris ou en Île-de-France, ces nouveautés méritent toute votre attention pour optimiser votre fiscalité et anticiper les évolutions à venir."},
-      {"type": "h2", "text": "Le nouveau plafond du micro-BIC"},
-      {"type": "p", "text": "Le plafond du régime micro-BIC pour la location meublée classique reste fixé à 77 700 € de recettes annuelles en 2026. Au-delà, le bascule vers le régime réel simplifié devient obligatoire. Pour les meublés de tourisme non classés, le plafond a été durci à 15 000 € depuis 2024 — une évolution qui continue de s'appliquer sans modification notable cette année."},
-      {"type": "h2", "text": "Réintégration des amortissements à la revente"},
-      {"type": "p", "text": "C'est le changement majeur : depuis le 15 février 2025, la plus-value de cession d'un bien en LMNP est calculée en réintégrant les amortissements déjà déduits. Concrètement, un bien acquis 500 000 € et revendu 600 000 € après 100 000 € d'amortissements cumulés sera taxé sur 200 000 € de plus-value — non plus 100 000 €. Cette réforme aligne le LMNP sur le LMP et change la rentabilité long-terme de l'investissement locatif meublé."},
-      {"type": "h2", "text": "Amortissement : la stratégie à adopter"},
-      {"type": "p", "text": "L'amortissement reste un levier puissant pour neutraliser fiscalement vos revenus locatifs pendant la détention du bien. Mais avec la réintégration à la revente, il faut désormais raisonner en rentabilité globale : amortir pleinement si vous conservez le bien longtemps, modérer si vous comptez revendre sous 8-10 ans."},
-      {"type": "h2", "text": "Ce que cela change pour les propriétaires Move in Paris"},
-      {"type": "p", "text": "Notre modèle de location meublée corporate longue durée (baux de 1 à 3 ans, loyers garantis par l'employeur) reste particulièrement performant : taux d'occupation supérieur à 95 %, revenus LMNP élevés, charges optimisées. Nos équipes accompagnent chaque propriétaire partenaire dans la simulation fiscale — avec ou sans amortissement, micro-BIC ou réel simplifié — pour choisir la meilleure stratégie selon votre horizon de détention."},
-      {"type": "h2", "text": "Notre conseil"},
-      {"type": "p", "text": "Faites réaliser une simulation complète intégrant les trois paramètres clés : loyer attendu, horizon de revente, et taux d'imposition. Un bon arbitrage LMNP peut représenter plusieurs dizaines de milliers d'euros d'économie sur la durée."}
+      {
+        "type": "p",
+        "text": "La Loi de Finances 2026 a apporté plusieurs ajustements au régime de la Location Meublée Non Professionnelle (LMNP). Si vous êtes propriétaire d'un bien meublé à Paris ou en Île-de-France, ces nouveautés méritent toute votre attention pour optimiser votre fiscalité et anticiper les évolutions à venir."
+      },
+      {
+        "type": "h2",
+        "text": "Le nouveau plafond du micro-BIC"
+      },
+      {
+        "type": "p",
+        "text": "Le plafond du régime micro-BIC pour la location meublée classique reste fixé à 77 700 € de recettes annuelles en 2026. Au-delà, le bascule vers le régime réel simplifié devient obligatoire. Pour les meublés de tourisme non classés, le plafond a été durci à 15 000 € depuis 2024 — une évolution qui continue de s'appliquer sans modification notable cette année."
+      },
+      {
+        "type": "h2",
+        "text": "Réintégration des amortissements à la revente"
+      },
+      {
+        "type": "p",
+        "text": "C'est le changement majeur : depuis le 15 février 2025, la plus-value de cession d'un bien en LMNP est calculée en réintégrant les amortissements déjà déduits. Concrètement, un bien acquis 500 000 € et revendu 600 000 € après 100 000 € d'amortissements cumulés sera taxé sur 200 000 € de plus-value — non plus 100 000 €. Cette réforme aligne le LMNP sur le LMP et change la rentabilité long-terme de l'investissement locatif meublé."
+      },
+      {
+        "type": "h2",
+        "text": "Amortissement : la stratégie à adopter"
+      },
+      {
+        "type": "p",
+        "text": "L'amortissement reste un levier puissant pour neutraliser fiscalement vos revenus locatifs pendant la détention du bien. Mais avec la réintégration à la revente, il faut désormais raisonner en rentabilité globale : amortir pleinement si vous conservez le bien longtemps, modérer si vous comptez revendre sous 8-10 ans."
+      },
+      {
+        "type": "h2",
+        "text": "Ce que cela change pour les propriétaires Move in Paris"
+      },
+      {
+        "type": "p",
+        "text": "Notre modèle de location meublée corporate longue durée (baux de 1 à 3 ans, loyers garantis par l'employeur) reste particulièrement performant : taux d'occupation supérieur à 95 %, revenus LMNP élevés, charges optimisées. Nos équipes accompagnent chaque propriétaire partenaire dans la simulation fiscale — avec ou sans amortissement, micro-BIC ou réel simplifié — pour choisir la meilleure stratégie selon votre horizon de détention."
+      },
+      {
+        "type": "h2",
+        "text": "Notre conseil"
+      },
+      {
+        "type": "p",
+        "text": "Faites réaliser une simulation complète intégrant les trois paramètres clés : loyer attendu, horizon de revente, et taux d'imposition. Un bon arbitrage LMNP peut représenter plusieurs dizaines de milliers d'euros d'économie sur la durée."
+      }
     ]
   },
   {
@@ -33,20 +490,57 @@
     "date": "2026-04-07",
     "author": "Move in Paris",
     "image": "/apartments/salon-orange.jpg",
-    "tags": ["Location meublée", "Fiscalité", "Investissement"],
+    "tags": [
+      "Location meublée",
+      "Fiscalité",
+      "Investissement"
+    ],
     "metaDescription": "Location meublée vs nue en 2026 : rendement, fiscalité LMNP, flexibilité des baux. Comparatif complet pour propriétaires et investisseurs à Paris.",
     "content": [
-      {"type": "p", "text": "Vous hésitez entre louer votre appartement parisien meublé ou non meublé ? Le choix n'est pas anodin : il conditionne votre rendement, votre imposition et la nature de vos locataires. Voici les critères à peser en 2026."},
-      {"type": "h2", "text": "Le rendement : avantage location meublée"},
-      {"type": "p", "text": "À Paris, un meublé se loue en moyenne 15 à 25 % plus cher qu'un non-meublé équivalent. Sur les segments corporate et expatriés, l'écart peut atteindre +30 à +40 %, avec des loyers allant jusqu'à 55 €/m² dans le 8e, 16e ou 17e arrondissement."},
-      {"type": "h2", "text": "La fiscalité : LMNP vs revenus fonciers"},
-      {"type": "p", "text": "En LMNP, vous relevez des BIC (Bénéfices Industriels et Commerciaux) avec deux options : micro-BIC (abattement forfaitaire de 50 %) ou réel simplifié (déduction des charges réelles + amortissement du bien et du mobilier). En non meublé, vos loyers sont imposés en revenus fonciers avec un abattement micro-foncier de 30 % ou la déduction des charges réelles — sans amortissement. Pour un bien parisien, le LMNP au réel est quasi systématiquement plus avantageux."},
-      {"type": "h2", "text": "La durée des baux"},
-      {"type": "p", "text": "Le bail non meublé est de 3 ans reconductibles. Le bail meublé classique est d'1 an (9 mois pour les étudiants). À ceux-ci s'ajoutent deux formats courts très adaptés au marché corporate : le bail mobilité (1 à 10 mois, non renouvelable) et le bail meublé société / clause commerciale pour les entreprises."},
-      {"type": "h2", "text": "Le turnover locataires"},
-      {"type": "p", "text": "La location meublée a historiquement un turnover plus fort. Mais la location corporate via Move in Paris change la donne : durée moyenne de séjour de 3 mois, 117 000+ nuits gérées, taux d'occupation > 95 %. Le turnover est géré par l'agence, pas par le propriétaire."},
-      {"type": "h2", "text": "Notre recommandation"},
-      {"type": "p", "text": "Pour un bien de standing dans Paris intra-muros ou proche banlieue (Neuilly, Levallois, Boulogne), le meublé corporate reste en 2026 le segment le plus rentable. Combiné au régime réel LMNP, il offre le meilleur rapport rendement net / gestion déléguée du marché parisien."}
+      {
+        "type": "p",
+        "text": "Vous hésitez entre louer votre appartement parisien meublé ou non meublé ? Le choix n'est pas anodin : il conditionne votre rendement, votre imposition et la nature de vos locataires. Voici les critères à peser en 2026."
+      },
+      {
+        "type": "h2",
+        "text": "Le rendement : avantage location meublée"
+      },
+      {
+        "type": "p",
+        "text": "À Paris, un meublé se loue en moyenne 15 à 25 % plus cher qu'un non-meublé équivalent. Sur les segments corporate et expatriés, l'écart peut atteindre +30 à +40 %, avec des loyers allant jusqu'à 55 €/m² dans le 8e, 16e ou 17e arrondissement."
+      },
+      {
+        "type": "h2",
+        "text": "La fiscalité : LMNP vs revenus fonciers"
+      },
+      {
+        "type": "p",
+        "text": "En LMNP, vous relevez des BIC (Bénéfices Industriels et Commerciaux) avec deux options : micro-BIC (abattement forfaitaire de 50 %) ou réel simplifié (déduction des charges réelles + amortissement du bien et du mobilier). En non meublé, vos loyers sont imposés en revenus fonciers avec un abattement micro-foncier de 30 % ou la déduction des charges réelles — sans amortissement. Pour un bien parisien, le LMNP au réel est quasi systématiquement plus avantageux."
+      },
+      {
+        "type": "h2",
+        "text": "La durée des baux"
+      },
+      {
+        "type": "p",
+        "text": "Le bail non meublé est de 3 ans reconductibles. Le bail meublé classique est d'1 an (9 mois pour les étudiants). À ceux-ci s'ajoutent deux formats courts très adaptés au marché corporate : le bail mobilité (1 à 10 mois, non renouvelable) et le bail meublé société / clause commerciale pour les entreprises."
+      },
+      {
+        "type": "h2",
+        "text": "Le turnover locataires"
+      },
+      {
+        "type": "p",
+        "text": "La location meublée a historiquement un turnover plus fort. Mais la location corporate via Move in Paris change la donne : durée moyenne de séjour de 3 mois, 117 000+ nuits gérées, taux d'occupation > 95 %. Le turnover est géré par l'agence, pas par le propriétaire."
+      },
+      {
+        "type": "h2",
+        "text": "Notre recommandation"
+      },
+      {
+        "type": "p",
+        "text": "Pour un bien de standing dans Paris intra-muros ou proche banlieue (Neuilly, Levallois, Boulogne), le meublé corporate reste en 2026 le segment le plus rentable. Combiné au régime réel LMNP, il offre le meilleur rapport rendement net / gestion déléguée du marché parisien."
+      }
     ]
   },
   {
@@ -58,20 +552,57 @@
     "date": "2026-03-31",
     "author": "Move in Paris",
     "image": "/apartments/salon-bibliotheque.jpg",
-    "tags": ["Bail mobilité", "Expatriés", "Corporate"],
+    "tags": [
+      "Bail mobilité",
+      "Expatriés",
+      "Corporate"
+    ],
     "metaDescription": "Bail mobilité 2026 : durée 1 à 10 mois, sans dépôt de garantie, idéal pour expatriés en mission courte. Guide complet pour entreprises et propriétaires.",
     "content": [
-      {"type": "p", "text": "Le bail mobilité, instauré par la loi ELAN en 2018, s'est imposé comme le contrat de référence pour la location meublée de courte durée à Paris. Il répond parfaitement aux besoins des DRH qui doivent loger rapidement un collaborateur en mission temporaire."},
-      {"type": "h2", "text": "Durée : 1 à 10 mois, non renouvelable"},
-      {"type": "p", "text": "Le bail mobilité est conclu pour une durée comprise entre 1 et 10 mois, non renouvelable avec le même locataire. En contrepartie, pas de reconduction tacite ni de prolongation — parfait pour une mobilité ponctuelle (stage, mission, formation, mutation temporaire)."},
-      {"type": "h2", "text": "Pas de dépôt de garantie"},
-      {"type": "p", "text": "Contrairement au bail meublé classique, le bail mobilité interdit la demande de dépôt de garantie. En revanche, le propriétaire peut exiger la garantie Visale (gratuite, délivrée par Action Logement) ou une caution solidaire."},
-      {"type": "h2", "text": "Pour qui ?"},
-      {"type": "p", "text": "Le locataire doit justifier, au moment de la signature, d'une situation professionnelle ou académique spécifique : formation professionnelle, études supérieures, contrat d'apprentissage, stage, engagement volontaire, mutation professionnelle, ou mission temporaire dans le cadre de son activité professionnelle. Les expatriés en mission de 3 à 10 mois en France entrent pleinement dans ce cadre."},
-      {"type": "h2", "text": "Avantages pour l'employeur"},
-      {"type": "p", "text": "L'entreprise peut prendre en charge le loyer dans le cadre de sa politique de mobilité interne. Le collaborateur arrive dans un appartement meublé, équipé, prêt à vivre — aucune démarche administrative lourde. Chez Move in Paris, tous nos biens sont éligibles au bail mobilité, avec remise des clés sur demande et état des lieux digital."},
-      {"type": "h2", "text": "Attention à la reconversion du bail"},
-      {"type": "p", "text": "Si le locataire souhaite rester au-delà des 10 mois, le bail mobilité ne peut être prolongé : il faut signer un bail meublé classique d'un an (règles différentes : dépôt de garantie, durée, reconduction tacite). Nos équipes gèrent cette transition sans interruption pour les locataires corporate."}
+      {
+        "type": "p",
+        "text": "Le bail mobilité, instauré par la loi ELAN en 2018, s'est imposé comme le contrat de référence pour la location meublée de courte durée à Paris. Il répond parfaitement aux besoins des DRH qui doivent loger rapidement un collaborateur en mission temporaire."
+      },
+      {
+        "type": "h2",
+        "text": "Durée : 1 à 10 mois, non renouvelable"
+      },
+      {
+        "type": "p",
+        "text": "Le bail mobilité est conclu pour une durée comprise entre 1 et 10 mois, non renouvelable avec le même locataire. En contrepartie, pas de reconduction tacite ni de prolongation — parfait pour une mobilité ponctuelle (stage, mission, formation, mutation temporaire)."
+      },
+      {
+        "type": "h2",
+        "text": "Pas de dépôt de garantie"
+      },
+      {
+        "type": "p",
+        "text": "Contrairement au bail meublé classique, le bail mobilité interdit la demande de dépôt de garantie. En revanche, le propriétaire peut exiger la garantie Visale (gratuite, délivrée par Action Logement) ou une caution solidaire."
+      },
+      {
+        "type": "h2",
+        "text": "Pour qui ?"
+      },
+      {
+        "type": "p",
+        "text": "Le locataire doit justifier, au moment de la signature, d'une situation professionnelle ou académique spécifique : formation professionnelle, études supérieures, contrat d'apprentissage, stage, engagement volontaire, mutation professionnelle, ou mission temporaire dans le cadre de son activité professionnelle. Les expatriés en mission de 3 à 10 mois en France entrent pleinement dans ce cadre."
+      },
+      {
+        "type": "h2",
+        "text": "Avantages pour l'employeur"
+      },
+      {
+        "type": "p",
+        "text": "L'entreprise peut prendre en charge le loyer dans le cadre de sa politique de mobilité interne. Le collaborateur arrive dans un appartement meublé, équipé, prêt à vivre — aucune démarche administrative lourde. Chez Move in Paris, tous nos biens sont éligibles au bail mobilité, avec remise des clés sur demande et état des lieux digital."
+      },
+      {
+        "type": "h2",
+        "text": "Attention à la reconversion du bail"
+      },
+      {
+        "type": "p",
+        "text": "Si le locataire souhaite rester au-delà des 10 mois, le bail mobilité ne peut être prolongé : il faut signer un bail meublé classique d'un an (règles différentes : dépôt de garantie, durée, reconduction tacite). Nos équipes gèrent cette transition sans interruption pour les locataires corporate."
+      }
     ]
   },
   {
@@ -83,20 +614,57 @@
     "date": "2026-03-24",
     "author": "Move in Paris",
     "image": "/apartments/cuisine-entree.jpg",
-    "tags": ["Encadrement loyers", "Paris", "Réglementation"],
+    "tags": [
+      "Encadrement loyers",
+      "Paris",
+      "Réglementation"
+    ],
     "metaDescription": "Encadrement des loyers Paris 2026 : nouveaux plafonds, complément de loyer, règles spécifiques à la location meublée. Guide propriétaires et bailleurs.",
     "content": [
-      {"type": "p", "text": "L'encadrement des loyers à Paris, reconduit et durci, continue de s'appliquer à la grande majorité des locations. Voici un point complet sur les règles en vigueur en 2026 et leurs spécificités pour la location meublée."},
-      {"type": "h2", "text": "Le principe de l'encadrement"},
-      {"type": "p", "text": "Chaque logement à Paris relève d'un loyer de référence, d'un loyer minoré et d'un loyer majoré, fixés par arrêté préfectoral en fonction de la zone, de l'époque de construction, du type de logement et du nombre de pièces. Le loyer hors charges du bail ne peut excéder le loyer de référence majoré (+20 % environ par rapport au loyer de référence)."},
-      {"type": "h2", "text": "Le complément de loyer"},
-      {"type": "p", "text": "Un complément de loyer peut s'ajouter si le bien présente des caractéristiques de localisation ou de confort exceptionnelles (vue remarquable, terrasse privative, équipements premium non standard). Il doit être justifié, chiffré et mentionné explicitement dans le bail. Depuis 2024, la preuve incombe au bailleur en cas de contestation."},
-      {"type": "h2", "text": "Spécificités du meublé"},
-      {"type": "p", "text": "Le loyer de référence en meublé est majoré forfaitairement (environ +10 % vs. non meublé) pour tenir compte du mobilier. Le bail mobilité suit les mêmes règles d'encadrement que le bail meublé classique."},
-      {"type": "h2", "text": "Sanctions en cas de non-respect"},
-      {"type": "p", "text": "Le préfet peut mettre en demeure le bailleur de réduire le loyer et de rembourser le trop-perçu au locataire. En cas de non-exécution, l'amende administrative peut atteindre 5 000 € (personne physique) ou 15 000 € (personne morale). Le locataire dispose de 3 ans pour contester son loyer."},
-      {"type": "h2", "text": "Notre approche"},
-      {"type": "p", "text": "Tous les loyers proposés par Move in Paris sont systématiquement vérifiés contre le barème parisien au moment de la mise en location. Notre objectif : optimiser le revenu du propriétaire tout en garantissant la conformité réglementaire — aucun risque de rétroaction, aucune sanction."}
+      {
+        "type": "p",
+        "text": "L'encadrement des loyers à Paris, reconduit et durci, continue de s'appliquer à la grande majorité des locations. Voici un point complet sur les règles en vigueur en 2026 et leurs spécificités pour la location meublée."
+      },
+      {
+        "type": "h2",
+        "text": "Le principe de l'encadrement"
+      },
+      {
+        "type": "p",
+        "text": "Chaque logement à Paris relève d'un loyer de référence, d'un loyer minoré et d'un loyer majoré, fixés par arrêté préfectoral en fonction de la zone, de l'époque de construction, du type de logement et du nombre de pièces. Le loyer hors charges du bail ne peut excéder le loyer de référence majoré (+20 % environ par rapport au loyer de référence)."
+      },
+      {
+        "type": "h2",
+        "text": "Le complément de loyer"
+      },
+      {
+        "type": "p",
+        "text": "Un complément de loyer peut s'ajouter si le bien présente des caractéristiques de localisation ou de confort exceptionnelles (vue remarquable, terrasse privative, équipements premium non standard). Il doit être justifié, chiffré et mentionné explicitement dans le bail. Depuis 2024, la preuve incombe au bailleur en cas de contestation."
+      },
+      {
+        "type": "h2",
+        "text": "Spécificités du meublé"
+      },
+      {
+        "type": "p",
+        "text": "Le loyer de référence en meublé est majoré forfaitairement (environ +10 % vs. non meublé) pour tenir compte du mobilier. Le bail mobilité suit les mêmes règles d'encadrement que le bail meublé classique."
+      },
+      {
+        "type": "h2",
+        "text": "Sanctions en cas de non-respect"
+      },
+      {
+        "type": "p",
+        "text": "Le préfet peut mettre en demeure le bailleur de réduire le loyer et de rembourser le trop-perçu au locataire. En cas de non-exécution, l'amende administrative peut atteindre 5 000 € (personne physique) ou 15 000 € (personne morale). Le locataire dispose de 3 ans pour contester son loyer."
+      },
+      {
+        "type": "h2",
+        "text": "Notre approche"
+      },
+      {
+        "type": "p",
+        "text": "Tous les loyers proposés par Move in Paris sont systématiquement vérifiés contre le barème parisien au moment de la mise en location. Notre objectif : optimiser le revenu du propriétaire tout en garantissant la conformité réglementaire — aucun risque de rétroaction, aucune sanction."
+      }
     ]
   },
   {
@@ -108,22 +676,65 @@
     "date": "2026-03-17",
     "author": "Move in Paris",
     "image": "/apartments/chambre.jpg",
-    "tags": ["LMNP", "Amortissement", "Fiscalité"],
+    "tags": [
+      "LMNP",
+      "Amortissement",
+      "Fiscalité"
+    ],
     "metaDescription": "Amortissement LMNP 2026 : méthode de calcul, durée, optimisation fiscale. Guide pratique pour propriétaires en location meublée au régime réel.",
     "content": [
-      {"type": "p", "text": "L'amortissement est la pierre angulaire du régime LMNP au réel. Bien maîtrisé, il permet souvent de neutraliser fiscalement l'intégralité des revenus locatifs pendant plusieurs années. Voici comment l'utiliser efficacement en 2026."},
-      {"type": "h2", "text": "Qu'est-ce que l'amortissement ?"},
-      {"type": "p", "text": "L'amortissement est une charge comptable qui constate la dépréciation d'un bien dans le temps. En LMNP, vous pouvez amortir le bâti (hors terrain), le mobilier et les équipements. Cette charge vient en déduction de vos revenus locatifs — sans mouvement de trésorerie."},
-      {"type": "h2", "text": "Méthode : l'amortissement par composants"},
-      {"type": "p", "text": "Le bien est décomposé en plusieurs composants amortis sur des durées différentes : structure (50 ans), toiture (25 ans), façade (25 ans), installations techniques (25 ans), agencements (15 ans). En pratique, un expert-comptable établit un plan d'amortissement détaillé qui maximise la charge déductible les premières années."},
-      {"type": "h2", "text": "Exemple chiffré"},
-      {"type": "p", "text": "Appartement acheté 500 000 € à Paris (dont 100 000 € de terrain non amortissable). Amortissement moyen du bâti sur 30 ans pondéré : environ 13 000 €/an. Ajoutez 20 000 € de mobilier amorti sur 7 ans (soit 2 900 €/an) et vous obtenez environ 16 000 € d'amortissement annuel — qui viendront neutraliser une grande partie de votre loyer annuel net de charges."},
-      {"type": "h2", "text": "Le plafonnement du déficit"},
-      {"type": "p", "text": "Attention : l'amortissement ne peut pas créer de déficit. Si le total des charges + amortissements dépasse les loyers, l'excédent d'amortissement est reporté sans limite de durée, pour être utilisé les années suivantes. Votre résultat fiscal ne peut donc jamais être négatif via amortissement en LMNP."},
-      {"type": "h2", "text": "Impact de la réforme 2025"},
-      {"type": "p", "text": "Depuis le 15 février 2025, les amortissements pratiqués sont réintégrés dans le calcul de la plus-value à la revente. Cela change la stratégie : l'amortissement reste pertinent pour réduire la fiscalité pendant la détention, mais son bénéfice est partiellement neutralisé si vous revendez rapidement."},
-      {"type": "h2", "text": "Notre conseil"},
-      {"type": "p", "text": "Faites établir votre plan d'amortissement par un expert-comptable spécialisé LMNP dès la première année. Un bon plan peut représenter 3 000 à 8 000 € d'impôt économisé par an pour un bien parisien."}
+      {
+        "type": "p",
+        "text": "L'amortissement est la pierre angulaire du régime LMNP au réel. Bien maîtrisé, il permet souvent de neutraliser fiscalement l'intégralité des revenus locatifs pendant plusieurs années. Voici comment l'utiliser efficacement en 2026."
+      },
+      {
+        "type": "h2",
+        "text": "Qu'est-ce que l'amortissement ?"
+      },
+      {
+        "type": "p",
+        "text": "L'amortissement est une charge comptable qui constate la dépréciation d'un bien dans le temps. En LMNP, vous pouvez amortir le bâti (hors terrain), le mobilier et les équipements. Cette charge vient en déduction de vos revenus locatifs — sans mouvement de trésorerie."
+      },
+      {
+        "type": "h2",
+        "text": "Méthode : l'amortissement par composants"
+      },
+      {
+        "type": "p",
+        "text": "Le bien est décomposé en plusieurs composants amortis sur des durées différentes : structure (50 ans), toiture (25 ans), façade (25 ans), installations techniques (25 ans), agencements (15 ans). En pratique, un expert-comptable établit un plan d'amortissement détaillé qui maximise la charge déductible les premières années."
+      },
+      {
+        "type": "h2",
+        "text": "Exemple chiffré"
+      },
+      {
+        "type": "p",
+        "text": "Appartement acheté 500 000 € à Paris (dont 100 000 € de terrain non amortissable). Amortissement moyen du bâti sur 30 ans pondéré : environ 13 000 €/an. Ajoutez 20 000 € de mobilier amorti sur 7 ans (soit 2 900 €/an) et vous obtenez environ 16 000 € d'amortissement annuel — qui viendront neutraliser une grande partie de votre loyer annuel net de charges."
+      },
+      {
+        "type": "h2",
+        "text": "Le plafonnement du déficit"
+      },
+      {
+        "type": "p",
+        "text": "Attention : l'amortissement ne peut pas créer de déficit. Si le total des charges + amortissements dépasse les loyers, l'excédent d'amortissement est reporté sans limite de durée, pour être utilisé les années suivantes. Votre résultat fiscal ne peut donc jamais être négatif via amortissement en LMNP."
+      },
+      {
+        "type": "h2",
+        "text": "Impact de la réforme 2025"
+      },
+      {
+        "type": "p",
+        "text": "Depuis le 15 février 2025, les amortissements pratiqués sont réintégrés dans le calcul de la plus-value à la revente. Cela change la stratégie : l'amortissement reste pertinent pour réduire la fiscalité pendant la détention, mais son bénéfice est partiellement neutralisé si vous revendez rapidement."
+      },
+      {
+        "type": "h2",
+        "text": "Notre conseil"
+      },
+      {
+        "type": "p",
+        "text": "Faites établir votre plan d'amortissement par un expert-comptable spécialisé LMNP dès la première année. Un bon plan peut représenter 3 000 à 8 000 € d'impôt économisé par an pour un bien parisien."
+      }
     ]
   },
   {
@@ -135,22 +746,65 @@
     "date": "2026-03-10",
     "author": "Move in Paris",
     "image": "/apartments/salle-de-bain.jpg",
-    "tags": ["Déclaration", "LMNP", "Fiscalité"],
+    "tags": [
+      "Déclaration",
+      "LMNP",
+      "Fiscalité"
+    ],
     "metaDescription": "Déclaration revenus LMNP 2026 : formulaire 2042-C-PRO, liasse 2031, micro-BIC vs réel simplifié. Guide étape par étape pour propriétaires en location meublée.",
     "content": [
-      {"type": "p", "text": "La déclaration des revenus LMNP intervient chaque année au printemps, en même temps que votre déclaration personnelle. Selon votre régime fiscal, les démarches diffèrent. Voici un guide clair pour 2026."},
-      {"type": "h2", "text": "Étape 1 : immatriculation et numéro SIRET"},
-      {"type": "p", "text": "Tout loueur en meublé doit s'immatriculer dans les 15 jours suivant le début de la location via le guichet unique formalités.entreprises.gouv.fr. Vous recevrez un numéro SIRET indispensable pour toutes vos déclarations fiscales LMNP."},
-      {"type": "h2", "text": "Étape 2 : choix du régime fiscal"},
-      {"type": "p", "text": "Micro-BIC : recettes ≤ 77 700 €, abattement forfaitaire de 50 %. Régime simplifié, aucun amortissement. Réel simplifié : obligatoire au-delà du plafond, optionnel en dessous. Déduction de toutes les charges réelles + amortissement. Quasi systématiquement plus avantageux à Paris."},
-      {"type": "h2", "text": "Étape 3 : au régime micro-BIC"},
-      {"type": "p", "text": "Reportez simplement le montant brut de vos loyers encaissés dans la case 5ND (ou 5NJ pour meublé de tourisme classé) du formulaire 2042-C-PRO. Le fisc applique automatiquement l'abattement de 50 %."},
-      {"type": "h2", "text": "Étape 4 : au régime réel simplifié"},
-      {"type": "p", "text": "Vous devez déposer une liasse fiscale 2031 avant le 2e jour ouvré suivant le 1er mai, avec bilan (tableau 2033-A), compte de résultat (2033-B), plan d'amortissement (2033-C). Le résultat obtenu est ensuite reporté sur le 2042-C-PRO (case 5NA si bénéfice, 5NY si déficit reporté)."},
-      {"type": "h2", "text": "Étape 5 : CFE et TVA"},
-      {"type": "p", "text": "CFE (Cotisation Foncière des Entreprises) : due dès la 2e année de location, variable selon commune (souvent 200 à 800 €). TVA : uniquement pour les meublés de tourisme avec services para-hôteliers (petit-déjeuner, ménage récurrent, réception). La location meublée longue durée standard est exonérée de TVA."},
-      {"type": "h2", "text": "Notre accompagnement"},
-      {"type": "p", "text": "Nos propriétaires partenaires reçoivent chaque trimestre un reporting consolidé : revenus encaissés, charges engagées, liste des interventions, calcul prévisionnel du résultat fiscal. De quoi faciliter considérablement la déclaration annuelle et le dialogue avec l'expert-comptable."}
+      {
+        "type": "p",
+        "text": "La déclaration des revenus LMNP intervient chaque année au printemps, en même temps que votre déclaration personnelle. Selon votre régime fiscal, les démarches diffèrent. Voici un guide clair pour 2026."
+      },
+      {
+        "type": "h2",
+        "text": "Étape 1 : immatriculation et numéro SIRET"
+      },
+      {
+        "type": "p",
+        "text": "Tout loueur en meublé doit s'immatriculer dans les 15 jours suivant le début de la location via le guichet unique formalités.entreprises.gouv.fr. Vous recevrez un numéro SIRET indispensable pour toutes vos déclarations fiscales LMNP."
+      },
+      {
+        "type": "h2",
+        "text": "Étape 2 : choix du régime fiscal"
+      },
+      {
+        "type": "p",
+        "text": "Micro-BIC : recettes ≤ 77 700 €, abattement forfaitaire de 50 %. Régime simplifié, aucun amortissement. Réel simplifié : obligatoire au-delà du plafond, optionnel en dessous. Déduction de toutes les charges réelles + amortissement. Quasi systématiquement plus avantageux à Paris."
+      },
+      {
+        "type": "h2",
+        "text": "Étape 3 : au régime micro-BIC"
+      },
+      {
+        "type": "p",
+        "text": "Reportez simplement le montant brut de vos loyers encaissés dans la case 5ND (ou 5NJ pour meublé de tourisme classé) du formulaire 2042-C-PRO. Le fisc applique automatiquement l'abattement de 50 %."
+      },
+      {
+        "type": "h2",
+        "text": "Étape 4 : au régime réel simplifié"
+      },
+      {
+        "type": "p",
+        "text": "Vous devez déposer une liasse fiscale 2031 avant le 2e jour ouvré suivant le 1er mai, avec bilan (tableau 2033-A), compte de résultat (2033-B), plan d'amortissement (2033-C). Le résultat obtenu est ensuite reporté sur le 2042-C-PRO (case 5NA si bénéfice, 5NY si déficit reporté)."
+      },
+      {
+        "type": "h2",
+        "text": "Étape 5 : CFE et TVA"
+      },
+      {
+        "type": "p",
+        "text": "CFE (Cotisation Foncière des Entreprises) : due dès la 2e année de location, variable selon commune (souvent 200 à 800 €). TVA : uniquement pour les meublés de tourisme avec services para-hôteliers (petit-déjeuner, ménage récurrent, réception). La location meublée longue durée standard est exonérée de TVA."
+      },
+      {
+        "type": "h2",
+        "text": "Notre accompagnement"
+      },
+      {
+        "type": "p",
+        "text": "Nos propriétaires partenaires reçoivent chaque trimestre un reporting consolidé : revenus encaissés, charges engagées, liste des interventions, calcul prévisionnel du résultat fiscal. De quoi faciliter considérablement la déclaration annuelle et le dialogue avec l'expert-comptable."
+      }
     ]
   },
   {
@@ -162,24 +816,73 @@
     "date": "2026-03-03",
     "author": "Move in Paris",
     "image": "/apartments/vue-paris.jpg",
-    "tags": ["Investissement", "Paris", "Rentabilité"],
+    "tags": [
+      "Investissement",
+      "Paris",
+      "Rentabilité"
+    ],
     "metaDescription": "Rentabilité location meublée Paris 2026 : analyse par arrondissement (8e, 16e, 17e, Neuilly). Loyers au m², taux d'occupation, ROI net pour investisseurs.",
     "content": [
-      {"type": "p", "text": "Tous les arrondissements parisiens ne se valent pas quand il s'agit de location meublée corporate. Voici notre analyse des zones les plus rentables en 2026, basée sur notre portefeuille de plus de 200 biens gérés."},
-      {"type": "h2", "text": "Le 8e arrondissement : le premium pur"},
-      {"type": "p", "text": "Triangle d'or, Champs-Élysées, Madeleine : les loyers corporate atteignent 55 €/m² HC, parfois plus pour des biens d'exception. Clientèle : directeurs internationaux, CEOs en mission, diplomates. Taux d'occupation > 97 %. Prix d'acquisition élevés (14 000-20 000 €/m²) qui limitent le rendement brut, mais ticket moyen élevé et turnover maîtrisé."},
-      {"type": "h2", "text": "Le 16e arrondissement : le beau classique"},
-      {"type": "p", "text": "Passy, Trocadéro, Auteuil : secteur résidentiel haut de gamme, proche de la Défense via métro 9 et RER C. Loyers corporate 45-52 €/m². Idéal pour les familles d'expatriés (écoles internationales nombreuses). Rendement brut 4,5-5,5 %. Notre zone la plus dense."},
-      {"type": "h2", "text": "Le 17e arrondissement : le rapport qualité-prix"},
-      {"type": "p", "text": "Batignolles, Monceau, Étoile : tickets d'entrée plus accessibles (10 000-14 000 €/m²), loyers solides (42-48 €/m² corporate), excellente connexion transports. L'équilibre idéal rendement/sécurité locative. Rendement brut 5-6 %."},
-      {"type": "h2", "text": "Neuilly-sur-Seine : l'alternative premium"},
-      {"type": "p", "text": "Quartiers Sablons, Bagatelle, Saint-James : clientèle corporate internationale très forte, proximité La Défense (5 min en métro 1). Loyers 45-55 €/m², taux d'occupation > 95 %. Fiscalité locale attractive (Hauts-de-Seine). Notre 2e zone d'activité."},
-      {"type": "h2", "text": "Levallois et Boulogne"},
-      {"type": "p", "text": "Demande corporate forte (sièges sociaux à proximité), loyers 38-45 €/m², prix d'achat modérés (9 000-12 000 €/m²). Rendement brut 5,5-6,5 %. Moins prestigieux mais excellent compromis ROI."},
-      {"type": "h2", "text": "Les arrondissements à éviter pour le corporate"},
-      {"type": "p", "text": "Le 18e, 19e et 20e présentent des loyers trop faibles et une demande corporate marginale. Idem pour les 13e et 14e, hormis les axes Montparnasse. La location meublée corporate est un produit de niche qui s'adresse aux zones premium intra-muros et première couronne ouest."},
-      {"type": "h2", "text": "Notre recommandation d'investissement 2026"},
-      {"type": "p", "text": "Pour un premier investissement corporate, privilégiez le 17e Monceau ou Neuilly Sablons : tickets d'entrée raisonnables, demande pérenne, rendement 5-6 % net de charges. Pour un portefeuille de diversification, le 8e ou 16e pour la plus-value long terme."}
+      {
+        "type": "p",
+        "text": "Tous les arrondissements parisiens ne se valent pas quand il s'agit de location meublée corporate. Voici notre analyse des zones les plus rentables en 2026, basée sur notre portefeuille de plus de 200 biens gérés."
+      },
+      {
+        "type": "h2",
+        "text": "Le 8e arrondissement : le premium pur"
+      },
+      {
+        "type": "p",
+        "text": "Triangle d'or, Champs-Élysées, Madeleine : les loyers corporate atteignent 55 €/m² HC, parfois plus pour des biens d'exception. Clientèle : directeurs internationaux, CEOs en mission, diplomates. Taux d'occupation > 97 %. Prix d'acquisition élevés (14 000-20 000 €/m²) qui limitent le rendement brut, mais ticket moyen élevé et turnover maîtrisé."
+      },
+      {
+        "type": "h2",
+        "text": "Le 16e arrondissement : le beau classique"
+      },
+      {
+        "type": "p",
+        "text": "Passy, Trocadéro, Auteuil : secteur résidentiel haut de gamme, proche de la Défense via métro 9 et RER C. Loyers corporate 45-52 €/m². Idéal pour les familles d'expatriés (écoles internationales nombreuses). Rendement brut 4,5-5,5 %. Notre zone la plus dense."
+      },
+      {
+        "type": "h2",
+        "text": "Le 17e arrondissement : le rapport qualité-prix"
+      },
+      {
+        "type": "p",
+        "text": "Batignolles, Monceau, Étoile : tickets d'entrée plus accessibles (10 000-14 000 €/m²), loyers solides (42-48 €/m² corporate), excellente connexion transports. L'équilibre idéal rendement/sécurité locative. Rendement brut 5-6 %."
+      },
+      {
+        "type": "h2",
+        "text": "Neuilly-sur-Seine : l'alternative premium"
+      },
+      {
+        "type": "p",
+        "text": "Quartiers Sablons, Bagatelle, Saint-James : clientèle corporate internationale très forte, proximité La Défense (5 min en métro 1). Loyers 45-55 €/m², taux d'occupation > 95 %. Fiscalité locale attractive (Hauts-de-Seine). Notre 2e zone d'activité."
+      },
+      {
+        "type": "h2",
+        "text": "Levallois et Boulogne"
+      },
+      {
+        "type": "p",
+        "text": "Demande corporate forte (sièges sociaux à proximité), loyers 38-45 €/m², prix d'achat modérés (9 000-12 000 €/m²). Rendement brut 5,5-6,5 %. Moins prestigieux mais excellent compromis ROI."
+      },
+      {
+        "type": "h2",
+        "text": "Les arrondissements à éviter pour le corporate"
+      },
+      {
+        "type": "p",
+        "text": "Le 18e, 19e et 20e présentent des loyers trop faibles et une demande corporate marginale. Idem pour les 13e et 14e, hormis les axes Montparnasse. La location meublée corporate est un produit de niche qui s'adresse aux zones premium intra-muros et première couronne ouest."
+      },
+      {
+        "type": "h2",
+        "text": "Notre recommandation d'investissement 2026"
+      },
+      {
+        "type": "p",
+        "text": "Pour un premier investissement corporate, privilégiez le 17e Monceau ou Neuilly Sablons : tickets d'entrée raisonnables, demande pérenne, rendement 5-6 % net de charges. Pour un portefeuille de diversification, le 8e ou 16e pour la plus-value long terme."
+      }
     ]
   },
   {
@@ -191,28 +894,89 @@
     "date": "2026-02-24",
     "author": "Move in Paris",
     "image": "/apartments/cuisine.jpg",
-    "tags": ["Charges", "LMNP", "Fiscalité"],
+    "tags": [
+      "Charges",
+      "LMNP",
+      "Fiscalité"
+    ],
     "metaDescription": "Charges déductibles LMNP 2026 : liste complète pour location meublée au régime réel. Intérêts d'emprunt, taxe foncière, travaux, frais de gestion.",
     "content": [
-      {"type": "p", "text": "Au régime réel simplifié, toutes les charges engagées pour la location sont déductibles de vos recettes. Les oublier, c'est payer trop d'impôts. Voici la liste exhaustive en 2026."},
-      {"type": "h2", "text": "Intérêts d'emprunt et frais bancaires"},
-      {"type": "p", "text": "100 % des intérêts du prêt immobilier sont déductibles, ainsi que les frais de dossier, l'assurance emprunteur et les frais de garantie (hypothèque, caution)."},
-      {"type": "h2", "text": "Impôts et taxes"},
-      {"type": "p", "text": "Taxe foncière, CFE, éventuellement taxe d'habitation si le bien est loué meublé à un locataire occupant. La taxe d'enlèvement des ordures ménagères récupérable auprès du locataire n'est pas déductible."},
-      {"type": "h2", "text": "Charges de copropriété"},
-      {"type": "p", "text": "Provisions sur charges courantes (hors régularisation), travaux votés en assemblée, rémunération du syndic, frais de gardien. Attention : les travaux d'investissement ne sont pas déductibles mais amortissables."},
-      {"type": "h2", "text": "Frais de gestion locative"},
-      {"type": "p", "text": "Honoraires d'agence (mise en location, gestion courante, recherche de locataire), frais de publicité, commissions, frais d'état des lieux. Tous déductibles à 100 %."},
-      {"type": "h2", "text": "Travaux d'entretien et de réparation"},
-      {"type": "p", "text": "Peinture, remplacement d'équipements usagés, réparations de plomberie, électricité, maintien en état du bien. À distinguer des travaux d'amélioration (rénovation lourde, extension) qui sont amortissables."},
-      {"type": "h2", "text": "Assurance et autres contrats"},
-      {"type": "p", "text": "Assurance propriétaire non occupant (PNO), assurance loyers impayés, garantie visale, contrats de maintenance (chaudière, ascenseur, climatisation)."},
-      {"type": "h2", "text": "Honoraires comptables et frais divers"},
-      {"type": "p", "text": "Expert-comptable (bonifiés d'une réduction d'impôt de 2/3 dans la limite de 915 €), abonnement logiciel de gestion, frais de déplacement (limités, sur justificatifs), adhésion à un Centre de Gestion Agréé (CGA)."},
-      {"type": "h2", "text": "Mobilier et petit équipement"},
-      {"type": "p", "text": "Mobilier < 500 € HT : déductible en totalité l'année d'acquisition. Mobilier > 500 € HT : amortissable sur 5 à 10 ans. Petit électroménager, linge de maison, vaisselle : charges déductibles."},
-      {"type": "h2", "text": "Notre conseil pratique"},
-      {"type": "p", "text": "Conservez scrupuleusement tous vos justificatifs pendant au moins 6 ans (délai de prescription fiscale). Move in Paris fournit à ses propriétaires partenaires un tableau de bord mensuel avec chaque charge catégorisée et PDF joint — prêt à transmettre à l'expert-comptable."}
+      {
+        "type": "p",
+        "text": "Au régime réel simplifié, toutes les charges engagées pour la location sont déductibles de vos recettes. Les oublier, c'est payer trop d'impôts. Voici la liste exhaustive en 2026."
+      },
+      {
+        "type": "h2",
+        "text": "Intérêts d'emprunt et frais bancaires"
+      },
+      {
+        "type": "p",
+        "text": "100 % des intérêts du prêt immobilier sont déductibles, ainsi que les frais de dossier, l'assurance emprunteur et les frais de garantie (hypothèque, caution)."
+      },
+      {
+        "type": "h2",
+        "text": "Impôts et taxes"
+      },
+      {
+        "type": "p",
+        "text": "Taxe foncière, CFE, éventuellement taxe d'habitation si le bien est loué meublé à un locataire occupant. La taxe d'enlèvement des ordures ménagères récupérable auprès du locataire n'est pas déductible."
+      },
+      {
+        "type": "h2",
+        "text": "Charges de copropriété"
+      },
+      {
+        "type": "p",
+        "text": "Provisions sur charges courantes (hors régularisation), travaux votés en assemblée, rémunération du syndic, frais de gardien. Attention : les travaux d'investissement ne sont pas déductibles mais amortissables."
+      },
+      {
+        "type": "h2",
+        "text": "Frais de gestion locative"
+      },
+      {
+        "type": "p",
+        "text": "Honoraires d'agence (mise en location, gestion courante, recherche de locataire), frais de publicité, commissions, frais d'état des lieux. Tous déductibles à 100 %."
+      },
+      {
+        "type": "h2",
+        "text": "Travaux d'entretien et de réparation"
+      },
+      {
+        "type": "p",
+        "text": "Peinture, remplacement d'équipements usagés, réparations de plomberie, électricité, maintien en état du bien. À distinguer des travaux d'amélioration (rénovation lourde, extension) qui sont amortissables."
+      },
+      {
+        "type": "h2",
+        "text": "Assurance et autres contrats"
+      },
+      {
+        "type": "p",
+        "text": "Assurance propriétaire non occupant (PNO), assurance loyers impayés, garantie visale, contrats de maintenance (chaudière, ascenseur, climatisation)."
+      },
+      {
+        "type": "h2",
+        "text": "Honoraires comptables et frais divers"
+      },
+      {
+        "type": "p",
+        "text": "Expert-comptable (bonifiés d'une réduction d'impôt de 2/3 dans la limite de 915 €), abonnement logiciel de gestion, frais de déplacement (limités, sur justificatifs), adhésion à un Centre de Gestion Agréé (CGA)."
+      },
+      {
+        "type": "h2",
+        "text": "Mobilier et petit équipement"
+      },
+      {
+        "type": "p",
+        "text": "Mobilier < 500 € HT : déductible en totalité l'année d'acquisition. Mobilier > 500 € HT : amortissable sur 5 à 10 ans. Petit électroménager, linge de maison, vaisselle : charges déductibles."
+      },
+      {
+        "type": "h2",
+        "text": "Notre conseil pratique"
+      },
+      {
+        "type": "p",
+        "text": "Conservez scrupuleusement tous vos justificatifs pendant au moins 6 ans (délai de prescription fiscale). Move in Paris fournit à ses propriétaires partenaires un tableau de bord mensuel avec chaque charge catégorisée et PDF joint — prêt à transmettre à l'expert-comptable."
+      }
     ]
   },
   {
@@ -224,20 +988,57 @@
     "date": "2026-02-17",
     "author": "Move in Paris",
     "image": "/apartments/salon-haussmann.jpg",
-    "tags": ["LMNP", "Régime réel", "Fiscalité"],
+    "tags": [
+      "LMNP",
+      "Régime réel",
+      "Fiscalité"
+    ],
     "metaDescription": "Passage au régime réel simplifié LMNP 2026 : démarches, avantages fiscaux, délais. Guide pour propriétaires en location meublée souhaitant optimiser.",
     "content": [
-      {"type": "p", "text": "Le régime micro-BIC est simple mais loin d'être toujours optimal. Dès que vos charges + amortissements dépassent 50 % des loyers, le régime réel simplifié devient plus avantageux. Voici comment basculer sans faute."},
-      {"type": "h2", "text": "Les cas où le réel devient indispensable"},
-      {"type": "p", "text": "Acquisition récente avec intérêts d'emprunt importants. Travaux récents ou à venir. Charges de copropriété élevées (Paris > 40 €/m²/an typiquement). Bien à forte valeur (> 400 000 €) permettant un amortissement conséquent. Frais de gestion locative > 7 % du loyer. Dans au moins un de ces cas, le réel est quasi-systématiquement gagnant."},
-      {"type": "h2", "text": "Délai pour opter"},
-      {"type": "p", "text": "L'option pour le régime réel doit être formulée avant le 1er février de l'année concernée (sauf première année de location : option possible sur la déclaration). L'option est valable 1 an et reconductible tacitement. Vous pouvez y renoncer chaque année selon la même modalité."},
-      {"type": "h2", "text": "Formalités pratiques"},
-      {"type": "p", "text": "1. Option notifiée par courrier recommandé au service des impôts des entreprises (SIE) compétent. 2. Tenue d'une comptabilité commerciale (bilan, compte de résultat, grand livre). 3. Dépôt annuel de la liasse 2031 et ses annexes 2033-A à 2033-C. 4. Report du résultat sur le 2042-C-PRO de votre déclaration personnelle."},
-      {"type": "h2", "text": "Le coût caché : l'expert-comptable"},
-      {"type": "p", "text": "Une comptabilité LMNP au réel est techniquement exigeante : plan d'amortissement, retraitement des charges, gestion des provisions, cohérence avec la TVA éventuelle. Comptez 500 à 1 200 € HT/an d'honoraires pour un bien. L'adhésion à un CGA (Centre de Gestion Agréé) donne droit à une réduction d'impôt de 2/3 des frais comptables dans la limite de 915 €, soit souvent jusqu'à 600 € d'économie nette."},
-      {"type": "h2", "text": "Simulation avant bascule"},
-      {"type": "p", "text": "Avant d'opter, faites simuler sur 5 ans les deux régimes en intégrant vos charges réelles, votre amortissement prévisionnel et vos honoraires comptables. Pour un bien parisien standard, l'écart est souvent de 2 000 à 6 000 € d'impôt par an en faveur du réel. Notre équipe accompagne chaque propriétaire partenaire dans cette simulation comparative, avant même la signature du mandat de gestion."}
+      {
+        "type": "p",
+        "text": "Le régime micro-BIC est simple mais loin d'être toujours optimal. Dès que vos charges + amortissements dépassent 50 % des loyers, le régime réel simplifié devient plus avantageux. Voici comment basculer sans faute."
+      },
+      {
+        "type": "h2",
+        "text": "Les cas où le réel devient indispensable"
+      },
+      {
+        "type": "p",
+        "text": "Acquisition récente avec intérêts d'emprunt importants. Travaux récents ou à venir. Charges de copropriété élevées (Paris > 40 €/m²/an typiquement). Bien à forte valeur (> 400 000 €) permettant un amortissement conséquent. Frais de gestion locative > 7 % du loyer. Dans au moins un de ces cas, le réel est quasi-systématiquement gagnant."
+      },
+      {
+        "type": "h2",
+        "text": "Délai pour opter"
+      },
+      {
+        "type": "p",
+        "text": "L'option pour le régime réel doit être formulée avant le 1er février de l'année concernée (sauf première année de location : option possible sur la déclaration). L'option est valable 1 an et reconductible tacitement. Vous pouvez y renoncer chaque année selon la même modalité."
+      },
+      {
+        "type": "h2",
+        "text": "Formalités pratiques"
+      },
+      {
+        "type": "p",
+        "text": "1. Option notifiée par courrier recommandé au service des impôts des entreprises (SIE) compétent. 2. Tenue d'une comptabilité commerciale (bilan, compte de résultat, grand livre). 3. Dépôt annuel de la liasse 2031 et ses annexes 2033-A à 2033-C. 4. Report du résultat sur le 2042-C-PRO de votre déclaration personnelle."
+      },
+      {
+        "type": "h2",
+        "text": "Le coût caché : l'expert-comptable"
+      },
+      {
+        "type": "p",
+        "text": "Une comptabilité LMNP au réel est techniquement exigeante : plan d'amortissement, retraitement des charges, gestion des provisions, cohérence avec la TVA éventuelle. Comptez 500 à 1 200 € HT/an d'honoraires pour un bien. L'adhésion à un CGA (Centre de Gestion Agréé) donne droit à une réduction d'impôt de 2/3 des frais comptables dans la limite de 915 €, soit souvent jusqu'à 600 € d'économie nette."
+      },
+      {
+        "type": "h2",
+        "text": "Simulation avant bascule"
+      },
+      {
+        "type": "p",
+        "text": "Avant d'opter, faites simuler sur 5 ans les deux régimes en intégrant vos charges réelles, votre amortissement prévisionnel et vos honoraires comptables. Pour un bien parisien standard, l'écart est souvent de 2 000 à 6 000 € d'impôt par an en faveur du réel. Notre équipe accompagne chaque propriétaire partenaire dans cette simulation comparative, avant même la signature du mandat de gestion."
+      }
     ]
   },
   {
@@ -249,28 +1050,89 @@
     "date": "2026-04-17",
     "author": "Move in Paris",
     "image": "/apartments/salon-bibliotheque.jpg",
-    "tags": ["Bail Code Civil", "Location temporaire", "Corporate"],
+    "tags": [
+      "Bail Code Civil",
+      "Location temporaire",
+      "Corporate"
+    ],
     "metaDescription": "Bail Code Civil 2026 : cadre juridique, durée libre, loyer libre, conditions d'application. Guide complet pour locations meublées temporaires à Paris.",
     "content": [
-      {"type": "p", "text": "Parmi les nombreux contrats de location existants en France, le bail dit « Code Civil » — régi par les articles 1708 et suivants du Code Civil et non par la loi du 6 juillet 1989 — est un outil juridique souvent méconnu. Il s'impose pourtant comme la solution de référence pour de nombreuses locations meublées corporate, et particulièrement pour les séjours temporaires d'expatriés à Paris."},
-      {"type": "h2", "text": "Qu'est-ce que le bail Code Civil ?"},
-      {"type": "p", "text": "Contrairement au bail d'habitation classique (loi du 6 juillet 1989) qui s'applique à la résidence principale du locataire, le bail Code Civil est un contrat de louage régi par le droit commun. Il offre une très grande liberté contractuelle aux deux parties : durée, loyer, conditions de résiliation, obligations réciproques — tout se négocie librement, dans la limite des règles générales du droit civil et du respect de l'ordre public."},
-      {"type": "h2", "text": "Dans quels cas peut-il s'appliquer ?"},
-      {"type": "p", "text": "Le bail Code Civil ne peut être choisi que si le logement n'est PAS la résidence principale du locataire. Les cas types à Paris : résidence secondaire (propriétaire ou locataire ayant sa résidence principale ailleurs), logement de fonction ou d'entreprise pour un collaborateur en mission, pied-à-terre parisien pour un dirigeant basé en province ou à l'étranger, mise à disposition pour un expatrié dont la famille reste dans le pays d'origine. La condition essentielle : que le locataire dispose manifestement d'une autre résidence principale, justifiable en cas de contrôle."},
-      {"type": "h2", "text": "Liberté de la durée"},
-      {"type": "p", "text": "Aucune durée minimale ni maximale n'est imposée. Les parties peuvent conclure pour quelques semaines, plusieurs mois, un an, trois ans ou plus. Le contrat peut être à durée déterminée (avec ou sans tacite reconduction) ou indéterminée. Cette flexibilité en fait un outil particulièrement adapté aux missions professionnelles dont la durée est incertaine — ce que le bail mobilité (plafonné à 10 mois non renouvelables) ne permet pas."},
-      {"type": "h2", "text": "Loyer libre et clauses négociables"},
-      {"type": "p", "text": "Le loyer est librement fixé : ni l'encadrement des loyers parisien ni les règles de plafonnement applicables au bail d'habitation ne s'appliquent. Le dépôt de garantie, les modalités de révision annuelle, les conditions d'entrée et de sortie, la répartition des charges, les règles d'état des lieux : tout peut être précisé au contrat selon les besoins des parties. Attention cependant : le juge peut toujours sanctionner les clauses manifestement déséquilibrées ou contraires à la bonne foi."},
-      {"type": "h2", "text": "Différence avec le bail mobilité"},
-      {"type": "p", "text": "Le bail mobilité (créé par la loi ELAN en 2018) est soumis à la loi du 6 juillet 1989 : durée de 1 à 10 mois non renouvelable, justificatif obligatoire (mission, mutation, études), loyer soumis à l'encadrement parisien, interdiction de dépôt de garantie. Le bail Code Civil est beaucoup plus souple : pas de plafond de durée, pas de justificatif imposé, pas d'encadrement du loyer, dépôt de garantie autorisé. En contrepartie, la condition de résidence non principale doit être clairement établie pour éviter toute requalification."},
-      {"type": "h2", "text": "Le risque de requalification"},
-      {"type": "p", "text": "C'est le point de vigilance majeur. Si le locataire installe dans le logement le centre de sa vie personnelle et familiale, il peut demander au juge la requalification du bail en bail d'habitation soumis à la loi de 1989 — avec application rétroactive de toutes ses protections (encadrement du loyer, durée minimale, restitution du trop-perçu). Les juges examinent : la facturation EDF et télécoms, le lieu de scolarisation des enfants, les déclarations fiscales, l'adresse déclarée aux organismes sociaux, le temps de présence effective. Un locataire déclarant le bien comme résidence principale expose fortement le propriétaire."},
-      {"type": "h2", "text": "Les garanties à poser au contrat"},
-      {"type": "p", "text": "Pour sécuriser juridiquement la qualification Code Civil, le contrat doit explicitement mentionner : la résidence principale du locataire (adresse précise, idéalement justifiée en annexe par une pièce d'identité ou un avis d'imposition), la vocation de résidence secondaire ou temporaire du logement, l'identification du cadre professionnel ou de la mission qui motive l'occupation, l'interdiction d'y domicilier administrativement le locataire ou sa famille. Un simple visa de ces mentions ne suffit pas : elles doivent être circonstanciées et vérifiables."},
-      {"type": "h2", "text": "Fiscalité : aucun impact spécifique"},
-      {"type": "p", "text": "Le statut fiscal du bailleur (LMNP au micro-BIC ou au réel) n'est pas affecté par le type de bail signé. Les revenus issus d'un bail Code Civil restent des revenus BIC en location meublée ou des revenus fonciers en location nue. La CFE, la déclaration 2031, les amortissements : tout fonctionne à l'identique."},
-      {"type": "h2", "text": "Notre approche Move in Paris"},
-      {"type": "p", "text": "Le bail Code Civil représente une part significative de notre portefeuille, en particulier pour les missions d'expatriés long terme (CEOs, directeurs financiers, avocats internationaux) dont la famille et la résidence principale restent dans le pays d'origine. Nos équipes juridiques rédigent des contrats sur-mesure qui sécurisent le cadre Code Civil : vérification de la résidence principale effective, clauses dédiées, suivi documentaire. C'est ce qui nous permet d'offrir des loyers corporate jusqu'à 55 €/m² et une flexibilité totale sur les durées, tout en préservant la sécurité juridique du propriétaire."}
+      {
+        "type": "p",
+        "text": "Parmi les nombreux contrats de location existants en France, le bail dit « Code Civil » — régi par les articles 1708 et suivants du Code Civil et non par la loi du 6 juillet 1989 — est un outil juridique souvent méconnu. Il s'impose pourtant comme la solution de référence pour de nombreuses locations meublées corporate, et particulièrement pour les séjours temporaires d'expatriés à Paris."
+      },
+      {
+        "type": "h2",
+        "text": "Qu'est-ce que le bail Code Civil ?"
+      },
+      {
+        "type": "p",
+        "text": "Contrairement au bail d'habitation classique (loi du 6 juillet 1989) qui s'applique à la résidence principale du locataire, le bail Code Civil est un contrat de louage régi par le droit commun. Il offre une très grande liberté contractuelle aux deux parties : durée, loyer, conditions de résiliation, obligations réciproques — tout se négocie librement, dans la limite des règles générales du droit civil et du respect de l'ordre public."
+      },
+      {
+        "type": "h2",
+        "text": "Dans quels cas peut-il s'appliquer ?"
+      },
+      {
+        "type": "p",
+        "text": "Le bail Code Civil ne peut être choisi que si le logement n'est PAS la résidence principale du locataire. Les cas types à Paris : résidence secondaire (propriétaire ou locataire ayant sa résidence principale ailleurs), logement de fonction ou d'entreprise pour un collaborateur en mission, pied-à-terre parisien pour un dirigeant basé en province ou à l'étranger, mise à disposition pour un expatrié dont la famille reste dans le pays d'origine. La condition essentielle : que le locataire dispose manifestement d'une autre résidence principale, justifiable en cas de contrôle."
+      },
+      {
+        "type": "h2",
+        "text": "Liberté de la durée"
+      },
+      {
+        "type": "p",
+        "text": "Aucune durée minimale ni maximale n'est imposée. Les parties peuvent conclure pour quelques semaines, plusieurs mois, un an, trois ans ou plus. Le contrat peut être à durée déterminée (avec ou sans tacite reconduction) ou indéterminée. Cette flexibilité en fait un outil particulièrement adapté aux missions professionnelles dont la durée est incertaine — ce que le bail mobilité (plafonné à 10 mois non renouvelables) ne permet pas."
+      },
+      {
+        "type": "h2",
+        "text": "Loyer libre et clauses négociables"
+      },
+      {
+        "type": "p",
+        "text": "Le loyer est librement fixé : ni l'encadrement des loyers parisien ni les règles de plafonnement applicables au bail d'habitation ne s'appliquent. Le dépôt de garantie, les modalités de révision annuelle, les conditions d'entrée et de sortie, la répartition des charges, les règles d'état des lieux : tout peut être précisé au contrat selon les besoins des parties. Attention cependant : le juge peut toujours sanctionner les clauses manifestement déséquilibrées ou contraires à la bonne foi."
+      },
+      {
+        "type": "h2",
+        "text": "Différence avec le bail mobilité"
+      },
+      {
+        "type": "p",
+        "text": "Le bail mobilité (créé par la loi ELAN en 2018) est soumis à la loi du 6 juillet 1989 : durée de 1 à 10 mois non renouvelable, justificatif obligatoire (mission, mutation, études), loyer soumis à l'encadrement parisien, interdiction de dépôt de garantie. Le bail Code Civil est beaucoup plus souple : pas de plafond de durée, pas de justificatif imposé, pas d'encadrement du loyer, dépôt de garantie autorisé. En contrepartie, la condition de résidence non principale doit être clairement établie pour éviter toute requalification."
+      },
+      {
+        "type": "h2",
+        "text": "Le risque de requalification"
+      },
+      {
+        "type": "p",
+        "text": "C'est le point de vigilance majeur. Si le locataire installe dans le logement le centre de sa vie personnelle et familiale, il peut demander au juge la requalification du bail en bail d'habitation soumis à la loi de 1989 — avec application rétroactive de toutes ses protections (encadrement du loyer, durée minimale, restitution du trop-perçu). Les juges examinent : la facturation EDF et télécoms, le lieu de scolarisation des enfants, les déclarations fiscales, l'adresse déclarée aux organismes sociaux, le temps de présence effective. Un locataire déclarant le bien comme résidence principale expose fortement le propriétaire."
+      },
+      {
+        "type": "h2",
+        "text": "Les garanties à poser au contrat"
+      },
+      {
+        "type": "p",
+        "text": "Pour sécuriser juridiquement la qualification Code Civil, le contrat doit explicitement mentionner : la résidence principale du locataire (adresse précise, idéalement justifiée en annexe par une pièce d'identité ou un avis d'imposition), la vocation de résidence secondaire ou temporaire du logement, l'identification du cadre professionnel ou de la mission qui motive l'occupation, l'interdiction d'y domicilier administrativement le locataire ou sa famille. Un simple visa de ces mentions ne suffit pas : elles doivent être circonstanciées et vérifiables."
+      },
+      {
+        "type": "h2",
+        "text": "Fiscalité : aucun impact spécifique"
+      },
+      {
+        "type": "p",
+        "text": "Le statut fiscal du bailleur (LMNP au micro-BIC ou au réel) n'est pas affecté par le type de bail signé. Les revenus issus d'un bail Code Civil restent des revenus BIC en location meublée ou des revenus fonciers en location nue. La CFE, la déclaration 2031, les amortissements : tout fonctionne à l'identique."
+      },
+      {
+        "type": "h2",
+        "text": "Notre approche Move in Paris"
+      },
+      {
+        "type": "p",
+        "text": "Le bail Code Civil représente une part significative de notre portefeuille, en particulier pour les missions d'expatriés long terme (CEOs, directeurs financiers, avocats internationaux) dont la famille et la résidence principale restent dans le pays d'origine. Nos équipes juridiques rédigent des contrats sur-mesure qui sécurisent le cadre Code Civil : vérification de la résidence principale effective, clauses dédiées, suivi documentaire. C'est ce qui nous permet d'offrir des loyers corporate jusqu'à 55 €/m² et une flexibilité totale sur les durées, tout en préservant la sécurité juridique du propriétaire."
+      }
     ]
   },
   {
@@ -282,22 +1144,65 @@
     "date": "2026-02-10",
     "author": "Move in Paris",
     "image": "/apartments/salon-orange.jpg",
-    "tags": ["CFE", "LMNP", "Fiscalité"],
+    "tags": [
+      "CFE",
+      "LMNP",
+      "Fiscalité"
+    ],
     "metaDescription": "CFE LMNP 2026 : calcul, exonérations, paiement. Tout savoir sur la Cotisation Foncière des Entreprises pour propriétaires en location meublée.",
     "content": [
-      {"type": "p", "text": "Beaucoup de loueurs en meublé découvrent la Cotisation Foncière des Entreprises (CFE) avec surprise en deuxième année de location. Voici comment l'anticiper et la gérer."},
-      {"type": "h2", "text": "À qui s'applique la CFE ?"},
-      {"type": "p", "text": "Tout loueur en meublé exerçant une activité commerciale (LMNP ou LMP) est redevable de la CFE, y compris s'il n'a qu'un seul bien. L'exonération la première année est automatique. À partir de l'année suivante, la cotisation est due."},
-      {"type": "h2", "text": "Comment la CFE est-elle calculée ?"},
-      {"type": "p", "text": "La base est la valeur locative cadastrale du bien, à laquelle s'applique le taux voté par la commune. Pour Paris, cela représente généralement 200 à 800 € par an pour un bien meublé standard. La commune et la surface jouent fortement : Paris 8e > Paris 19e, 80 m² > 30 m²."},
-      {"type": "h2", "text": "Les cas d'exonération"},
-      {"type": "p", "text": "Location meublée de la résidence principale du bailleur (ou partie). Meublés de tourisme classés dans certaines zones rurales. Premier exercice d'activité (automatique). Recettes inférieures à 5 000 € par an (cotisation minimum réduite)."},
-      {"type": "h2", "text": "Paiement et échéances"},
-      {"type": "p", "text": "L'avis de CFE est consultable en ligne sur votre espace professionnel impots.gouv.fr vers octobre. Paiement avant le 15 décembre. Pensez à consulter votre espace régulièrement : aucun avis papier n'est envoyé."},
-      {"type": "h2", "text": "La CFE est-elle déductible ?"},
-      {"type": "p", "text": "Oui, 100 % déductible en charges sur votre résultat LMNP au régime réel. C'est donc une charge, pas un coût net — à intégrer dans votre plan de trésorerie annuel."},
-      {"type": "h2", "text": "Notre rappel"},
-      {"type": "p", "text": "Nos propriétaires partenaires reçoivent un rappel trimestriel incluant toutes les échéances fiscales de l'année (CFE, déclaration 2031, acomptes). Un dispositif simple qui évite les oublis et les majorations."}
+      {
+        "type": "p",
+        "text": "Beaucoup de loueurs en meublé découvrent la Cotisation Foncière des Entreprises (CFE) avec surprise en deuxième année de location. Voici comment l'anticiper et la gérer."
+      },
+      {
+        "type": "h2",
+        "text": "À qui s'applique la CFE ?"
+      },
+      {
+        "type": "p",
+        "text": "Tout loueur en meublé exerçant une activité commerciale (LMNP ou LMP) est redevable de la CFE, y compris s'il n'a qu'un seul bien. L'exonération la première année est automatique. À partir de l'année suivante, la cotisation est due."
+      },
+      {
+        "type": "h2",
+        "text": "Comment la CFE est-elle calculée ?"
+      },
+      {
+        "type": "p",
+        "text": "La base est la valeur locative cadastrale du bien, à laquelle s'applique le taux voté par la commune. Pour Paris, cela représente généralement 200 à 800 € par an pour un bien meublé standard. La commune et la surface jouent fortement : Paris 8e > Paris 19e, 80 m² > 30 m²."
+      },
+      {
+        "type": "h2",
+        "text": "Les cas d'exonération"
+      },
+      {
+        "type": "p",
+        "text": "Location meublée de la résidence principale du bailleur (ou partie). Meublés de tourisme classés dans certaines zones rurales. Premier exercice d'activité (automatique). Recettes inférieures à 5 000 € par an (cotisation minimum réduite)."
+      },
+      {
+        "type": "h2",
+        "text": "Paiement et échéances"
+      },
+      {
+        "type": "p",
+        "text": "L'avis de CFE est consultable en ligne sur votre espace professionnel impots.gouv.fr vers octobre. Paiement avant le 15 décembre. Pensez à consulter votre espace régulièrement : aucun avis papier n'est envoyé."
+      },
+      {
+        "type": "h2",
+        "text": "La CFE est-elle déductible ?"
+      },
+      {
+        "type": "p",
+        "text": "Oui, 100 % déductible en charges sur votre résultat LMNP au régime réel. C'est donc une charge, pas un coût net — à intégrer dans votre plan de trésorerie annuel."
+      },
+      {
+        "type": "h2",
+        "text": "Notre rappel"
+      },
+      {
+        "type": "p",
+        "text": "Nos propriétaires partenaires reçoivent un rappel trimestriel incluant toutes les échéances fiscales de l'année (CFE, déclaration 2031, acomptes). Un dispositif simple qui évite les oublis et les majorations."
+      }
     ]
   },
   {
@@ -309,24 +1214,73 @@
     "date": "2026-04-20",
     "author": "Move in Paris",
     "image": "/apartments/hero-salon.jpg",
-    "tags": ["DPE", "Réglementation", "Énergie"],
+    "tags": [
+      "DPE",
+      "Réglementation",
+      "Énergie"
+    ],
     "metaDescription": "DPE et interdiction de louer à Paris 2026 : calendrier des interdictions, travaux prioritaires, aides MaPrimeRénov'. Guide pour propriétaires de meublés.",
     "content": [
-      {"type": "p", "text": "Depuis le 1er janvier 2025, les logements classés G au sens du diagnostic de performance énergétique (DPE) ne peuvent plus être mis en location en France. C'est la première étape d'un calendrier réglementaire ambitieux qui touchera ensuite les étiquettes F, puis E. À Paris, où une part significative du parc locatif date d'avant 1975, la question du DPE est devenue une priorité stratégique pour tous les propriétaires — et tout particulièrement pour ceux qui louent meublé."},
-      {"type": "h2", "text": "Le calendrier des interdictions étape par étape"},
-      {"type": "p", "text": "La loi Climat et Résilience de 2021 a fixé des échéances claires et progressives. Depuis le 1er janvier 2025 : interdiction de mise en location des logements classés G (consommation supérieure à 420 kWh/m²/an). À partir du 1er janvier 2028 : extension aux logements classés F (supérieure à 330 kWh/m²/an). À partir du 1er janvier 2034 : les logements classés E (supérieure à 250 kWh/m²/an) seront à leur tour concernés. Ces seuils s'appliquent aux nouvelles mises en location et aux renouvellements de bail. Un bail en cours peut se poursuivre jusqu'à son échéance naturelle, mais sa reconduction sera impossible si le DPE n'est pas conforme."},
-      {"type": "h2", "text": "Paris : un parc immobilier particulièrement exposé"},
-      {"type": "p", "text": "L'Île-de-France concentre environ 450 000 passoires thermiques (classes F et G), dont une proportion élevée dans Paris intra-muros. L'immobilier haussmannien — pierre de taille, double vitrage rare, isolation inexistante dans les murs et les combles — affiche souvent un DPE D ou E. Mais les immeubles des années 1950-1970 sont les plus touchés : chauffage électrique vétuste, menuiseries d'époque, façades non isolées. Dans les arrondissements prisés pour la location corporate (8e, 16e, 17e), les grandes surfaces au cachet indéniable — parquet ancien, hauts plafonds, moulures — sont fréquemment mal isolées, malgré leurs loyers élevés."},
-      {"type": "h2", "text": "Les conséquences concrètes sur la location meublée"},
-      {"type": "p", "text": "Pour un propriétaire en LMNP, l'impact est direct. Toute mise en location d'un logement classé G est désormais illégale : impossible de signer un nouveau bail ni de renouveler un bail existant. En cas de non-respect, le locataire peut exiger une réduction de loyer, saisir la commission de conciliation ou demander des dommages et intérêts devant le tribunal. Pour les biens classés F, il reste deux ans pour agir avant l'interdiction de 2028 — un délai court compte tenu des délais d'instruction des aides et des travaux, particulièrement en copropriété."},
-      {"type": "h2", "text": "Quels travaux pour changer de classe DPE ?"},
-      {"type": "p", "text": "L'objectif est de passer de G ou F à au minimum E, idéalement D. Les postes les plus efficaces, par ordre d'impact : isolation des combles et toitures (gain moyen d'une à deux étiquettes), remplacement du système de chauffage (chaudière à condensation, pompe à chaleur air/eau, radiateurs à inertie), isolation des murs par l'intérieur en appartement (praticable sans accord de copropriété pour les travaux intérieurs), remplacement des menuiseries simple vitrage par du double vitrage PVC ou aluminium. Attention : à Paris, les façades classées ou situées en secteur protégé peuvent imposer l'aval des Architectes des Bâtiments de France avant tout travaux extérieurs, ce qui allonge significativement les délais."},
-      {"type": "h2", "text": "Les aides financières à mobiliser dès maintenant"},
-      {"type": "p", "text": "Plusieurs dispositifs permettent de financer une partie des travaux. MaPrimeRénov' : aide de l'État accessible aux propriétaires bailleurs, calculée selon le type de travaux et le gain de performance atteint. L'éco-PTZ : prêt à taux zéro plafonné à 50 000 € pour une rénovation globale, cumulable avec MaPrimeRénov'. Les aides locales : la Ville de Paris et la Région Île-de-France proposent leurs propres subventions, parfois cumulables avec les dispositifs nationaux. Les Certificats d'Économies d'Énergie (CEE) : prime versée par les fournisseurs d'énergie en échange d'une amélioration prouvée de la performance. Un bien passant de G à D peut ainsi bénéficier d'une aide cumulée de 15 000 à 30 000 € selon sa surface et les travaux réalisés."},
-      {"type": "h2", "text": "DPE et valeur de revente : l'impact patrimonial à ne pas négliger"},
-      {"type": "p", "text": "Le DPE impacte désormais directement la valeur vénale d'un bien. Selon les études de la FNAIM et des notaires, un logement classé F ou G se vend 10 à 20 % moins cher qu'un bien équivalent classé C ou D. À Paris, où le prix moyen dépasse 10 000 €/m², cet écart représente souvent 80 000 à 200 000 € sur la valeur d'un appartement de 80 m². Engager des travaux avant la revente améliore donc à la fois la rentabilité locative pendant la détention et la valorisation patrimoniale à la sortie — deux arguments décisifs pour un propriétaire LMNP raisonnant en rentabilité globale."},
-      {"type": "h2", "text": "Notre approche Move in Paris"},
-      {"type": "p", "text": "Chez Move in Paris, nous analysons systématiquement le DPE de chaque bien lors de la prise de mandat. Notre offre de location meublée corporate longue durée — baux de 1 à 3 ans, loyers garantis par l'employeur, taux d'occupation supérieur à 95 % — est conditionnée à la conformité réglementaire du logement. Pour les propriétaires dont le bien est classé E ou en-deçà, nous pouvons orienter vers des maîtres d'œuvre spécialisés en rénovation en milieu occupé, coordonner les travaux entre deux locataires, et actualiser le DPE après chantier pour valoriser le loyer révisé à la hausse. Anticiper, c'est transformer une contrainte réglementaire en levier de rendement."}
+      {
+        "type": "p",
+        "text": "Depuis le 1er janvier 2025, les logements classés G au sens du diagnostic de performance énergétique (DPE) ne peuvent plus être mis en location en France. C'est la première étape d'un calendrier réglementaire ambitieux qui touchera ensuite les étiquettes F, puis E. À Paris, où une part significative du parc locatif date d'avant 1975, la question du DPE est devenue une priorité stratégique pour tous les propriétaires — et tout particulièrement pour ceux qui louent meublé."
+      },
+      {
+        "type": "h2",
+        "text": "Le calendrier des interdictions étape par étape"
+      },
+      {
+        "type": "p",
+        "text": "La loi Climat et Résilience de 2021 a fixé des échéances claires et progressives. Depuis le 1er janvier 2025 : interdiction de mise en location des logements classés G (consommation supérieure à 420 kWh/m²/an). À partir du 1er janvier 2028 : extension aux logements classés F (supérieure à 330 kWh/m²/an). À partir du 1er janvier 2034 : les logements classés E (supérieure à 250 kWh/m²/an) seront à leur tour concernés. Ces seuils s'appliquent aux nouvelles mises en location et aux renouvellements de bail. Un bail en cours peut se poursuivre jusqu'à son échéance naturelle, mais sa reconduction sera impossible si le DPE n'est pas conforme."
+      },
+      {
+        "type": "h2",
+        "text": "Paris : un parc immobilier particulièrement exposé"
+      },
+      {
+        "type": "p",
+        "text": "L'Île-de-France concentre environ 450 000 passoires thermiques (classes F et G), dont une proportion élevée dans Paris intra-muros. L'immobilier haussmannien — pierre de taille, double vitrage rare, isolation inexistante dans les murs et les combles — affiche souvent un DPE D ou E. Mais les immeubles des années 1950-1970 sont les plus touchés : chauffage électrique vétuste, menuiseries d'époque, façades non isolées. Dans les arrondissements prisés pour la location corporate (8e, 16e, 17e), les grandes surfaces au cachet indéniable — parquet ancien, hauts plafonds, moulures — sont fréquemment mal isolées, malgré leurs loyers élevés."
+      },
+      {
+        "type": "h2",
+        "text": "Les conséquences concrètes sur la location meublée"
+      },
+      {
+        "type": "p",
+        "text": "Pour un propriétaire en LMNP, l'impact est direct. Toute mise en location d'un logement classé G est désormais illégale : impossible de signer un nouveau bail ni de renouveler un bail existant. En cas de non-respect, le locataire peut exiger une réduction de loyer, saisir la commission de conciliation ou demander des dommages et intérêts devant le tribunal. Pour les biens classés F, il reste deux ans pour agir avant l'interdiction de 2028 — un délai court compte tenu des délais d'instruction des aides et des travaux, particulièrement en copropriété."
+      },
+      {
+        "type": "h2",
+        "text": "Quels travaux pour changer de classe DPE ?"
+      },
+      {
+        "type": "p",
+        "text": "L'objectif est de passer de G ou F à au minimum E, idéalement D. Les postes les plus efficaces, par ordre d'impact : isolation des combles et toitures (gain moyen d'une à deux étiquettes), remplacement du système de chauffage (chaudière à condensation, pompe à chaleur air/eau, radiateurs à inertie), isolation des murs par l'intérieur en appartement (praticable sans accord de copropriété pour les travaux intérieurs), remplacement des menuiseries simple vitrage par du double vitrage PVC ou aluminium. Attention : à Paris, les façades classées ou situées en secteur protégé peuvent imposer l'aval des Architectes des Bâtiments de France avant tout travaux extérieurs, ce qui allonge significativement les délais."
+      },
+      {
+        "type": "h2",
+        "text": "Les aides financières à mobiliser dès maintenant"
+      },
+      {
+        "type": "p",
+        "text": "Plusieurs dispositifs permettent de financer une partie des travaux. MaPrimeRénov' : aide de l'État accessible aux propriétaires bailleurs, calculée selon le type de travaux et le gain de performance atteint. L'éco-PTZ : prêt à taux zéro plafonné à 50 000 € pour une rénovation globale, cumulable avec MaPrimeRénov'. Les aides locales : la Ville de Paris et la Région Île-de-France proposent leurs propres subventions, parfois cumulables avec les dispositifs nationaux. Les Certificats d'Économies d'Énergie (CEE) : prime versée par les fournisseurs d'énergie en échange d'une amélioration prouvée de la performance. Un bien passant de G à D peut ainsi bénéficier d'une aide cumulée de 15 000 à 30 000 € selon sa surface et les travaux réalisés."
+      },
+      {
+        "type": "h2",
+        "text": "DPE et valeur de revente : l'impact patrimonial à ne pas négliger"
+      },
+      {
+        "type": "p",
+        "text": "Le DPE impacte désormais directement la valeur vénale d'un bien. Selon les études de la FNAIM et des notaires, un logement classé F ou G se vend 10 à 20 % moins cher qu'un bien équivalent classé C ou D. À Paris, où le prix moyen dépasse 10 000 €/m², cet écart représente souvent 80 000 à 200 000 € sur la valeur d'un appartement de 80 m². Engager des travaux avant la revente améliore donc à la fois la rentabilité locative pendant la détention et la valorisation patrimoniale à la sortie — deux arguments décisifs pour un propriétaire LMNP raisonnant en rentabilité globale."
+      },
+      {
+        "type": "h2",
+        "text": "Notre approche Move in Paris"
+      },
+      {
+        "type": "p",
+        "text": "Chez Move in Paris, nous analysons systématiquement le DPE de chaque bien lors de la prise de mandat. Notre offre de location meublée corporate longue durée — baux de 1 à 3 ans, loyers garantis par l'employeur, taux d'occupation supérieur à 95 % — est conditionnée à la conformité réglementaire du logement. Pour les propriétaires dont le bien est classé E ou en-deçà, nous pouvons orienter vers des maîtres d'œuvre spécialisés en rénovation en milieu occupé, coordonner les travaux entre deux locataires, et actualiser le DPE après chantier pour valoriser le loyer révisé à la hausse. Anticiper, c'est transformer une contrainte réglementaire en levier de rendement."
+      }
     ]
   },
   {
@@ -338,35 +1292,118 @@
     "date": "2026-04-24",
     "author": "Move in Paris",
     "image": "/apartments/salon-bibliotheque.jpg",
-    "tags": ["Location meublée société", "Bail société", "SCI", "Corporate housing"],
+    "tags": [
+      "Location meublée société",
+      "Bail société",
+      "SCI",
+      "Corporate housing"
+    ],
     "metaDescription": "Location meublée société à Paris : différences entre bail société, bail entreprise et bail SCI. Comparatif fiscal, juridique et opérationnel pour faire le bon choix.",
     "content": [
-      {"type": "p", "text": "Louer un appartement meublé à Paris au nom d'une personne morale plutôt qu'au nom d'un particulier est une pratique répandue chez les entreprises, les sociétés de conseil, les cabinets, les family offices et les investisseurs. Mais entre le bail « société » classique, le bail entreprise corporate et le bail conclu par une SCI, les règles ne sont pas les mêmes. Voici comment choisir la bonne structure selon votre objectif."},
-      {"type": "h2", "text": "Qu'est-ce qu'une location meublée société ?"},
-      {"type": "p", "text": "La location meublée société désigne tout bail de logement meublé dont le locataire n'est pas une personne physique mais une personne morale — c'est-à-dire une entité juridique dotée de son propre patrimoine. La signification est large : SAS, SARL, SA, EURL, SCI, association loi 1901, ambassade, organisation internationale, groupement d'intérêt économique… Tous ces statuts permettent de signer un bail au nom de l'entité. La location meublée société s'oppose donc à la location meublée classique où le locataire est un particulier qui occupe le logement à titre personnel."},
-      {"type": "h2", "text": "Les trois grandes catégories de baux au nom d'une personne morale"},
-      {"type": "p", "text": "En pratique, on distingue trois profils de locations meublées société, qui répondent chacun à un usage distinct et mobilisent un cadre juridique différent."},
-      {"type": "h2", "text": "1. Le bail société « entreprise » (logement de fonction)"},
-      {"type": "p", "text": "C'est le plus courant. Une entreprise (SAS, SARL, SA, EURL, etc.) signe un bail pour loger un ou plusieurs collaborateurs en mission à Paris : cadres en mobilité, consultants détachés, expatriés de retour, associés internationaux. Le bail est souscrit au nom de la personne morale, qui devient juridiquement locataire. Les collaborateurs sont désignés comme occupants autorisés au contrat."},
-      {"type": "p", "text": "Cadre juridique : articles 1714 à 1762 du Code Civil (pas la loi de 1989). Cela permet une liberté totale sur la durée (1 mois à plusieurs années), sur le loyer (non encadré), et sur les clauses de résiliation (préavis souvent 15 jours). Ce bail est dit « logement de fonction » ou « corporate » selon les professionnels."},
-      {"type": "p", "text": "Avantages fiscaux : le loyer est intégralement déductible du résultat fiscal de l'entreprise (charge externe). Aucune constitution d'avantage en nature imposable pour le salarié si le logement est strictement nécessaire à l'exercice de ses fonctions. La location meublée est exonérée de TVA (article 261 D du CGI), donc facturation HT = TTC sans TVA récupérable."},
-      {"type": "h2", "text": "2. Le bail société « SCI » (investissement patrimonial)"},
-      {"type": "p", "text": "Une SCI familiale ou patrimoniale peut elle aussi être locataire d'un appartement meublé, mais la logique est différente. Typiquement, une SCI loue pour héberger l'un de ses associés de passage à Paris, un membre de la famille en études, ou pour mettre à disposition un logement à un tiers (sous-location encadrée contractuellement). Le bail reste un bail Code Civil, mais la SCI elle-même étant soumise à un régime fiscal spécifique (IR transparent ou IS selon l'option), la déductibilité du loyer n'est pas automatique : elle dépend de l'objet statutaire de la SCI et de l'usage réel du logement."},
-      {"type": "p", "text": "Attention : la SCI qui loue puis sous-loue bascule potentiellement dans l'activité commerciale (para-hôtelier, location meublée professionnelle) avec des conséquences fiscales lourdes. Un avis expert-comptable est indispensable avant de structurer ce montage."},
-      {"type": "h2", "text": "3. Le bail société « organisme international »"},
-      {"type": "p", "text": "Ambassades, consulats, organisations internationales (OCDE, UNESCO, Banque Mondiale, etc.) louent fréquemment des appartements meublés à Paris pour leurs diplomates et agents détachés. Ces baux relèvent du même cadre Code Civil mais bénéficient souvent de clauses d'immunité, d'exonérations fiscales spécifiques (taxe d'habitation, TVA) et de modalités de paiement adaptées (bons de commande, ordres de mission en devise étrangère). Ce segment représente une part significative du marché corporate parisien haut de gamme."},
-      {"type": "h2", "text": "Tableau comparatif : société vs entreprise vs SCI"},
-      {"type": "p", "text": "Pour y voir plus clair, voici les 4 dimensions qui distinguent les trois profils de location meublée société."},
-      {"type": "p", "text": "Durée du bail : l'entreprise classique signe pour 1 à 36 mois avec préavis court (15 jours). La SCI signe généralement pour des durées plus longues (1 à 3 ans). L'organisme international calque souvent la durée sur la mission diplomatique (2 à 4 ans)."},
-      {"type": "p", "text": "Garanties exigées : pour une entreprise de taille moyenne à grande, aucune garantie additionnelle n'est demandée (la solvabilité de la personne morale suffit). Pour une SCI, un dépôt de garantie équivalent à 2 mois de loyer est usuel. Pour les organismes internationaux, un ordre de mission ou une lettre de garantie de l'organisation remplace généralement tout autre dispositif."},
-      {"type": "p", "text": "Déductibilité fiscale : intégrale pour l'entreprise (charge externe 100 % déductible IS). Variable pour la SCI selon son objet social et son régime fiscal. Sans objet pour l'organisme international (qui bénéficie d'exonérations propres)."},
-      {"type": "p", "text": "Flexibilité d'occupation : l'entreprise peut loger successivement plusieurs collaborateurs sur le même bail (un simple avenant désigne le nouvel occupant). La SCI est plus contrainte sur les changements d'occupant (avenant obligatoire, vérification de l'objet statutaire). L'organisme international change d'occupant selon les rotations diplomatiques avec préavis court."},
-      {"type": "h2", "text": "Quelle structure choisir selon votre situation ?"},
-      {"type": "p", "text": "Pour une entreprise qui cherche à loger ses collaborateurs à Paris : signez au nom de votre SAS, SARL ou SA. C'est le cas d'usage le plus simple, le cadre juridique est parfaitement rodé, et les avantages fiscaux sont intégraux. Chez Move in Paris, ce segment représente environ 70 % de nos locations société."},
-      {"type": "p", "text": "Pour une SCI qui souhaite loger un associé ou un proche : vérifiez d'abord que l'objet statutaire de la SCI prévoit la mise à disposition de logement. Faites valider le montage par votre expert-comptable pour éviter la requalification en location meublée professionnelle. Ce cas est plus rare mais très présent sur les patrimoines familiaux parisiens."},
-      {"type": "p", "text": "Pour un organisme international : le cadre est spécifique et nos équipes corporate gèrent régulièrement ce type de dossier avec les services d'accueil des organisations. Les prérequis sont souvent : ordre de mission, lettre de garantie, paiement par virement SWIFT multi-devises."},
-      {"type": "h2", "text": "La position Move in Paris"},
-      {"type": "p", "text": "Nous opérons depuis 2018 exclusivement sur le segment corporate parisien haut de gamme. Notre portefeuille de 50+ appartements dans le 7e, 8e, 16e, 17e, Neuilly et Levallois est conçu pour accueillir les trois profils de location meublée société. Nos baux sont signés au nom de la personne morale (qu'il s'agisse d'une entreprise, d'une SCI ou d'un organisme international), avec facturation dédiée, signature électronique et gestion 100 % déléguée. Pour en savoir plus sur notre offre société, consultez notre page dédiée à la location meublée société à Paris, ou contactez notre équipe corporate pour une sélection sur-mesure adaptée à votre cadre juridique."}
+      {
+        "type": "p",
+        "text": "Louer un appartement meublé à Paris au nom d'une personne morale plutôt qu'au nom d'un particulier est une pratique répandue chez les entreprises, les sociétés de conseil, les cabinets, les family offices et les investisseurs. Mais entre le bail « société » classique, le bail entreprise corporate et le bail conclu par une SCI, les règles ne sont pas les mêmes. Voici comment choisir la bonne structure selon votre objectif."
+      },
+      {
+        "type": "h2",
+        "text": "Qu'est-ce qu'une location meublée société ?"
+      },
+      {
+        "type": "p",
+        "text": "La location meublée société désigne tout bail de logement meublé dont le locataire n'est pas une personne physique mais une personne morale — c'est-à-dire une entité juridique dotée de son propre patrimoine. La signification est large : SAS, SARL, SA, EURL, SCI, association loi 1901, ambassade, organisation internationale, groupement d'intérêt économique… Tous ces statuts permettent de signer un bail au nom de l'entité. La location meublée société s'oppose donc à la location meublée classique où le locataire est un particulier qui occupe le logement à titre personnel."
+      },
+      {
+        "type": "h2",
+        "text": "Les trois grandes catégories de baux au nom d'une personne morale"
+      },
+      {
+        "type": "p",
+        "text": "En pratique, on distingue trois profils de locations meublées société, qui répondent chacun à un usage distinct et mobilisent un cadre juridique différent."
+      },
+      {
+        "type": "h2",
+        "text": "1. Le bail société « entreprise » (logement de fonction)"
+      },
+      {
+        "type": "p",
+        "text": "C'est le plus courant. Une entreprise (SAS, SARL, SA, EURL, etc.) signe un bail pour loger un ou plusieurs collaborateurs en mission à Paris : cadres en mobilité, consultants détachés, expatriés de retour, associés internationaux. Le bail est souscrit au nom de la personne morale, qui devient juridiquement locataire. Les collaborateurs sont désignés comme occupants autorisés au contrat."
+      },
+      {
+        "type": "p",
+        "text": "Cadre juridique : articles 1714 à 1762 du Code Civil (pas la loi de 1989). Cela permet une liberté totale sur la durée (1 mois à plusieurs années), sur le loyer (non encadré), et sur les clauses de résiliation (préavis souvent 15 jours). Ce bail est dit « logement de fonction » ou « corporate » selon les professionnels."
+      },
+      {
+        "type": "p",
+        "text": "Avantages fiscaux : le loyer est intégralement déductible du résultat fiscal de l'entreprise (charge externe). Aucune constitution d'avantage en nature imposable pour le salarié si le logement est strictement nécessaire à l'exercice de ses fonctions. La location meublée est exonérée de TVA (article 261 D du CGI), donc facturation HT = TTC sans TVA récupérable."
+      },
+      {
+        "type": "h2",
+        "text": "2. Le bail société « SCI » (investissement patrimonial)"
+      },
+      {
+        "type": "p",
+        "text": "Une SCI familiale ou patrimoniale peut elle aussi être locataire d'un appartement meublé, mais la logique est différente. Typiquement, une SCI loue pour héberger l'un de ses associés de passage à Paris, un membre de la famille en études, ou pour mettre à disposition un logement à un tiers (sous-location encadrée contractuellement). Le bail reste un bail Code Civil, mais la SCI elle-même étant soumise à un régime fiscal spécifique (IR transparent ou IS selon l'option), la déductibilité du loyer n'est pas automatique : elle dépend de l'objet statutaire de la SCI et de l'usage réel du logement."
+      },
+      {
+        "type": "p",
+        "text": "Attention : la SCI qui loue puis sous-loue bascule potentiellement dans l'activité commerciale (para-hôtelier, location meublée professionnelle) avec des conséquences fiscales lourdes. Un avis expert-comptable est indispensable avant de structurer ce montage."
+      },
+      {
+        "type": "h2",
+        "text": "3. Le bail société « organisme international »"
+      },
+      {
+        "type": "p",
+        "text": "Ambassades, consulats, organisations internationales (OCDE, UNESCO, Banque Mondiale, etc.) louent fréquemment des appartements meublés à Paris pour leurs diplomates et agents détachés. Ces baux relèvent du même cadre Code Civil mais bénéficient souvent de clauses d'immunité, d'exonérations fiscales spécifiques (taxe d'habitation, TVA) et de modalités de paiement adaptées (bons de commande, ordres de mission en devise étrangère). Ce segment représente une part significative du marché corporate parisien haut de gamme."
+      },
+      {
+        "type": "h2",
+        "text": "Tableau comparatif : société vs entreprise vs SCI"
+      },
+      {
+        "type": "p",
+        "text": "Pour y voir plus clair, voici les 4 dimensions qui distinguent les trois profils de location meublée société."
+      },
+      {
+        "type": "p",
+        "text": "Durée du bail : l'entreprise classique signe pour 1 à 36 mois avec préavis court (15 jours). La SCI signe généralement pour des durées plus longues (1 à 3 ans). L'organisme international calque souvent la durée sur la mission diplomatique (2 à 4 ans)."
+      },
+      {
+        "type": "p",
+        "text": "Garanties exigées : pour une entreprise de taille moyenne à grande, aucune garantie additionnelle n'est demandée (la solvabilité de la personne morale suffit). Pour une SCI, un dépôt de garantie équivalent à 2 mois de loyer est usuel. Pour les organismes internationaux, un ordre de mission ou une lettre de garantie de l'organisation remplace généralement tout autre dispositif."
+      },
+      {
+        "type": "p",
+        "text": "Déductibilité fiscale : intégrale pour l'entreprise (charge externe 100 % déductible IS). Variable pour la SCI selon son objet social et son régime fiscal. Sans objet pour l'organisme international (qui bénéficie d'exonérations propres)."
+      },
+      {
+        "type": "p",
+        "text": "Flexibilité d'occupation : l'entreprise peut loger successivement plusieurs collaborateurs sur le même bail (un simple avenant désigne le nouvel occupant). La SCI est plus contrainte sur les changements d'occupant (avenant obligatoire, vérification de l'objet statutaire). L'organisme international change d'occupant selon les rotations diplomatiques avec préavis court."
+      },
+      {
+        "type": "h2",
+        "text": "Quelle structure choisir selon votre situation ?"
+      },
+      {
+        "type": "p",
+        "text": "Pour une entreprise qui cherche à loger ses collaborateurs à Paris : signez au nom de votre SAS, SARL ou SA. C'est le cas d'usage le plus simple, le cadre juridique est parfaitement rodé, et les avantages fiscaux sont intégraux. Chez Move in Paris, ce segment représente environ 70 % de nos locations société."
+      },
+      {
+        "type": "p",
+        "text": "Pour une SCI qui souhaite loger un associé ou un proche : vérifiez d'abord que l'objet statutaire de la SCI prévoit la mise à disposition de logement. Faites valider le montage par votre expert-comptable pour éviter la requalification en location meublée professionnelle. Ce cas est plus rare mais très présent sur les patrimoines familiaux parisiens."
+      },
+      {
+        "type": "p",
+        "text": "Pour un organisme international : le cadre est spécifique et nos équipes corporate gèrent régulièrement ce type de dossier avec les services d'accueil des organisations. Les prérequis sont souvent : ordre de mission, lettre de garantie, paiement par virement SWIFT multi-devises."
+      },
+      {
+        "type": "h2",
+        "text": "La position Move in Paris"
+      },
+      {
+        "type": "p",
+        "text": "Nous opérons depuis 2018 exclusivement sur le segment corporate parisien haut de gamme. Notre portefeuille de 50+ appartements dans le 7e, 8e, 16e, 17e, Neuilly et Levallois est conçu pour accueillir les trois profils de location meublée société. Nos baux sont signés au nom de la personne morale (qu'il s'agisse d'une entreprise, d'une SCI ou d'un organisme international), avec facturation dédiée, signature électronique et gestion 100 % déléguée. Pour en savoir plus sur notre offre société, consultez notre page dédiée à la location meublée société à Paris, ou contactez notre équipe corporate pour une sélection sur-mesure adaptée à votre cadre juridique."
+      }
     ]
   }
 ]
