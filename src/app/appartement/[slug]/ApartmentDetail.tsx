@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { usePickField, useT } from "@/i18n/LocaleProvider";
+import { usePickField, useT, useLocale } from "@/i18n/LocaleProvider";
 import { getFeatureIcon } from "@/lib/featureIcons";
 import { MetroLineBadge, resolveMetroLines } from "@/lib/metroLines";
 import TripCalculator from "@/components/TripCalculator";
@@ -94,6 +94,7 @@ interface ApartmentProps {
 export default function ApartmentDetail({ apartment }: ApartmentProps) {
   const t = useT();
   const pick = usePickField();
+  const { locale } = useLocale();
   const [currentImage, setCurrentImage] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [tripRoute, setTripRoute] = useState<{ destination: string; mode: "transit" | "bicycling" | "driving" } | null>(null);
@@ -269,16 +270,19 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.1 }}
-                className="grid grid-cols-2 sm:grid-cols-4 gap-6 p-6 bg-blanc-chaud border border-gris-clair/50 mb-10 [&>div+div]:relative sm:[&>div+div]:before:content-[''] sm:[&>div+div]:before:absolute sm:[&>div+div]:before:left-0 sm:[&>div+div]:before:top-1/2 sm:[&>div+div]:before:-translate-y-1/2 sm:[&>div+div]:before:h-10 sm:[&>div+div]:before:w-px sm:[&>div+div]:before:bg-gris-clair"
+                className={`grid grid-cols-2 ${locale === "en" ? "sm:grid-cols-3" : "sm:grid-cols-4"} gap-6 p-6 bg-blanc-chaud border border-gris-clair/50 mb-10 [&>div+div]:relative sm:[&>div+div]:before:content-[''] sm:[&>div+div]:before:absolute sm:[&>div+div]:before:left-0 sm:[&>div+div]:before:top-1/2 sm:[&>div+div]:before:-translate-y-1/2 sm:[&>div+div]:before:h-10 sm:[&>div+div]:before:w-px sm:[&>div+div]:before:bg-gris-clair`}
               >
                 <div className="text-center">
                   <div className="text-2xl font-serif text-gold font-bold">{apt.surface} {t("common.surfaceUnit")}</div>
                   <div className="text-xs text-gris uppercase tracking-wider mt-1">{t("apartment.surface")}</div>
                 </div>
-                <div className="text-center">
-                  <div className="text-2xl font-serif text-gold font-bold">{apt.rooms}</div>
-                  <div className="text-xs text-gris uppercase tracking-wider mt-1">{t("apartment.rooms")}</div>
-                </div>
+                {/* "Pièces" stat: shown only in FR (in EN, "Rooms = 2" is misleading because EN counts bedrooms only) */}
+                {locale !== "en" && (
+                  <div className="text-center">
+                    <div className="text-2xl font-serif text-gold font-bold">{apt.rooms}</div>
+                    <div className="text-xs text-gris uppercase tracking-wider mt-1">{t("apartment.rooms")}</div>
+                  </div>
+                )}
                 <div className="text-center">
                   <div className="text-2xl font-serif text-gold font-bold">{apt.bedrooms}</div>
                   <div className="text-xs text-gris uppercase tracking-wider mt-1">{apt.bedrooms > 1 ? t("apartment.bedrooms") : t("apartment.bedroom")}</div>
@@ -451,7 +455,15 @@ export default function ApartmentDetail({ apartment }: ApartmentProps) {
                     </div>
                     <div className="flex justify-between text-blanc/60">
                       <span>{t("apartment.type")}</span>
-                      <span className="text-blanc">{apt.rooms} {(apt.rooms > 1 ? t("apartment.rooms") : t("apartment.room")).toLowerCase()}</span>
+                      <span className="text-blanc">
+                        {locale === "en"
+                          ? (apt.bedrooms === 0
+                              ? "Studio"
+                              : apt.bedrooms === 1
+                                ? "1-bedroom"
+                                : `${apt.bedrooms}-bedroom`)
+                          : `${apt.rooms} ${(apt.rooms > 1 ? t("apartment.rooms") : t("apartment.room")).toLowerCase()}`}
+                      </span>
                     </div>
                     <div className="flex justify-between text-blanc/60">
                       <span>{t("apartment.floor")}</span>
