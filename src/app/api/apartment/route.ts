@@ -66,11 +66,20 @@ export async function POST(req: NextRequest) {
       bedrooms: typeof apartment.bedrooms === "number" ? apartment.bedrooms : undefined,
       rooms: typeof apartment.rooms === "number" ? apartment.rooms : undefined,
     });
+    let translationWarning: string | undefined;
     if (!isTranslateError(translated)) {
       apartment.title_en = translated.title_en;
       apartment.description_en = translated.description_en;
       apartment.floor_en = translated.floor_en;
       apartment.features_en = translated.features_en;
+    } else {
+      translationWarning =
+        translated.kind === "no_key"
+          ? "Traduction EN ignorée — ANTHROPIC_API_KEY absente sur Vercel"
+          : translated.kind === "api_error"
+            ? `Traduction EN échouée — API Claude: ${translated.message}`
+            : `Traduction EN échouée — réponse invalide: ${translated.message}`;
+      console.error("[apartment POST] translation failed:", translated);
     }
 
     // Get current apartments.json
@@ -95,7 +104,7 @@ export async function POST(req: NextRequest) {
       sha: currentFile.sha,
     });
 
-    return NextResponse.json({ success: true, slug: apartment.slug });
+    return NextResponse.json({ success: true, slug: apartment.slug, translationWarning });
   } catch (error) {
     console.error("Erreur API:", error);
     const message = error instanceof Error ? error.message : "Erreur inconnue";

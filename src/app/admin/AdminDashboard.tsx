@@ -152,9 +152,14 @@ export default function AdminDashboard() {
       });
       const data = await res.json();
       if (data.success) {
-        setMessage({ type: "success", text: `"${editData.title || slug}" modifié ! En ligne dans ~2 min.` });
-        setEditingSlug(null);
-        setEditData({});
+        const baseMsg = `"${editData.title || slug}" modifié ! En ligne dans ~2 min.`;
+        if (data.translationWarning) {
+          setMessage({ type: "error", text: `${baseMsg} ⚠️ ${data.translationWarning}. Cliquez sur "Auto-traduire" et réessayez.` });
+        } else {
+          setMessage({ type: "success", text: baseMsg });
+          setEditingSlug(null);
+          setEditData({});
+        }
         fetchApartments();
       } else {
         setMessage({ type: "error", text: data.error });

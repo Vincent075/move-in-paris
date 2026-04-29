@@ -73,6 +73,7 @@ export async function PUT(req: NextRequest) {
       updates.description !== undefined ||
       updates.floor !== undefined ||
       updates.features !== undefined;
+    let translationWarning: string | undefined;
     if (translatableChanged) {
       const merged = apartments[index];
       const translated = await translateApartment({
@@ -88,6 +89,14 @@ export async function PUT(req: NextRequest) {
         apartments[index].description_en = translated.description_en;
         apartments[index].floor_en = translated.floor_en;
         apartments[index].features_en = translated.features_en;
+      } else {
+        translationWarning =
+          translated.kind === "no_key"
+            ? "Traduction EN ignorée — ANTHROPIC_API_KEY absente sur Vercel"
+            : translated.kind === "api_error"
+              ? `Traduction EN échouée — API Claude: ${translated.message}`
+              : `Traduction EN échouée — réponse invalide: ${translated.message}`;
+        console.error("[apartment-update PUT] translation failed:", translated);
       }
     }
 
@@ -98,7 +107,7 @@ export async function PUT(req: NextRequest) {
       sha: currentFile.sha,
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, translationWarning });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Erreur";
     return NextResponse.json({ error: message }, { status: 500 });

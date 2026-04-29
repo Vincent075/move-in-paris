@@ -488,7 +488,12 @@ export default function AddApartment({ password, onSuccess }: { password: string
       });
       const data = await res.json();
       if (data.success) {
-        setSuccess(`Appartement "${title}" ajouté avec ${uploadedImages.length} photos ! Il sera en ligne dans ~2 minutes.`);
+        const base = `Appartement "${title}" ajouté avec ${uploadedImages.length} photos ! Il sera en ligne dans ~2 minutes.`;
+        if (data.translationWarning) {
+          setError(`${base} ⚠️ ${data.translationWarning}. Allez sur l'onglet Modifier pour cliquer sur "Auto-traduire".`);
+        } else {
+          setSuccess(base);
+        }
         setTimeout(() => onSuccess(), 2000);
         setTitle(""); setFullAddress(""); setStreetOnly(""); setDistrict("");
         setSurface(""); setRooms(""); setBedrooms(""); setBathrooms("");
