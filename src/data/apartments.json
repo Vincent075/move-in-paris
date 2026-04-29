@@ -88,7 +88,7 @@
       }
     ],
     "hasElevator": true,
-    "description_en": "1-bedroom apartment fully furnished and equipped with a surface of approximately 40 sqm. On the 2nd floor of a classic building with elevator access.\nLiving room with 3-seater sofa, coffee table and Smart TV\nseparate kitchen modern fully equipped\nEquipment: microwave oven, oven traditionnnel, dishwasher, Nespresso coffee machine, toaster…\nBedroom with a double bed and grands rangement and TV.\nBuanderie with washing machine and sèche linge\nBathroom with shower and WC\napartment très bright and proche of tout commodités.\nChauffage and eau chaude individuels électriques.",
+    "description_en": "1-bedroom fully furnished and equipped apartment with a surface area of approximately 40 sqm. On the 2nd floor with elevator in a classic building.\nLiving room with 3-seater sofa, coffee table and Smart TV\nSeparate modern equipped kitchen\nEquipments: Microwave, traditional oven, dishwasher, Nespresso machine, toaster…\nBedroom with a double bed and ample storage and TV.\nLaundry room with washing machine and dryer\nBathroom with walk-in shower and separate toilet\nVery bright apartment close to all amenities.\nIndividual electric heating and hot water.",
     "address_en": "Rue des Dames, Paris 17th arr.",
     "title_en": "1-Bedroom Apartment Batignolles",
     "floor_en": "2nd floor",
@@ -98,8 +98,8 @@
       "Oven",
       "Freezer",
       "Toaster",
-      "Door code",
-      "Herringbone parquet flooring",
+      "Keypad entry",
+      "Herringbone parquet",
       "Smart TV",
       "Dryer",
       "Microwave",
@@ -114,7 +114,7 @@
       "Individual electric heating",
       "Iron",
       "Cooktop",
-      "4K TV",
+      "Smart TV",
       "Dishwasher",
       "Equipped kitchen",
       "Refrigerator",
@@ -222,14 +222,14 @@
       "Oven",
       "Freezer",
       "Toaster",
-      "Door code",
-      "Herringbone parquet flooring",
+      "Keypad entry",
+      "Herringbone parquet",
       "Smart TV",
       "Microwave",
       "Nespresso machine",
       "Vacuum cleaner",
       "Intercom",
-      "Collective heating",
+      "Central heating",
       "Cooktop",
       "Iron",
       "Concierge",
@@ -245,7 +245,7 @@
       "Dishwasher",
       "Double glazing"
     ],
-    "description_en": "1-bedroom apartment with a surface of approximately 62 sqm, completely renovated.\nOn the 3rd floor of a Haussmann building, with elevator access.\nLiving room with 3-seater sofa, a coffee table and a television.\nA fully equipped kitchen, semi-open onto the living room.\nEquipment: dishwasher, microwave oven, cooktop, refrigerator, Nespresso coffee machine\nwashing machine séchante a Bedroom with a queen-size bed and rangements.\nBathroom with shower attenante à the Bedroom.\nseparate toilet.\nChauffage and eau chaude collectifs."
+    "description_en": "1-bedroom apartment of approximately 62 sqm, completely renovated. On the 3rd floor with elevator in a Haussmann building. Living room with 3-seater sofa, coffee table and flat-screen TV. Fully equipped kitchen, semi-open to the living room. Equipment: dishwasher, microwave, cooktop, refrigerator, Nespresso machine, washer-dryer. One bedroom with queen-size bed and storage. Bathroom with walk-in shower adjacent to the bedroom. Separate toilet. Central heating and hot water."
   },
   {
     "slug": "2-chambres-chaillot-paris-16e",
@@ -355,14 +355,14 @@
       "Freezer",
       "Toaster",
       "Washer-dryer",
-      "Door code",
-      "Herringbone parquet flooring",
+      "Keypad entry",
+      "Herringbone parquet",
       "Bathtub",
       "Walk-in shower",
       "Double glazing",
       "Balcony",
       "Intercom",
-      "Collective heating",
+      "Central heating",
       "Vacuum cleaner",
       "Nespresso machine",
       "Microwave",
@@ -381,7 +381,7 @@
       "Dishwasher",
       "Equipped kitchen"
     ],
-    "description_en": "2-bedroom apartment with a surface of approximately 105 sqm, completely renovated by an architect\nOn the 2nd floor (street side) of a Haussmann building, with elevator access. a Living room with 4-seater corner sofa, a coffee table and a flat-screen TV.\nDining area for 8 people. A separate fully fitted and equipped kitchen.\nEquipment: dishwasher, microwave oven, cooktop, refrigerator, Nespresso coffee machine, cave à vin Machine a laver/sèche-linge.\n1ère Bedroom with a lit 160*200cm and walk-in closet and Bathroom attenante. 2ème Bedroom with bed 140*190cm with storage and Bathroom attenante. Chauffage collectif and eau chaude individuelle."
+    "description_en": "2-bedroom high-end apartment of approximately 105 sqm, completely renovated by architect.\nOn the 2nd floor with elevator on the street side of a Haussmann building.\nA living room with a 4-seat corner sofa, a coffee table and a flat-screen TV.\nDining area for 8 people. A separate equipped and fitted kitchen.\nEquipment: dishwasher, microwave oven, cooktop, refrigerator, Nespresso machine, wine cooler, washer-dryer.\n1st bedroom with a 160x200cm bed and walk-in closet and attached bathroom.\n2nd bedroom with a 140x190cm bed with storage and attached bathroom.\nCentral heating and individual hot water."
   },
   {
     "slug": "2-pieces-chaillot-2-paris-16e",
@@ -479,7 +479,7 @@
       }
     ],
     "hasElevator": true,
-    "title_en": "1-Bedroom Apartment Chaillot #2",
+    "title_en": "1-Bedroom Apartment Chaillot",
     "floor_en": "1st floor",
     "address_en": "Rue de Bassano, Paris 16th arr.",
     "features_en": [
@@ -488,15 +488,15 @@
       "Oven",
       "Freezer",
       "Toaster",
-      "Door code",
-      "Herringbone parquet flooring",
+      "Keypad entry",
+      "Herringbone parquet",
       "Bathtub",
       "Smart TV",
       "Dryer",
       "Microwave",
       "Nespresso machine",
       "Vacuum cleaner",
-      "Collective heating",
+      "Central heating",
       "Double glazing",
       "Fiber optic internet",
       "Hair dryer",
@@ -511,7 +511,7 @@
       "Elevator",
       "Separate toilet"
     ],
-    "description_en": "1-bedroom apartment high-end fully furnished and equipped with a surface of approximately 65 m²On the 1st floor with elevator access of a immeuble HaussmannienDécoration modern and contemporary, furniture signéEntrée with large custom-fit walk-in closet room\nLiving room with sofa cuir 3 places convertible and TV écran 4K coffee table up&down with ouverture for table dinatoire\nAbonnement triple-play : Internet-television-Téléphone (fiber optic)\nBedroom with bed King SizeSalle d'eau with bathtub, separate toilet\nopen kitchen fully equipped\napartment donnant street side calme\nChauffage and eau chaude collectif"
+    "description_en": "1-bedroom high-end apartment, completely furnished and equipped, approximately 65 sqm. Located on the 1st floor with elevator in a Haussmann building. Modern and contemporary décor with designer furniture. Entrance with custom-built walk-in closet. Living room with 3-seater convertible leather sofa and 4K Smart TV. Adjustable coffee table with dining table extension. Triple-play subscription: Internet-Television-Telephone (fiber optic). Bedroom with King size bed. Bathroom with bathtub and separate toilet. Open equipped kitchen. Apartment facing quiet street. Central heating and central hot water."
   },
   {
     "slug": "2-pieces-porte-dauphine-paris-16e",
@@ -612,7 +612,7 @@
       "Individual electric heating",
       "Freezer",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Walk-in shower",
       "Iron",
@@ -634,7 +634,7 @@
       "Toaster",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment with a surface of approximately 32 sqm, completely renovated by an architect.\nOn the 2nd floor of a classic building (no elevator).\nLiving room with sofa convertible 2 places, a coffee table and a flat-screen TV.\nA fully equipped open kitchen onto the living room.\nEquipment: dishwasher, microwave oven, plaques à inductions, refrigerator, coffee machine NespressoMachine à laver séchante\na Bedroom with a double bed and rangements.\nBathroom with shower and WC.\nChauffage and eau chaude individuel électrique."
+    "description_en": "1-bedroom apartment with a total area of approximately 32 sqm, completely renovated by an architect.\nOn the 2nd floor with no elevator of a classic building.\nLiving room with a sofa bed for 2 people, a coffee table and a flat-screen TV.\nA fully equipped open kitchen overlooking the living room.\nEquipment: dishwasher, microwave, induction cooktop, refrigerator, Nespresso machine, washer-dryer.\nOne bedroom with a double bed and storage.\nBathroom with walk-in shower and separate toilet.\nIndividual electric heating and hot water."
   },
   {
     "slug": "2p-ternes-paris-17e",
@@ -728,7 +728,7 @@
       "Vacuum cleaner",
       "Equipped kitchen",
       "Household linen provided",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Kettle",
       "Coffee maker",
@@ -737,7 +737,7 @@
       "Queen size bed",
       "Smart TV",
       "Towels provided",
-      "4K TV",
+      "Smart TV",
       "Ironing board",
       "Nespresso machine",
       "Microwave",
@@ -751,7 +751,7 @@
       "Freezer",
       "Individual electric heating"
     ],
-    "description_en": "1-bedroom apartment fully furnished and equipped of a surface\nof approximately 36 sqm. 1er étage with elevator access of a\nclassic building.\nLiving room with sofa, coffee table and Smart TV\nseparate kitchen modern fully equipped\nEquipment: microwave oven, washing machine, lave-\ntableware, Nespresso coffee machine, toaster…\nBedroom with a lit 2 places and grands rangements.\nBathroom with shower and WC\napartment bright and proche of tout commodités.\nChauffage and eau chaude individuels electriques."
+    "description_en": "1-bedroom fully furnished and equipped apartment with a surface area of approximately 36 sqm. 1st floor with elevator in a classic building.\nLiving room with sofa, coffee table and Smart TV\nSeparate modern equipped kitchen\nEquipments: Microwave, washing machine, dishwasher, Nespresso machine, toaster…\nBedroom with a double bed and large storage.\nBathroom with shower and separate toilet\nBright apartment close to all amenities.\nIndividual electric heating and hot water."
   },
   {
     "slug": "3p-ternes-paris-17e",
@@ -855,7 +855,7 @@
       "Vacuum cleaner",
       "Bathtub",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Dishwasher",
       "Household linen provided",
@@ -864,7 +864,7 @@
       "Towels provided",
       "Smart TV",
       "Ironing board",
-      "4K TV",
+      "Smart TV",
       "Nespresso machine",
       "Microwave",
       "Toaster",
@@ -886,7 +886,7 @@
       "Individual electric heating",
       "Freezer"
     ],
-    "description_en": "2-bedroom apartment with a surface of approximately 98 sqm On the 2nd floor\nwith elevator access of a classic building secured with\nconcierge.\napartment comprenant a Living room with sofa,\ncoffee table, a flat-screen TV.\na dining area with table and chairs.\na kitchen fully equipped and fitted.\nEquipment: oven, refrigerator, cooktop,\nmicrowave, washing machine, sèche-linge…\na Bedroom with double bed and of the rangement.\na Bedroom with 2 single bed and of the rangement.\n2 salle bain, shower bathtub and Wc.\nChauffage électrique."
+    "description_en": "2-bedroom apartment with a surface area of approximately 98 sqm on the 2nd floor of a classic secured building with a concierge and elevator.\nThe apartment comprises a living room with sofa, coffee table, and flat-screen TV. A dining area with table and chairs. A fully equipped and fitted kitchen.\nEquipment: oven, refrigerator, cooktop, microwave, washing machine, dryer, etc.\nOne bedroom with a double bed and storage. One bedroom with 2 single beds and storage.\n2 bathrooms with shower, bathtub, and toilet.\nElectric heating."
   },
   {
     "slug": "3p-madelaine-paris-8e",
@@ -982,14 +982,14 @@
       }
     ],
     "hasElevator": true,
-    "title_en": "2-Bedroom Apartment Madelaine",
+    "title_en": "2-Bedroom Apartment Madeleine",
     "floor_en": "2nd floor",
     "address_en": "Rue Cambacérès, Paris 8th arr.",
     "features_en": [
       "Elevator",
       "Vacuum cleaner",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Dishwasher",
       "Household linen provided",
       "Queen size bed",
@@ -1019,7 +1019,7 @@
       "Wi-Fi",
       "Separate toilet"
     ],
-    "description_en": "2-bedroom apartment high-end. furnished and equipped of a surface\nof approximately 60 sqm.\n2ème étage with elevator access of a modern building and\nsecured. Modern, contemporary décor.\nLiving room with 3-seater sofa and plasma-screen TV\nBedroom 1 with double bed and rangement.\nBedroom 2 with double bed.\nBathroom with shower. separate toilet.\nopen kitchen fully equipped.\napartment donnant on a rue calme. Chauffage and\neau chaude individuels électrique.\nNombreux commerces au pied of l'immeuble."
+    "description_en": "2-bedroom high-end apartment. Furnished and equipped with a surface area of approximately 60 sqm.\n2nd floor with elevator in a modern and secured building. Modern and contemporary decoration.\nLiving room with 3-seater sofa and flat-screen TV.\nBedroom 1 with double bed and storage.\nBedroom 2 with double bed.\nBathroom with walk-in shower. Separate toilet.\nOpen equipped kitchen.\nApartment overlooking a quiet street. Individual electric heating and hot water.\nMany shops at the foot of the building."
   },
   {
     "slug": "2p-ternes-3-paris-17e",
@@ -1112,14 +1112,14 @@
       }
     ],
     "hasElevator": true,
-    "title_en": "1-Bedroom Apartment Ternes - 6R",
+    "title_en": "1-Bedroom Apartment Ternes",
     "floor_en": "6th floor",
     "address_en": "Rue des Acacias 75017 Paris, Paris 17th arr.",
     "features_en": [
       "Elevator",
       "Vacuum cleaner",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Dishwasher",
       "Household linen provided",
       "Queen size bed",
@@ -1136,7 +1136,7 @@
       "Washing machine",
       "Intercom",
       "Concierge",
-      "Oven",
+      "Traditional oven",
       "Fiber optic internet",
       "Iron",
       "Bed linen provided",
@@ -1144,10 +1144,10 @@
       "Double glazing",
       "Kettle",
       "Coffee maker",
-      "Collective heating",
+      "Central heating",
       "Freezer"
     ],
-    "description_en": "1-bedroom apartment with a surface of approximately 32 sqm.\nOn the 6th floor with elevator access of a immeuble\nmodern. Acces secured par digicode.\nLiving room with 2-seater sofa, coffee table and TV écran\nplasma. Unlimited high-speed internet\nBedroom with double bed and rangements in l'Entrance.\nkitchen toute equipped and fitted ouverte on the\nséjour.Equipment: lave-linge, oven, microwave oven,\ncooktop vitrocéramique, refrigerator/freezer,\nkettle, toaster.\nBathroom with shower and WC\nChauffage and eau chaude collectif."
+    "description_en": "1-bedroom apartment with a surface area of approximately 32 sqm. On the 6th floor with elevator of a modern building. Secured access via keypad entry. Living room with 2-seat sofa, coffee table and plasma-screen TV. High-speed unlimited internet. Bedroom with double bed and storage in the entrance. Fully equipped and fitted open kitchen overlooking the living room. Equipment: washing machine, traditional oven, microwave, cooktop, refrigerator/freezer, kettle, toaster... Bathroom with walk-in shower and separate toilet. Central heating and hot water."
   },
   {
     "slug": "3p-saint-augustin-paris-8e",
@@ -1244,7 +1244,7 @@
       "Vacuum cleaner",
       "Bathtub",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Dishwasher",
       "Household linen provided",
@@ -1260,7 +1260,7 @@
       "Cooktop",
       "Refrigerator",
       "Washer-dryer",
-      "Oven",
+      "Traditional oven",
       "Fiber optic internet",
       "Iron",
       "Bed linen provided",
@@ -1271,7 +1271,7 @@
       "Freezer",
       "Elevator"
     ],
-    "description_en": "2-bedroom apartment rooms haut standing with a surface of approximately 90 sqm, completely renovated Mars 2019.\nAu RDC courtyard side and street side of a classic building\na séjour with grand 5-seater corner sofa, table\nbasse, Tv ecran plat and Dining area,\nMaster bedroom with double bed (180x200cm)\nwalk-in closet, TV and Bathroom with WC attenante. 2ème\nBedroom with 2 lits simples and rangements. Salle\nd'eau with shower and double vasque. separate toilet.\nkitchen high-end ouverte toute equipped and\nfitted.\nEquipment: lave-linge, oven, microwave oven, lave-\ntableware, cooktop, refrigerator, washing machine\nséchante.\nChauffage and eau chaude individuels électrique."
+    "description_en": "2-bedroom high-end apartment of approximately 90 sqm, completely renovated in March 2019. On the ground floor overlooking a courtyard and street of a classic building. A living room with a large 5-seater corner sofa, coffee table, flat-screen TV and dining area. Master bedroom with a double bed (180x200cm), walk-in closet, TV and bathroom with attached toilet. 2nd bedroom with 2 single beds and storage. Bathroom with shower and double sink. Separate toilet. High-end open equipped and fitted kitchen. Equipment: washing machine, traditional oven, microwave, dishwasher, cooktop, refrigerator, washer-dryer. Individual electric heating and hot water."
   },
   {
     "slug": "2p-saint-germain-des-pres-paris-7e",
@@ -1362,10 +1362,10 @@
     "features_en": [
       "Vacuum cleaner",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Dishwasher",
       "Towels provided",
-      "4K TV",
+      "Smart TV",
       "Wi-Fi",
       "Freezer",
       "Kettle",
@@ -1394,7 +1394,7 @@
     "title_en": "1-Bedroom Apartment Saint Germain des Prés",
     "floor_en": "1st floor",
     "address_en": "Rue de Lille, Paris 7th arr.",
-    "description_en": "1-bedroom apartment with a surface of approximately 45 sqm, completely renovated by an architect.\nOn the 1st floor of a classic building (no elevator).\nLiving room with sofa convertible 3 places, a table\nbasse and a flat-screen TV.\nA fully equipped open kitchen onto the living room.\nEquipment: dishwasher, microwave oven, cooktop,\nrefrigerator, Nespresso coffee machine\nwashing machine séchante\na Bedroom with a queen-size bed and rangements.\nBathroom with bathtub and WC.\nair conditioning.\nChauffage and eau chaude individuel électrique."
+    "description_en": "1-bedroom apartment with a surface area of approximately 45 sqm, completely renovated by an architect. Located on the 1st floor with no elevator in a classic building. Living room with a 3-seat sofa bed, a coffee table, and a flat-screen TV. A fully equipped open kitchen overlooking the living room. Equipment: dishwasher, microwave, cooktop, refrigerator, Nespresso machine, and washer-dryer. One bedroom with a queen-size bed and storage. Bathroom with a bathtub and separate toilet. Air conditioning. Individual electric heating and hot water."
   },
   {
     "slug": "2p-charles-de-gaulle-etoile-paris-17e",
@@ -1481,7 +1481,7 @@
       }
     ],
     "hasElevator": true,
-    "title_en": "1-Bedroom Apartment Charles de Gaulle Etoile",
+    "title_en": "1-Bedroom Apartment Étoile",
     "floor_en": "1st floor",
     "address_en": "Avenue de Wagram, Paris 17th arr.",
     "features_en": [
@@ -1494,7 +1494,7 @@
       "Individual electric heating",
       "Freezer",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Bed linen provided",
       "Iron",
@@ -1514,7 +1514,7 @@
       "Toaster",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment fully furnished and equipped of a surface\nof approximately 44 sqm. 1er étage with elevator access of a\nclassic building high-end.\nLiving room with sofa-lit, coffee table and television à écran\nplat. Coin dinatoire with table à manger ronde 4\npeople. separate kitchen fully equipped.\nBedroom with double bed and a walk-in closet (tables of chevet cours of livraison).\nBathroom with bathtub and WC.\napartment bright and proche of tout commodités.\nNombreux rangements.\nChauffage and eau chaude individuels électriques. Au\npied of l'arc of triomphe"
+    "description_en": "1-bedroom fully furnished and equipped apartment of approximately 44 sqm. 1st floor with elevator in a classic high-end building. Living room with sofa bed, coffee table, and flat-screen television. Dining area with round dining table for 4 people. Separate fully equipped kitchen. Bedroom with double bed and walk-in closet (bedside tables currently being delivered). Bathroom with bathtub and separate toilet. Bright apartment close to all amenities. Numerous storage spaces. Individual electric heating and hot water. At the foot of the Arc de Triomphe."
   },
   {
     "slug": "2p-tenres-1-paris-17e",
@@ -1602,14 +1602,14 @@
       }
     ],
     "hasElevator": true,
-    "title_en": "1-Bedroom Apartment Ternes 1er G",
+    "title_en": "1-Bedroom Apartment Ternes",
     "floor_en": "1st floor",
     "address_en": "Rue des Acacias, Paris 17th arr.",
     "features_en": [
       "Elevator",
       "Vacuum cleaner",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Dishwasher",
       "Household linen provided",
       "Towels provided",
@@ -1632,10 +1632,10 @@
       "Walk-in shower",
       "Kettle",
       "Coffee maker",
-      "Collective heating",
+      "Central heating",
       "Freezer"
     ],
-    "description_en": "1-bedroom apartment meublées with a surface of approximately 42 sqm\n1er étage with elevator access, courtyard side\nEntrance, Living room with 2-seater sofa, TV écran plasma\nInternet-TV-Téléphone illimité\nEspace dining area.\nkitchen tout equipped ouverte on the séjour\nEquipment: refrigerator, oven, Hotte, machine à\ncafé Nespresso, lave tableware ; petit électroménager…\nBedroom with double bed\nBathroom with WC.\nChauffage and eau chaude collectifs.\nQuartier ternes, nombreux commerces autour of\nl'apartment"
+    "description_en": "1-bedroom furnished apartment of approximately 42 sqm\n1st floor with elevator, courtyard side\nEntrance, living room with 2-seater sofa, plasma screen TV\nUnlimited Internet-TV-Phone\nDining area.\nFully equipped open kitchen flowing into the living room\nEquipment: Refrigerator, oven, Hood, Nespresso machine, dishwasher; small appliances…\nBedroom with double bed\nBathroom with separate toilet.\nCentral heating and hot water.\nTernes neighborhood, numerous shops around the apartment"
   },
   {
     "slug": "2p-batignolles-paris-17e",
@@ -1723,7 +1723,7 @@
     "features_en": [
       "Vacuum cleaner",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Dishwasher",
       "Household linen provided",
       "Queen size bed",
@@ -1747,9 +1747,9 @@
       "Kettle",
       "Coffee maker",
       "Sofa bed",
-      "Individual electric heating"
+      "Individual gas heating"
     ],
-    "description_en": "1-bedroom apartment fully furnished and equipped of a surface\nof approximately 40 sqm. 4ème étage no elevator of a\nclassic building high-end.\nLiving room with sofa-lit, coffee table and Smart TV\nseparate kitchen modern fully equipped\nEquipment: microwave oven, washing machine, lave-\ntableware, Nespresso coffee machine, toaster…\nBedroom with a lit 2 places and grands rangements.\nBathroom with shower and WC\napartment très bright and proche of toute commodité.\nChauffage and eau chaude individuels à GAZ."
+    "description_en": "1-bedroom fully furnished and equipped apartment with a surface area of approximately 40 sqm. 4th floor with no elevator in a classic high-end building.\nLiving room with sofa bed, coffee table and Smart TV\nSeparate modern equipped kitchen\nEquipments: Microwave, washing machine, dishwasher, Nespresso machine, toaster…\nBedroom with a double bed and large storage.\nBathroom with walk-in shower and separate toilet\nVery bright apartment close to all amenities.\nIndividual gas heating and hot water."
   },
   {
     "slug": "2-pieces-ternes-2q-paris-17e",
@@ -1836,14 +1836,14 @@
       }
     ],
     "hasElevator": true,
-    "title_en": "1-Bedroom Apartment Ternes - 2Q",
+    "title_en": "1-Bedroom Apartment Ternes",
     "floor_en": "2nd floor",
     "address_en": "Rue des Acacias, Paris 17th arr.",
     "features_en": [
       "Elevator",
       "Vacuum cleaner",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Household linen provided",
       "Kettle",
       "Coffee maker",
@@ -1866,7 +1866,7 @@
       "Ironing board",
       "Towels provided"
     ],
-    "description_en": "1-bedroom apartment with a surface of approximately 32 sqm.\nOn the 6th floor with elevator access of a immeuble\nmodern. Acces secured par digicode.\nLiving room with 2-seater sofa, coffee table and TV écran\nplasma. Unlimited high-speed internet\nBedroom with double bed and rangements in l'Entrance.\nkitchen toute equipped and fitted ouverte on the\nséjour.Equipment: lave-linge, oven, microwave oven,\ncooktop vitrocéramique, refrigerator/freezer,\nkettle, toaster.\nBathroom with shower and WC\nChauffage and eau chaude collectif."
+    "description_en": "1-bedroom apartment with a surface area of approximately 32 sqm.\nOn the 6th floor with elevator in a modern building. Secured access via keypad entry.\nLiving room with 2-seat sofa, coffee table and plasma flat-screen TV. Unlimited high-speed internet.\nBedroom with double bed and storage in the entrance.\nFully equipped kitchen open to the living room. Equipment: washing machine, oven, microwave, ceramic cooktop, refrigerator/freezer, kettle, toaster...\nBathroom with shower and separate toilet.\nCentral heating and hot water."
   },
   {
     "slug": "2-pieces-montmartre-paris-18e",
@@ -1960,10 +1960,10 @@
       "Elevator",
       "Vacuum cleaner",
       "Kettle",
-      "Coffee maker",
+      "Nespresso machine",
       "Individual electric heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Walk-in shower",
       "Bed linen provided",
@@ -1985,7 +1985,7 @@
       "Toaster",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment with a surface of approximately 45 sqm.\nSitué On the 6th floor with elevator access of a immeuble\nancien.\nEntrance, Living room with sofa convertible, flat-screen TV and\ncoffee table.\nkitchen américaine tout equipped with bar dinatoire.\nEquipment: microwave oven, kettle, machine à\ncafé Nespresso, hotte aspirante, washing machine\nséchante.\nBedroom with bed \"Queen size\" (160*200cm), Tv écran\nplat. Grand walk-in closet.Bathroom with shower and\nWC.Nombreux rangements in l'apartment.\nChauffage and eau chaude individuels électriques.\nA quelques minutes a pied of the quartier très recherche of\nMontmartre."
+    "description_en": "1-bedroom apartment with a surface area of approximately 45 sqm.\nLocated on the 6th floor with elevator in a classic building.\nEntrance, living room with sofa bed, flat-screen TV and coffee table.\nOpen kitchen fully equipped with dining bar.\nEquipments: Microwave, kettle, Nespresso machine, range hood, washer-dryer.\nBedroom with queen-size bed (160*200cm), flat-screen TV. Large walk-in closet. Bathroom with shower and separate toilet. Numerous storage spaces throughout the apartment.\nIndividual electric heating and hot water.\nJust a few minutes walking distance from the highly sought-after Montmartre neighborhood."
   },
   {
     "slug": "rue-marbeuf-paris-8e",
@@ -2074,7 +2074,7 @@
       }
     ],
     "hasElevator": true,
-    "title_en": "Rue Marbeuf",
+    "title_en": "1-Bedroom Apartment Rue Marbeuf",
     "floor_en": "2nd floor",
     "address_en": "Rue Marbeuf, Paris 8th arr.",
     "features_en": [
@@ -2085,7 +2085,7 @@
       "Individual electric heating",
       "Freezer",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Bed linen provided",
       "Iron",
@@ -2103,11 +2103,11 @@
       "Refrigerator",
       "Towels provided",
       "Ironing board",
-      "4K TV",
+      "Smart TV",
       "Toaster",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment of 52 sqm, 3ème étage with elevator access.\napartment courtyard side\nAccès privé and secured (Digicode). open kitchen tout\nequipped. Bathroom with bathtub and WC.\nLiving room with 2-seater sofa.\nCoin repas with table à manger in the salon.\nBedroom with double bed and rangement.\nwashing machine.\nChauffage and eau chaude collective.\napartment calme and bright.\nProche of tous commerces and commodités."
+    "description_en": "1-bedroom apartment of 52 sqm, 3rd floor with elevator.\nApartment on courtyard side\nPrivate and secured access (keypad entry). Open equipped kitchen. Bathroom with bathtub and separate toilet.\nLiving room with 2-seater sofa.\nDining area with dining table in the living room.\nBedroom with double bed and storage.\nWashing machine.\nCentral heating and hot water.\nQuiet and bright apartment.\nClose to all shops and amenities."
   },
   {
     "slug": "2-pieces-victor-hugo-paris-16e",
@@ -2200,7 +2200,7 @@
       "Coffee maker",
       "Freezer",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Bed linen provided",
       "Iron",
       "Fiber optic internet",
@@ -2220,7 +2220,7 @@
       "Toaster",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment with a surface of approximately 42 sqm On the 2nd floor\nwith elevator access.\nSalon 1 2-seater sofa and a 3-seater sofa\nconvertible and television à flat screen. separate kitchen\ntout equipped.\nEquipment: dishwasher, washing machine, cafetière\nNespresso, microwave oven, kettle…\nBedroom with a double bed 140 * 200cm\nBathroom with shower and WC.\nGrande armoire\nSitué in the quartier Très recherché of Victor Hugo.\napartment bright and très calme.\nChauffage and eau chaude individuels électriques."
+    "description_en": "1-bedroom apartment with a surface area of approximately 42 sqm on the 2nd floor with elevator. Living room featuring a 2-seater sofa and a 3-seater convertible sofa with flat-screen television. Separate equipped kitchen. Amenities: Dishwasher, washing machine, Nespresso machine, microwave oven, kettle, etc. Bedroom with a 140 x 200 cm double bed. Bathroom with shower and separate toilet. Large cupboard. Located in the highly sought-after Victor Hugo neighborhood. Bright and very quiet apartment. Individual electric heating and hot water."
   },
   {
     "slug": "2-pieces-ternes-paris-17e",
@@ -2318,7 +2318,7 @@
       "Sofa bed",
       "Individual electric heating",
       "Freezer",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Bed linen provided",
       "Iron",
@@ -2339,7 +2339,7 @@
       "Toaster",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment with a surface of approximately 44 sqm, bon état\nOn the 4th floor with elevator access of a immeuble\nmodern\na Living room with sofa convertible, a coffee table and\na flat-screen TV.\na table à manger and chaises.\nA fully fitted and equipped kitchen\nEquipment: dishwasher, microwave oven, cooktop,\nrefrigerator, lave-linge…\na Bedroom with a double bed and of the rangement.\nBathroom with bathtub and WC.\nChauffage individuel électrique."
+    "description_en": "1-bedroom apartment with a surface area of approximately 44 sqm, in good condition.\nOn the 4th floor with elevator of a modern building.\nA living room with a sofa bed, a coffee table, and a flat-screen TV.\nA dining table and chairs.\nA fully equipped and fitted kitchen.\nEquipment: dishwasher, microwave, cooktop, refrigerator, washing machine, etc.\nOne bedroom with a double bed and storage.\nBathroom with bathtub and toilet.\nIndividual electric heating."
   },
   {
     "slug": "2-pieces-porte-maillot-paris-16e",
@@ -2439,10 +2439,10 @@
       "Bathtub",
       "Kettle",
       "Sofa bed",
-      "Collective heating",
+      "Central heating",
       "Freezer",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Walk-in shower",
       "Bed linen provided",
@@ -2467,7 +2467,7 @@
       "Wi-Fi",
       "Roller shutters"
     ],
-    "description_en": "Grand 2 rooms très bright with a surface of approximately 62 sqm. Situé On the 5th floor with elevator access courtyard side\ncalme. Entrance, grand séjour courtyard side lumineuse without\nvis-à-vis.\nseparate kitchen tout equipped.\nEquipment: lave tableware, lave linge, toaster,\ncafetière Nespresso.\nGrande Bedroom à coucher lumineuse courtyard side calme.\nBathroom with shower and bathtub.\nChauffage and eau chaude collectif.\napartment très calme and proche of toute\ncommodités. Vue tour Eiffel."
+    "description_en": "Spacious 1-bedroom bright apartment with a surface area of approximately 62 sqm. Located on the 5th floor with elevator on the courtyard side, quiet. Entrance, large living room on the courtyard side bright with no overlooking. Separate equipped kitchen. Equipment: dishwasher, washing machine, toaster, Nespresso machine... Large bright bedroom on the quiet courtyard side. Bathroom with shower and bathtub. Central heating and hot water. Very quiet apartment close to all amenities. Eiffel Tower view."
   },
   {
     "slug": "2-pieces-pereire-paris-17e",
@@ -2565,7 +2565,7 @@
       "Individual electric heating",
       "Freezer",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Walk-in shower",
       "Bed linen provided",
@@ -2589,7 +2589,7 @@
       "Roller shutters",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment with a surface of approximately 52 sqm, bon état\nOn the 3rd floor of a classic building (no elevator).\na Living room with sofa, a coffee table and a Tv\nflat screen.\na table à manger with table and chairs.\nA fully fitted and equipped kitchen\nEquipment: dishwasher, microwave oven, cooktop,\nrefrigerator …\na Bedroom with a double bed and a of the rangement.\nBathroom with shower and WC.\nChauffage and eau chaude individuel électrique."
+    "description_en": "1-bedroom apartment with a surface area of approximately 52 sqm, in good condition.\nOn the 3rd floor with no elevator of a classic building.\nA living room with sofa, coffee table and flat-screen TV.\nA dining area with dining table and chairs.\nA fully equipped and fitted kitchen.\nEquipment: dishwasher, microwave, cooktop, refrigerator, etc.\nOne bedroom with a double bed and storage.\nBathroom with walk-in shower and separate toilet.\nIndividual electric heating and hot water."
   },
   {
     "slug": "3-pieces-boissiere-paris-16e",
@@ -2685,10 +2685,10 @@
       "Elevator",
       "Bathtub",
       "Kettle",
-      "Coffee maker",
+      "Coffee machine",
       "Individual gas heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Bed linen provided",
       "Iron",
       "Fiber optic internet",
@@ -2701,7 +2701,7 @@
       "Bunk bed",
       "Nespresso machine",
       "Microwave",
-      "Herringbone parquet flooring",
+      "Herringbone parquet",
       "Cooktop",
       "Wi-Fi",
       "Separate toilet",
@@ -2711,7 +2711,7 @@
       "Towels provided",
       "Refrigerator"
     ],
-    "description_en": "2-bedroom apartment with a surface of approximately 88 sqm\nOn the 1st floor with elevator access si immeuble\nhaussmannien.\nEntrance, kitchen américaine fully equipped\nEquipment: traditional oven, dishwasher, micro-\nondes, coffee machine…\nLiving room with 2-seater sofa, coffee table and TV écran\nplat.\n1ère Bedroom with double bed and placard in a rue\ncalme\n2ème Bedroom with bed superposé and placard.\nBathroom with shower and bathtub.\nBureau/walk-in closet.\nChauffage individuel and eau chaude par GAZ."
+    "description_en": "2-bedroom apartment with a surface area of approximately 88 sqm\nOn the 1st floor with elevator if Haussmann building.\nEntrance, fully equipped open kitchen\nEquipment: Traditional oven, dishwasher, microwave, coffee machine…\nLiving room with 2-seater sofa, coffee table and flat-screen TV.\n1st bedroom with double bed and cupboard in a quiet street\n2nd bedroom with bunk bed and cupboard.\nBathroom with shower and bathtub.\nOffice/walk-in closet.\nIndividual heating and hot water by gas."
   },
   {
     "slug": "3-pieces-batignolles-paris-17e",
@@ -2807,10 +2807,10 @@
       "Kettle",
       "Coffee maker",
       "Sofa bed",
-      "Collective heating",
+      "Central heating",
       "Freezer",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Walk-in shower",
       "Bed linen provided",
@@ -2835,7 +2835,7 @@
       "Separate toilet",
       "Wi-Fi"
     ],
-    "description_en": "2-bedroom apartment of a surface d' environ 75 sqm, bon état\nOn the 5th floor of a classic building with elevator access.\na Living room with sofa, a coffee table, a fauteuil and\na flat-screen TV.\na espace bureau or Bedroom d'appoint ( sofa\nconvertible.\nA fully fitted and equipped kitchen\nEquipment: dishwasher, microwave oven, cooktop,\nrefrigerator, lave-linge séchant …\na Bedroom with a double bed and a of the rangement.\nBathroom with walk-in shower and separate toilet.\na petit balcony accessible depuis the kitchen.\nChauffage and eau chaude collective."
+    "description_en": "2-bedroom apartment with a total surface area of approximately 75 sqm, in good condition.\nOn the 5th floor with elevator in a classic building.\nA living room with sofa, coffee table, armchair and flat-screen TV.\nAn office space or guest bedroom with sofa bed.\nA fully equipped and fitted kitchen.\nEquipment: dishwasher, microwave, cooktop, refrigerator, washer-dryer, etc.\nA bedroom with a double bed and storage.\nBathroom with walk-in shower and separate toilet.\nA small balcony accessible from the kitchen.\nCentral heating and central hot water."
   },
   {
     "slug": "3-pieces-levallois-centre-levallois-perret",
@@ -2938,7 +2938,7 @@
       "Sofa bed",
       "Individual gas heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Bed linen provided",
       "Iron",
@@ -2962,7 +2962,7 @@
       "Wi-Fi",
       "Single bed"
     ],
-    "description_en": "2-bedroom apartment of a surface d' environ 74 sqm, bon état\nOn the 4th floor with elevator access of a immeuble\nmoderneUn Living room with sofa convertible, a\ncoffee table and a flat-screen TV.\na table à manger with table and chairs.\na open kitchen toute equipped and fitted\nEquipment: dishwasher, microwave oven, oven,\ncooktop, refrigerator, …\na Bedroom parentale with a double bed, a\narmoire, a Tv donnant on a balcony and a\nBedroom enfant with a single bed and a bureau.Bathroom with bathtub, washing machine and WC\nséparé. Chauffage and eau chaude individuel\nélectrique."
+    "description_en": "2-bedroom apartment with a surface area of approximately 74 sqm, in good condition\nOn the 4th floor with elevator of a modern building\nA living room with a sofa bed, a coffee table and a flat-screen TV.\nA dining room with a dining table and chairs.\nAn open equipped and fitted kitchen\nEquipment: dishwasher, microwave, oven, cooktop, refrigerator, …\nA master bedroom with a double bed, a cupboard, a TV overlooking a balcony and a child's bedroom with a single bed and a desk.\nBathroom with bathtub, washing machine and separate toilet. Individual electric heating and hot water."
   },
   {
     "slug": "2-pieces-faubourg-du-roule-paris-8e",
@@ -3055,7 +3055,7 @@
       }
     ],
     "hasElevator": true,
-    "title_en": "1-Bedroom Apartment Faubourg Du Roule",
+    "title_en": "1-Bedroom Apartment Faubourg du Roule",
     "floor_en": "6th floor",
     "address_en": "Rue du Commandant Rivière, Paris 8th arr.",
     "features_en": [
@@ -3066,7 +3066,7 @@
       "Air conditioning",
       "Equipped kitchen",
       "Double glazing",
-      "Door code",
+      "Keypad entry",
       "Walk-in shower",
       "Bed linen provided",
       "Iron",
@@ -3090,7 +3090,7 @@
       "Roller shutters",
       "Wi-Fi"
     ],
-    "description_en": "Grand 2 rooms completely renovated situé On the 6th floor with elevator access courtyard side\nfully furnished and equipped with a surface of approximately 60 sqm. Entrance with coin bureau\nGrand Living room with 3-seater sofa, TV écran plasma and\nDining area.\nkitchen américaine fully equipped.\nEquipment: dishwasher, refrigerator/freezer,\nNespresso coffee machine, traditional oven, oven micro-\nonde, washing machine séchante, toasteur.\nGrande Bedroom with with queen-size bed, rangement.\nBathroom with shower and wc.\nNombreux rangements\napartment très bright.\nair conditioning réversible."
+    "description_en": "Spacious 1-bedroom high-end apartment completely renovated located on the 6th floor with elevator on the courtyard side. Completely furnished and equipped with a surface area of approximately 60 sqm. Entrance with office corner. Large living room with 3-seater sofa, plasma screen TV and dining area. Open kitchen fully equipped. Equipment: Dishwasher, refrigerator/freezer, Nespresso machine, traditional oven, microwave, washer-dryer, toaster... Large bedroom with queen-size bed and storage. Bathroom with shower and toilet. Numerous storage cupboards. Very bright apartment. Reversible air conditioning."
   },
   {
     "slug": "2-pieces-cardinet-paris-17e",
@@ -3184,7 +3184,7 @@
       "Sofa bed",
       "Individual electric heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Bed linen provided",
       "Iron",
       "Fiber optic internet",
@@ -3207,7 +3207,7 @@
       "Roller shutters",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment of a surface d' environ 53 sqm, bon état\nOn the 1st floor of a classic building (no elevator).\na Living room with sofa convertible, a coffee table and\na flat-screen TV.\na table à manger with table and chairs.\nA fully fitted and equipped kitchen\nEquipment: dishwasher, oven, microwave, cooktop, refrigerator, lave-linge…\na Bedroom with a double bed and of the rangement.\nBathroom with shower and separate toilet.\nChauffage and eau chaude individuel électrique."
+    "description_en": "1-bedroom apartment with a surface area of approximately 53 sqm, in good condition\nOn the 1st floor without elevator of a classic building\nA living room with a sofa bed, a coffee table and a flat-screen TV.\nA dining area with dining table and chairs.\nA fully equipped and fitted kitchen\nEquipment: dishwasher, oven, microwave, cooktop, refrigerator, washing machine…\nA bedroom with a double bed and storage.\nBathroom with shower and separate toilet.\nIndividual electric heating and hot water."
   },
   {
     "slug": "3-pieces-ternes-7-paris-17e",
@@ -3296,15 +3296,15 @@
       }
     ],
     "hasElevator": false,
-    "title_en": "1-Bedroom Apartment Ternes / 7",
-    "floor_en": "",
+    "title_en": "1-Bedroom Apartment Ternes",
+    "floor_en": "7th floor",
     "address_en": "Rue des Acacias, Paris 17th arr.",
     "features_en": [
       "Vacuum cleaner",
       "Kettle",
-      "Collective heating",
+      "Central heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Walk-in shower",
       "Bed linen provided",
@@ -3328,7 +3328,7 @@
       "Toaster",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment of a surface d' environ 61 sqm, bon état.\nOn the 7th floor of a classic building with elevator access.\na Living room with sofa, a coffee table and a Tv\nflat screen.\na table à manger with table and chairs.\nA fully fitted and equipped kitchen\nEquipment: dishwasher, microwave oven, cooktop,\nrefrigerator, lave-linge séchant…\na Bedroom with a double bed and of the rangement.\na bureau with of the rangement.\nBathroom with shower and WC.\nbalcony. Chauffage and eau chaude collectifs."
+    "description_en": "1-bedroom apartment with a surface area of approximately 61 sqm, in good condition.\nOn the 7th floor with elevator in a classic building.\nA living room with sofa, coffee table and flat-screen TV.\nA dining area with dining table and chairs.\nA fully equipped and fitted kitchen.\nEquipment: dishwasher, microwave, cooktop, refrigerator, washer-dryer…\nOne bedroom with a double bed and storage.\nAn office with storage.\nBathroom with walk-in shower and separate toilet.\nBalcony. Central heating and central hot water."
   },
   {
     "slug": "2-pieces-ternes-3m-paris-17e",
@@ -3416,16 +3416,16 @@
         "distance": "4 min"
       }
     ],
-    "title_en": "1-Bedroom Apartment Ternes 3M",
+    "title_en": "1-Bedroom Apartment Ternes",
     "floor_en": "3rd floor",
     "address_en": "Rue des Acacias, Paris 17th arr.",
     "features_en": [
       "Elevator",
       "Vacuum cleaner",
       "Kettle",
-      "Collective heating",
+      "Central heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Walk-in shower",
       "Bed linen provided",
       "Iron",
@@ -3447,7 +3447,7 @@
       "Toaster",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment with a surface of approximately 32 sqm.\nOn the 3rd floor with elevator access of a immeuble\nmodern. Acces secured par digicode.\nLiving room with 2-seater sofa, coffee table and TV écran\nplasma. Unlimited high-speed internet\nBedroom with double bed and rangements in l'Entrance.\nkitchen toute equipped and fitted ouverte on the\nséjour.Equipment: lave-linge, oven, microwave oven,\ncooktop vitrocéramique, refrigerator/freezer,\nkettle, toaster.\nBathroom with shower and WC\nChauffage and eau chaude collectif."
+    "description_en": "1-bedroom apartment with a surface area of approximately 32 sqm.\nOn the 3rd floor with elevator of a modern building. Access secured by keypad entry.\nLiving room with 2-seater sofa, coffee table and flat-screen plasma TV. Unlimited high-speed internet.\nBedroom with double bed and storage in the entrance.\nFully equipped and fitted open kitchen overlooking the living room. Equipment: washing machine, oven, microwave, ceramic cooktop, refrigerator/freezer, kettle, toaster...\nBathroom with walk-in shower and separate toilet.\nCentral heating and hot water."
   },
   {
     "slug": "3-pieces-europe-paris-8e",
@@ -3543,7 +3543,7 @@
       "Kettle",
       "Individual electric heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Walk-in shower",
       "Bed linen provided",
@@ -3567,7 +3567,7 @@
       "Wi-Fi",
       "Separate toilet"
     ],
-    "description_en": "2-bedroom apartment with a surface of approximately 63 sqm, bon état\nOn the 5th floor with elevator access of a immeuble\nancien. a Living room with sofa, a coffee table and a\nflat-screen TV.\na kitchen semi-ouverte toute equipped and fitted\nEquipment: dishwasher, microwave oven, cooktop,\nrefrigerator, Nespresso coffee machine\nMachine a laver/sèche.\na Bedroom with a queen-size bed and of the rangement.\n2ème Bedroom with a queen-size bed and rangements.\nBathroom with walk-in shower. separate toilet.\nChauffage and eau chaude individuel électriques."
+    "description_en": "2-bedroom apartment with a surface area of approximately 63 sqm, in good condition.\nOn the 5th floor with elevator in a classic building.\nA living room with sofa, coffee table and flat-screen TV.\nA semi-open equipped and fitted kitchen.\nEquipment: dishwasher, microwave oven, cooktop, refrigerator, Nespresso machine.\nWasher-dryer.\nOne bedroom with a queen-size bed and storage.\n2nd bedroom with a queen-size bed and storage.\nBathroom with walk-in shower. Separate toilet.\nIndividual electric heating and hot water."
   },
   {
     "slug": "2-pieces-terrasse-paris-16e",
@@ -3666,9 +3666,9 @@
       "Vacuum cleaner",
       "Kettle",
       "Sofa bed",
-      "Collective heating",
+      "Central heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Bed linen provided",
       "Walk-in shower",
@@ -3695,7 +3695,7 @@
       "Roller shutters",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment with a surface of approximately 37 sqm, renovated.\nOn the 7th floor with elevator access of a immeuble\nmodern secured with concierge.\na Living room with sofa convertible, a coffee table and\na flat-screen TV.\na kitchen semi-ouverte toute equipped and fitted\nEquipment: dishwasher, oven, cooktop,\nrefrigerator, microwave oven…\na espace nuit with a double bed and of the rangement.\nBathroom with bathtub and WC.\na terrace privative ensoleillé with vue Tour Effeil\nChauffage collectif"
+    "description_en": "1-bedroom apartment with a surface area of approximately 37 sqm, completely renovated.\nOn the 7th floor with elevator of a modern secured building with concierge.\nA living room with sofa bed, a coffee table and a flat-screen TV.\nA semi-open equipped and fitted kitchen.\nEquipment: dishwasher, oven, cooktop, refrigerator, microwave…\nA sleeping area with a double bed and storage.\nBathroom with bathtub and separate toilet.\nA private sunny terrace with Eiffel Tower view.\nCentral heating."
   },
   {
     "slug": "2-pieces-cardinet-1-paris-17e",
@@ -3781,16 +3781,16 @@
       }
     ],
     "hasElevator": true,
-    "title_en": "1-Bedroom Apartment Cardinet 1",
+    "title_en": "1-Bedroom Apartment Cardinet",
     "floor_en": "3rd floor",
     "address_en": "Rue de Tocqueville, Paris 17th arr.",
     "features_en": [
       "Elevator",
       "Vacuum cleaner",
       "Kettle",
-      "Collective heating",
+      "Central heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Walk-in shower",
       "Bed linen provided",
@@ -3812,7 +3812,7 @@
       "Toaster",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment with a surface of approximately 52 sqm, très état\nOn the 3rd floor with elevator access courtyard side of a\nclassic building. a Living room with 4-seater sofa,\na coffee table and a flat-screen TV.\nA separate fully fitted and equipped kitchen with\ntable dinatoire. Equipment: oven mixte, cooktop of\ncuisson induction, refrigerator, coffee machine\nNespresso, washing machine.\na Bedroom with a queen-size bed (160*200cm)\nof the rangement. Bathroom with shower. WC\nséparés. Chauffage and eau chaude individuels\nélectriques."
+    "description_en": "1-bedroom apartment with a surface area of approximately 52 sqm, in excellent condition. On the 3rd floor with elevator on the courtyard side of a classic building. A living room with a 4-seater sofa, a coffee table and a flat-screen TV. A separate equipped and fitted kitchen with a dining table. Equipment: combination oven, induction cooktop, refrigerator, Nespresso machine, washing machine. One bedroom with a queen-size bed (160x200cm) and storage. Bathroom with walk-in shower. Separate toilet. Individual electric heating and hot water."
   },
   {
     "slug": "2-pieces-pompes-paris-16e",
@@ -3905,7 +3905,7 @@
       "Sofa bed",
       "Individual electric heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Walk-in shower",
       "Bed linen provided",
@@ -3926,7 +3926,7 @@
       "Toaster",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment high-end fully furnished and equipped\nwith a surface of approximately 45 sqm On the 1st floor without\nascenseur of a classic building modern décor\ncontemporary Living room with 2-seater sofa\nconvertible (vrai matelas) and TV écran plasma.\nBedroom with double bed and rangements Bathroom\nwith bathtub attenante à the Bedroom. separate toilet.\nseparate kitchen fully equipped apartment\ndonnant street side calme.\nChauffage and eau chaude individuels électrique.\nNombreux commerces au pied of l'immeuble."
+    "description_en": "1-bedroom high-end apartment, completely furnished and equipped with an area of approximately 45 sqm on the 1st floor with no elevator of a classic building. Modern and contemporary décor. Living room with 2-seater sofa bed (genuine mattress) and flat-screen plasma TV. Bedroom with double bed and storage. Bathroom with bathtub adjacent to the bedroom. Separate toilet. Separate equipped kitchen. Apartment facing a quiet street. Individual electric heating and hot water. Numerous shops at the foot of the building."
   },
   {
     "slug": "2-pieces-saint-georges-paris-9e",
@@ -4019,7 +4019,7 @@
       "Kettle",
       "Individual electric heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Bed linen provided",
       "Iron",
@@ -4041,7 +4041,7 @@
       "Toaster",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment of a surface d' environ 38 sqm, renovated.\nOn the 4th floor of a classic building (no elevator).\na Living room with 2-seater sofa, a coffee table and a\nflat-screen TV.\na table dinatoire and ses chaises.\na kitchen semi ouverte toute equipped and fitted\nEquipment: oven, cooktop, refrigerator, machine à\ncafé…\na Bedroom with a double bed, table of chevet and\na armoire of rangement.\nBathroom with bathtub, a lave-linge and WC.\nChauffage and eau chaude individuel électrique."
+    "description_en": "1-bedroom apartment with a surface area of approximately 38 sqm, completely renovated.\nOn the 4th floor with no elevator of a classic building.\nA living room with a 2-seater sofa, a coffee table and a flat-screen TV.\nA dining table and its chairs.\nA semi-open equipped and fitted kitchen.\nEquipment: oven, cooktop, refrigerator, coffee machine…\nA bedroom with a double bed, bedside table and storage cupboard.\nBathroom with bathtub, washing machine and separate toilet.\nIndividual electric heating and hot water."
   },
   {
     "slug": "2-pieces-wagram-paris-17e",
@@ -4136,7 +4136,7 @@
       "Vacuum cleaner",
       "Bathtub",
       "Kettle",
-      "Collective heating",
+      "Central heating",
       "Equipped kitchen",
       "Double glazing",
       "Bed linen provided",
@@ -4162,7 +4162,7 @@
       "Roller shutters",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment with a surface of approximately 44 sqm, bon état\nOn the 8th floor of a classic building with elevator access.\na Living room with sofa, a coffee table and a Tv\nflat screen.\na mange debout with chaises\nA fully fitted and equipped kitchen\nEquipment: dishwasher, microwave oven, cooktop,\nrefrigerator, lave-linge.\na Bedroom with a double bed a Bathroom\nwith bathtub and separate toilet.\nterrace Vue Tour Eiffel\nChauffage individuelle."
+    "description_en": "1-bedroom apartment of approximately 44 sqm, in good condition.\nOn the 8th floor with elevator in a classic building.\nA living room with sofa, a coffee table and a flat-screen TV.\nA standing dining area with chairs.\nA fully equipped and fitted kitchen.\nEquipment: dishwasher, microwave, cooktop, refrigerator, washing machine.\nOne bedroom with a double bed, a bathroom with bathtub and separate toilet.\nTerrace with Eiffel Tower view.\nIndividual heating."
   },
   {
     "slug": "2-pieces-champs-elysees-paris-8e",
@@ -4246,7 +4246,7 @@
         "distance": "4 min"
       }
     ],
-    "title_en": "1-Bedroom Apartment Champs Elysées",
+    "title_en": "1-Bedroom Apartment Champs-Élysées",
     "floor_en": "3rd floor",
     "address_en": "Rue de Berri, Paris 8th arr.",
     "features_en": [
@@ -4255,7 +4255,7 @@
       "Sofa bed",
       "Individual electric heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Walk-in shower",
       "Bed linen provided",
@@ -4279,7 +4279,7 @@
       "Ironing board",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment of a surface environ 42 sqm, bon état.\nOn the 3rd floor of a classic building (no elevator).\na séjour with a 2-seater sofa, a coffee table and\na flat-screen TV.\na open kitchen with toute equipped and fitted\nEquipment: dishwasher, oven, cooktop,\nrefrigerator…\na Bedroom with a double bed, a espace bureau\nBathroom with bathtub and WC.\nChauffage and eau chaude individuel électrique."
+    "description_en": "1-bedroom apartment with a surface area of approximately 42 sqm, in good condition.\nOn the 3rd floor with no elevator of a classic building.\nA living room with a 2-seat sofa, a coffee table and a flat-screen TV.\nAn open kitchen fully equipped and fitted.\nEquipment: dishwasher, oven, cooktop, refrigerator…\nOne bedroom with a double bed, a desk area.\nBathroom with bathtub and separate toilet.\nIndividual electric heating and hot water."
   },
   {
     "slug": "2-pieces-courcelles-paris-17e",
@@ -4374,11 +4374,11 @@
       "Elevator",
       "Vacuum cleaner",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Terrace",
       "Kettle",
       "Sofa bed",
-      "Collective heating",
+      "Central heating",
       "Double glazing",
       "Bed linen provided",
       "Iron",
@@ -4401,7 +4401,7 @@
       "Towels provided",
       "Refrigerator"
     ],
-    "description_en": "1-bedroom apartment of a surface d' environ 43 sqm, renovated.\nOn the 6th floor with elevator access of a immeuble\nmodern secured with concierge.\na Living room with sofa convertible, a coffee table and\na flat-screen TV.\na table dinatoire with chaises.\na kitchen semi-ouverte toute equipped and fitted\nEquipment: dishwasher, oven, cooktop,\nrefrigerator, microwave oven…\na Bedroom with a double bed and of the rangement.\nBathroom with bathtub and WC.\na cellier with lave-linge séchant.\na terrace privative of 20 sqm ensoleillé\nChauffage collectif"
+    "description_en": "1-bedroom apartment with a surface area of approximately 43 sqm, completely renovated.\nOn the 6th floor with elevator of a modern secured building with concierge.\nA living room with sofa bed, a coffee table and a flat-screen TV.\nA dining table with chairs.\nA semi-open equipped and fitted kitchen.\nEquipment: dishwasher, oven, cooktop, refrigerator, microwave…\nOne bedroom with a queen-size bed and storage.\nBathroom with bathtub and separate toilet.\nA utility room with washer-dryer.\nA private terrace of 20 sqm with plenty of sunshine.\nCentral heating."
   },
   {
     "slug": "2-pieces-faubourg-montmartre-paris-9e",
@@ -4499,7 +4499,7 @@
       "Kettle",
       "Individual gas heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Walk-in shower",
       "Bed linen provided",
@@ -4524,7 +4524,7 @@
       "Wi-Fi",
       "Refrigerator"
     ],
-    "description_en": "1-bedroom apartment with a surface of approximately 53 sqm, bon état\nOn the 5th floor with elevator access courtyard side of a\nclassic building. a Living room with sofa d'angle 4\nplaces, a coffee table and a flat-screen TV.\nBar dinatoire. a kitchen toute equipped and\nfitted\nEquipment: dishwasher, microwave oven, cooktop,\nrefrigerator, Nespresso coffee machine\nMachine a laver and Machine sèche-linge.\na Bedroom with a double bed and of the rangement.\nBathroom with walk-in shower. separate toilet.\nChauffage and eau chaude individuel GAZ."
+    "description_en": "1-bedroom apartment with a surface area of approximately 53 sqm, in good condition. On the 5th floor with elevator on the courtyard side of a classic building. A living room with a 4-seater corner sofa, a coffee table and a flat-screen TV. Breakfast bar. A fully equipped and fitted kitchen. Equipment: dishwasher, microwave oven, cooktop, refrigerator, Nespresso machine, washing machine and dryer. One bedroom with a double bed and storage. Bathroom with walk-in shower. Separate toilet. Individual gas heating and hot water."
   },
   {
     "slug": "2-pieces-faubourg-saint-martin-paris-10e",
@@ -4624,7 +4624,7 @@
       "Kettle",
       "Individual electric heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Walk-in shower",
       "Bed linen provided",
@@ -4652,7 +4652,7 @@
     "title_en": "1-Bedroom Apartment Faubourg Saint Martin",
     "floor_en": "5th floor",
     "address_en": "Rue de Paradis, Paris 10th arr.",
-    "description_en": "1-bedroom apartment of a surface d' environ 49 sqm, bon état\nOn the 5th floor of a classic building with elevator access.\na Living room with sofa, a coffee table and a Tv\nflat screen.\na table à manger with table and chairs.\nA fully fitted and equipped kitchen\nEquipment: dishwasher, microwave oven, cooktop,\nrefrigerator, lave-linge…\na Bedroom with a double bed and of the rangement.\nBathroom with shower and WC.\nChauffage individuel Gaz."
+    "description_en": "1-bedroom apartment with a surface area of approximately 49 sqm, in good condition.\nOn the 5th floor with elevator in a classic building.\nA living room with sofa, coffee table and flat-screen TV.\nA dining area with dining table and chairs.\nA fully equipped and fitted kitchen.\nEquipment: dishwasher, microwave, cooktop, refrigerator, washing machine, etc.\nOne bedroom with a double bed and storage.\nBathroom with walk-in shower and separate toilet.\nIndividual gas heating."
   },
   {
     "slug": "2-pieces-porte-maillot-paris-17e",
@@ -4745,9 +4745,9 @@
       "Bathtub",
       "Balcony",
       "Kettle",
-      "Collective heating",
+      "Central heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Bed linen provided",
       "Iron",
@@ -4770,7 +4770,7 @@
       "Toaster",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment high-end fully furnished and equipped with a surface of approximately 35 sqm.\nOn the 7th floor with elevator access of a classic building Modern, contemporary décor. Living room with 3-seater sofa and TV écran. Bedroom with double bed 140*190cm and rangements. Bathroom with bathtub and WC. separate kitchen fully equipped with dishwasher.\napartment with balcony and without vis-à-vis donnant courtyard side calme.\nChauffage and eau chaude collectif\nNombreux commerces in the quartier"
+    "description_en": "1-bedroom high-end apartment completely furnished and equipped with a surface area of approximately 35 sqm.\nOn the 7th floor with elevator in a classic building with modern and contemporary decoration. Living room with 3-seater sofa and flat-screen TV. Bedroom with double bed 140*190cm and storage. Bathroom with bathtub and separate toilet. Separate equipped kitchen with dishwasher.\nApartment with balcony and no overlooking neighbors overlooking a quiet courtyard.\nCentral heating and central hot water.\nNumerous shops in the neighborhood."
   },
   {
     "slug": "4-pieces-sablons-neuilly-sur-seine",
@@ -4886,7 +4886,7 @@
       "Coffee maker",
       "Individual electric heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Walk-in shower",
       "Bed linen provided",
@@ -4913,7 +4913,7 @@
       "Separate toilet",
       "Wi-Fi"
     ],
-    "description_en": "3-bedroom apartment with a surface of approximately 110 sqm, très bon état\nOn the 3rd floor of a classic building with elevator access.\na Living room with sofa, a coffee table and a flat-screen TV.\na table à manger with table and chairs.\nA fully fitted and equipped kitchen\nEquipment: dishwasher, microwave oven, cooktop,\nrefrigerator, lave-linge, sèche-linge…\na Bedroom parentale with a double bed, a salle of\nbain with bathtub and a walk-in closet.\na 2eme Bedroom with a double bed and of the rangement\na 3eme Bedroom with a single bed and a bureau\nBathroom with shower and separate toilet.\nbalcony\nChauffage individuel électrique."
+    "description_en": "3-bedroom apartment with a surface area of approximately 110 sqm, in excellent condition.\n3rd floor with elevator in a classic building.\nA living room with sofa, coffee table and flat-screen TV.\nA dining room with dining table and chairs.\nA fully equipped and appointed kitchen.\nEquipment: dishwasher, microwave, cooktop, refrigerator, washing machine, dryer, etc.\nA master bedroom with a double bed, a bathroom with bathtub and a walk-in closet.\nA 2nd bedroom with a double bed and storage.\nA 3rd bedroom with a single bed and a desk.\nBathroom with walk-in shower and separate toilet.\nBalcony.\nIndividual electric heating."
   },
   {
     "slug": "2-pieces-chaillot-1-paris-16e",
@@ -5001,16 +5001,16 @@
         "distance": "3 min"
       }
     ],
-    "title_en": "1-Bedroom Apartment Chaillot / 1",
+    "title_en": "1-Bedroom Apartment Chaillot",
     "floor_en": "3rd floor",
     "address_en": "Rue de Bassano, Paris 16th arr.",
     "features_en": [
       "Elevator",
       "Vacuum cleaner",
       "Kettle",
-      "Collective heating",
+      "Central heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Iron",
       "Bed linen provided",
@@ -5035,7 +5035,7 @@
       "Separate toilet",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment with a surface of approximately 62 sqm, completely renovated.\nOn the 3rd floor with elevator access of a immeuble\nhaussmannien.\nLiving room with 3-seater sofa, a coffee table and a\nflat-screen TV.\na kitchen toute equipped and semi ouverte on the\nséjour.\nEquipment: dishwasher, microwave oven, cooktop,\nrefrigerator, Nespresso coffee machine\nwashing machine séchante\na Bedroom with a queen-size bed and rangements.\nBathroom with shower attenante à the Bedroom.\nseparate toilet.\nChauffage and eau chaude collectifs."
+    "description_en": "1-bedroom apartment with a surface area of approximately 62 sqm, completely renovated. On the 3rd floor with elevator in a Haussmann building. Living room with 3-seat sofa, coffee table and flat-screen TV. A fully equipped kitchen semi-open to the living room. Equipment: dishwasher, microwave, cooktop, refrigerator, Nespresso machine, washer-dryer. One bedroom with a queen-size bed and storage. Bathroom with walk-in shower adjoining the bedroom. Separate toilet. Central heating and hot water."
   },
   {
     "slug": "2-pieces-etoile-paris-17e",
@@ -5122,7 +5122,7 @@
         "distance": "6 min"
       }
     ],
-    "title_en": "1-Bedroom Apartment Etoile",
+    "title_en": "1-Bedroom Apartment Étoile",
     "floor_en": "2nd floor",
     "address_en": "Rue de l'Etoile, Paris 17th arr.",
     "features_en": [
@@ -5130,7 +5130,7 @@
       "Kettle",
       "Individual electric heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Walk-in shower",
       "Bed linen provided",
@@ -5153,7 +5153,7 @@
       "Separate toilet",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment with a surface of approximately 45 sqm.\napartment rénové récemment.\nSitué On the 2nd floor no elevator in a rue calme à\nsens unique. Entrance, Living room with sofa\nWi-Fi and television illimités (plus of 100 chaînes)\nopen kitchen fully equipped\nBedroom with double bed and rangement\nBathroom with shower\nseparate toilet in l'Entrance.\nChauffage and eau chaude individuels au GAZ."
+    "description_en": "1-bedroom apartment with a surface area of approximately 45 sqm.\nRecently renovated apartment.\nLocated on the 2nd floor without elevator on a quiet one-way street. Entrance, living room with sofa\nUnlimited Wi-Fi and television (over 100 channels)\nOpen equipped kitchen\nBedroom with double bed and storage\nBathroom with shower\nSeparate toilet in the entrance.\nIndividual heating and hot water via gas."
   },
   {
     "slug": "2-pieces-acacias-paris-17e",
@@ -5246,9 +5246,9 @@
       "Vacuum cleaner",
       "Bathtub",
       "Kettle",
-      "Collective heating",
+      "Central heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Bed linen provided",
       "Iron",
@@ -5271,7 +5271,7 @@
       "Toaster",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment meublées with a surface of approximately 40 sqm\n1er étage with elevator access, street side (double glazing)\nEntrance, Living room with 2-seater sofa, TV écran plasma\nInternet-TV-Téléphone illimité\nkitchen tout equipped ouverte on the séjour\nEquipment: refrigerator, microwave, oven\ntraditionnel, Hotte, Nespresso coffee machine, petit\nélectroménager…\nBedroom with double bed\nBathroom attenante à the Bedroom with bathtub\nWC Chauffage central\nQuartier ternes, nombreux commerces autour of l'apartment"
+    "description_en": "1-bedroom furnished apartment of approximately 40 sqm\n1st floor with elevator, street side (double glazing)\nEntrance, living room with 2-seater sofa, plasma flat-screen TV\nUnlimited Internet-TV-Telephone\nEquipped open kitchen opening onto the living room\nEquipment: Refrigerator, microwave, traditional oven, hood, Nespresso machine, small appliances…\nBedroom with double bed\nBathroom adjoining the bedroom with bathtub and separate toilet. Central heating\nTernes neighborhood, numerous shops around the apartment"
   },
   {
     "slug": "2-pieces-etoile-3eme-paris-17e",
@@ -5360,7 +5360,7 @@
         "distance": "6 min"
       }
     ],
-    "title_en": "1-Bedroom Apartment Etoile 3eme",
+    "title_en": "1-Bedroom Apartment Étoile",
     "floor_en": "3rd floor",
     "address_en": "Rue de l'Etoile, Paris 17th arr.",
     "features_en": [
@@ -5369,7 +5369,7 @@
       "Sofa bed",
       "Individual gas heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Walk-in shower",
       "Bed linen provided",
@@ -5392,7 +5392,7 @@
       "Wi-Fi",
       "Separate toilet"
     ],
-    "description_en": "1-bedroom apartment with a surface of approximately 45 sqm.\napartment rénové récemment.\nSitué On the 3rd floor no elevator in a rue calme\nà sens unique. Entrance, Living room with sofa-lit\nWi-Fi and television illimités (plus of 100 chaînes)\nopen kitchen fully equipped\nBedroom with double bed and rangement\nBathroom with shower\nseparate toilet in l'Entrance.\nChauffage and eau chaude individuels au GAZ."
+    "description_en": "1-bedroom apartment with a surface area of approximately 45 sqm.\nRecently renovated apartment.\nLocated on the 3rd floor without elevator on a quiet one-way street. Entrance, living room with sofa bed\nUnlimited Wi-Fi and television (over 100 channels)\nOpen equipped kitchen\nBedroom with double bed and storage\nBathroom with shower\nSeparate toilet in the entrance.\nIndividual gas heating and hot water."
   },
   {
     "slug": "3-pieces-cardinet-paris-17e",
@@ -5488,7 +5488,7 @@
       "Coffee maker",
       "Individual gas heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Walk-in shower",
       "Bed linen provided",
@@ -5511,7 +5511,7 @@
       "Separate toilet",
       "Wi-Fi"
     ],
-    "description_en": "2-bedroom apartment of a surface d' environ 72 sqm, renovated Juillet 2023\nOn the 2nd floor with elevator access of a immeuble pierre of\ntaille with concierge.\na Living room with 3-seater sofa, a fauteuil, a table\nbasse and a flat-screen TV.\na dining area with table and chairs.\na open kitchen toute equipped and fitted\nEquipment: dishwasher, oven, cooktop, refrigerator,\nmicrowave oven…\na Bedroom with a queen-size bed and rangements with\nBathroom attenante.\n2ème Bedroom with queen-size bed and rangements and salle of\nbain attenante.\nChauffage and eau chaude individuel au GAZ."
+    "description_en": "2-bedroom apartment with a surface area of approximately 72 sqm, completely renovated in July 2023. Located on the 2nd floor with elevator in a classic stone building with concierge. A living room with a 3-seater sofa, an armchair, a coffee table and a flat-screen TV. A dining area with table and chairs. An open equipped and fitted kitchen with dishwasher, oven, cooktop, refrigerator, microwave, etc. A bedroom with a queen-size bed and storage with ensuite bathroom. A second bedroom with a queen-size bed and storage with ensuite bathroom. Individual gas heating and hot water."
   },
   {
     "slug": "2-pieces-montorgeuil-paris-1er",
@@ -5607,7 +5607,7 @@
       "Coffee maker",
       "Individual gas heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Walk-in shower",
       "Bed linen provided",
@@ -5631,7 +5631,7 @@
       "Separate toilet",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment high-end fully furnished and equipped with a surface of approximately 48 sqm. On the 3rd floor no elevator of a classic building Modern, contemporary décor Living room with 2-seater sofa convertible and TV écran plasma. open kitchen fully equipped. Bedroom with double bed and rangements.\nBathroom with shower. separate toilet. apartment donnant street side calme. Chauffage and eau chaude individuel électrique\nNombreux commerces au pied of l'immeuble."
+    "description_en": "1-bedroom high-end apartment completely furnished and equipped with a surface area of approximately 48 sqm.\n\nOn the 3rd floor with no elevator of a classic building. Modern and contemporary decoration.\n\nLiving room with 2-seater sofa bed and flat-screen TV. Fully equipped open kitchen.\n\nBedroom with double bed and storage.\nBathroom with walk-in shower. Separate toilet.\n\nApartment facing a quiet street.\n\nIndividual electric heating and hot water.\nMany shops at the foot of the building."
   },
   {
     "slug": "2-pieces-rue-de-la-pompe-paris-16e",
@@ -5748,14 +5748,14 @@
       "Towels provided",
       "Smart TV",
       "Ironing board",
-      "4K TV",
+      "Smart TV",
       "Toaster",
       "Separate toilet",
       "Wi-Fi",
-      "Door code",
+      "Keypad entry",
       "Parquet flooring"
     ],
-    "description_en": "1-bedroom apartment with a surface of approximately 52 sqm, bon état\nOn the 1st floor of a classic building with elevator access.\na Living room with sofa, a coffee table and a Tv\nflat screen.\na table à manger and chaises.\nA fully fitted and equipped kitchen\nEquipment: dishwasher, microwave oven, cooktop,\nrefrigerator, lave-linge séchant…\na Bedroom with a double bed and of the rangement.\nBathroom with shower and separate toilet.\nChauffage individuel."
+    "description_en": "1-bedroom apartment with a surface area of approximately 52 sqm, in good condition\nOn the 1st floor with elevator in a classic building\nA living room with sofa, coffee table and flat-screen TV.\nA dining table and chairs.\nA fully equipped and fitted kitchen\nEquipment: dishwasher, microwave oven, cooktop, refrigerator, washer-dryer…\nA bedroom with a double bed and storage.\nBathroom with walk-in shower and separate toilet.\nIndividual heating."
   },
   {
     "slug": "2-pieces-trocadero-paris-16e",
@@ -5845,7 +5845,7 @@
         "distance": "2 min"
       }
     ],
-    "title_en": "1-Bedroom Apartment Trocadero",
+    "title_en": "1-Bedroom Apartment Trocadéro",
     "floor_en": "4th floor",
     "address_en": "Rue Petrarque Paris 16, Paris 16th arr.",
     "features_en": [
@@ -5857,7 +5857,7 @@
       "Equipped kitchen",
       "Double glazing",
       "Walk-in shower",
-      "Door code",
+      "Keypad entry",
       "Bed linen provided",
       "Iron",
       "Fiber optic internet",
@@ -5880,7 +5880,7 @@
       "Wi-Fi",
       "Separate toilet"
     ],
-    "description_en": "1-bedroom apartment with a surface of approximately 60 sqm, très bon\nétat\nAu 4me étage with elevator access of a classic building\na Living room with sofa convertible, a coffee table and\na flat-screen TV.\na dining area with table and chairs.\nA fully fitted and equipped kitchen\nEquipment: dishwasher, microwave oven, cooktop,\nrefrigerator, lave-linge séchant…\na Bedroom with a double bed and of the rangement.\nBathroom with shower and separate toilet.\nChauffage individuel électrique."
+    "description_en": "1-bedroom apartment with a surface area of approximately 60 sqm, in excellent condition. On the 4th floor with elevator in a classic building. A living room with sofa bed, coffee table and flat-screen TV. A dining room with table and chairs. A fully equipped and fitted kitchen. Equipment: dishwasher, microwave, cooktop, refrigerator, washer-dryer, etc. One bedroom with a double bed and storage. Bathroom with walk-in shower and separate toilet. Individual electric heating."
   },
   {
     "slug": "2-pieces-republique-paris-11e",
@@ -5982,7 +5982,7 @@
       "Coffee maker",
       "Individual gas heating",
       "Equipped kitchen",
-      "Door code",
+      "Keypad entry",
       "Double glazing",
       "Walk-in shower",
       "Bed linen provided",
@@ -6005,7 +6005,7 @@
       "Separate toilet",
       "Wi-Fi"
     ],
-    "description_en": "1-bedroom apartment with a surface of approximately 58 sqm, très état\nOn the 5th floor with elevator access courtyard side of a\nclassic building. a Living room with sofa d'angle 4\nplaces, a coffee table and a flat-screen TV.\nBar dinatoire. a kitchen toute equipped and\nfitted\nEquipment: dishwasher, microwave oven, cooktop,\nrefrigerator, Nespresso coffee machine\nMachine a laver.\na Bedroom with a queen-size bed and of the rangement.\nBathroom with walk-in shower. separate toilet.\nChauffage and eau chaude individuel GAZ."
+    "description_en": "1-bedroom apartment with a surface area of approximately 58 sqm, in excellent condition. On the 5th floor with elevator on the courtyard side of a classic building. A living room with a 4-seater corner sofa, a coffee table and a flat-screen TV. A dining bar. A fully equipped and fitted kitchen. Equipment: dishwasher, microwave oven, cooktop, refrigerator, Nespresso machine, washing machine. One bedroom with a queen-size bed and storage. Bathroom with walk-in shower. Separate toilet. Individual gas heating and hot water."
   },
   {
     "slug": "3-pieces-ecole-militaire-paris-7e",
@@ -6098,7 +6098,7 @@
     "features_en": [
       "Vacuum cleaner",
       "Kettle",
-      "Coffee maker",
+      "Coffee machine",
       "Sofa bed",
       "Individual electric heating",
       "Air conditioning",
@@ -6123,7 +6123,7 @@
       "Toaster",
       "Wi-Fi"
     ],
-    "description_en": "2-bedroom apartment with a surface of approximately 53 sqm, bon état.\nOn the 2nd floor and dernière étage no elevator of a\nclassic building.\nLiving room with sofa convertible 3 places, a table\nbasse and a flat-screen TV.\na open kitchen toute equipped.\nEquipment: dishwasher, microwave oven, cooktop,\nrefrigerator, coffee machine\na Bedroom with a queen-size bed and rangements.\na Deuxième Bedroom with double bed and\nrangement\nBathroom with shower, wc, lave-linge and sèche-\nlinge.\nAu calme with air conditioning\nChauffage and eau individuel électrique."
+    "description_en": "2-bedroom apartment with a total surface area of approximately 53 sqm, in good condition.\nOn the 2nd floor and top floor with no elevator of a classic building.\nLiving room with a sofa bed (3-seater), a coffee table and a flat-screen TV.\nAn open equipped kitchen.\nEquipment: dishwasher, microwave, cooktop, refrigerator, coffee machine.\nOne bedroom with a queen-size bed and storage.\nA second bedroom with a double bed and storage.\nBathroom with walk-in shower, separate toilet, washing machine and dryer.\nQuiet location with air conditioning.\nIndividual electric heating and hot water."
   },
   {
     "slug": "3-pieces-niel-paris-17e",
@@ -6239,7 +6239,7 @@
       "Dishwasher",
       "Household linen provided",
       "Queen size bed",
-      "Deux lit simple",
+      "Two single beds",
       "Nespresso machine",
       "Microwave",
       "Parquet flooring",
@@ -6252,6 +6252,6 @@
       "Separate toilet",
       "Wi-Fi"
     ],
-    "description_en": "2-bedroom apartment with a surface of approximately 66 sqm, renovated\nOn the 1st floor with elevator access of a immeuble récent\na Living room with sofa, a coffee table and a flat-screen TV and\na dining area\nA fully fitted and equipped kitchen\nEquipment: dishwasher, microwave oven, cooktop,\nrefrigerator, lave-linge, sèche-linge…\na Bedroom parentale with a double bed and of the rangement.\n2eme Bedroom with 2 single bed (possibilité double).\nBathroom with bathtub and a separate toilet.\nClimatiseur réversible (chaud / froid)\nbalcony.\nChauffage individuel électrique."
+    "description_en": "2-bedroom apartment with a surface area of approximately 66 sqm, completely renovated.\nOn the 1st floor with elevator in a recent building.\nA living room with sofa, coffee table and flat-screen TV and a dining area.\nA fully equipped and fitted kitchen.\nEquipment: dishwasher, microwave, cooktop, refrigerator, washing machine, dryer, etc.\nA master bedroom with a double bed and storage.\n2nd bedroom with 2 single beds (possibility to convert to double).\nBathroom with bathtub and a separate toilet.\nReversible air conditioning (hot/cold).\nBalcony.\nIndividual electric heating."
   }
 ]
