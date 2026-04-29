@@ -8,8 +8,8 @@ import BailComparisonTable from "@/components/BailComparisonTable";
 import BailDureesTable from "@/components/BailDureesTable";
 
 export const metadata: Metadata = {
-  title: "Location meublée société & entreprise Paris — Bail société | Move in Paris",
-  description: "Location meublée société à Paris : appartement meublé au nom de votre société (SAS, SARL, SCI). Bail société, facture entreprise, gestion 100% déléguée.",
+  title: "Location meublée société Paris — Bail société court & long terme | Move in Paris",
+  description: "Location meublée société à Paris : bail au nom de votre entreprise (SAS, SARL, SCI). Court, moyen & long terme. Service 100 % gratuit propriétaire. +200 clients.",
   alternates: { canonical: "https://www.move-in-paris.com/location-meublee-entreprise" },
   openGraph: {
     title: "Location meublée société & entreprise à Paris | Move in Paris",

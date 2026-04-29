@@ -3,7 +3,7 @@ import QuartierLanding, { type QuartierConfig } from "@/components/QuartierLandi
 
 export const metadata: Metadata = {
   title: "Location meublée société Paris 16e — Trocadéro, Passy, Auteuil | Move in Paris",
-  description: "Location meublée société Paris 16e : appartements meublés à Trocadéro, Passy, Auteuil, Foch. Bail société, facture entreprise, gestion 100% déléguée pour familles d'expatriés.",
+  description: "Location meublée société Paris 16e (Trocadéro, Passy, Auteuil). Idéal familles d'expatriés. Bail société, propriétaire 100 % gratuit. +200 clients corporate.",
   alternates: { canonical: "https://www.move-in-paris.com/location-meublee-entreprise-paris-16e" },
   openGraph: {
     title: "Location meublée société Paris 16e | Move in Paris",

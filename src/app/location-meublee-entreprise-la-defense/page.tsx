@@ -3,7 +3,7 @@ import QuartierLanding, { type QuartierConfig } from "@/components/QuartierLandi
 
 export const metadata: Metadata = {
   title: "Location meublée société La Défense — Appartements meublés entreprise | Move in Paris",
-  description: "Location meublée société à La Défense : appartements meublés à Puteaux, Courbevoie, Neuilly et Paris ouest pour vos collaborateurs. Bail société, facture entreprise, gestion clé en main.",
+  description: "Location meublée société La Défense (Puteaux, Courbevoie, Neuilly). Idéal cadres CAC 40, audits Big Four. Bail société, propriétaire 100 % gratuit. +200 clients.",
   alternates: { canonical: "https://www.move-in-paris.com/location-meublee-entreprise-la-defense" },
   openGraph: {
     title: "Location meublée société La Défense | Move in Paris",

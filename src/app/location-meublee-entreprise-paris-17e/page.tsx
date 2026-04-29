@@ -3,7 +3,7 @@ import QuartierLanding, { type QuartierConfig } from "@/components/QuartierLandi
 
 export const metadata: Metadata = {
   title: "Location meublée société Paris 17e — Batignolles, Étoile, Ternes | Move in Paris",
-  description: "Location meublée société Paris 17e : appartements meublés à Batignolles, Étoile, Ternes, Monceau. Proche La Défense (RER A). Bail société, facture entreprise.",
+  description: "Location meublée société Paris 17e (Batignolles, Étoile, Ternes). Proche La Défense (RER A 12 min). Bail société, propriétaire 100 % gratuit. +200 clients.",
   alternates: { canonical: "https://www.move-in-paris.com/location-meublee-entreprise-paris-17e" },
   openGraph: {
     title: "Location meublée société Paris 17e | Move in Paris",

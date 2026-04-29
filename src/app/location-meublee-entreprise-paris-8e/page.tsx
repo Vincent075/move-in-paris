@@ -3,7 +3,7 @@ import QuartierLanding, { type QuartierConfig } from "@/components/QuartierLandi
 
 export const metadata: Metadata = {
   title: "Location meublée société Paris 8e — Champs-Élysées, Madeleine | Move in Paris",
-  description: "Location meublée société Paris 8e : appartements meublés près des Champs-Élysées, Madeleine, Saint-Lazare. Bail société, facture entreprise, gestion clé en main.",
+  description: "Location meublée société Paris 8e (Champs-Élysées, Madeleine). Bail société court, moyen ou long terme. Propriétaire 100 % gratuit. +200 clients corporate.",
   alternates: { canonical: "https://www.move-in-paris.com/location-meublee-entreprise-paris-8e" },
   openGraph: {
     title: "Location meublée société Paris 8e | Move in Paris",

@@ -3,7 +3,7 @@ import QuartierLanding, { type QuartierConfig } from "@/components/QuartierLandi
 
 export const metadata: Metadata = {
   title: "Location meublée société Neuilly-sur-Seine — Appartements meublés entreprise | Move in Paris",
-  description: "Location meublée société à Neuilly-sur-Seine : appartements meublés haut de gamme pour collaborateurs et familles d'expatriés. Bail société, facture entreprise, gestion 100% déléguée.",
+  description: "Location meublée société à Neuilly-sur-Seine. Idéal mutations familiales d'expatriés, écoles internationales. Bail société, propriétaire 100 % gratuit. +200 clients.",
   alternates: { canonical: "https://www.move-in-paris.com/location-meublee-entreprise-neuilly" },
   openGraph: {
     title: "Location meublée société Neuilly | Move in Paris",
