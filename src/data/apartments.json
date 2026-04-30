@@ -6371,5 +6371,89 @@
       "Roller shutters",
       "Wi-Fi"
     ]
+  },
+  {
+    "slug": "2-pieces-pont-de-neuilly-neuilly-sur-seine",
+    "title": "2 Pièces Pont de Neuilly ",
+    "address": "Avenue de Madrid, Neuilly-sur-Seine",
+    "district": "Neuilly-sur-Seine",
+    "surface": 44,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "3e étage",
+    "status": "À louer",
+    "description": "2 pièce d’une surface d’ environ 44 m2, en bon état\nAu 3eme étage sans ascenseur d’un immeuble ancien\nUn séjour avec canapé, une table basse et un Tv\nécran plat.\nEspace salle à manger avec table et chaises.\nUne cuisine toute équipée et aménagée\nÉquipement : lave-vaisselle, four, plaque ,\nréfrigérateur, four micro-onde…\nUne chambre avec un lit double et une grande\narmoire de rangement.\nSalle d’eau avec douche et WC.\nBuanderie sur le palier avec machine à laver séchant\nChauffage et eau chaude individuel gaz",
+    "features": [
+      "Aspirateur",
+      "Bouilloire",
+      "Cafetière",
+      "Canapé convertible",
+      "Chauffage individuel gaz",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Interphone",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Wifi"
+    ],
+    "photos": "2-pieces-pont-de-neuilly-neuilly-sur-seine",
+    "images": [
+      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-1.jpg",
+      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-2.jpg",
+      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-3.jpg",
+      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-4.jpg",
+      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-5.jpg",
+      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-6.jpg",
+      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-7.jpg",
+      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-8.jpg",
+      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-9.jpg",
+      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-10.jpg",
+      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-11.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Esplanade de La Défense",
+        "distance": "11 min",
+        "lines": [
+          "1"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Les Sablons",
+        "distance": "12 min",
+        "lines": [
+          "1"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Primeur x Éthique",
+        "distance": "2 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Parc de la Folie Saint-James",
+        "distance": "3 min"
+      }
+    ]
   }
 ]
