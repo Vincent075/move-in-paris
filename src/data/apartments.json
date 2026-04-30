@@ -6540,5 +6540,89 @@
         "distance": "6 min"
       }
     ]
+  },
+  {
+    "slug": "2-pieces-bassano-paris-16e",
+    "title": "2 Pièces Bassano",
+    "address": "Rue de Bassano, Paris 16e",
+    "district": "Paris 16e",
+    "surface": 65,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "1er étage",
+    "status": "À louer",
+    "description": "2 pièces de standing entièrement meublé et équipé\nd’une surface d’environ 65 m²\nAu 1er étage avec ascenseur d’une immeuble\nHaussmannien\nDécoration moderne et contemporaine, mobilier neuf\nEntrée avec grand dressing sur mesure\nSalon avec canapé convertible convertible et TV écran\nplat.\nAbonnement triple-play : Internet-Télévision-Téléphone\n(fibre optique)\nChambre avec lit queen Size (160*200 cm)\nSalle d’eau avec baignoire, WC séparés\nCuisine ouverte entièrement équipée\nApartment’s description:\n1 bedroom apartment, luxury, fully furnished and\nequipped with a surface of about 65 m²\n1st floor with elevator of a Haussmann building\nModern and contemporary decoration, brand new\nfurniture\nEntrance with large custom dressing\nLiving room with convertible 3 seater sofa and flat\nscreen TV Coffee table\nBedroom with queen size bed (160*200cm).\nOffice in the apartment.\nBathroom with bath and separate toilet\nOpen kitchen fully equipped\nApartment overlooking on a really quiet street\nHeating and collective hot water.\nAppartement donnant sur rue calme\nChauffage et eau chaude collectifs",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Baignoire",
+      "Bouilloire",
+      "Chauffage collectif",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Gardien",
+      "Interphone",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Sèche-linge",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Toilettes séparées",
+      "Wifi"
+    ],
+    "photos": "2-pieces-bassano-paris-16e",
+    "images": [
+      "/apartments/2-pieces-bassano-paris-16e/photo-1.jpg",
+      "/apartments/2-pieces-bassano-paris-16e/photo-2.jpg",
+      "/apartments/2-pieces-bassano-paris-16e/photo-3.jpg",
+      "/apartments/2-pieces-bassano-paris-16e/photo-4.jpg",
+      "/apartments/2-pieces-bassano-paris-16e/photo-5.jpg",
+      "/apartments/2-pieces-bassano-paris-16e/photo-6.jpg",
+      "/apartments/2-pieces-bassano-paris-16e/photo-7.jpg",
+      "/apartments/2-pieces-bassano-paris-16e/photo-8.jpg",
+      "/apartments/2-pieces-bassano-paris-16e/photo-9.jpg",
+      "/apartments/2-pieces-bassano-paris-16e/photo-10.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Kléber",
+        "distance": "5 min",
+        "lines": [
+          "6"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Iéna",
+        "distance": "6 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "G20",
+        "distance": "2 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Thomas Jefferson",
+        "distance": "2 min"
+      }
+    ]
   }
 ]
