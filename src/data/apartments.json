@@ -6415,17 +6415,17 @@
     ],
     "photos": "2-pieces-pont-de-neuilly-neuilly-sur-seine",
     "images": [
-      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-1.jpg",
-      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-2.jpg",
-      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-3.jpg",
-      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-4.jpg",
-      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-5.jpg",
-      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-6.jpg",
+      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-11.jpg",
       "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-7.jpg",
-      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-8.jpg",
+      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-6.jpg",
+      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-2.jpg",
+      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-5.jpg",
       "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-9.jpg",
       "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-10.jpg",
-      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-11.jpg"
+      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-1.jpg",
+      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-8.jpg",
+      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-4.jpg",
+      "/apartments/2-pieces-pont-de-neuilly-neuilly-sur-seine/photo-3.jpg"
     ],
     "nearby": [
       {
@@ -6454,6 +6454,7 @@
         "name": "Parc de la Folie Saint-James",
         "distance": "3 min"
       }
-    ]
+    ],
+    "hasElevator": false
   }
 ]
