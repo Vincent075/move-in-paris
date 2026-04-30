@@ -6456,5 +6456,89 @@
       }
     ],
     "hasElevator": false
+  },
+  {
+    "slug": "2-pieces-arc-de-triomphe-paris-17e",
+    "title": "2 Pièces Arc de Triomphe",
+    "address": "Rue Brey, Paris 17e",
+    "district": "Paris 17e",
+    "surface": 55,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "4e étage",
+    "status": "À louer",
+    "description": "2 pièce d’une surface d’environ 55 m2, en bon état\nAu 4eme étage sans ascenseur d’un immeuble ancien\nUn séjour avec canapé, un fauteuil, une table basse,\net un Tv écran plat.\nUne cuisine toute équipée et aménagée avec mange\ndebout\nÉquipement : machine à laver, four, plaque ,\nréfrigérateur, four micro-onde…\nUne chambre avec un lit double et du rangement\nSalle d’eau avec douche, un lave-linge et WC.\nChauffage et eau chaude individuel électrique.",
+    "features": [
+      "Aspirateur",
+      "Bouilloire",
+      "Cafetière",
+      "Chauffage électrique individuel",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Sèche-cheveux",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Wifi"
+    ],
+    "photos": "2-pieces-arc-de-triomphe-paris-17e",
+    "images": [
+      "/apartments/2-pieces-arc-de-triomphe-paris-17e/photo-1.jpg",
+      "/apartments/2-pieces-arc-de-triomphe-paris-17e/photo-2.jpg",
+      "/apartments/2-pieces-arc-de-triomphe-paris-17e/photo-3.jpg",
+      "/apartments/2-pieces-arc-de-triomphe-paris-17e/photo-4.jpg",
+      "/apartments/2-pieces-arc-de-triomphe-paris-17e/photo-5.jpg",
+      "/apartments/2-pieces-arc-de-triomphe-paris-17e/photo-6.jpg",
+      "/apartments/2-pieces-arc-de-triomphe-paris-17e/photo-7.jpg",
+      "/apartments/2-pieces-arc-de-triomphe-paris-17e/photo-8.jpg",
+      "/apartments/2-pieces-arc-de-triomphe-paris-17e/photo-9.jpg",
+      "/apartments/2-pieces-arc-de-triomphe-paris-17e/photo-10.jpg",
+      "/apartments/2-pieces-arc-de-triomphe-paris-17e/photo-11.jpg",
+      "/apartments/2-pieces-arc-de-triomphe-paris-17e/photo-12.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Charles de Gaulle — Étoile",
+        "distance": "2 min",
+        "lines": [
+          "1",
+          "2",
+          "6"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Ternes",
+        "distance": "4 min",
+        "lines": [
+          "2"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Monoprix",
+        "distance": "3 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Jardin de l’Hôtel Salomon de Rothschild",
+        "distance": "6 min"
+      }
+    ]
   }
 ]
