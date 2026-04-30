@@ -6624,5 +6624,94 @@
         "distance": "2 min"
       }
     ]
+  },
+  {
+    "slug": "3-pieces-villiers-paris-17e",
+    "title": "3 Pièces Villiers",
+    "address": "Rue de la Terrasse, Paris 17e",
+    "district": "Paris 17e",
+    "surface": 120,
+    "rooms": 3,
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "floor": "1er étage",
+    "status": "À louer",
+    "description": "Rue de la Terrasse.\nA deux pas du Parc Monceau, dans un bel immeuble Haussmannien avec un gardien, un appartement loué meublé comprenant une entrée, un double séjour / salle à manger, une cuisine ouverte tout équipée, une grande chambre parentale avec dressing et salle de bain avec baignoire et douche à l'itelienne, une 2ème chambre avec salle de douche a proximité immédiate avec toilettes, un espace bureau avec canapé convertible. \nChauffage et eau chaude au gaz",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Baignoire",
+      "Bouilloire",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Gardien",
+      "Interphone",
+      "Lave-linge",
+      "Chauffage électrique individuel",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Toilettes séparées",
+      "Wifi"
+    ],
+    "photos": "3-pieces-villiers-paris-17e",
+    "images": [
+      "/apartments/3-pieces-villiers-paris-17e/photo-1.jpg",
+      "/apartments/3-pieces-villiers-paris-17e/photo-2.jpg",
+      "/apartments/3-pieces-villiers-paris-17e/photo-3.jpg",
+      "/apartments/3-pieces-villiers-paris-17e/photo-4.jpg",
+      "/apartments/3-pieces-villiers-paris-17e/photo-5.jpg",
+      "/apartments/3-pieces-villiers-paris-17e/photo-6.jpg",
+      "/apartments/3-pieces-villiers-paris-17e/photo-7.jpg",
+      "/apartments/3-pieces-villiers-paris-17e/photo-8.jpg",
+      "/apartments/3-pieces-villiers-paris-17e/photo-9.jpg",
+      "/apartments/3-pieces-villiers-paris-17e/photo-10.jpg",
+      "/apartments/3-pieces-villiers-paris-17e/photo-11.jpg",
+      "/apartments/3-pieces-villiers-paris-17e/photo-12.jpg",
+      "/apartments/3-pieces-villiers-paris-17e/photo-13.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Villiers",
+        "distance": "2 min",
+        "lines": [
+          "2",
+          "3"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Monceau",
+        "distance": "4 min",
+        "lines": [
+          "2"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Monoprix",
+        "distance": "3 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Jardin de la Mairie du 8e",
+        "distance": "7 min"
+      }
+    ]
   }
 ]
