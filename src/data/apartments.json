@@ -1762,7 +1762,7 @@
     "bathrooms": 1,
     "floor": "2e étage",
     "status": "À louer",
-    "description": "2 pièces d’une surface d’environ 32 m2.\nAu 6ème étage avec ascenseur d’un immeuble\nmoderne. Acces securisé par digicode.\nSéjour avec canapé 2 places, table basse et TV écran\nplasma. Internet haut débit illimité\nChambre avec lit double et rangements dans l’entrée.\nCuisine toute équipée et aménagée ouverte sur le\nséjour.Équipement : lave-linge, four, four micro-onde,\nplaque vitrocéramique, réfrigérateur/congélateur,\nbouilloire, toaster...\nSalle d’eau avec douche et WC\nChauffage et eau chaude collectif.",
+    "description": "2 pièces d’une surface d’environ 32 m2.\nAu 2ème étage avec ascenseur d’un immeuble\nmoderne. Acces securisé par digicode.\nSéjour avec canapé 2 places, table basse et TV écran\nplasma. Internet haut débit illimité\nChambre avec lit double et rangements dans l’entrée.\nCuisine toute équipée et aménagée ouverte sur le\nséjour.Équipement : lave-linge, four, four micro-onde,\nplaque vitrocéramique, réfrigérateur/congélateur,\nbouilloire, toaster...\nSalle d’eau avec douche et WC\nChauffage et eau chaude collectif.",
     "features": [
       "Ascenseur",
       "Aspirateur",
@@ -1865,7 +1865,7 @@
       "Ironing board",
       "Towels provided"
     ],
-    "description_en": "1-bedroom apartment with a surface area of approximately 32 sqm.\nOn the 6th floor with elevator in a modern building. Secured access via keypad entry.\nLiving room with 2-seat sofa, coffee table and plasma flat-screen TV. Unlimited high-speed internet.\nBedroom with double bed and storage in the entrance.\nFully equipped kitchen open to the living room. Equipment: washing machine, oven, microwave, ceramic cooktop, refrigerator/freezer, kettle, toaster...\nBathroom with shower and separate toilet.\nCentral heating and hot water."
+    "description_en": "1-bedroom apartment with a surface area of approximately 32 sqm.\nOn the 2nd floor with elevator in a modern building. Secured access via keypad entry.\nLiving room with 2-seat sofa, coffee table and plasma flat-screen TV. Unlimited high-speed internet.\nBedroom with double bed and storage in the entrance.\nFully equipped kitchen open to the living room. Equipment: washing machine, oven, microwave, ceramic cooktop, refrigerator/freezer, kettle, toaster...\nBathroom with shower and separate toilet.\nCentral heating and hot water."
   },
   {
     "slug": "2-pieces-montmartre-paris-18e",
