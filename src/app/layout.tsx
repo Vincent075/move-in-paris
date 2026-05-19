@@ -80,6 +80,12 @@ const organizationLd = {
     ratingCount: "61",
     reviewCount: "61",
   },
+  sameAs: [
+    "https://www.linkedin.com/company/moveinparis",
+    "https://www.instagram.com/moveinparis",
+    "https://www.facebook.com/people/Move-in-Paris/100063485832577/",
+    "https://www.google.com/search?kgmid=/g/11fb2r219_",
+  ],
 };
 
 export default async function RootLayout({

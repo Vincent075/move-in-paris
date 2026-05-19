@@ -58,8 +58,10 @@ const jsonLd = {
       areaServed: { "@type": "City", name: "Paris" },
       priceRange: "€€€",
       sameAs: [
-        "https://www.linkedin.com/company/move-in-paris",
+        "https://www.linkedin.com/company/moveinparis",
         "https://www.instagram.com/moveinparis",
+        "https://www.facebook.com/people/Move-in-Paris/100063485832577/",
+        "https://www.google.com/search?kgmid=/g/11fb2r219_",
       ],
     },
     {
