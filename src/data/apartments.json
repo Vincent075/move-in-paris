@@ -6712,5 +6712,87 @@
         "distance": "7 min"
       }
     ]
+  },
+  {
+    "slug": "2-pieces-dupleix-paris-15e",
+    "title": "2 Pièces Dupleix",
+    "address": "Rue George Bernard Shaw, Paris 15e",
+    "district": "Paris 15e",
+    "surface": 50,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "1er étage",
+    "status": "À louer",
+    "description": "2 pièces d'une surface d'environ 50m2 au 1er étage\navec ascenseur d'un immeuble bien entretenu et\nsécurisé avec gardien.\nAppartement meublé comprenant une entrée avec\nplacard\nun séjour ouvert avec coin cuisine aménagé et\néquipé.\nÉquipement : four, réfrigérateur, plaque de cuisson,\nmicro-onde, machine à laver,\nUne chambre avec lit double coffre, un bureau et des\nplacards.\nUne salle de douche et un WC.\nChauffage et chaude individuels électriques.",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Bouilloire",
+      "Cafetière",
+      "Chauffage électrique individuel",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Draps fournis",
+      "Fer à repasser",
+      "Four",
+      "Gardien",
+      "Lave-linge",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Toilettes séparées",
+      "Wifi"
+    ],
+    "photos": "2-pieces-dupleix-paris-15e",
+    "images": [
+      "/apartments/2-pieces-dupleix-paris-15e/photo-1.jpg",
+      "/apartments/2-pieces-dupleix-paris-15e/photo-2.jpg",
+      "/apartments/2-pieces-dupleix-paris-15e/photo-3.jpg",
+      "/apartments/2-pieces-dupleix-paris-15e/photo-4.jpg",
+      "/apartments/2-pieces-dupleix-paris-15e/photo-5.jpg",
+      "/apartments/2-pieces-dupleix-paris-15e/photo-6.jpg",
+      "/apartments/2-pieces-dupleix-paris-15e/photo-7.jpg",
+      "/apartments/2-pieces-dupleix-paris-15e/photo-8.jpg",
+      "/apartments/2-pieces-dupleix-paris-15e/photo-9.jpg",
+      "/apartments/2-pieces-dupleix-paris-15e/photo-10.jpg",
+      "/apartments/2-pieces-dupleix-paris-15e/photo-11.jpg",
+      "/apartments/2-pieces-dupleix-paris-15e/photo-12.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Dupleix",
+        "distance": "3 min",
+        "lines": [
+          "6"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Bir-Hakeim",
+        "distance": "4 min",
+        "lines": [
+          "6"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "G20",
+        "distance": "1 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Nicole de Hauteclocque",
+        "distance": "1 min"
+      }
+    ]
   }
 ]
