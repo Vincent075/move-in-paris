@@ -58,11 +58,20 @@ export default function PartnerLogos() {
       `}</style>
 
       <div className="relative logos-container">
-        <div className="flex gap-8 md:gap-12 items-center logos-track px-4">
+        {/*
+         * Standard partner-carousel pattern :
+         * - every logo gets the SAME visual height (mobile 32px / desktop 40px)
+         * - width is auto so each wordmark keeps its native aspect ratio
+         * - max-width caps ultra-wide marks (e.g. "Pernod Ricard") from
+         *   dominating the strip
+         * - a fixed gap (mobile 56px / desktop 80px) gives equal breathing
+         *   room between every logo
+         */}
+        <div className="flex gap-14 md:gap-20 items-center logos-track px-6">
           {doubled.map((p, i) => (
             <div
               key={`${p.name}-${i}`}
-              className="flex-shrink-0 logos-item flex items-center justify-center h-20 w-[160px] md:w-[200px] opacity-60 hover:opacity-100 transition-opacity duration-500"
+              className="flex-shrink-0 flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity duration-500"
               title={p.name}
             >
               <Image
@@ -70,7 +79,7 @@ export default function PartnerLogos() {
                 alt={p.name}
                 width={200}
                 height={80}
-                className="max-h-14 md:max-h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-500"
+                className="h-8 md:h-10 w-auto max-w-[140px] md:max-w-[160px] object-contain grayscale hover:grayscale-0 transition-all duration-500"
               />
             </div>
           ))}
