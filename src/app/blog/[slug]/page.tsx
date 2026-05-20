@@ -20,9 +20,13 @@ type Article = {
   tags: string[];
   metaDescription: string;
   content: Block[];
+  // AI-generated drafts must not be reachable from the public URL.
+  status?: "draft" | "published";
 };
 
-const articles = articlesData as Article[];
+const articles = (articlesData as Article[]).filter(
+  (a) => a.status !== "draft",
+);
 
 export async function generateStaticParams() {
   return articles.map((a) => ({ slug: a.slug }));

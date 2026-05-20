@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import AddApartment, { FLOOR_OPTIONS, ROOM_OPTIONS, BEDROOM_OPTIONS, BATHROOM_OPTIONS } from "./AddApartment";
+import BlogTab from "./BlogTab";
 
 const AMENITIES: { fr: string; en: string }[] = [
   { fr: "Wifi", en: "Wifi" },
@@ -89,7 +90,7 @@ export default function AdminDashboard() {
   const [authenticated, setAuthenticated] = useState(false);
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState("");
-  const [activeTab, setActiveTab] = useState<"list" | "add">("list");
+  const [activeTab, setActiveTab] = useState<"list" | "add" | "blog">("list");
   const [apartments, setApartments] = useState<Apartment[]>([]);
   const [loading, setLoading] = useState(false);
   const [editingSlug, setEditingSlug] = useState<string | null>(null);
@@ -132,8 +133,15 @@ export default function AdminDashboard() {
     try {
       const res = await fetch(`/api/apartment-update?password=${encodeURIComponent(password)}`);
       const data = await res.json();
-      if (data.apartments) setApartments(data.apartments);
-    } catch { /* ignore */ }
+      if (data.apartments) {
+        setApartments(data.apartments);
+      } else if (data.error) {
+        setMessage({ type: "error", text: `Impossible de charger les appartements: ${data.error}` });
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setMessage({ type: "error", text: `Erreur de connexion: ${msg}` });
+    }
     setLoading(false);
   }
 
@@ -582,6 +590,10 @@ export default function AdminDashboard() {
             className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${activeTab === "add" ? "border-[#B88B58] text-[#1A1A1A]" : "border-transparent text-[#6B6B6B] hover:text-[#1A1A1A]"}`}>
             + Ajouter un appartement
           </button>
+          <button onClick={() => setActiveTab("blog")}
+            className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${activeTab === "blog" ? "border-[#B88B58] text-[#1A1A1A]" : "border-transparent text-[#6B6B6B] hover:text-[#1A1A1A]"}`}>
+            Blog
+          </button>
         </div>
       </div>
 
@@ -999,8 +1011,10 @@ export default function AdminDashboard() {
               </div>
             )}
           </>
-        ) : (
+        ) : activeTab === "add" ? (
           <AddApartment password={password} onSuccess={() => { setActiveTab("list"); fetchApartments(); }} />
+        ) : (
+          <BlogTab password={password} />
         )}
       </div>
     </div>
