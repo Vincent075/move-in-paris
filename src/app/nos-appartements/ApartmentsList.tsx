@@ -126,7 +126,9 @@ export default function ApartmentsList() {
   const [elevator, setElevator] = useState("no");
   const [metroLine, setMetroLine] = useState("all");
 
-  const filtered = apartmentsData.filter((apt) => {
+  // Newest first: the admin appends new apartments to the end of apartments.json,
+  // so reversing the array surfaces the most recently added entries at the top.
+  const filtered = [...apartmentsData].reverse().filter((apt) => {
     if (!matchesLocation(selectedLocation, ALL, apt.district)) return false;
     if (selectedType !== "all") {
       if (selectedType === "studio" && apt.rooms !== 1) return false;

@@ -16,8 +16,9 @@ type ApartmentLite = {
   images: string[];
 };
 
-// Show up to 8 apartments; repeat at least twice so the carousel track is wide enough
-const source = (apartmentsData as ApartmentLite[]).slice(0, 8);
+// Show up to 8 most recent apartments. Admin appends new entries to the end of
+// apartments.json, so we reverse before slicing to surface the latest first.
+const source = (apartmentsData as ApartmentLite[]).slice().reverse().slice(0, 8);
 const latestApartments = source.length > 0 ? source : [];
 const doubled = latestApartments.length >= 4
   ? [...latestApartments, ...latestApartments]
