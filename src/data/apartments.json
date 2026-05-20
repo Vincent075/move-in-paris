@@ -6948,13 +6948,13 @@
     "title": "3 Pièces Ternes",
     "address": "Avenue de Wagram, Paris 17e",
     "district": "Paris 17e",
-    "surface": 100,
+    "surface": 95,
     "rooms": 3,
     "bedrooms": 2,
     "bathrooms": 2,
     "floor": "8e étage",
     "status": "À louer",
-    "description": "Exceptionnel appartement de 92 m² avec toit-terrasse et vues panoramiques sur Paris — Ternes / Marché Poncelet.\n\nAu cœur du très recherché quartier des Ternes, à deux pas du célèbre marché Poncelet et de ses commerces de bouche, nous vous proposons un sublime appartement d'environ 92 m², entièrement rénové par architecte, situé au dernier étage d'un bel immeuble avec ascenseur et concierge.\n\nCe bien d'exception bénéficie d'un vaste toit-terrasse aménagé ainsi que de plusieurs terrasses privatives, offrant des vues imprenables sur tout Paris, la Tour Eiffel et l'Arc de Triomphe.\n\nL'appartement se compose de :\n\n– Un salon élégant et lumineux\n– Une salle à manger conviviale\n– Une cuisine ouvrant sur les terrasses, bénéficiant de vues dégagées\n– Une chambre parentale avec terrasse privative, dressing, salle de douche avec sauna et toilettes\n– Une chambre d'invités avec salle de douche et toilettes\n\nPrestations :\n\nImmeuble de standing avec ascenseur et concierge — Rénovation architecte — Toit-terrasse panoramique et terrasses privatives — Appartement entièrement climatisé — Chauffage au sol dans les salles de bains — Deux caves en complément.\n\nIdéal cadre dirigeant en mobilité professionnelle ou famille en relocation, à la recherche d'une adresse parisienne d'exception.\n",
+    "description": "Exceptionnel appartement de 95 m² avec toit-terrasse et vues panoramiques sur Paris — Ternes / Marché Poncelet.\n\nAu cœur du très recherché quartier des Ternes, à deux pas du célèbre marché Poncelet et de ses commerces de bouche, nous vous proposons un sublime appartement d'environ 92 m², entièrement rénové par architecte, situé au dernier étage d'un bel immeuble avec ascenseur et concierge.\n\nCe bien d'exception bénéficie d'un vaste toit-terrasse aménagé ainsi que de plusieurs terrasses privatives, offrant des vues imprenables sur tout Paris, la Tour Eiffel et l'Arc de Triomphe.\n\nL'appartement se compose de :\n\n– Un salon élégant et lumineux\n– Une salle à manger conviviale\n– Une cuisine ouvrant sur les terrasses, bénéficiant de vues dégagées\n– Une chambre parentale avec terrasse privative, dressing, salle de douche avec sauna et toilettes\n– Une chambre d'invités avec salle de douche et toilettes\n\nPrestations :\n\nImmeuble de standing avec ascenseur et concierge — Rénovation architecte — Toit-terrasse panoramique et terrasses privatives — Appartement entièrement climatisé — Chauffage au sol dans les salles de bains — Deux caves en complément.\n\nIdéal cadre dirigeant en mobilité professionnelle ou famille en relocation, à la recherche d'une adresse parisienne d'exception.\n",
     "features": [
       "Ascenseur",
       "Aspirateur",
@@ -7043,7 +7043,7 @@
       }
     ],
     "title_en": "2-Bedroom Apartment Ternes",
-    "description_en": "Exceptional 2-bedroom apartment of approximately 92 sqm with rooftop terrace and panoramic views over Paris — Ternes / Marché Poncelet.\n\nIn the heart of the highly sought-after Ternes neighborhood, just steps away from the famous Marché Poncelet and its gourmet shops, we present a sublime apartment of approximately 92 sqm, entirely renovated by an architect, located on the top floor of a beautiful building with elevator and concierge.\n\nThis exceptional property benefits from a vast landscaped rooftop terrace as well as several private terraces, offering breathtaking views over all of Paris, the Eiffel Tower, and the Arc de Triomphe.\n\nThe apartment comprises:\n\n– An elegant and bright living room\n– A welcoming dining room\n– A kitchen opening onto the terraces, offering unobstructed views\n– A master bedroom with private terrace, dressing room, shower room with sauna, and separate toilet\n– A guest bedroom with shower room and toilet\n\nFeatures:\n\nHigh-end building with elevator and concierge — Architect renovation — Panoramic rooftop terrace and private terraces — Apartment fully air-conditioned — Underfloor heating in the bathrooms — Two cellars included.\n\nIdeal for an executive in professional mobility or a family relocating, seeking an exceptional Parisian address.",
+    "description_en": "Exceptional 2-bedroom apartment of approximately 95 sqm with rooftop terrace and panoramic views over Paris — Ternes / Marché Poncelet.\n\nIn the heart of the highly sought-after Ternes neighborhood, just steps away from the famous Marché Poncelet and its gourmet shops, we present a sublime apartment of approximately 92 sqm, entirely renovated by an architect, located on the top floor of a beautiful building with elevator and concierge.\n\nThis exceptional property benefits from a vast landscaped rooftop terrace as well as several private terraces, offering breathtaking views over all of Paris, the Eiffel Tower and the Arc de Triomphe.\n\nThe apartment comprises:\n\n– An elegant and luminous living room\n– A welcoming dining room\n– A kitchen opening onto the terraces, enjoying unobstructed views\n– A master bedroom with private terrace, dressing room, shower room with sauna and separate toilet\n– A guest bedroom with shower room and separate toilet\n\nFeatures:\n\nPremium building with elevator and concierge — Architect renovation — Panoramic rooftop terrace and private terraces — Apartment fully air-conditioned — Underfloor heating in bathrooms — Two cellars included.\n\nIdeal for senior executives in professional mobility or families relocating, seeking an exceptional Parisian address.",
     "floor_en": "8th floor",
     "features_en": [
       "Elevator",
@@ -7052,7 +7052,7 @@
       "Kettle",
       "Coffee maker",
       "Balcony",
-      "Collective heating",
+      "Central heating",
       "Air conditioning",
       "Freezer",
       "Equipped kitchen",
@@ -7076,6 +7076,7 @@
       "Terrace",
       "Separate toilet",
       "Wifi"
-    ]
+    ],
+    "hasElevator": true
   }
 ]
