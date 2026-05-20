@@ -212,8 +212,12 @@ export async function generateArticle(
 
   let response;
   try {
+    // Haiku 4.5 produces 2000-word structured content in ~8-15s.
+    // Sonnet would be higher quality but routinely hits Vercel's 10s Hobby
+    // function timeout and returns the dreaded HTML "An error occurred"
+    // page that breaks res.json() on the client.
     response = await client.messages.create({
-      model: "claude-sonnet-4-6",
+      model: "claude-haiku-4-5",
       max_tokens: 8000,
       system: SYSTEM_PROMPT,
       messages: [{ role: "user", content: userPrompt(idea, apartment) }],
