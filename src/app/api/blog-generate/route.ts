@@ -30,7 +30,10 @@ import {
  * Max duration : 60s (Claude generation is the bottleneck, typically 20-40s).
  */
 
-export const maxDuration = 60;
+// Pro plan caps maxDuration at 300s. Haiku + GitHub I/O fit comfortably
+// in ~15-30s, but Anthropic and GitHub APIs occasionally lag and we'd
+// rather wait than serve FUNCTION_INVOCATION_TIMEOUT.
+export const maxDuration = 300;
 
 async function run(ideaId?: string) {
   // 1. Read everything in parallel — GitHub API is the slow path here.

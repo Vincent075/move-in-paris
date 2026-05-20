@@ -152,7 +152,7 @@ INTERDICTIONS strictes :
 
 function userPrompt(idea: Idea, apt: Apartment): string {
   const district = apt.district || "Paris";
-  return `Rédige un article de blog complet de 2000 à 2800 mots sur le sujet suivant.
+  return `Rédige un article de blog complet de 1200 à 1500 mots sur le sujet suivant.
 
 SUJET : ${idea.topic}
 
@@ -212,16 +212,19 @@ export async function generateArticle(
 
   let response;
   try {
-    // Haiku 4.5 produces 2000-word structured content in ~8-15s.
-    // Sonnet would be higher quality but routinely hits Vercel's 10s Hobby
-    // function timeout and returns the dreaded HTML "An error occurred"
-    // page that breaks res.json() on the client.
-    response = await client.messages.create({
-      model: "claude-haiku-4-5",
-      max_tokens: 8000,
-      system: SYSTEM_PROMPT,
-      messages: [{ role: "user", content: userPrompt(idea, apartment) }],
-    });
+    // Haiku 4.5 produces 1200-1500 word structured content in ~5-12s,
+    // which comfortably fits inside Vercel Pro's 300s max with room for
+    // GitHub I/O. An explicit 280s abort signal ensures we surface a
+    // friendly error before Vercel returns FUNCTION_INVOCATION_TIMEOUT.
+    response = await client.messages.create(
+      {
+        model: "claude-haiku-4-5",
+        max_tokens: 6000,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: "user", content: userPrompt(idea, apartment) }],
+      },
+      { signal: AbortSignal.timeout(280_000) },
+    );
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
     return { kind: "api_error", message };

@@ -28,7 +28,7 @@ import {
  * around a news beat or a Vincent inspiration.
  */
 
-export const maxDuration = 60;
+export const maxDuration = 300;
 
 async function expandSeed(seed: string): Promise<Idea | null> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
