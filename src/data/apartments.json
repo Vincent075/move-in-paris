@@ -7078,5 +7078,123 @@
       "Wifi"
     ],
     "hasElevator": true
+  },
+  {
+    "slug": "4-pieces-bassano-paris-16e",
+    "title": "4 Pièces Bassano",
+    "address": "Rue de Bassano, Paris 16e",
+    "district": "Paris 16e",
+    "surface": 98,
+    "rooms": 4,
+    "bedrooms": 3,
+    "bathrooms": 1,
+    "floor": "4e étage",
+    "status": "À louer",
+    "description": "4 pièces d'environ 98 m² en bon état général.\nAu 4ème étage sans ascenseur d'un immeuble ancien avec gardien.\nUn séjour comprenant un canapé 3 places, 2 fauteuils, une table basse et une TV écran plat.\nTable dinatoire avec ses chaises.\nUne cuisine indépendant toute équipée et aménagée.\nÉquipement: Réfrigérateur, four, plaque de cuisson, four micro-onde, lave-linge séchant.\n3 chambres, 2 grande chambre avec lit double et rangement et un chambre avec un lit simple.\nSalle de bain avec baignoire et douche, WC séparé.\nChauffage Collectif.",
+    "features": [
+      "Baignoire",
+      "Chauffage collectif",
+      "Congélateur",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Lit simple",
+      "Micro-ondes",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Parquet point de Hongrie",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Toilettes séparées",
+      "Wifi"
+    ],
+    "photos": "4-pieces-bassano-paris-16e",
+    "images": [
+      "/apartments/4-pieces-bassano-paris-16e/photo-1.jpg",
+      "/apartments/4-pieces-bassano-paris-16e/photo-2.jpg",
+      "/apartments/4-pieces-bassano-paris-16e/photo-3.jpg",
+      "/apartments/4-pieces-bassano-paris-16e/photo-4.jpg",
+      "/apartments/4-pieces-bassano-paris-16e/photo-5.jpg",
+      "/apartments/4-pieces-bassano-paris-16e/photo-6.jpg",
+      "/apartments/4-pieces-bassano-paris-16e/photo-7.jpg",
+      "/apartments/4-pieces-bassano-paris-16e/photo-8.jpg",
+      "/apartments/4-pieces-bassano-paris-16e/photo-9.jpg",
+      "/apartments/4-pieces-bassano-paris-16e/photo-10.jpg",
+      "/apartments/4-pieces-bassano-paris-16e/photo-11.jpg",
+      "/apartments/4-pieces-bassano-paris-16e/photo-12.jpg",
+      "/apartments/4-pieces-bassano-paris-16e/photo-13.jpg",
+      "/apartments/4-pieces-bassano-paris-16e/photo-14.jpg",
+      "/apartments/4-pieces-bassano-paris-16e/photo-15.jpg",
+      "/apartments/4-pieces-bassano-paris-16e/photo-16.jpg",
+      "/apartments/4-pieces-bassano-paris-16e/photo-17.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Kléber",
+        "distance": "5 min",
+        "lines": [
+          "6"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Iéna",
+        "distance": "6 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "G20",
+        "distance": "2 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Thomas Jefferson",
+        "distance": "3 min"
+      }
+    ],
+    "title_en": "3-Bedroom Apartment Bassano",
+    "description_en": "3-bedroom apartment of approximately 98 sqm in good overall condition.\nOn the 4th floor without elevator in an old building with concierge.\nA living room furnished with a 3-seater sofa, 2 armchairs, a coffee table and a flat-screen TV.\nDining table with chairs.\nAn independent fully equipped and fitted kitchen.\nEquipment: Refrigerator, oven, cooktop, microwave, washing machine with dryer.\n3 bedrooms: 2 large bedrooms with double beds and storage, and 1 bedroom with a single bed.\nBathroom with bathtub and shower, separate WC.\nCollective heating.",
+    "floor_en": "4th floor",
+    "features_en": [
+      "Bathtub",
+      "Collective heating",
+      "Freezer",
+      "Equipped kitchen",
+      "Double glazing",
+      "Walk-in shower",
+      "Sheets provided",
+      "Iron",
+      "Fiber optic internet",
+      "Oven",
+      "Washing machine",
+      "Dishwasher",
+      "Household linens provided",
+      "Queen size bed",
+      "Single bed",
+      "Microwave",
+      "Cooktop",
+      "Refrigerator",
+      "Herringbone parquet",
+      "Towels provided",
+      "Smart TV",
+      "Ironing board",
+      "Toaster",
+      "Separate toilets",
+      "Wifi"
+    ]
   }
 ]
