@@ -7316,7 +7316,7 @@
     "bathrooms": 1,
     "floor": "4e étage",
     "status": "À louer",
-    "description": "2 pièces d’une surface d’environ 60 m2, entièrement\nrefait à neuf en Mars 2019.\nAu 4ème étage sur cour d’un immeuble récent\nUn séjour avec grand canapé d’angle 5 places , table\nbasse, Tv ecran plat et coin salle à manger,\nGrande Chambre avec lit double et rangements.\nSalle d’eau avec douche, double vasque et WC.\nMachine à laver séchante.\nCuisine ouverte toute équipée et aménagée.\nÉquipement : four traditionnel, micro-onde, lave-\nvaisselle, plaque , réfrigérateur, machine à café\nNespresso\nChauffage et eau chaude individuels collectifs.\nBalcon.",
+    "description": "2 pièces d’une surface d’environ 60 m2, entièrement\nrefait à neuf en Mars 2019.\nAu 4ème étage sur cour d’un immeuble récent\nUn séjour avec grand canapé d’angle 5 places , table\nbasse, Tv ecran plat et coin salle à manger,\nGrande Chambre avec lit double et rangements.\nSalle d’eau avec douche, double vasque et WC.\nMachine à laver séchante.\nCuisine ouverte toute équipée et aménagée.\nÉquipement : four traditionnel, micro-onde, lave-\nvaisselle, plaque , réfrigérateur, machine à café\nNespresso\nChauffage et eau chaude collectifs.\nBalcon.",
     "features": [
       "Ascenseur",
       "Aspirateur",
@@ -7388,7 +7388,7 @@
       }
     ],
     "title_en": "1-Bedroom Apartment Anatole France",
-    "description_en": "1-bedroom high-end apartment of approximately 60 sqm, completely renovated in March 2019.\nLocated on the 4th floor overlooking a courtyard in a modern building.\nA living room with a large 5-seater corner sofa, coffee table, flat-screen TV, and dining area.\nLarge bedroom with double bed and storage.\nBathroom with walk-in shower, double sink, and toilet.\nWashing machine with dryer.\nOpen fully equipped and fitted kitchen.\nFeatures: traditional oven, microwave, dishwasher, cooktop, refrigerator, and Nespresso machine.\nIndividual and collective heating and hot water.\nBalcony.",
+    "description_en": "1-bedroom high-end apartment of approximately 60 sqm, fully renovated in March 2019.\nLocated on the 4th floor overlooking a courtyard in a modern building.\nFeatures a living room with a large 5-seat corner sofa, coffee table, flat-screen TV and dining area, plus a spacious bedroom with double bed and storage.\nBathroom with walk-in shower, double sink and toilet.\nWashing machine with dryer function.\nFully equipped and fitted open-plan kitchen.\nEquipment includes: traditional oven, microwave, dishwasher, cooktop, refrigerator and Nespresso machine.\nCentralized heating and hot water.\nBalcony.",
     "floor_en": "4th floor",
     "features_en": [
       "Elevator",
@@ -7400,15 +7400,15 @@
       "Equipped kitchen",
       "Double glazing",
       "Walk-in shower",
-      "Sheets provided",
+      "Linens provided",
       "Iron",
       "Fiber optic internet",
       "Oven",
       "Intercom",
       "Washing machine",
       "Dishwasher",
-      "Linens provided",
-      "Queen-size bed",
+      "Household linens provided",
+      "Queen size bed",
       "Nespresso machine",
       "Microwave",
       "Parquet",
@@ -7419,6 +7419,7 @@
       "Ironing board",
       "Toaster",
       "Wifi"
-    ]
+    ],
+    "hasElevator": true
   }
 ]
