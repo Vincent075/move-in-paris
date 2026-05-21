@@ -7304,5 +7304,121 @@
       "Refrigerator",
       "Parquet"
     ]
+  },
+  {
+    "slug": "2-pieces-anatole-france-levallois-perret",
+    "title": "2 Pièces Anatole France",
+    "address": "Rue Anatole France, Levallois-Perret",
+    "district": "Levallois-Perret",
+    "surface": 60,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "4e étage",
+    "status": "À louer",
+    "description": "2 pièces d’une surface d’environ 60 m2, entièrement\nrefait à neuf en Mars 2019.\nAu 4ème étage sur cour d’un immeuble récent\nUn séjour avec grand canapé d’angle 5 places , table\nbasse, Tv ecran plat et coin salle à manger,\nGrande Chambre avec lit double et rangements.\nSalle d’eau avec douche, double vasque et WC.\nMachine à laver séchante.\nCuisine ouverte toute équipée et aménagée.\nÉquipement : four traditionnel, micro-onde, lave-\nvaisselle, plaque , réfrigérateur, machine à café\nNespresso\nChauffage et eau chaude individuels collectifs.\nBalcon.",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Balcon",
+      "Bouilloire",
+      "Chauffage collectif",
+      "Congélateur",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Interphone",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Wifi"
+    ],
+    "photos": "2-pieces-anatole-france-levallois-perret",
+    "images": [
+      "/apartments/2-pieces-anatole-france-levallois-perret/photo-1.jpg",
+      "/apartments/2-pieces-anatole-france-levallois-perret/photo-2.jpg",
+      "/apartments/2-pieces-anatole-france-levallois-perret/photo-3.jpg",
+      "/apartments/2-pieces-anatole-france-levallois-perret/photo-4.jpg",
+      "/apartments/2-pieces-anatole-france-levallois-perret/photo-5.jpg",
+      "/apartments/2-pieces-anatole-france-levallois-perret/photo-6.jpg",
+      "/apartments/2-pieces-anatole-france-levallois-perret/photo-7.jpg",
+      "/apartments/2-pieces-anatole-france-levallois-perret/photo-8.jpg",
+      "/apartments/2-pieces-anatole-france-levallois-perret/photo-9.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Anatole France",
+        "distance": "2 min",
+        "lines": [
+          "3"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Pont de Levallois - Bécon",
+        "distance": "6 min",
+        "lines": [
+          "3"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Franprix",
+        "distance": "1 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Parc de la Planchette",
+        "distance": "3 min"
+      }
+    ],
+    "title_en": "1-Bedroom Apartment Anatole France",
+    "description_en": "1-bedroom high-end apartment of approximately 60 sqm, completely renovated in March 2019.\nLocated on the 4th floor overlooking a courtyard in a modern building.\nA living room with a large 5-seater corner sofa, coffee table, flat-screen TV, and dining area.\nLarge bedroom with double bed and storage.\nBathroom with walk-in shower, double sink, and toilet.\nWashing machine with dryer.\nOpen fully equipped and fitted kitchen.\nFeatures: traditional oven, microwave, dishwasher, cooktop, refrigerator, and Nespresso machine.\nIndividual and collective heating and hot water.\nBalcony.",
+    "floor_en": "4th floor",
+    "features_en": [
+      "Elevator",
+      "Vacuum cleaner",
+      "Balcony",
+      "Kettle",
+      "Collective heating",
+      "Freezer",
+      "Equipped kitchen",
+      "Double glazing",
+      "Walk-in shower",
+      "Sheets provided",
+      "Iron",
+      "Fiber optic internet",
+      "Oven",
+      "Intercom",
+      "Washing machine",
+      "Dishwasher",
+      "Linens provided",
+      "Queen-size bed",
+      "Nespresso machine",
+      "Microwave",
+      "Parquet",
+      "Cooktop",
+      "Refrigerator",
+      "Towels provided",
+      "Smart TV",
+      "Ironing board",
+      "Toaster",
+      "Wifi"
+    ]
   }
 ]
