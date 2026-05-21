@@ -102,7 +102,7 @@ export default function QuartierLanding({ config }: { config: QuartierConfig }) 
                   </p>
                   <BailDureesTable />
                   <p>
-                    Notre service est <strong>100 % gratuit pour le propriétaire bailleur</strong>, quelle que soit la durée du bail. Côté entreprise locataire : zéro frais sur les missions courtes et moyennes, 12,5 % HT du loyer annuel uniquement sur les baux longue durée (plus de 12 mois), avec un dépôt de garantie de 2 mois reversé intégralement au propriétaire.
+                    Notre service est <strong>100 % gratuit pour le propriétaire bailleur</strong>, quelle que soit la durée du bail — le loyer annoncé est celui qui lui est reversé, net. Côté entreprise locataire : sur les missions courtes et moyennes (1 à 12 mois), loyer tout compris sans honoraires séparés. Sur les baux longue durée (plus de 12 mois) : loyer mensuel + 12,5 % HT du loyer annuel d&apos;honoraires d&apos;agence + dépôt de garantie de 2 mois reversé intégralement au propriétaire.
                   </p>
                 </>
               ),
@@ -130,7 +130,7 @@ export default function QuartierLanding({ config }: { config: QuartierConfig }) 
                   </p>
                   <ul>
                     <li><strong>Service 100 % gratuit pour le propriétaire</strong> — quelle que soit la durée du bail</li>
-                    <li><strong>Honoraires entreprise locataire</strong> : 0 € en court/moyen terme, 12,5 % HT du loyer annuel en long terme</li>
+                    <li><strong>Honoraires entreprise locataire</strong> : inclus dans le loyer convenu en court/moyen terme (pas de ligne d&apos;honoraires séparée), 12,5 % HT du loyer annuel facturés à part en long terme</li>
                     <li><strong>Assistance technique 7j/7 incluse</strong> — bénéficie aussi indirectement au propriétaire (zéro gestion opérationnelle)</li>
                     <li><strong>Bail société signé en 5 minutes</strong> via DocuSign</li>
                     <li><strong>Account manager dédié</strong> pour les entreprises gérant 5+ appartements simultanés</li>

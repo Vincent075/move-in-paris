@@ -33,7 +33,7 @@ const faqs: SEOLandingFAQ[] = [
   },
   {
     q: "Quels sont les frais d'agence pour une location société chez Move in Paris ?",
-    a: "Pour les baux courts et moyen terme (1 à 12 mois), notre service est 100 % gratuit pour les deux parties — propriétaire et entreprise locataire. Aucun honoraire d'agence, aucune commission. Pour les baux longue durée (plus de 12 mois, en bail société), seule l'entreprise locataire règle des honoraires de 12,5 % HT du loyer annuel. Le propriétaire reste 100 % gratuit, quelle que soit la durée du bail.",
+    a: "Le propriétaire bailleur ne paie jamais aucun frais : notre service est 100 % gratuit pour le propriétaire, quelle que soit la durée du bail. Côté entreprise locataire, la mécanique dépend de la durée. Pour les baux courts et moyens (1 à 12 mois), vous payez un loyer tout compris : notre rémunération est intégrée au prix convenu, pas d'honoraires d'agence séparés sur la facture. Pour les baux longue durée (plus de 12 mois, en bail société), l'entreprise locataire règle en plus 12,5 % HT du loyer annuel à titre d'honoraires d'agence. Dans tous les cas, le propriétaire reçoit le loyer net qui lui a été annoncé.",
   },
   {
     q: "Faut-il un dépôt de garantie pour une location société ?",
@@ -119,7 +119,7 @@ export default function Page() {
           eyebrow="Location meublée société"
           intro="La location meublée société à Paris est notre cœur de métier. Louer un appartement meublé au nom d'une société ou d'une entreprise demande un cadre juridique adapté, des garanties spécifiques et une gestion administrative efficace. Move in Paris propose depuis 2018 une solution dédiée aux personnes morales (SAS, SARL, SA, SCI, associations, organismes internationaux) — pour des séjours courts (missions, audits, consultants), moyens (intégrations, expatriés) ou longs (mutations 1 à 3 ans, logement de fonction). Notre service est 100 % gratuit pour le propriétaire bailleur, quelle que soit la durée du bail."
           highlights={[
-            { title: "Court, moyen et long terme", text: "Bail société flexible : missions de 1 mois à mutations de 3 ans. Honoraires uniquement sur le long terme côté locataire (12,5 % HT du loyer annuel)." },
+            { title: "Court, moyen et long terme", text: "Bail société flexible : missions de 1 mois à mutations de 3 ans. Loyer tout compris pour l'entreprise sur le court et moyen terme. Honoraires de 12,5 % HT du loyer annuel sur le long terme côté entreprise." },
             { title: "100 % gratuit propriétaire", text: "Aucun frais d'agence pour le propriétaire, jamais. Assistance technique 7j/7 incluse, dépôt de garantie reversé intégralement sur les longs baux." },
             { title: "Multi-sites possible", text: "5 ou 50 appartements gérés via un account manager unique et un reporting consolidé mensuel." },
           ]}
@@ -136,7 +136,7 @@ export default function Page() {
                   </p>
                   <BailDureesTable />
                   <p>
-                    <strong>Concrètement</strong> : pour une mission de 3 mois d&apos;un consultant à Paris, vous payez le loyer mensuel et rien de plus. Pour une mutation de 18 mois d&apos;un cadre expatrié, vous réglez en plus 12,5 % HT du loyer annuel et un dépôt de garantie de 2 mois — intégralement reversé au propriétaire bailleur. Aucun frais caché, aucune surprise en cours de bail.
+                    <strong>Concrètement</strong> : pour une mission de 3 mois d&apos;un consultant à Paris, vous payez un loyer mensuel tout compris — pas d&apos;honoraires séparés sur la facture, notre rémunération est intégrée au prix convenu. Pour une mutation de 18 mois d&apos;un cadre expatrié, vous réglez le loyer mensuel + 12,5 % HT du loyer annuel d&apos;honoraires + un dépôt de garantie de 2 mois (intégralement reversé au propriétaire bailleur). Aucun frais caché, aucune surprise en cours de bail.
                   </p>
                 </>
               ),
@@ -146,7 +146,7 @@ export default function Page() {
               body: (
                 <>
                   <p>
-                    Move in Paris ne facture <strong>jamais</strong> de frais au propriétaire qui nous confie un appartement, qu&apos;il soit loué à une entreprise pour un mois ou pour trois ans. Notre rémunération vient exclusivement du locataire — et uniquement sur le segment longue durée.
+                    Move in Paris ne facture <strong>jamais</strong> de frais au propriétaire qui nous confie un appartement, qu&apos;il soit loué à une entreprise pour un mois ou pour trois ans. Notre rémunération provient exclusivement de l&apos;entreprise locataire — intégrée au loyer convenu sur les baux courts et moyens, et matérialisée par des honoraires d&apos;agence de 12,5 % HT du loyer annuel sur les baux longue durée. Le propriétaire reçoit toujours le loyer net annoncé, sans déduction.
                   </p>
                   <p>
                     Le propriétaire bénéficie en outre, et sans frais supplémentaire, de l&apos;<strong>assistance technique 7j/7</strong> que nous apportons à l&apos;occupant : intervention plomberie, chauffage, électroménager, internet, ménage. Toutes les interventions courantes sont prises en charge par notre équipe et notre réseau d&apos;artisans, ce qui décharge le propriétaire de la gestion opérationnelle au quotidien.

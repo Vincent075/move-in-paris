@@ -13,7 +13,7 @@ const ROWS: Row[] = [
   },
   {
     label: "Frais côté locataire (entreprise)",
-    courtMoyen: "0 € — service 100 % gratuit",
+    courtMoyen: "Loyer tout compris — pas d'honoraires séparés",
     longTerme: "12,5 % HT du loyer annuel",
   },
   {

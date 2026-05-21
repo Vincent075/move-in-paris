@@ -14,11 +14,13 @@
 3. **Locataires** (cadres expatriés, consultants en mission, dirigeants)
 
 ### Modèle économique (CRITIQUE pour comms et SEO)
-- **Service 100 % gratuit pour le propriétaire**, toujours, quelle que soit la durée
-- **Court / moyen terme (≤ 12 mois)** : 0 € pour locataire entreprise aussi, pas de dépôt de garantie
-- **Long terme (> 12 mois)** : 12,5 % HT du loyer annuel à charge de l'entreprise locataire + 2 mois de dépôt de garantie reversés intégralement au propriétaire bailleur
+- **Service 100 % gratuit pour le propriétaire**, toujours, quelle que soit la durée. Le propriétaire reçoit le loyer net annoncé, sans aucune déduction.
+- **Court / moyen terme (≤ 12 mois)** : pour l'entreprise locataire, **loyer tout compris** — notre rémunération est intégrée au prix convenu (marge entre prix société et loyer reversé au propriétaire). PAS d'honoraires séparés sur la facture, et pas de dépôt de garantie.
+- **Long terme (> 12 mois)** : pour l'entreprise locataire, **loyer + 12,5 % HT du loyer annuel** d'honoraires d'agence facturés à part + 2 mois de dépôt de garantie reversés intégralement au propriétaire bailleur.
 - Bail société (Code civil 1714-1762) en format par défaut
 - Assistance technique 7j/7 incluse — bénéfice indirect au propriétaire
+
+⚠️ **NE JAMAIS écrire "service 100 % gratuit pour les deux parties" ou "0 € locataire entreprise court terme"** — c'est faux et juridiquement risqué (publicité trompeuse). L'entreprise locataire paie toujours quelque chose : soit dans le loyer (court/moyen), soit en honoraires séparés (long terme). Formulation correcte : *"100 % gratuit pour le propriétaire"* (toujours vrai). Pour l'entreprise : *"loyer tout compris"* (court/moyen) ou *"12,5 % HT du loyer annuel"* (long terme).
 
 ### Métriques clés (à jour 2026-04)
 - 52 appartements au catalogue (Paris 8e, 16e, 17e, La Défense, Neuilly principalement)

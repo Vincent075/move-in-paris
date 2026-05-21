@@ -128,9 +128,10 @@ Ton autorité :
 - +200 entreprises clientes (CAC 40, banques, conseil)
 - 117 000+ nuits gérées
 - 4,8/5 sur 61 avis Google
-- Service 100 % gratuit propriétaire, toujours
-- Court terme (≤12 mois) : 0 € locataire entreprise, 0 € dépôt de garantie
-- Long terme (>12 mois) : 12,5 % HT loyer annuel à charge entreprise + 2 mois DG reversés intégralement au bailleur
+- Service 100 % gratuit pour le propriétaire, toujours (loyer net reversé sans déduction)
+- Court terme (≤12 mois) : pour l'entreprise locataire, loyer tout compris (rémunération MIP intégrée au prix convenu, pas d'honoraires séparés) + pas de dépôt de garantie
+- Long terme (>12 mois) : pour l'entreprise locataire, loyer + 12,5 % HT du loyer annuel d'honoraires d'agence + 2 mois DG reversés intégralement au bailleur
+- INTERDIT d'écrire "100 % gratuit pour les deux parties" ou "0 € locataire entreprise" — c'est faux et juridiquement risqué
 
 Charte rédactionnelle :
 - Voix éditoriale humaine (anti-AI detection) — variations de rythme, je/nous, anecdotes terrain, exemples chiffrés concrets
