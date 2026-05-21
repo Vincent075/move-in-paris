@@ -7196,5 +7196,113 @@
       "Separate toilets",
       "Wifi"
     ]
+  },
+  {
+    "slug": "4-pieces-saint-james-neuilly-sur-seine",
+    "title": "4 Pièces Saint James",
+    "address": "Rue de la Ferme, Neuilly-sur-Seine",
+    "district": "Neuilly-sur-Seine",
+    "surface": 105,
+    "rooms": 4,
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "floor": "2e étage",
+    "status": "À louer",
+    "description": "Superbe appartement meublé de 105 m², entièrement rénové fin 2025 avec des prestations haut de gamme, situé  à Neuilly-sur-Seine, au 2e étage avec ascenseur.\n\nLumineux et traversant, cet appartement offre un cadre de vie élégant et moderne avec mobilier de standing et parquet.\n\nIl se compose d'une entrée, d'un séjour / salle à manger, d'une cuisine ouverte très haut de gamme entièrement équipée (réfrigérateur, four, lave-vaisselle, lave-linge, sèche-linge), d'une chambre parentale au calme avec rangements, de deux autres chambres au calme, de deux salles de bains rénovées (baignoire + douche) dont une avec WC, et d'un WC séparé.\nChauffage au sol collectif. Interphone, digicode, fibre optique, double vitrage, local vélo.",
+    "features": [
+      "Aspirateur",
+      "Baignoire",
+      "Bouilloire",
+      "Cafetière",
+      "Chauffage collectif",
+      "Congélateur",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Micro-ondes",
+      "Machine Nespresso",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Interphone",
+      "Lave-linge",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Toilettes séparées",
+      "Wifi",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Parquet"
+    ],
+    "photos": "4-pieces-saint-james-neuilly-sur-seine",
+    "images": [
+      "/apartments/4-pieces-saint-james-neuilly-sur-seine/photo-1.jpg",
+      "/apartments/4-pieces-saint-james-neuilly-sur-seine/photo-2.jpg",
+      "/apartments/4-pieces-saint-james-neuilly-sur-seine/photo-3.jpg",
+      "/apartments/4-pieces-saint-james-neuilly-sur-seine/photo-4.jpg",
+      "/apartments/4-pieces-saint-james-neuilly-sur-seine/photo-5.jpg",
+      "/apartments/4-pieces-saint-james-neuilly-sur-seine/photo-6.jpg",
+      "/apartments/4-pieces-saint-james-neuilly-sur-seine/photo-7.jpg",
+      "/apartments/4-pieces-saint-james-neuilly-sur-seine/photo-8.jpg",
+      "/apartments/4-pieces-saint-james-neuilly-sur-seine/photo-9.jpg",
+      "/apartments/4-pieces-saint-james-neuilly-sur-seine/photo-10.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Esplanade de La Défense",
+        "distance": "14 min",
+        "lines": [
+          "1"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Les Sablons",
+        "distance": "20 min",
+        "lines": [
+          "1"
+        ]
+      },
+      {
+        "type": "Parc",
+        "name": "Théâtre de Verdure",
+        "distance": "8 min"
+      }
+    ],
+    "title_en": "3-Bedroom Apartment Saint James",
+    "description_en": "Superb furnished 3-bedroom apartment of 105 sqm, fully renovated in late 2025 with premium amenities, located in Neuilly-sur-Seine, on the 2nd floor with elevator.\n\nBright and through-facing, this apartment offers an elegant and modern living environment with high-end furniture and parquet flooring.\n\nIt comprises an entrance hall, a living/dining room, a very high-end open-plan equipped kitchen (refrigerator, oven, dishwasher, washing machine, dryer), a quiet master bedroom with storage, two other quiet bedrooms, two renovated bathrooms (bathtub + shower) one with WC, and a separate WC.\nCollective underfloor heating. Intercom, keypad entry, fiber optic internet, double glazing, bike storage.",
+    "floor_en": "2nd floor",
+    "features_en": [
+      "Vacuum cleaner",
+      "Bathtub",
+      "Kettle",
+      "Coffee maker",
+      "Collective heating",
+      "Freezer",
+      "Equipped kitchen",
+      "Double glazing",
+      "Linens provided",
+      "Queen-size bed",
+      "Microwave",
+      "Nespresso machine",
+      "Iron",
+      "Fiber optic internet",
+      "Oven",
+      "Intercom",
+      "Washing machine",
+      "Towels provided",
+      "Smart TV",
+      "Ironing board",
+      "Toaster",
+      "Separate toilets",
+      "Wifi",
+      "Cooktop",
+      "Refrigerator",
+      "Parquet"
+    ]
   }
 ]
