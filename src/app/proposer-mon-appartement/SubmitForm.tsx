@@ -2,12 +2,17 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import PhoneInput from "@/components/PhoneInput";
+import { validatePhone } from "@/lib/validate-phone";
 
 export default function SubmitForm() {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [photoFiles, setPhotoFiles] = useState<File[]>([]);
   const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
+  const [telephone, setTelephone] = useState("");
+  const [phoneValid, setPhoneValid] = useState(false);
+  const [phoneError, setPhoneError] = useState("");
 
   function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files || []);
@@ -53,6 +58,13 @@ export default function SubmitForm() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setPhoneError("");
+    const phoneCheck = validatePhone(telephone);
+    if (!phoneCheck.valid) {
+      setPhoneError(phoneCheck.reason);
+      setPhoneValid(false);
+      return;
+    }
     setLoading(true);
     const form = e.currentTarget;
 
@@ -62,7 +74,7 @@ export default function SubmitForm() {
     formData.append("prenom", (form.elements.namedItem("prenom") as HTMLInputElement).value);
     formData.append("nom", (form.elements.namedItem("nom") as HTMLInputElement).value);
     formData.append("email", (form.elements.namedItem("email") as HTMLInputElement).value);
-    formData.append("telephone", (form.elements.namedItem("telephone") as HTMLInputElement).value);
+    formData.append("telephone", phoneCheck.normalised);
     formData.append("adresse", (form.elements.namedItem("adresse") as HTMLInputElement).value);
     formData.append("surface", (form.elements.namedItem("surface") as HTMLInputElement).value);
     formData.append("pieces", (form.elements.namedItem("pieces") as HTMLSelectElement).value);
@@ -163,11 +175,20 @@ export default function SubmitForm() {
                     <label className="block text-xs text-gris uppercase tracking-wider mb-2">Email</label>
                     <input name="email" type="email" required className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors" />
                   </div>
-                  <div>
-                    <label className="block text-xs text-gris uppercase tracking-wider mb-2">Téléphone</label>
-                    <input name="telephone" type="tel" className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors" />
-                  </div>
+                  <PhoneInput
+                    id="proposer-telephone"
+                    value={telephone}
+                    onChange={(v) => { setTelephone(v); if (phoneError) setPhoneError(""); }}
+                    required
+                    label="Téléphone"
+                    labelClass="block text-xs text-gris uppercase tracking-wider mb-2"
+                    baseClass="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors"
+                    onValidityChange={setPhoneValid}
+                  />
                 </div>
+                {phoneError && (
+                  <p className="text-xs text-red-600 -mt-3">{phoneError}</p>
+                )}
                 <div className="pt-4 border-t border-gris-clair/50">
                   <h3 className="font-serif text-2xl text-noir mb-4">Votre appartement</h3>
                 </div>
@@ -296,9 +317,9 @@ export default function SubmitForm() {
                     J&apos;accepte les conditions générales d&apos;utilisation et la politique relative aux données personnelles (RGPD).
                   </label>
                 </div>
-                <button type="submit" disabled={loading}
-                  className={`w-full py-4 font-medium tracking-wider uppercase text-sm transition-all duration-300 ${loading ? "bg-gris text-blanc" : "bg-gold text-noir-deep hover:bg-gold-light"}`}>
-                  {loading ? "Envoi en cours..." : "Envoyer ma demande"}
+                <button type="submit" disabled={loading || !phoneValid}
+                  className={`w-full py-4 font-medium tracking-wider uppercase text-sm transition-all duration-300 ${loading || !phoneValid ? "bg-gris text-blanc cursor-not-allowed" : "bg-gold text-noir-deep hover:bg-gold-light"}`}>
+                  {loading ? "Envoi en cours..." : !phoneValid ? "Vérifiez votre numéro" : "Envoyer ma demande"}
                 </button>
               </form>
             )}

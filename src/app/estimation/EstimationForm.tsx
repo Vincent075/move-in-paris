@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import rentTable from "@/data/encadrement/rent-table.json";
 import { useT } from "@/i18n/LocaleProvider";
+import PhoneInput from "@/components/PhoneInput";
+import { validatePhone } from "@/lib/validate-phone";
 
 type BanFeature = {
   geometry?: { type: "Point"; coordinates: [number, number] };
@@ -98,6 +100,7 @@ export default function EstimationForm({
   const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
   const [telephone, setTelephone] = useState("");
+  const [phoneValid, setPhoneValid] = useState(false);
   const [consent, setConsent] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -335,6 +338,14 @@ export default function EstimationForm({
   async function handleSubmitContact(e: React.FormEvent) {
     e.preventDefault();
     setErrorMsg("");
+    const phoneCheck = validatePhone(telephone);
+    if (!phoneCheck.valid) {
+      setErrorMsg(phoneCheck.reason || "Numéro de téléphone invalide.");
+      setPhoneValid(false);
+      return;
+    }
+    // Store normalised E.164 number for the backend
+    setTelephone(phoneCheck.normalised);
     if (!consent) {
       setErrorMsg("Merci de valider le consentement RGPD.");
       return;
@@ -721,18 +732,16 @@ export default function EstimationForm({
                       className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none"
                     />
                   </div>
-                  <div>
-                    <label className="block text-xs text-gris uppercase tracking-wider mb-2">
-                      {t("estimationPage.phone")}
-                    </label>
-                    <input
-                      required
-                      type="tel"
-                      value={telephone}
-                      onChange={(e) => setTelephone(e.target.value)}
-                      className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none"
-                    />
-                  </div>
+                  <PhoneInput
+                    id="estim-telephone"
+                    value={telephone}
+                    onChange={(v) => { setTelephone(v); if (errorMsg) setErrorMsg(""); }}
+                    required
+                    label={t("estimationPage.phone")}
+                    labelClass="block text-xs text-gris uppercase tracking-wider mb-2"
+                    baseClass="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none"
+                    onValidityChange={setPhoneValid}
+                  />
                 </div>
 
                 <label className="flex items-start gap-3 text-xs text-gris leading-relaxed cursor-pointer">
@@ -751,16 +760,18 @@ export default function EstimationForm({
 
                 <button
                   type="submit"
-                  disabled={submitting}
+                  disabled={submitting || !phoneValid}
                   className={`w-full py-4 font-medium tracking-wider uppercase text-sm transition-all ${
-                    submitting
-                      ? "bg-gris text-blanc cursor-wait"
+                    submitting || !phoneValid
+                      ? "bg-gris text-blanc cursor-not-allowed"
                       : "bg-gold text-noir-deep hover:bg-gold-light"
                   }`}
                   style={{ borderRadius: 10 }}
                 >
                   {submitting
                     ? t("estimationPage.sending")
+                    : !phoneValid
+                    ? "Vérifiez votre numéro"
                     : contactFirst
                     ? "Suivant : décrire mon bien →"
                     : t("estimationPage.revealEstimate")}

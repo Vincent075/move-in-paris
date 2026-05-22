@@ -8,14 +8,26 @@ import { getFeatureIcon } from "@/lib/featureIcons";
 import { MetroLineBadge, resolveMetroLines } from "@/lib/metroLines";
 import TripCalculator from "@/components/TripCalculator";
 import { getApartmentReference } from "@/lib/apartmentRef";
+import PhoneInput from "@/components/PhoneInput";
+import { validatePhone } from "@/lib/validate-phone";
 
 function VisitForm({ title, reference, slug }: { title: string; reference: string; slug: string }) {
   const t = useT();
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [telephone, setTelephone] = useState("");
+  const [phoneValid, setPhoneValid] = useState(false);
+  const [phoneError, setPhoneError] = useState("");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setPhoneError("");
+    const phoneCheck = validatePhone(telephone);
+    if (!phoneCheck.valid) {
+      setPhoneError(phoneCheck.reason);
+      setPhoneValid(false);
+      return;
+    }
     setLoading(true);
     const form = e.currentTarget;
     const data = {
@@ -25,12 +37,13 @@ function VisitForm({ title, reference, slug }: { title: string; reference: strin
       slug,
       nom: (form.elements.namedItem("nom") as HTMLInputElement).value,
       email: (form.elements.namedItem("email") as HTMLInputElement).value,
-      telephone: (form.elements.namedItem("telephone") as HTMLInputElement).value,
+      telephone: phoneCheck.normalised,
       message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
     };
     try {
       await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
       setSent(true);
+      setTelephone("");
     } catch { /* ignore */ }
     setLoading(false);
   }
@@ -53,14 +66,24 @@ function VisitForm({ title, reference, slug }: { title: string; reference: strin
           className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors" />
         <input name="email" type="email" required placeholder={t("apartment.formEmail")}
           className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors" />
-        <input name="telephone" type="tel" placeholder={t("apartment.formPhone")}
-          className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors" />
+        <PhoneInput
+          id={`apt-${slug}-tel`}
+          value={telephone}
+          onChange={(v) => { setTelephone(v); if (phoneError) setPhoneError(""); }}
+          required
+          placeholder={t("apartment.formPhone")}
+          baseClass="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors"
+          onValidityChange={setPhoneValid}
+        />
+        {phoneError && (
+          <p className="text-xs text-red-600 -mt-2">{phoneError}</p>
+        )}
         <textarea name="message" rows={3}
           defaultValue={t("apartment.defaultMessage").replace("{title}", title)}
           className="w-full px-4 py-3 border border-gris-clair bg-blanc text-noir text-sm focus:border-gold focus:outline-none transition-colors resize-none" />
-        <button type="submit" disabled={loading}
-          className={`w-full py-4 font-medium tracking-wider uppercase text-sm transition-all duration-300 ${loading ? "bg-gris text-blanc" : "bg-gold text-noir-deep hover:bg-gold-light"}`}>
-          {loading ? t("apartment.sending") : t("apartment.sendRequest")}
+        <button type="submit" disabled={loading || !phoneValid}
+          className={`w-full py-4 font-medium tracking-wider uppercase text-sm transition-all duration-300 ${loading || !phoneValid ? "bg-gris text-blanc cursor-not-allowed" : "bg-gold text-noir-deep hover:bg-gold-light"}`}>
+          {loading ? t("apartment.sending") : !phoneValid ? "Vérifiez votre numéro" : t("apartment.sendRequest")}
         </button>
       </form>
     </>

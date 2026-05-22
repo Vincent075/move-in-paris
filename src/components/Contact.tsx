@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useT } from "@/i18n/LocaleProvider";
+import PhoneInput from "@/components/PhoneInput";
+import { validatePhone } from "@/lib/validate-phone";
 
 const IconAddress = (
   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -25,6 +27,9 @@ export default function Contact() {
   const t = useT();
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [telephone, setTelephone] = useState("");
+  const [phoneValid, setPhoneValid] = useState(true);
+  const [phoneError, setPhoneError] = useState("");
 
   const contactInfo = [
     {
@@ -53,6 +58,15 @@ export default function Contact() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setPhoneError("");
+    // Re-validate phone server-side-style on submit so we ALWAYS block
+    // a bad number, even if the user pasted it after losing focus.
+    const phoneCheck = validatePhone(telephone);
+    if (!phoneCheck.valid) {
+      setPhoneError(phoneCheck.reason);
+      setPhoneValid(false);
+      return;
+    }
     setLoading(true);
     const form = e.currentTarget;
     const data = {
@@ -60,7 +74,7 @@ export default function Contact() {
       prenom: (form.elements.namedItem("prenom") as HTMLInputElement).value,
       nom: (form.elements.namedItem("nom") as HTMLInputElement).value,
       email: (form.elements.namedItem("email") as HTMLInputElement).value,
-      telephone: (form.elements.namedItem("telephone") as HTMLInputElement).value,
+      telephone: phoneCheck.normalised,
       profil: (form.elements.namedItem("profil") as HTMLSelectElement).value,
       message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
     };
@@ -68,6 +82,7 @@ export default function Contact() {
       await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
       setSent(true);
       form.reset();
+      setTelephone("");
     } catch { /* ignore */ }
     setLoading(false);
   }
@@ -155,10 +170,20 @@ export default function Contact() {
                   <label htmlFor="contact-email" className="block text-xs text-gris uppercase tracking-wider mb-2">{t("contact.email")}</label>
                   <input id="contact-email" name="email" type="email" required autoComplete="email" className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors" />
                 </div>
-                <div>
-                  <label htmlFor="contact-telephone" className="block text-xs text-gris uppercase tracking-wider mb-2">{t("contact.phone")}</label>
-                  <input id="contact-telephone" name="telephone" type="tel" autoComplete="tel" className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors" />
-                </div>
+                <PhoneInput
+                  id="contact-telephone"
+                  name="telephone"
+                  value={telephone}
+                  onChange={(v) => { setTelephone(v); if (phoneError) setPhoneError(""); }}
+                  required
+                  label={t("contact.phone")}
+                  labelClass="block text-xs text-gris uppercase tracking-wider mb-2"
+                  baseClass="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors"
+                  onValidityChange={setPhoneValid}
+                />
+                {phoneError && (
+                  <p className="text-xs text-red-600 -mt-2">{phoneError}</p>
+                )}
                 <div>
                   <label htmlFor="contact-profil" className="block text-xs text-gris uppercase tracking-wider mb-2">{t("contact.profile")}</label>
                   <select id="contact-profil" name="profil" className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors">
@@ -173,9 +198,9 @@ export default function Contact() {
                   <label htmlFor="contact-message" className="block text-xs text-gris uppercase tracking-wider mb-2">{t("contact.message")}</label>
                   <textarea id="contact-message" name="message" rows={4} required className="w-full px-4 py-3 border border-gris-clair bg-transparent text-noir focus:border-gold focus:outline-none transition-colors resize-none" />
                 </div>
-                <button type="submit" disabled={loading}
-                  className={`w-full py-4 font-medium tracking-wider uppercase text-sm transition-all duration-300 ${loading ? "bg-gris text-blanc" : "bg-gold text-noir-deep hover:bg-gold-light"}`}>
-                  {loading ? t("contact.sending") : t("contact.sendMessage")}
+                <button type="submit" disabled={loading || !phoneValid}
+                  className={`w-full py-4 font-medium tracking-wider uppercase text-sm transition-all duration-300 ${loading || !phoneValid ? "bg-gris text-blanc cursor-not-allowed" : "bg-gold text-noir-deep hover:bg-gold-light"}`}>
+                  {loading ? t("contact.sending") : !phoneValid ? "Vérifiez votre numéro" : t("contact.sendMessage")}
                 </button>
               </form>
             )}
