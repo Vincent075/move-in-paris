@@ -7421,5 +7421,110 @@
       "Wifi"
     ],
     "hasElevator": true
+  },
+  {
+    "slug": "3-pieces-la-garenne-colombes",
+    "title": "3 Pièces",
+    "address": "Rue Jules Ferry, La Garenne-Colombes",
+    "district": "La Garenne-Colombes",
+    "surface": 55,
+    "rooms": 3,
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "floor": "1er étage",
+    "status": "À louer",
+    "description": "3 pièces entièrement meublé et équipé d'une surface\nd'environ 55 m². 1er étage sans ascenseur d'un\nimmeuble ancien.\nSalon avec canapé d’angle, table basse et SMART TV\nCuisine séparée moderne entièrement équipée\nEquipements : Four micro-onde, machine à laver, lave-\nvaisselle, machine à café Nespresso, grille-pain…\nChambre avec un lit 2 double 160 / 200 places et grands\nrangements.\n2eme chambre avec 2 lits simple avec rangement\nSalle d’eau avec douche et WC\nAppartement lumineux et proche de tout commodités.\nChauffage et eau chaude Collectif.",
+    "features": [
+      "Aspirateur",
+      "Canapé convertible",
+      "Chauffage collectif",
+      "Congélateur",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit simple",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Wifi"
+    ],
+    "photos": "3-pieces-la-garenne-colombes",
+    "images": [
+      "/apartments/3-pieces-la-garenne-colombes/photo-1.jpg",
+      "/apartments/3-pieces-la-garenne-colombes/photo-2.jpg",
+      "/apartments/3-pieces-la-garenne-colombes/photo-3.jpg",
+      "/apartments/3-pieces-la-garenne-colombes/photo-4.jpg",
+      "/apartments/3-pieces-la-garenne-colombes/photo-5.jpg",
+      "/apartments/3-pieces-la-garenne-colombes/photo-6.jpg",
+      "/apartments/3-pieces-la-garenne-colombes/photo-7.jpg",
+      "/apartments/3-pieces-la-garenne-colombes/photo-8.jpg",
+      "/apartments/3-pieces-la-garenne-colombes/photo-9.jpg",
+      "/apartments/3-pieces-la-garenne-colombes/photo-10.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "La Défense - Grande Arche",
+        "distance": "15 min"
+      },
+      {
+        "type": "Métro",
+        "name": "Esplanade de La Défense",
+        "distance": "25 min",
+        "lines": [
+          "1"
+        ]
+      },
+      {
+        "type": "RER",
+        "name": "L-L",
+        "distance": "10 min"
+      }
+    ],
+    "title_en": "2-Bedroom Apartment",
+    "description_en": "2-bedroom fully furnished and equipped apartment of approximately 55 sqm. 1st floor without elevator in a period building.\nLiving room with corner sofa, coffee table and Smart TV\nSeparate modern equipped kitchen\nEquipment: Microwave, washing machine, dishwasher, Nespresso machine, toaster…\nBedroom with one double bed 160 / 200 and large storage.\n2nd bedroom with 2 single beds with storage\nBathroom with walk-in shower and WC\nBright apartment close to all amenities.\nCollective heating and hot water.",
+    "floor_en": "1st floor",
+    "features_en": [
+      "Vacuum cleaner",
+      "Sofa bed",
+      "Collective heating",
+      "Freezer",
+      "Equipped kitchen",
+      "Double glazing",
+      "Walk-in shower",
+      "Sheets provided",
+      "Iron",
+      "Fiber optic internet",
+      "Oven",
+      "Washing machine",
+      "Dishwasher",
+      "Linens provided",
+      "Single bed",
+      "Queen size bed",
+      "Nespresso machine",
+      "Microwave",
+      "Parquet",
+      "Cooktop",
+      "Refrigerator",
+      "Towels provided",
+      "Smart TV",
+      "Ironing board",
+      "Toaster",
+      "Wifi"
+    ]
   }
 ]
