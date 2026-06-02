@@ -57,10 +57,10 @@
       "fiscalité bail société"
     ],
     "priority_score": 90,
-    "used": false,
+    "used": true,
     "created_at": "2026-05-20T00:00:00.000Z",
-    "used_at": null,
-    "generated_article_slug": null,
+    "used_at": "2026-06-02T09:01:31.052Z",
+    "generated_article_slug": "loi-de-finances-2026-ce-qui-change-pour-la-location-meublee-dentreprise",
     "trend_source": "seed"
   },
   {
