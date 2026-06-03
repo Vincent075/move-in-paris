@@ -7526,5 +7526,127 @@
       "Toaster",
       "Wifi"
     ]
+  },
+  {
+    "slug": "2-pieces-pont-de-sevres-boulogne-billancourt",
+    "title": "2 Pièces Pont de Sèvres",
+    "address": "Avenue du Maréchal Juin, Boulogne-Billancourt",
+    "district": "Boulogne-Billancourt",
+    "surface": 42,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "7e étage",
+    "status": "À louer",
+    "description": "2 pièces d’une surface d’environ 42m², au 7ème étage avec ascenseur avec gardien.\nSéjour avec canapé d’angle, Tv écran plat et espace dinatoire table à manger et chaises.\nCuisine moderne toute équipée ouverte.\nÉquipement : four, réfrigérateur, plaque de cuisson, micro-onde , lave-linge …\nUne chambre avec un lit Queen size et du rangement.\nSalle de bain avec douche italienne et Wc. \nChauffage au gaz.\n",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Bouilloire",
+      "Cafetière",
+      "Canapé convertible",
+      "Chauffage collectif",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Gardien",
+      "Interphone",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet point de Hongrie",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Wifi"
+    ],
+    "photos": "2-pieces-pont-de-sevres-boulogne-billancourt",
+    "images": [
+      "/apartments/2-pieces-pont-de-sevres-boulogne-billancourt/photo-1.jpg",
+      "/apartments/2-pieces-pont-de-sevres-boulogne-billancourt/photo-2.jpg",
+      "/apartments/2-pieces-pont-de-sevres-boulogne-billancourt/photo-3.jpg",
+      "/apartments/2-pieces-pont-de-sevres-boulogne-billancourt/photo-4.jpg",
+      "/apartments/2-pieces-pont-de-sevres-boulogne-billancourt/photo-5.jpg",
+      "/apartments/2-pieces-pont-de-sevres-boulogne-billancourt/photo-6.jpg",
+      "/apartments/2-pieces-pont-de-sevres-boulogne-billancourt/photo-7.jpg",
+      "/apartments/2-pieces-pont-de-sevres-boulogne-billancourt/photo-8.jpg",
+      "/apartments/2-pieces-pont-de-sevres-boulogne-billancourt/photo-9.jpg",
+      "/apartments/2-pieces-pont-de-sevres-boulogne-billancourt/photo-10.jpg",
+      "/apartments/2-pieces-pont-de-sevres-boulogne-billancourt/photo-11.jpg",
+      "/apartments/2-pieces-pont-de-sevres-boulogne-billancourt/photo-12.jpg",
+      "/apartments/2-pieces-pont-de-sevres-boulogne-billancourt/photo-13.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Billancourt",
+        "distance": "5 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Pont de Sèvres",
+        "distance": "5 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Le Petit Casino de Silly",
+        "distance": "2 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Mail du Maréchal Juin",
+        "distance": "3 min"
+      }
+    ],
+    "title_en": "1-Bedroom Apartment Pont de Sèvres",
+    "description_en": "1-bedroom apartment of approximately 42 sqm, on the 7th floor with elevator and concierge.\nLiving room with corner sofa, flat-screen TV, and dining area with table and chairs.\nModern equipped open kitchen.\nEquipment: oven, refrigerator, cooktop, microwave, washing machine, etc.\nOne bedroom with a Queen size bed and storage.\nBathroom with walk-in shower and WC.\nGas heating.\n",
+    "floor_en": "7th floor",
+    "features_en": [
+      "Elevator",
+      "Vacuum cleaner",
+      "Kettle",
+      "Coffee maker",
+      "Convertible sofa",
+      "Central heating",
+      "Equipped kitchen",
+      "Double glazing",
+      "Walk-in shower",
+      "Bed linens provided",
+      "Iron",
+      "Fiber optic internet",
+      "Oven",
+      "Concierge",
+      "Intercom",
+      "Washing machine",
+      "Dishwasher",
+      "Household linens provided",
+      "Queen size bed",
+      "Nespresso machine",
+      "Microwave",
+      "Herringbone parquet",
+      "Cooktop",
+      "Refrigerator",
+      "Towels provided",
+      "Smart TV",
+      "Ironing board",
+      "Toaster",
+      "Wifi"
+    ]
   }
 ]
