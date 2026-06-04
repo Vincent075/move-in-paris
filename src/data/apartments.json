@@ -7883,5 +7883,124 @@
       "Toaster",
       "Wifi"
     ]
+  },
+  {
+    "slug": "2-pieces-saussure-paris-17e",
+    "title": "2 Pièces Saussure",
+    "address": "Rue de Saussure, Paris 17e",
+    "district": "Paris 17e",
+    "surface": 41,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "1er étage",
+    "status": "À louer",
+    "description": "2 pièce d’une surface d’ environ 41 m2, refait à neuf.\nAu 1er étage sans ascenseur d’un immeuble ancien\nUn séjour avec canapé, une table basse et une Tv\nécran plat.\nUne table à manger avec table et chaises.\nUne cuisine toute équipée et aménagée\nÉquipement : lave-vaisselle, four micro-onde, plaque ,\nréfrigérateur, lave-linge, sèche-linge…\nUne chambre avec un lit double et du rangement.\nSalle d’eau avec douche et WC .\nChauffage individuel électrique.",
+    "features": [
+      "Aspirateur",
+      "Bouilloire",
+      "Cafetière",
+      "Chauffage électrique individuel",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Wifi"
+    ],
+    "photos": "2-pieces-saussure-paris-17e",
+    "images": [
+      "/apartments/2-pieces-saussure-paris-17e/photo-1.jpg",
+      "/apartments/2-pieces-saussure-paris-17e/photo-2.jpg",
+      "/apartments/2-pieces-saussure-paris-17e/photo-3.jpg",
+      "/apartments/2-pieces-saussure-paris-17e/photo-4.jpg",
+      "/apartments/2-pieces-saussure-paris-17e/photo-5.jpg",
+      "/apartments/2-pieces-saussure-paris-17e/photo-6.jpg",
+      "/apartments/2-pieces-saussure-paris-17e/photo-7.jpg",
+      "/apartments/2-pieces-saussure-paris-17e/photo-8.jpg",
+      "/apartments/2-pieces-saussure-paris-17e/photo-9.jpg",
+      "/apartments/2-pieces-saussure-paris-17e/photo-10.jpg",
+      "/apartments/2-pieces-saussure-paris-17e/photo-11.jpg",
+      "/apartments/2-pieces-saussure-paris-17e/photo-12.jpg",
+      "/apartments/2-pieces-saussure-paris-17e/photo-13.jpg",
+      "/apartments/2-pieces-saussure-paris-17e/photo-14.jpg",
+      "/apartments/2-pieces-saussure-paris-17e/photo-15.jpg",
+      "/apartments/2-pieces-saussure-paris-17e/photo-16.jpg",
+      "/apartments/2-pieces-saussure-paris-17e/photo-17.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Villiers",
+        "distance": "4 min",
+        "lines": [
+          "2",
+          "3"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Rome",
+        "distance": "5 min",
+        "lines": [
+          "2"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Naturalia",
+        "distance": "2 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square des Batignolles",
+        "distance": "5 min"
+      }
+    ],
+    "title_en": "1-Bedroom Apartment Saussure",
+    "description_en": "1-bedroom apartment of approximately 41 sqm, recently renovated.\nOn the 1st floor without elevator in a historic building.\nA living room with sofa, coffee table and flat-screen TV.\nA dining area with table and chairs.\nA fully equipped and fitted kitchen.\nEquipment: dishwasher, microwave, cooktop, refrigerator, washing machine, dryer…\nOne bedroom with a double bed and storage.\nBathroom with walk-in shower and WC.\nIndividual electric heating.",
+    "floor_en": "1st floor",
+    "features_en": [
+      "Vacuum cleaner",
+      "Kettle",
+      "Coffee maker",
+      "Individual electric heating",
+      "Equipped kitchen",
+      "Double glazing",
+      "Walk-in shower",
+      "Sheets provided",
+      "Iron",
+      "Fiber optic internet",
+      "Oven",
+      "Washing machine",
+      "Dishwasher",
+      "Linens provided",
+      "Queen size bed",
+      "Nespresso machine",
+      "Microwave",
+      "Parquet",
+      "Cooktop",
+      "Refrigerator",
+      "Towels provided",
+      "Smart TV",
+      "Ironing board",
+      "Toaster",
+      "Wifi"
+    ]
   }
 ]
