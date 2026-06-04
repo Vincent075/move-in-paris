@@ -8002,5 +8002,130 @@
       "Toaster",
       "Wifi"
     ]
+  },
+  {
+    "slug": "r-paris-6e",
+    "title": "r",
+    "address": "Rue Mayet, Paris 6e",
+    "district": "Paris 6e",
+    "surface": 55,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "",
+    "status": "À louer",
+    "description": "2 pièce d’une surface d’environ 55 m2, en bon état\nAu 4eme étage avec ascenseur d’un immeuble ancien\nUn séjour avec canapé convertible, une table basse,\nune Tv écran plat et un BALCON.\nUn espace salle à manger avec table et chaises.\nUne cuisine toute équipée et aménagée\nÉquipement : lave-vaisselle, four, plaque,\nréfrigérateur, four micro-onde…\nUne chambre avec un lit double et une armoire de\nrangement.\nSalle d’eau avec baignoire, un lave-linge et WC.\nChauffage et eau chaude individuel électrique.",
+    "features": [
+      "Aspirateur",
+      "Baignoire",
+      "Balcon",
+      "Bouilloire",
+      "Cafetière",
+      "Chauffage électrique individuel",
+      "Cuisine équipée",
+      "Digicode",
+      "Double vitrage",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Interphone",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Terrasse",
+      "Toaster",
+      "Toilettes séparées",
+      "Wifi"
+    ],
+    "photos": "r-paris-6e",
+    "images": [
+      "/apartments/r-paris-6e/photo-1.jpg",
+      "/apartments/r-paris-6e/photo-2.jpg",
+      "/apartments/r-paris-6e/photo-3.jpg",
+      "/apartments/r-paris-6e/photo-4.jpg",
+      "/apartments/r-paris-6e/photo-5.jpg",
+      "/apartments/r-paris-6e/photo-6.jpg",
+      "/apartments/r-paris-6e/photo-7.jpg",
+      "/apartments/r-paris-6e/photo-8.jpg",
+      "/apartments/r-paris-6e/photo-9.jpg",
+      "/apartments/r-paris-6e/photo-10.jpg",
+      "/apartments/r-paris-6e/photo-11.jpg",
+      "/apartments/r-paris-6e/photo-12.jpg",
+      "/apartments/r-paris-6e/photo-13.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Duroc",
+        "distance": "2 min",
+        "lines": [
+          "10",
+          "13"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Falguière",
+        "distance": "3 min",
+        "lines": [
+          "12"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "G20",
+        "distance": "2 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Jardin du Père-Armand-David",
+        "distance": "3 min"
+      }
+    ],
+    "title_en": "1-Bedroom Apartment",
+    "description_en": "1-bedroom apartment of approximately 55 sqm, in good condition. Located on the 4th floor with elevator in a period building. A living room with sofa bed, coffee table, flat-screen TV and balcony. A dining area with table and chairs. A fully equipped and fitted kitchen with dishwasher, oven, cooktop, refrigerator, microwave and more. One bedroom with a double bed and storage wardrobe. Bathroom with bathtub, washing machine and separate WC. Individual electric heating and hot water.",
+    "floor_en": "4th floor",
+    "features_en": [
+      "Vacuum cleaner",
+      "Bathtub",
+      "Balcony",
+      "Kettle",
+      "Coffee maker",
+      "Individual electric heating",
+      "Equipped kitchen",
+      "Keypad entry",
+      "Double glazing",
+      "Bedding provided",
+      "Iron",
+      "Fiber optic internet",
+      "Oven",
+      "Intercom",
+      "Washing machine",
+      "Dishwasher",
+      "Household linens provided",
+      "Queen size bed",
+      "Nespresso machine",
+      "Microwave",
+      "Parquet",
+      "Cooktop",
+      "Refrigerator",
+      "Towels provided",
+      "Smart TV",
+      "Ironing board",
+      "Terrace",
+      "Toaster",
+      "Separate toilet",
+      "Wifi"
+    ]
   }
 ]
