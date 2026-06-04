@@ -7780,5 +7780,108 @@
       "Separate toilets",
       "Wifi"
     ]
+  },
+  {
+    "slug": "2-pieces-lauriston-paris-16e",
+    "title": "2 Pièces Lauriston",
+    "address": "Rue Lauriston, Paris 16e",
+    "district": "Paris 16e",
+    "surface": 41,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "3e étage",
+    "status": "À louer",
+    "description": "2 pièces de 41 m², 3ème étage sans ascenseur\nAppartement sur rue calme. Cuisine moderne\nentièrement équipée ouverte sur le séjour.\nEquipement : Lave-vaisselle, Machine à café\nNespresso, Four, Micro-onde, Bouilloire, lave-linge,\npetit électroménager...\nDouche à l'italienne et toilettes suspendues.\nSéjour avec canapé 2 places, TV écran plat\nChambre avec lit (160*200) et rangements.\nNombreux rangements.\nDécoration design soignée.\nChauffage individuel électrique et eau chaude",
+    "features": [
+      "Aspirateur",
+      "Bouilloire",
+      "Cafetière",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parking",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Wifi"
+    ],
+    "photos": "2-pieces-lauriston-paris-16e",
+    "images": [
+      "/apartments/2-pieces-lauriston-paris-16e/photo-1.jpg",
+      "/apartments/2-pieces-lauriston-paris-16e/photo-2.jpg",
+      "/apartments/2-pieces-lauriston-paris-16e/photo-3.jpg",
+      "/apartments/2-pieces-lauriston-paris-16e/photo-4.jpg",
+      "/apartments/2-pieces-lauriston-paris-16e/photo-5.jpg",
+      "/apartments/2-pieces-lauriston-paris-16e/photo-6.jpg",
+      "/apartments/2-pieces-lauriston-paris-16e/photo-7.jpg",
+      "/apartments/2-pieces-lauriston-paris-16e/photo-8.jpg",
+      "/apartments/2-pieces-lauriston-paris-16e/photo-9.jpg",
+      "/apartments/2-pieces-lauriston-paris-16e/photo-10.jpg",
+      "/apartments/2-pieces-lauriston-paris-16e/photo-11.jpg",
+      "/apartments/2-pieces-lauriston-paris-16e/photo-12.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Kléber",
+        "distance": "1 min",
+        "lines": [
+          "6"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Charles de Gaulle — Étoile",
+        "distance": "5 min",
+        "lines": [
+          "1",
+          "2",
+          "6"
+        ]
+      }
+    ],
+    "title_en": "1-Bedroom Apartment Lauriston",
+    "description_en": "1-bedroom high-end apartment of approximately 41 sqm on the 3rd floor without elevator.\nApartment overlooking a quiet street. Modern equipped kitchen open to the living room.\nAmenities: Dishwasher, Nespresso machine, Oven, Microwave, Kettle, Washing machine, and small appliances.\nWalk-in shower and suspended toilet.\nLiving room with 2-seater sofa and flat-screen TV.\nBedroom with bed (160x200 cm) and storage.\nNumerous storage spaces.\nRefined design decoration.\nIndividual electric heating and hot water.",
+    "floor_en": "3rd floor",
+    "features_en": [
+      "Vacuum cleaner",
+      "Kettle",
+      "Nespresso machine",
+      "Equipped kitchen",
+      "Double glazing",
+      "Walk-in shower",
+      "Sheets provided",
+      "Iron",
+      "Fiber optic internet",
+      "Oven",
+      "Washing machine",
+      "Dishwasher",
+      "Linens provided",
+      "Queen-size bed",
+      "Nespresso machine",
+      "Microwave",
+      "Parking",
+      "Cooktop",
+      "Refrigerator",
+      "Towels provided",
+      "Smart TV",
+      "Ironing board",
+      "Toaster",
+      "Wifi"
+    ]
   }
 ]
