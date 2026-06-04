@@ -7648,5 +7648,137 @@
       "Toaster",
       "Wifi"
     ]
+  },
+  {
+    "slug": "4-chambres-paris-17e",
+    "title": "4 Chambres",
+    "address": "Rue Guersant, Paris 17e",
+    "district": "Paris 17e",
+    "surface": 150,
+    "rooms": 6,
+    "bedrooms": 4,
+    "bathrooms": 3,
+    "floor": "5e étage",
+    "status": "À louer",
+    "description": "Quartier TERNES / PEREIRE\n\nAppartement familiale de 4 chambres 4 salle de bain au 5eme étage avec ascenseur d'un immeuble bien entretenu.\n\nAppartement comprenant une entrée , un vaste double séjour, avec canapé , table basse, Tv, salle à manger ..\nUne cuisine ouverte avec mange debout entièrement équipée.\nEquipement, four, micro onde, plaque de cuisson, réfrigérateur, machine à café ..\nUne chambre parentale avec un lit double et du rangement, salle d'eau attenante.\nUne  chambre enfant avec lit simple , rangement et salle d'eau attenante.\nUne  chambre enfant avec lit simple , rangement et salle d'eau attenante avec machine à laver et sèche linge.\nUne  chambre enfant avec lit simple , rangement et salle d'eau attenante.\n2 wc Séparé et un Balcon lumineux.\n\nProche tout commerces, transport et restaurants.\n\nPossibilité de moduler le mobilier.\n\nIdeal famille.",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Baignoire",
+      "Balcon",
+      "Bouilloire",
+      "Cafetière",
+      "Chauffage collectif",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Four",
+      "Gardien",
+      "Interphone",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Sèche-linge",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Lit double",
+      "Lit simple",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Réfrigérateur",
+      "Plaques de cuisson",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Toilettes séparées",
+      "Wifi"
+    ],
+    "photos": "4-chambres-paris-17e",
+    "images": [
+      "/apartments/4-chambres-paris-17e/photo-1.jpg",
+      "/apartments/4-chambres-paris-17e/photo-2.jpg",
+      "/apartments/4-chambres-paris-17e/photo-3.jpg",
+      "/apartments/4-chambres-paris-17e/photo-4.jpg",
+      "/apartments/4-chambres-paris-17e/photo-5.jpg",
+      "/apartments/4-chambres-paris-17e/photo-6.jpg",
+      "/apartments/4-chambres-paris-17e/photo-7.jpg",
+      "/apartments/4-chambres-paris-17e/photo-8.jpg",
+      "/apartments/4-chambres-paris-17e/photo-9.jpg",
+      "/apartments/4-chambres-paris-17e/photo-10.jpg",
+      "/apartments/4-chambres-paris-17e/photo-11.jpg",
+      "/apartments/4-chambres-paris-17e/photo-12.jpg",
+      "/apartments/4-chambres-paris-17e/photo-13.jpg",
+      "/apartments/4-chambres-paris-17e/photo-14.jpg",
+      "/apartments/4-chambres-paris-17e/photo-15.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Argentine",
+        "distance": "7 min",
+        "lines": [
+          "1"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Porte Maillot",
+        "distance": "8 min",
+        "lines": [
+          "1"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Naturalia",
+        "distance": "3 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Promenade Pereire",
+        "distance": "1 min"
+      }
+    ],
+    "title_en": "4-Bedroom Apartment Ternes / Pereire",
+    "description_en": "Ternes / Pereire neighborhood\n\nFamily 4-bedroom apartment with 4 bathrooms on the 5th floor with elevator in a well-maintained building.\n\nThe apartment features an entrance, a spacious double living room with sofa, coffee table, Smart TV, and dining area.\nAn open-plan equipped kitchen with breakfast bar.\nEquipment includes: Oven, Microwave, Cooktop, Refrigerator, Coffee machine.\nA master bedroom with a double bed and storage, with adjoining bathroom.\nA children's bedroom with a single bed, storage, and adjoining bathroom.\nA children's bedroom with a single bed, storage, and adjoining bathroom with Washing machine and Dryer.\nA children's bedroom with a single bed, storage, and adjoining bathroom.\n2 separate toilets and a bright Balcony.\n\nClose to all shops, transport, and restaurants.\n\nPossibility to adjust the furniture.\n\nIdeal for families.",
+    "floor_en": "5th floor",
+    "features_en": [
+      "Elevator",
+      "Vacuum cleaner",
+      "Bathtub",
+      "Balcony",
+      "Kettle",
+      "Coffee machine",
+      "Collective heating",
+      "Equipped kitchen",
+      "Double glazing",
+      "Walk-in shower",
+      "Bed linens provided",
+      "Iron",
+      "Oven",
+      "Concierge",
+      "Intercom",
+      "Washing machine",
+      "Dishwasher",
+      "Dryer",
+      "Household linens provided",
+      "Queen size bed",
+      "Double bed",
+      "Single bed",
+      "Nespresso machine",
+      "Microwave",
+      "Parquet",
+      "Refrigerator",
+      "Cooktop",
+      "Towels provided",
+      "Smart TV",
+      "Ironing board",
+      "Toaster",
+      "Separate toilets",
+      "Wifi"
+    ]
   }
 ]
