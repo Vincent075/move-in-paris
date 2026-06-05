@@ -89,10 +89,10 @@
       "logement cadre paris"
     ],
     "priority_score": 88,
-    "used": false,
+    "used": true,
     "created_at": "2026-05-20T00:00:00.000Z",
-    "used_at": null,
-    "generated_article_slug": null,
+    "used_at": "2026-06-05T09:01:25.800Z",
+    "generated_article_slug": "bail-mobilite-vs-bail-societe-en-2026-lequel-choisir-pour-loger-un-cadre-a-paris",
     "trend_source": "seed"
   },
   {
