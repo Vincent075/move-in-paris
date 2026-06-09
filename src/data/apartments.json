@@ -8128,5 +8128,130 @@
       "Separate toilet",
       "Wifi"
     ]
+  },
+  {
+    "slug": "3-pieces-porte-maillot-paris-17e",
+    "title": "3 Pièces Porte Maillot",
+    "address": "Rue Gustave Charpentier, Paris 17e",
+    "district": "Paris 17e",
+    "surface": 73,
+    "rooms": 3,
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "floor": "10e étage et plus",
+    "status": "À louer",
+    "description": "3 pièces d’une surface d’environ 73 m2, en bon état\nAu 14eme étage avec ascenseur d’un immeuble\nrécent.\nUn séjour avec canapé convertible, une table basse et\nun Tv écran plat.\nUn espace repas avec chaises\nUne cuisine toute équipée et aménagée\nÉquipement : lave-vaisselle, four micro-onde, plaque,\nréfrigérateur, lave-linge séchant.\nUne chambre avec un lit double une salle de bain\navec baignoire.\nDeuxième chambre avec lit superposer, du\nrangement et un bureau\nune salle d’eau avec wc et wc séparé.\nChauffage collectif.",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Baignoire",
+      "Bouilloire",
+      "Canapé convertible",
+      "Chauffage collectif",
+      "Congélateur",
+      "Cuisine équipée",
+      "Lit superposé",
+      "Lit Queen size",
+      "Fer à repasser",
+      "Draps fournis",
+      "Douche à l'italienne",
+      "Double vitrage",
+      "Fibre optique",
+      "Four",
+      "Gardien",
+      "Lave-linge séchant",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Toilettes séparées",
+      "Volets roulants",
+      "Wifi"
+    ],
+    "photos": "3-pieces-porte-maillot-paris-17e",
+    "images": [
+      "/apartments/3-pieces-porte-maillot-paris-17e/photo-1.jpg",
+      "/apartments/3-pieces-porte-maillot-paris-17e/photo-2.jpg",
+      "/apartments/3-pieces-porte-maillot-paris-17e/photo-3.jpg",
+      "/apartments/3-pieces-porte-maillot-paris-17e/photo-4.jpg",
+      "/apartments/3-pieces-porte-maillot-paris-17e/photo-5.jpg",
+      "/apartments/3-pieces-porte-maillot-paris-17e/photo-6.jpg",
+      "/apartments/3-pieces-porte-maillot-paris-17e/photo-7.jpg",
+      "/apartments/3-pieces-porte-maillot-paris-17e/photo-8.jpg",
+      "/apartments/3-pieces-porte-maillot-paris-17e/photo-9.jpg",
+      "/apartments/3-pieces-porte-maillot-paris-17e/photo-10.jpg",
+      "/apartments/3-pieces-porte-maillot-paris-17e/photo-11.jpg",
+      "/apartments/3-pieces-porte-maillot-paris-17e/photo-12.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Porte Maillot",
+        "distance": "6 min",
+        "lines": [
+          "1"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Les Sablons",
+        "distance": "9 min",
+        "lines": [
+          "1"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Neuilly Cacher",
+        "distance": "4 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Marguerite Long",
+        "distance": "2 min"
+      }
+    ],
+    "title_en": "2-Bedroom Apartment Porte Maillot",
+    "description_en": "2-bedroom apartment of approximately 73 sqm, in good condition. Located on the 14th floor with elevator in a modern building. A living room with sofa bed, coffee table and flat-screen TV. A dining area with chairs. A fully equipped and fitted kitchen. Equipment: dishwasher, microwave, cooktop, refrigerator, washer dryer. One bedroom with a double bed and a bathroom with bathtub. Second bedroom with bunk bed, storage and a desk. A guest bathroom with toilet and separate toilet. Collective heating.",
+    "floor_en": "14th floor",
+    "features_en": [
+      "Elevator",
+      "Vacuum cleaner",
+      "Bathtub",
+      "Kettle",
+      "Sofa bed",
+      "Collective heating",
+      "Freezer",
+      "Equipped kitchen",
+      "Bunk bed",
+      "Queen size bed",
+      "Iron",
+      "Bedding provided",
+      "Walk-in shower",
+      "Double glazing",
+      "Fiber optic internet",
+      "Oven",
+      "Concierge",
+      "Washer dryer",
+      "Dishwasher",
+      "Bed linens provided",
+      "Nespresso machine",
+      "Microwave",
+      "Cooktop",
+      "Refrigerator",
+      "Towels provided",
+      "Smart TV",
+      "Ironing board",
+      "Toaster",
+      "Separate toilet",
+      "Rolling shutters",
+      "Wifi"
+    ]
   }
 ]
