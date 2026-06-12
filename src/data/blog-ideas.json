@@ -121,10 +121,10 @@
       "loyer maximal paris"
     ],
     "priority_score": 86,
-    "used": false,
+    "used": true,
     "created_at": "2026-05-20T00:00:00.000Z",
-    "used_at": null,
-    "generated_article_slug": null,
+    "used_at": "2026-06-12T09:01:52.472Z",
+    "generated_article_slug": "encadrement-des-loyers-a-paris-en-2026-sapplique-t-il-au-bail-societe",
     "trend_source": "seed"
   },
   {
