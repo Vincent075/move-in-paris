@@ -1639,7 +1639,7 @@
   },
   {
     "slug": "2p-batignolles-paris-17e",
-    "title": "2 Pièces Batignolles",
+    "title": "2 Pièces Legendre",
     "address": "Rue Legendre, Paris 17e",
     "district": "Paris 17e",
     "surface": 40,
@@ -1717,7 +1717,7 @@
       }
     ],
     "hasElevator": false,
-    "title_en": "1-Bedroom Apartment Batignolles",
+    "title_en": "1-Bedroom Apartment Legendre",
     "floor_en": "4th floor",
     "address_en": "Rue Legendre, Paris 17th arr.",
     "features_en": [
@@ -1725,7 +1725,7 @@
       "Equipped kitchen",
       "Keypad entry",
       "Dishwasher",
-      "Household linen provided",
+      "Bed linens provided",
       "Queen size bed",
       "Towels provided",
       "Smart TV",
@@ -1733,7 +1733,7 @@
       "Nespresso machine",
       "Microwave",
       "Toaster",
-      "Parquet flooring",
+      "Parquet",
       "Cooktop",
       "Refrigerator",
       "Washing machine",
@@ -1741,15 +1741,15 @@
       "Oven",
       "Fiber optic internet",
       "Iron",
-      "Bed linen provided",
+      "Bed sheets provided",
       "Walk-in shower",
       "Double glazing",
       "Kettle",
       "Coffee maker",
       "Sofa bed",
-      "Individual gas heating"
+      "Individual electric heating"
     ],
-    "description_en": "1-bedroom fully furnished and equipped apartment with a surface area of approximately 40 sqm. 4th floor with no elevator in a classic high-end building.\nLiving room with sofa bed, coffee table and Smart TV\nSeparate modern equipped kitchen\nEquipments: Microwave, washing machine, dishwasher, Nespresso machine, toaster…\nBedroom with a double bed and large storage.\nBathroom with walk-in shower and separate toilet\nVery bright apartment close to all amenities.\nIndividual gas heating and hot water."
+    "description_en": "1-bedroom fully furnished and equipped apartment with a surface area of approximately 40 sqm. 4th floor without elevator in a prestigious historic building.\nLiving room with sofa bed, coffee table and Smart TV\nSeparate modern equipped kitchen\nEquipments: Microwave, washing machine, dishwasher, Nespresso machine, toaster…\nBedroom with a double bed and ample storage.\nBathroom with walk-in shower and WC\nVery bright apartment close to all amenities.\nIndividual gas heating and hot water."
   },
   {
     "slug": "2-pieces-ternes-2q-paris-17e",
