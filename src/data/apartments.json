@@ -3450,7 +3450,7 @@
   },
   {
     "slug": "3-pieces-europe-paris-8e",
-    "title": "3 Pièces Europe",
+    "title": "3 Pièces Bernoulli",
     "address": "Rue Bernoulli, Paris 8e",
     "district": "Paris 8e",
     "surface": 63,
@@ -3533,7 +3533,7 @@
         "distance": "5 min"
       }
     ],
-    "title_en": "2-Bedroom Apartment Europe",
+    "title_en": "2-Bedroom Apartment Bernoulli",
     "floor_en": "5th floor",
     "address_en": "Rue Bernoulli, Paris 8th arr.",
     "features_en": [
@@ -3545,28 +3545,29 @@
       "Keypad entry",
       "Double glazing",
       "Walk-in shower",
-      "Bed linen provided",
+      "Linens provided",
       "Iron",
       "Fiber optic internet",
       "Oven",
       "Concierge",
-      "Washer-dryer",
+      "Washing machine/dryer",
       "Dishwasher",
-      "Household linen provided",
-      "Queen size bed",
+      "Household linens provided",
+      "Queen-size bed",
       "Nespresso machine",
       "Microwave",
-      "Parquet flooring",
+      "Parquet",
       "Cooktop",
       "Refrigerator",
       "Towels provided",
       "Smart TV",
       "Ironing board",
       "Toaster",
-      "Wi-Fi",
-      "Separate toilet"
+      "Wifi",
+      "Separate toilets"
     ],
-    "description_en": "2-bedroom apartment with a surface area of approximately 63 sqm, in good condition.\nOn the 5th floor with elevator in a classic building.\nA living room with sofa, coffee table and flat-screen TV.\nA semi-open equipped and fitted kitchen.\nEquipment: dishwasher, microwave oven, cooktop, refrigerator, Nespresso machine.\nWasher-dryer.\nOne bedroom with a queen-size bed and storage.\n2nd bedroom with a queen-size bed and storage.\nBathroom with walk-in shower. Separate toilet.\nIndividual electric heating and hot water."
+    "description_en": "2-bedroom apartment of approximately 63 sqm, in good condition. Located on the 5th floor with elevator of an older building. A living room with sofa, coffee table, and flat-screen TV. A semi-open equipped and fitted kitchen with dishwasher, microwave, cooktop, refrigerator, and Nespresso machine. Washing machine/dryer. First bedroom with queen-size bed and storage. Second bedroom with queen-size bed and storage. Bathroom with walk-in shower. Separate WC. Individual electric heating and hot water.",
+    "hasElevator": true
   },
   {
     "slug": "2-pieces-terrasse-paris-16e",
