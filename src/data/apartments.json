@@ -3571,7 +3571,7 @@
   },
   {
     "slug": "2-pieces-terrasse-paris-16e",
-    "title": "2 Pièces Terrasse",
+    "title": "2 Pièces Pompe Terrasse",
     "address": "Rue de la Pompe, Paris 16e",
     "district": "Paris 16e",
     "surface": 37,
@@ -3658,19 +3658,19 @@
         "distance": "5 min"
       }
     ],
-    "title_en": "1-Bedroom Apartment Terrasse",
+    "title_en": "1-Bedroom Apartment Pompe",
     "floor_en": "7th floor",
     "address_en": "Rue de la Pompe, Paris 16th arr.",
     "features_en": [
       "Elevator",
       "Vacuum cleaner",
       "Kettle",
-      "Sofa bed",
-      "Central heating",
+      "Convertible sofa",
+      "Collective heating",
       "Equipped kitchen",
       "Keypad entry",
       "Double glazing",
-      "Bed linen provided",
+      "Bed linens provided",
       "Walk-in shower",
       "Iron",
       "Fiber optic internet",
@@ -3679,11 +3679,11 @@
       "Intercom",
       "Washing machine",
       "Dishwasher",
-      "Household linen provided",
+      "Household linens provided",
       "Queen size bed",
       "Nespresso machine",
       "Microwave",
-      "Parquet flooring",
+      "Parquet",
       "Cooktop",
       "Refrigerator",
       "Towels provided",
@@ -3692,10 +3692,11 @@
       "Terrace",
       "Toaster",
       "Separate toilet",
-      "Roller shutters",
-      "Wi-Fi"
+      "Rolling shutters",
+      "Wifi"
     ],
-    "description_en": "1-bedroom apartment with a surface area of approximately 37 sqm, completely renovated.\nOn the 7th floor with elevator of a modern secured building with concierge.\nA living room with sofa bed, a coffee table and a flat-screen TV.\nA semi-open equipped and fitted kitchen.\nEquipment: dishwasher, oven, cooktop, refrigerator, microwave…\nA sleeping area with a double bed and storage.\nBathroom with bathtub and separate toilet.\nA private sunny terrace with Eiffel Tower view.\nCentral heating."
+    "description_en": "1-bedroom high-end apartment of approximately 37 sqm, fully renovated.\nOn the 7th floor with elevator in a modern secure building with concierge.\nA living room with convertible sofa, coffee table, and flat-screen TV.\nA semi-open fully equipped and fitted kitchen.\nEquipment: dishwasher, oven, cooktop, refrigerator, microwave, etc.\nA bedroom with double bed and storage space.\nBathroom with bathtub and WC.\nA private sunny terrace with Eiffel Tower view.\nCollective heating.",
+    "hasElevator": true
   },
   {
     "slug": "2-pieces-cardinet-1-paris-17e",
