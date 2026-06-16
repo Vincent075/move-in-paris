@@ -3929,7 +3929,7 @@
   },
   {
     "slug": "2-pieces-saint-georges-paris-9e",
-    "title": "2 Pièces Saint Georges",
+    "title": "2 Pièces Calais",
     "address": "Rue de Calais, Paris 9e",
     "district": "Paris 9e",
     "surface": 38,
@@ -4009,7 +4009,7 @@
         "distance": "2 min"
       }
     ],
-    "title_en": "1-Bedroom Apartment Saint Georges",
+    "title_en": "1-Bedroom Apartment Calais",
     "floor_en": "4th floor",
     "address_en": "Rue de Calais, Paris 9th arr.",
     "features_en": [
@@ -4020,27 +4020,28 @@
       "Equipped kitchen",
       "Keypad entry",
       "Double glazing",
-      "Bed linen provided",
+      "Sheets provided",
       "Iron",
       "Fiber optic internet",
       "Oven",
       "Concierge",
       "Washing machine",
       "Dishwasher",
-      "Household linen provided",
-      "Queen size bed",
+      "Linens provided",
+      "Queen-size bed",
       "Nespresso machine",
       "Microwave",
-      "Parquet flooring",
+      "Parquet",
       "Cooktop",
       "Refrigerator",
       "Towels provided",
       "Smart TV",
       "Ironing board",
       "Toaster",
-      "Wi-Fi"
+      "Wifi"
     ],
-    "description_en": "1-bedroom apartment with a surface area of approximately 38 sqm, completely renovated.\nOn the 4th floor with no elevator of a classic building.\nA living room with a 2-seater sofa, a coffee table and a flat-screen TV.\nA dining table and its chairs.\nA semi-open equipped and fitted kitchen.\nEquipment: oven, cooktop, refrigerator, coffee machine…\nA bedroom with a double bed, bedside table and storage cupboard.\nBathroom with bathtub, washing machine and separate toilet.\nIndividual electric heating and hot water."
+    "description_en": "1-bedroom apartment of approximately 38 sqm, newly renovated.\nOn the 4th floor without elevator of an old building.\nA living room with a 2-seater sofa, a coffee table and a flat-screen TV.\nA dining table and chairs.\nA semi-open equipped and fitted kitchen.\nEquipment: oven, cooktop, refrigerator, Nespresso machine…\nOne bedroom with a double bed, bedside table and storage wardrobe.\nBathroom with bathtub, washing machine and WC.\nIndividual electric heating and hot water.",
+    "hasElevator": false
   },
   {
     "slug": "2-pieces-wagram-paris-17e",
