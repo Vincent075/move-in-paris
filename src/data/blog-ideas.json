@@ -73,10 +73,10 @@
       "logement expat paris"
     ],
     "priority_score": 85,
-    "used": false,
+    "used": true,
     "created_at": "2026-05-20T00:00:00.000Z",
-    "used_at": null,
-    "generated_article_slug": null,
+    "used_at": "2026-06-16T09:01:24.587Z",
+    "generated_article_slug": "heritage-des-jo-paris-2024-quel-impact-sur-la-mobilite-internationale-en-2026",
     "trend_source": "seed"
   },
   {
