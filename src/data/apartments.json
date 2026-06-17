@@ -8256,5 +8256,126 @@
       "Rolling shutters",
       "Wifi"
     ]
+  },
+  {
+    "slug": "3-pieces-quai-de-la-loire-paris-19e",
+    "title": "3 Pieces Quai de la Loire",
+    "address": "Quai de la Loire, Paris 19e",
+    "district": "Paris 19e",
+    "surface": 63,
+    "rooms": 3,
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "floor": "3e étage",
+    "status": "À louer",
+    "description": "3 pièces d’une surface d’environ 63 m2, en bon état Au 3eme étage sans ascenseur d’un immeuble ancien \nUn séjour avec canapé, une table basse.  \nUn espace dinatoire avec table et chaise.  \nUne cuisine toute équipée et aménagée  \nÉquipement : lave-vaisselle, four micro-onde, plaque, réfrigérateur, lave-linge, sèche linge.  \nUne chambre avec un lit double , du rangement.   \nUne deuxième chambre avec canapé convertible et espace bureau .                                               \nUne salle de bain avec douche et WC séparé.                                        \nVue sur les quais sans vis à vis  \nChauffage individuelle  \n",
+    "features": [
+      "Aspirateur",
+      "Bouilloire",
+      "Cafetière",
+      "Canapé convertible",
+      "Chauffage électrique individuel",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Sèche-linge",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Toilettes séparées",
+      "Wifi"
+    ],
+    "photos": "3-pieces-quai-de-la-loire-paris-19e",
+    "images": [
+      "/apartments/3-pieces-quai-de-la-loire-paris-19e/photo-1.jpg",
+      "/apartments/3-pieces-quai-de-la-loire-paris-19e/photo-2.jpg",
+      "/apartments/3-pieces-quai-de-la-loire-paris-19e/photo-3.jpg",
+      "/apartments/3-pieces-quai-de-la-loire-paris-19e/photo-4.jpg",
+      "/apartments/3-pieces-quai-de-la-loire-paris-19e/photo-5.jpg",
+      "/apartments/3-pieces-quai-de-la-loire-paris-19e/photo-6.jpg",
+      "/apartments/3-pieces-quai-de-la-loire-paris-19e/photo-7.jpg",
+      "/apartments/3-pieces-quai-de-la-loire-paris-19e/photo-8.jpg",
+      "/apartments/3-pieces-quai-de-la-loire-paris-19e/photo-9.jpg",
+      "/apartments/3-pieces-quai-de-la-loire-paris-19e/photo-10.jpg",
+      "/apartments/3-pieces-quai-de-la-loire-paris-19e/photo-11.jpg",
+      "/apartments/3-pieces-quai-de-la-loire-paris-19e/photo-12.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Jaurès",
+        "distance": "2 min",
+        "lines": [
+          "2",
+          "5",
+          "7bis"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Stalingrad",
+        "distance": "4 min",
+        "lines": [
+          "2",
+          "5",
+          "7"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Monoprix",
+        "distance": "2 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square du Quai de la Seine",
+        "distance": "2 min"
+      }
+    ],
+    "title_en": "2-Bedroom Apartment Quai de la Loire",
+    "description_en": "2-bedroom apartment of approximately 63 sqm, in good condition on the 3rd floor without elevator of an old building.\n\nA living area with sofa and coffee table.\nA dining space with table and chairs.\nA fully equipped and fitted kitchen.\nEquipment: dishwasher, microwave, cooktop, refrigerator, washing machine, dryer.\nOne bedroom with a double bed and storage.\nA second bedroom with convertible sofa and office space.\nA bathroom with shower and separate WC.\nView over the quays with no overlooking.\nIndividual heating.",
+    "floor_en": "3rd floor",
+    "features_en": [
+      "Vacuum cleaner",
+      "Kettle",
+      "Coffee maker",
+      "Convertible sofa",
+      "Individual electric heating",
+      "Equipped kitchen",
+      "Double glazing",
+      "Walk-in shower",
+      "Iron",
+      "Fiber optic internet",
+      "Oven",
+      "Washing machine",
+      "Dishwasher",
+      "Household linen provided",
+      "Queen-size bed",
+      "Nespresso machine",
+      "Microwave",
+      "Parquet",
+      "Cooktop",
+      "Refrigerator",
+      "Dryer",
+      "Towels provided",
+      "Smart TV",
+      "Ironing board",
+      "Toaster",
+      "Separate toilets",
+      "Wifi"
+    ]
   }
 ]
