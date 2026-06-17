@@ -4047,7 +4047,7 @@
   },
   {
     "slug": "2-pieces-wagram-paris-17e",
-    "title": "2 Pièces Wagram",
+    "title": "2 Pièces Vernicquet",
     "address": "Rue Verniquet, Paris 17e",
     "district": "Paris 17e",
     "surface": 44,
@@ -4130,7 +4130,7 @@
         "distance": "3 min"
       }
     ],
-    "title_en": "1-Bedroom Apartment Wagram",
+    "title_en": "1-Bedroom Apartment Vernicquet",
     "floor_en": "8th floor",
     "address_en": "Rue Verniquet, Paris 17th arr.",
     "features_en": [
@@ -4138,21 +4138,21 @@
       "Vacuum cleaner",
       "Bathtub",
       "Kettle",
-      "Central heating",
+      "Collective heating",
       "Equipped kitchen",
       "Double glazing",
-      "Bed linen provided",
+      "Sheets provided",
       "Iron",
       "Fiber optic internet",
       "Oven",
       "Concierge",
       "Washing machine",
       "Dishwasher",
-      "Household linen provided",
-      "Queen size bed",
+      "Household linens provided",
+      "Queen-size bed",
       "Nespresso machine",
       "Microwave",
-      "Parquet flooring",
+      "Parquet",
       "Cooktop",
       "Refrigerator",
       "Towels provided",
@@ -4161,10 +4161,11 @@
       "Terrace",
       "Toaster",
       "Separate toilet",
-      "Roller shutters",
-      "Wi-Fi"
+      "Rolling shutters",
+      "Wifi"
     ],
-    "description_en": "1-bedroom apartment of approximately 44 sqm, in good condition.\nOn the 8th floor with elevator in a classic building.\nA living room with sofa, a coffee table and a flat-screen TV.\nA standing dining area with chairs.\nA fully equipped and fitted kitchen.\nEquipment: dishwasher, microwave, cooktop, refrigerator, washing machine.\nOne bedroom with a double bed, a bathroom with bathtub and separate toilet.\nTerrace with Eiffel Tower view.\nIndividual heating."
+    "description_en": "1-bedroom apartment of approximately 44 sqm, in good condition. Located on the 8th floor with elevator in a classic Parisian building. Features a living room with sofa, coffee table, and flat-screen Smart TV, a standing dining area with chairs, and a fully equipped and fitted kitchen. Kitchen equipment includes dishwasher, microwave, cooktop, refrigerator, and washing machine. The bedroom includes a double bed, and the bathroom features a bathtub with separate toilet. Terrace with Eiffel Tower view. Individual heating.",
+    "hasElevator": true
   },
   {
     "slug": "2-pieces-champs-elysees-paris-8e",
