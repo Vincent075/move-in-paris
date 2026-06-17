@@ -5161,7 +5161,7 @@
   },
   {
     "slug": "2-pieces-acacias-paris-17e",
-    "title": "2 Pièces Acacias ",
+    "title": "2 Pièces Acacias 1er D",
     "address": "Rue des Acacias, Paris 17e",
     "district": "Paris 17e",
     "surface": 40,
@@ -5242,7 +5242,7 @@
         "distance": "4 min"
       }
     ],
-    "title_en": "1-Bedroom Apartment Acacias",
+    "title_en": "1-Bedroom Apartment Acacias 1er D",
     "floor_en": "1st floor",
     "address_en": "Rue des Acacias, Paris 17th arr.",
     "features_en": [
@@ -5254,7 +5254,7 @@
       "Equipped kitchen",
       "Keypad entry",
       "Double glazing",
-      "Bed linen provided",
+      "Bedding provided",
       "Iron",
       "Fiber optic internet",
       "Oven",
@@ -5262,20 +5262,21 @@
       "Intercom",
       "Washing machine",
       "Dishwasher",
-      "Household linen provided",
+      "Linens provided",
       "Queen size bed",
       "Nespresso machine",
       "Microwave",
-      "Parquet flooring",
+      "Parquet",
       "Cooktop",
       "Refrigerator",
       "Towels provided",
       "Smart TV",
       "Ironing board",
       "Toaster",
-      "Wi-Fi"
+      "Wifi"
     ],
-    "description_en": "1-bedroom furnished apartment of approximately 40 sqm\n1st floor with elevator, street side (double glazing)\nEntrance, living room with 2-seater sofa, plasma flat-screen TV\nUnlimited Internet-TV-Telephone\nEquipped open kitchen opening onto the living room\nEquipment: Refrigerator, microwave, traditional oven, hood, Nespresso machine, small appliances…\nBedroom with double bed\nBathroom adjoining the bedroom with bathtub and separate toilet. Central heating\nTernes neighborhood, numerous shops around the apartment"
+    "description_en": "1-bedroom furnished apartment of approximately 40 sqm\n1st floor with elevator, facing the street (double glazing)\nEntrance, living room with 2-seater sofa, plasma screen TV\nUnlimited Internet-TV-Telephone\nEquipped open kitchen overlooking the living room\nEquipment: Refrigerator, microwave, traditional oven, hood, Nespresso machine, small appliances…\nBedroom with double bed\nBathroom adjoining the bedroom with bathtub and WC Central heating\nTernes neighborhood, numerous shops around the apartment",
+    "hasElevator": true
   },
   {
     "slug": "2-pieces-etoile-3eme-paris-17e",
