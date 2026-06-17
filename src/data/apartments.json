@@ -8377,5 +8377,118 @@
       "Separate toilets",
       "Wifi"
     ]
+  },
+  {
+    "slug": "2-pieces-francoeur-paris-18e",
+    "title": "2 Pièces Francoeur",
+    "address": "Rue Francoeur, Paris 18e",
+    "district": "Paris 18e",
+    "surface": 37,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "5e étage",
+    "status": "À louer",
+    "description": "2 pièces d’une surface d’environ 37 m2, en bon état\nAu 5eme étage avec ascenseur d’un immeuble ancien\nUn séjour avec canapé, une table basse et espace\nbureau et Tv.\nUn espace dinatoire avec table et chaise.\nUne cuisine toute équipée et aménagée\nÉquipement : four micro-onde, plaque, réfrigérateur,\nlave-linge.\nUne chambre avec un lit double, du rangement.\nUne salle de bain avec douche et WC.\nBalcon filant\nChauffage collectif.",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Balcon",
+      "Cafetière",
+      "Chauffage collectif",
+      "Cuisine équipée",
+      "Lit double",
+      "Linge de maison fourni",
+      "Digicode",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Lave-linge",
+      "Micro-ondes",
+      "Machine Nespresso",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Table à repasser",
+      "Télévision 4K",
+      "Toaster",
+      "Wifi"
+    ],
+    "photos": "2-pieces-francoeur-paris-18e",
+    "images": [
+      "/apartments/2-pieces-francoeur-paris-18e/photo-1.jpg",
+      "/apartments/2-pieces-francoeur-paris-18e/photo-2.jpg",
+      "/apartments/2-pieces-francoeur-paris-18e/photo-3.jpg",
+      "/apartments/2-pieces-francoeur-paris-18e/photo-4.jpg",
+      "/apartments/2-pieces-francoeur-paris-18e/photo-5.jpg",
+      "/apartments/2-pieces-francoeur-paris-18e/photo-6.jpg",
+      "/apartments/2-pieces-francoeur-paris-18e/photo-7.jpg",
+      "/apartments/2-pieces-francoeur-paris-18e/photo-8.jpg",
+      "/apartments/2-pieces-francoeur-paris-18e/photo-9.jpg",
+      "/apartments/2-pieces-francoeur-paris-18e/photo-10.jpg",
+      "/apartments/2-pieces-francoeur-paris-18e/photo-11.jpg",
+      "/apartments/2-pieces-francoeur-paris-18e/photo-12.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Lamarck - Caulaincourt",
+        "distance": "3 min",
+        "lines": [
+          "12"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Jules Joffrin",
+        "distance": "4 min",
+        "lines": [
+          "12"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "La Vie Claire",
+        "distance": "2 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Jardin sauvage Saint-Vincent",
+        "distance": "3 min"
+      }
+    ],
+    "title_en": "1-Bedroom Apartment Francoeur",
+    "description_en": "1-bedroom apartment of approximately 37 sqm, in good condition\nOn the 5th floor with elevator of an old building\nA living room with sofa, coffee table and desk space\nwith TV.\nA dining area with table and chairs.\nA fully equipped and fitted kitchen\nEquipment: microwave, cooktop, refrigerator,\nwashing machine.\nA bedroom with a double bed and storage.\nA bathroom with walk-in shower and WC.\nRunning balcony\nCommunal heating.",
+    "floor_en": "5th floor",
+    "features_en": [
+      "Elevator",
+      "Vacuum cleaner",
+      "Balcony",
+      "Coffee machine",
+      "Communal heating",
+      "Equipped kitchen",
+      "Double bed",
+      "Household linens provided",
+      "Keypad entry",
+      "Walk-in shower",
+      "Sheets provided",
+      "Iron",
+      "Fiber optic internet",
+      "Oven",
+      "Washing machine",
+      "Microwave",
+      "Nespresso machine",
+      "Parquet",
+      "Cooktop",
+      "Refrigerator",
+      "Towels provided",
+      "Ironing board",
+      "Smart TV",
+      "Toaster",
+      "Wifi"
+    ]
   }
 ]
