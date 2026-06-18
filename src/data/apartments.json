@@ -1023,7 +1023,7 @@
   },
   {
     "slug": "2p-ternes-3-paris-17e",
-    "title": "2 Pièces Ternes - 6R",
+    "title": "2 Pièces Acacias - 6R",
     "address": "Rue des Acacias 75017 Paris, Paris 17e",
     "district": "Paris 17e",
     "surface": 32,
@@ -1112,7 +1112,7 @@
       }
     ],
     "hasElevator": true,
-    "title_en": "1-Bedroom Apartment Ternes",
+    "title_en": "1-Bedroom Apartment Acacias",
     "floor_en": "6th floor",
     "address_en": "Rue des Acacias 75017 Paris, Paris 17th arr.",
     "features_en": [
@@ -1121,16 +1121,16 @@
       "Equipped kitchen",
       "Keypad entry",
       "Dishwasher",
-      "Household linen provided",
-      "Queen size bed",
+      "Household linens provided",
+      "Queen-size bed",
       "Towels provided",
       "Smart TV",
       "Ironing board",
       "Nespresso machine",
       "Microwave",
       "Toaster",
-      "Roller shutters",
-      "Wi-Fi",
+      "Rolling shutters",
+      "Wifi",
       "Cooktop",
       "Refrigerator",
       "Washing machine",
@@ -1139,15 +1139,15 @@
       "Traditional oven",
       "Fiber optic internet",
       "Iron",
-      "Bed linen provided",
+      "Sheets provided",
       "Walk-in shower",
       "Double glazing",
       "Kettle",
       "Coffee maker",
-      "Central heating",
+      "Collective heating",
       "Freezer"
     ],
-    "description_en": "1-bedroom apartment with a surface area of approximately 32 sqm. On the 6th floor with elevator of a modern building. Secured access via keypad entry. Living room with 2-seat sofa, coffee table and plasma-screen TV. High-speed unlimited internet. Bedroom with double bed and storage in the entrance. Fully equipped and fitted open kitchen overlooking the living room. Equipment: washing machine, traditional oven, microwave, cooktop, refrigerator/freezer, kettle, toaster... Bathroom with walk-in shower and separate toilet. Central heating and hot water."
+    "description_en": "1-bedroom apartment with a surface area of approximately 32 sqm. On the 6th floor with elevator in a modern building. Secured access via keypad entry. Living room with 2-seater sofa, coffee table, and plasma screen TV. Unlimited high-speed internet. Bedroom with double bed and storage in the entrance. Fully equipped and fitted kitchen open to the living room. Equipment: washing machine, traditional oven, microwave, cooktop, refrigerator/freezer, kettle, toaster, etc. Bathroom with walk-in shower and WC. Collective heating and hot water."
   },
   {
     "slug": "3p-saint-augustin-paris-8e",
