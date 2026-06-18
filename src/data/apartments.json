@@ -5401,7 +5401,7 @@
   },
   {
     "slug": "3-pieces-cardinet-paris-17e",
-    "title": "3 Pièces Cardinet",
+    "title": "3 Pièces Nollet",
     "address": "Rue Nollet, Paris 17e",
     "district": "Paris 17e",
     "surface": 72,
@@ -5482,7 +5482,7 @@
         "distance": "3 min"
       }
     ],
-    "title_en": "2-Bedroom Apartment Cardinet",
+    "title_en": "2-Bedroom Apartment Nollet",
     "floor_en": "2nd floor",
     "address_en": "Rue Nollet, Paris 17th arr.",
     "features_en": [
@@ -5496,14 +5496,14 @@
       "Keypad entry",
       "Double glazing",
       "Walk-in shower",
-      "Bed linen provided",
+      "Bed linens provided",
       "Iron",
       "Fiber optic internet",
       "Oven",
       "Concierge",
       "Dishwasher",
-      "Household linen provided",
-      "Queen size bed",
+      "Household linens provided",
+      "Queen-size bed",
       "Nespresso machine",
       "Microwave",
       "Cooktop",
@@ -5514,9 +5514,10 @@
       "Ironing board",
       "Toaster",
       "Separate toilet",
-      "Wi-Fi"
+      "Wifi"
     ],
-    "description_en": "2-bedroom apartment with a surface area of approximately 72 sqm, completely renovated in July 2023. Located on the 2nd floor with elevator in a classic stone building with concierge. A living room with a 3-seater sofa, an armchair, a coffee table and a flat-screen TV. A dining area with table and chairs. An open equipped and fitted kitchen with dishwasher, oven, cooktop, refrigerator, microwave, etc. A bedroom with a queen-size bed and storage with ensuite bathroom. A second bedroom with a queen-size bed and storage with ensuite bathroom. Individual gas heating and hot water."
+    "description_en": "2-bedroom apartment of approximately 72 sqm, completely renovated in July 2023. Located on the 2nd floor with elevator in a Haussmann stone building with concierge. The living area features a 3-seater sofa, armchair, coffee table, and flat-screen Smart TV, complemented by a dining space with table and chairs. An open-plan fully equipped and fitted kitchen includes dishwasher, oven, cooktop, refrigerator, and microwave. The first bedroom features a queen-size bed with storage and an ensuite bathroom. The second bedroom also has a queen-size bed with storage and an ensuite bathroom. Individual gas heating and hot water.",
+    "hasElevator": true
   },
   {
     "slug": "2-pieces-montorgeuil-paris-1er",
