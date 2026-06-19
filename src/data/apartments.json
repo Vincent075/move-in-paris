@@ -5890,7 +5890,7 @@
   },
   {
     "slug": "2-pieces-republique-paris-11e",
-    "title": "2 Pièces République",
+    "title": "2 Pièces Parmentier",
     "address": "Avenue Parmentier, Paris 11e",
     "district": "Paris 11e",
     "surface": 58,
@@ -5978,7 +5978,7 @@
         "distance": "4 min"
       }
     ],
-    "title_en": "1-Bedroom Apartment République",
+    "title_en": "1-Bedroom Apartment Parmentier",
     "floor_en": "5th floor",
     "address_en": "Avenue Parmentier, Paris 11th arr.",
     "features_en": [
@@ -5991,17 +5991,17 @@
       "Keypad entry",
       "Double glazing",
       "Walk-in shower",
-      "Bed linen provided",
+      "Bed linens provided",
       "Iron",
       "Fiber optic internet",
       "Oven",
       "Washing machine",
       "Dishwasher",
-      "Household linen provided",
-      "Queen size bed",
+      "Household linens provided",
+      "Queen-size bed",
       "Nespresso machine",
       "Microwave",
-      "Parquet flooring",
+      "Parquet",
       "Cooktop",
       "Refrigerator",
       "Towels provided",
@@ -6009,9 +6009,10 @@
       "Ironing board",
       "Toaster",
       "Separate toilet",
-      "Wi-Fi"
+      "Wifi"
     ],
-    "description_en": "1-bedroom apartment with a surface area of approximately 58 sqm, in excellent condition. On the 5th floor with elevator on the courtyard side of a classic building. A living room with a 4-seater corner sofa, a coffee table and a flat-screen TV. A dining bar. A fully equipped and fitted kitchen. Equipment: dishwasher, microwave oven, cooktop, refrigerator, Nespresso machine, washing machine. One bedroom with a queen-size bed and storage. Bathroom with walk-in shower. Separate toilet. Individual gas heating and hot water."
+    "description_en": "1-bedroom apartment of approximately 58 sqm, in excellent condition. On the 5th floor with elevator in the courtyard of a historic building. A living room with 4-seater corner sofa, coffee table, and flat-screen TV. Dining bar. A fully equipped and fitted kitchen. Equipment: dishwasher, microwave, cooktop, refrigerator, Nespresso machine, washing machine. One bedroom with queen-size bed and storage. Bathroom with walk-in shower. Separate WC. Individual gas heating and hot water.",
+    "hasElevator": true
   },
   {
     "slug": "3-pieces-ecole-militaire-paris-7e",
