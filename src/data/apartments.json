@@ -8496,7 +8496,7 @@
   },
   {
     "slug": "r-colombes",
-    "title": "r",
+    "title": "4 Pièces Colombes",
     "address": "Rue des Vallées, Colombes",
     "district": "Colombes",
     "surface": 86,
@@ -8588,8 +8588,8 @@
         "distance": "3 min"
       }
     ],
-    "title_en": "3-Bedroom Apartment",
-    "description_en": "3-bedroom high-end apartment of approximately 86 sqm on the 5th floor with elevator in a modern, well-maintained and secure building. Furnished apartment comprising an entrance, a living room with sofa, coffee table, and Smart TV, and an open equipped kitchen. Equipment: oven, refrigerator, cooktop, microwave, washing machine with dryer, dishwasher. Master bedroom with double bed (160/200), storage, and office desk. 2nd bedroom with double bed (140/200) and storage. 3rd bedroom with single bed and storage. Shower room, bathroom with toilet, and separate toilet. Terrace with Eiffel Tower view + balcony. Collective heating and hot water.",
+    "title_en": "3-Bedroom Apartment Colombes",
+    "description_en": "3-bedroom apartment of approximately 86 sqm on the 5th floor with elevator in a modern, well-maintained and secure building.\n\nFurnished apartment comprising an entrance, a living room with sofa, coffee table, and Smart TV, and an open-plan equipped kitchen.\n\nKitchen equipment: oven, refrigerator, cooktop, microwave, washing machine/dryer combination, and dishwasher.\n\nMaster bedroom with double bed (160/200cm), storage, and desk. Second bedroom with double bed (140/200cm) and storage. Third bedroom with single bed and storage.\n\nShower room, bathroom with toilet, and separate toilet.\n\nTerrace with Eiffel Tower view and balcony.\n\nCollective heating and hot water.",
     "floor_en": "5th floor",
     "features_en": [
       "Elevator",
@@ -8608,11 +8608,11 @@
       "Fiber optic internet",
       "Oven",
       "Intercom",
-      "Washing machine with dryer",
+      "Washer/dryer combination",
       "Dishwasher",
       "Household linens provided",
       "Double bed",
-      "Queen size bed",
+      "Queen-size bed",
       "Single bed",
       "Nespresso machine",
       "Microwave",
@@ -8626,6 +8626,7 @@
       "Toaster",
       "Separate toilet",
       "Wifi"
-    ]
+    ],
+    "hasElevator": true
   }
 ]
