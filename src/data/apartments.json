@@ -8629,5 +8629,109 @@
       "Wifi"
     ],
     "hasElevator": true
+  },
+  {
+    "slug": "2-pieces-rue-bagnolet-paris-20e",
+    "title": "2 PIèces Rue Bagnolet",
+    "address": "Rue de Bagnolet, Paris 20e",
+    "district": "Paris 20e",
+    "surface": 52,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "Rez-de-chaussée",
+    "status": "À louer",
+    "description": "Charmant 2 pièces avec terrasse et jardin privatif – Village de Charonne (Paris 20e) Au cœur du Village de Charonne, à deux pas du square Antoine Blondin, découvrez ce ravissant appartement de 2 pièces idéal pour un séjour professionnel à Paris. Situé en rez-de-jardin d'une résidence récente de bon standing (livraison février 2019), il bénéficie d'un véritable atout en ville : une terrasse et un jardin privatif de 20 m² pour profiter des beaux jours en toute tranquillité. L'appartement se compose d'une entrée, d'un séjour lumineux avec cuisine ouverte entièrement équipée, d'une chambre offrant une belle hauteur sous plafond avec couchage en mezzanine métal, et d'une salle de bains avec WC. Prestations : baies vitrées double vitrage, eau chaude et chauffage collectifs. Entièrement meublé et équipé, cet appartement est parfait pour les cadres et professionnels en mobilité recherchant un logement clé en main pour un séjour de moyenne durée. Charges, ménage et accompagnement personnalisé inclus dans nos formules corporate. Quartier vivant et authentique, commerces de proximité, transports à pied (métro Alexandre Dumas / Porte de Bagnolet, bus, Vélib')",
+    "features": [
+      "Aspirateur",
+      "Baignoire",
+      "Bouilloire",
+      "Cafetière",
+      "Chauffage collectif",
+      "Cuisine équipée",
+      "Fer à repasser",
+      "Four",
+      "Lave-linge",
+      "Double vitrage",
+      "Lave-vaisselle",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Smart TV",
+      "Table à repasser",
+      "Terrasse",
+      "Toaster"
+    ],
+    "photos": "2-pieces-rue-bagnolet-paris-20e",
+    "images": [
+      "/apartments/2-pieces-rue-bagnolet-paris-20e/photo-1.jpg",
+      "/apartments/2-pieces-rue-bagnolet-paris-20e/photo-2.jpg",
+      "/apartments/2-pieces-rue-bagnolet-paris-20e/photo-3.jpg",
+      "/apartments/2-pieces-rue-bagnolet-paris-20e/photo-4.jpg",
+      "/apartments/2-pieces-rue-bagnolet-paris-20e/photo-5.jpg",
+      "/apartments/2-pieces-rue-bagnolet-paris-20e/photo-6.jpg",
+      "/apartments/2-pieces-rue-bagnolet-paris-20e/photo-7.jpg",
+      "/apartments/2-pieces-rue-bagnolet-paris-20e/photo-8.jpg",
+      "/apartments/2-pieces-rue-bagnolet-paris-20e/photo-9.jpg",
+      "/apartments/2-pieces-rue-bagnolet-paris-20e/photo-10.jpg",
+      "/apartments/2-pieces-rue-bagnolet-paris-20e/photo-11.jpg",
+      "/apartments/2-pieces-rue-bagnolet-paris-20e/photo-12.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Porte de Bagnolet",
+        "distance": "6 min",
+        "lines": [
+          "3"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Gambetta",
+        "distance": "8 min",
+        "lines": [
+          "3",
+          "3bis"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "ToutBon vrac et bio",
+        "distance": "4 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Antoine Blondin",
+        "distance": "1 min"
+      }
+    ],
+    "title_en": "1-Bedroom Apartment Rue Bagnolet",
+    "description_en": "Charming 1-bedroom apartment with terrace and private garden – Village de Charonne (Paris 20th arrondissement). In the heart of Village de Charonne, a stone's throw from square Antoine Blondin, discover this delightful 1-bedroom apartment ideal for a professional stay in Paris. Located on the ground floor of a recent high-end residence (completed February 2019), it benefits from a true asset in the city: a terrace and private garden of 20 sqm to enjoy fine weather in complete tranquility. The apartment comprises an entrance, a bright living room with fully equipped open kitchen, a bedroom offering beautiful ceiling height with metal mezzanine bed, and a bathroom with WC. Features: double-glazed bay windows, hot water and collective heating. Fully furnished and equipped, this apartment is perfect for executives and professionals in mobility seeking a turnkey rental for a medium-term stay. Service charges, housekeeping and personalized support included in our corporate packages. Vibrant and authentic neighborhood, local shops, transport on foot (Alexandre Dumas / Porte de Bagnolet Metro, bus, Vélib')",
+    "floor_en": "Ground floor",
+    "features_en": [
+      "Vacuum cleaner",
+      "Bathtub",
+      "Kettle",
+      "Coffee maker",
+      "Collective heating",
+      "Equipped kitchen",
+      "Iron",
+      "Oven",
+      "Washing machine",
+      "Double glazing",
+      "Dishwasher",
+      "Queen size bed",
+      "Nespresso machine",
+      "Microwave",
+      "Cooktop",
+      "Refrigerator",
+      "Smart TV",
+      "Ironing board",
+      "Terrace",
+      "Toaster"
+    ]
   }
 ]
