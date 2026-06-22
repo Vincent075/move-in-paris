@@ -8809,20 +8809,20 @@
       }
     ],
     "title_en": "1-Bedroom Apartment Université",
-    "description_en": "In the heart of the prestigious 7th arrondissement, steps away from Saint-Germain-des-Prés and the Seine quays, discover an exceptional 1-bedroom apartment of approximately 42 sqm, completely renovated and nestled in a courtyard within a characterful historic building.\nFrom the moment you enter, natural light floods thoughtfully designed spaces where every detail has been carefully curated to offer an impeccably renovated, refined and decidedly contemporary interior.\nLocated on the 3rd floor with elevator access, this rare property combines the charm of yesteryear with modern comfort. Its fully equipped kitchen, washing machine and premium amenities make it an elegant and highly functional living space, ready to welcome discerning guests.\nA true sanctuary in the heart of Paris, the apartment enjoys absolute tranquility and overlooks a shared tree-lined courtyard enhanced by a small garden, an invitation to serenity far from the bustle of the city. A residential and peaceful environment, a rare privilege in one of the capital's most sought-after neighborhoods.\nJust steps from the Musée d'Orsay, the National Assembly, boutiques and the finest addresses of the left bank, this address embodies the art of Parisian living in its most elegant form. An exceptional opportunity for a stay worthy of your expectations.",
+    "description_en": "In the heart of the prestigious 7th arrondissement, just steps from Saint-Germain-des-Prés and the Seine quays, discover an exceptional 1-bedroom apartment of approximately 42 sqm, entirely renovated and nestled on a courtyard within a characterful historic building.\nFrom the entrance, natural light floods thoughtfully designed spaces, where every detail has been carefully curated to offer a refined, resolutely contemporary interior that feels brand new.\nLocated on the 3rd floor with elevator access, this rare property combines the charm of a classic Parisian building with modern comfort. Its fully equipped kitchen, washing machine, and premium amenities make it an elegant and functional living space, ready to welcome the most discerning clients.\nA true haven of peace in the heart of Paris, the apartment benefits from absolute tranquility and overlooks a shared leafy courtyard adorned with a small garden—an invitation to serenity away from the hustle and bustle of the city. A residential and peaceful environment, a rare privilege in one of the capital's most sought-after neighborhoods.\nSteps away from the Musée d'Orsay, the National Assembly, boutiques, and the finest addresses on the Left Bank, this address embodies the Parisian art of living in its most elegant form. An exceptional opportunity for a stay worthy of your expectations.",
     "floor_en": "3rd floor",
     "features_en": [
       "Elevator",
       "Vacuum cleaner",
       "Bathtub",
       "Kettle",
-      "Sofa bed",
+      "Convertible sofa",
       "Equipped kitchen",
       "Double glazing",
       "Oven",
       "Washing machine",
       "Dishwasher",
-      "Linen provided",
+      "Household linens provided",
       "Queen-size bed",
       "Nespresso machine",
       "Parking",
@@ -8834,6 +8834,7 @@
       "Terrace",
       "Toaster",
       "Wifi"
-    ]
+    ],
+    "hasElevator": true
   }
 ]
