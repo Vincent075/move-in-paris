@@ -8734,5 +8734,106 @@
       "Toaster"
     ],
     "hasElevator": false
+  },
+  {
+    "slug": "2-pieces-universite-paris-7e",
+    "title": "2 Pièces Université",
+    "address": "Rue de l'Université, Paris 7e",
+    "district": "Paris 7e",
+    "surface": 42,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "3e étage",
+    "status": "À louer",
+    "description": "Au cœur du prestigieux 7e arrondissement, à quelques pas de Saint-Germain-des-Prés et des quais de Seine, découvrez un appartement d'exception de 42 m² entièrement rénové, niché sur cour au sein d'un immeuble ancien plein de caractère. \nDès l'entrée, la lumière naturelle inonde des volumes pensés avec goût, où chaque détail a été soigné pour offrir un intérieur comme neuf, raffiné et résolument contemporain.\nSitué au 3e étage avec ascenseur, ce bien rare conjugue le charme de l'ancien et le confort du neuf. Sa cuisine entièrement équipée, son lave-linge et ses prestations haut de gamme en font un lieu de vie aussi élégant que fonctionnel, prêt à accueillir une clientèle exigeante.\nVéritable havre de paix en plein Paris, l'appartement bénéficie d'un calme absolu et donne sur une cour commune arborée agrémentée d'un petit jardin, invitation à la sérénité loin de l'agitation de la ville. Un environnement résidentiel et paisible, privilège rare dans ce quartier parmi les plus prisés de la capitale.\nÀ deux pas du musée d'Orsay, de l'Assemblée nationale, des boutiques et des plus belles adresses de la rive gauche, cette adresse incarne l'art de vivre parisien dans ce qu'il a de plus élégant. Une opportunité d'exception pour un séjour à la hauteur de vos attentes.",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Baignoire",
+      "Bouilloire",
+      "Canapé convertible",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Four",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Parking",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Terrasse",
+      "Toaster",
+      "Wifi"
+    ],
+    "photos": "2-pieces-universite-paris-7e",
+    "images": [
+      "/apartments/2-pieces-universite-paris-7e/photo-1.jpg",
+      "/apartments/2-pieces-universite-paris-7e/photo-2.jpg",
+      "/apartments/2-pieces-universite-paris-7e/photo-3.jpg",
+      "/apartments/2-pieces-universite-paris-7e/photo-4.jpg",
+      "/apartments/2-pieces-universite-paris-7e/photo-5.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "La Tour Maubourg",
+        "distance": "5 min",
+        "lines": [
+          "8"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Invalides",
+        "distance": "5 min",
+        "lines": [
+          "13",
+          "8"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "G20",
+        "distance": "2 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Place Salvador Allende",
+        "distance": "5 min"
+      }
+    ],
+    "title_en": "1-Bedroom Apartment Université",
+    "description_en": "In the heart of the prestigious 7th arrondissement, steps away from Saint-Germain-des-Prés and the Seine quays, discover an exceptional 1-bedroom apartment of approximately 42 sqm, completely renovated and nestled in a courtyard within a characterful historic building.\nFrom the moment you enter, natural light floods thoughtfully designed spaces where every detail has been carefully curated to offer an impeccably renovated, refined and decidedly contemporary interior.\nLocated on the 3rd floor with elevator access, this rare property combines the charm of yesteryear with modern comfort. Its fully equipped kitchen, washing machine and premium amenities make it an elegant and highly functional living space, ready to welcome discerning guests.\nA true sanctuary in the heart of Paris, the apartment enjoys absolute tranquility and overlooks a shared tree-lined courtyard enhanced by a small garden, an invitation to serenity far from the bustle of the city. A residential and peaceful environment, a rare privilege in one of the capital's most sought-after neighborhoods.\nJust steps from the Musée d'Orsay, the National Assembly, boutiques and the finest addresses of the left bank, this address embodies the art of Parisian living in its most elegant form. An exceptional opportunity for a stay worthy of your expectations.",
+    "floor_en": "3rd floor",
+    "features_en": [
+      "Elevator",
+      "Vacuum cleaner",
+      "Bathtub",
+      "Kettle",
+      "Sofa bed",
+      "Equipped kitchen",
+      "Double glazing",
+      "Oven",
+      "Washing machine",
+      "Dishwasher",
+      "Linen provided",
+      "Queen-size bed",
+      "Nespresso machine",
+      "Parking",
+      "Cooktop",
+      "Refrigerator",
+      "Towels provided",
+      "Smart TV",
+      "Ironing board",
+      "Terrace",
+      "Toaster",
+      "Wifi"
+    ]
   }
 ]
