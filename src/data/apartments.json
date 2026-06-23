@@ -8836,5 +8836,125 @@
       "Wifi"
     ],
     "hasElevator": true
+  },
+  {
+    "slug": "2-pieces-dulong-paris-17e",
+    "title": "2 Pièces DULONG",
+    "address": "Rue Dulong, Paris 17e",
+    "district": "Paris 17e",
+    "surface": 52,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "2e étage",
+    "status": "À louer",
+    "description": "2 pièces d’une surface d’environ 52 m2, en bon état\nAu 2eme étage avec ascenseur d’un immeuble moderne\nUn séjour avec canapé, une table basse, espace bureau et une Tv écran plat.\nUne table à manger avec table et chaises.\nUne cuisine toute équipée et aménagée \nÉquipement : Lave-vaisselle, four, micro-onde, plaque, réfrigérateur, lave-linge…\nUne chambre avec un lit King size et du rangement.\nSalle de bain avec baignoire et WC . \nChauffage et eau chaude individuel électrique.\n",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Baignoire",
+      "Bouilloire",
+      "Cafetière",
+      "Chauffage électrique individuel",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Fer à repasser",
+      "Four",
+      "Fibre optique",
+      "Interphone",
+      "Lave-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit King size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Télévision 4K",
+      "Toaster",
+      "Volets roulants",
+      "Wifi"
+    ],
+    "photos": "2-pieces-dulong-paris-17e",
+    "images": [
+      "/apartments/2-pieces-dulong-paris-17e/photo-1.jpg",
+      "/apartments/2-pieces-dulong-paris-17e/photo-2.jpg",
+      "/apartments/2-pieces-dulong-paris-17e/photo-3.jpg",
+      "/apartments/2-pieces-dulong-paris-17e/photo-4.jpg",
+      "/apartments/2-pieces-dulong-paris-17e/photo-5.jpg",
+      "/apartments/2-pieces-dulong-paris-17e/photo-6.jpg",
+      "/apartments/2-pieces-dulong-paris-17e/photo-7.jpg",
+      "/apartments/2-pieces-dulong-paris-17e/photo-8.jpg",
+      "/apartments/2-pieces-dulong-paris-17e/photo-9.jpg",
+      "/apartments/2-pieces-dulong-paris-17e/photo-10.jpg",
+      "/apartments/2-pieces-dulong-paris-17e/photo-11.jpg",
+      "/apartments/2-pieces-dulong-paris-17e/photo-12.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Rome",
+        "distance": "6 min",
+        "lines": [
+          "2"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Villiers",
+        "distance": "6 min",
+        "lines": [
+          "2",
+          "3"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Monoprix",
+        "distance": "4 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square des Batignolles",
+        "distance": "4 min"
+      }
+    ],
+    "title_en": "1-Bedroom Apartment Dulong",
+    "description_en": "1-bedroom high-end apartment of approximately 52 sqm, in good condition.\nOn the 2nd floor with elevator in a modern building.\nA living room with sofa, coffee table, workspace, and flat-screen TV.\nA dining area with table and chairs.\nA fully equipped and fitted kitchen.\nEquipment: Dishwasher, oven, microwave, cooktop, refrigerator, washing machine, etc.\nOne bedroom with a king-size bed and storage.\nBathroom with bathtub and WC.\nIndividual electric heating and hot water.",
+    "floor_en": "2nd floor",
+    "features_en": [
+      "Elevator",
+      "Vacuum cleaner",
+      "Bathtub",
+      "Kettle",
+      "Coffee maker",
+      "Individual electric heating",
+      "Equipped kitchen",
+      "Double glazing",
+      "Iron",
+      "Oven",
+      "Fiber optic internet",
+      "Intercom",
+      "Washing machine",
+      "Dishwasher",
+      "Linens provided",
+      "King-size bed",
+      "Nespresso machine",
+      "Microwave",
+      "Parquet",
+      "Cooktop",
+      "Refrigerator",
+      "Towels provided",
+      "Smart TV",
+      "Ironing board",
+      "Smart TV",
+      "Toaster",
+      "Rolling shutters",
+      "Wifi"
+    ]
   }
 ]
