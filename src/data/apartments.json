@@ -8839,7 +8839,7 @@
   },
   {
     "slug": "2-pieces-dulong-paris-17e",
-    "title": "2 Pièces DULONG",
+    "title": "2 Pièces Dulong",
     "address": "Rue Dulong, Paris 17e",
     "district": "Paris 17e",
     "surface": 52,
@@ -8924,7 +8924,7 @@
       }
     ],
     "title_en": "1-Bedroom Apartment Dulong",
-    "description_en": "1-bedroom high-end apartment of approximately 52 sqm, in good condition.\nOn the 2nd floor with elevator in a modern building.\nA living room with sofa, coffee table, workspace, and flat-screen TV.\nA dining area with table and chairs.\nA fully equipped and fitted kitchen.\nEquipment: Dishwasher, oven, microwave, cooktop, refrigerator, washing machine, etc.\nOne bedroom with a king-size bed and storage.\nBathroom with bathtub and WC.\nIndividual electric heating and hot water.",
+    "description_en": "1-bedroom high-end apartment of approximately 52 sqm, in good condition.\nOn the 2nd floor with elevator in a modern building.\nA living room with sofa, coffee table, workspace, and flat-screen TV.\nA dining area with table and chairs.\nAn equipped and fitted kitchen.\nAppliances: Dishwasher, oven, microwave, cooktop, refrigerator, washing machine, etc.\nOne bedroom with a king-size bed and storage.\nBathroom with bathtub and WC.\nIndividual electric heating and hot water.",
     "floor_en": "2nd floor",
     "features_en": [
       "Elevator",
@@ -8941,7 +8941,7 @@
       "Intercom",
       "Washing machine",
       "Dishwasher",
-      "Linens provided",
+      "Household linens provided",
       "King-size bed",
       "Nespresso machine",
       "Microwave",
@@ -8955,6 +8955,7 @@
       "Toaster",
       "Rolling shutters",
       "Wifi"
-    ]
+    ],
+    "hasElevator": true
   }
 ]
