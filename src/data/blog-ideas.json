@@ -153,10 +153,10 @@
       "agence relocation paris"
     ],
     "priority_score": 82,
-    "used": false,
+    "used": true,
     "created_at": "2026-05-20T00:00:00.000Z",
-    "used_at": null,
-    "generated_article_slug": null,
+    "used_at": "2026-06-30T09:01:18.156Z",
+    "generated_article_slug": "comment-choisir-une-agence-de-corporate-housing-a-paris-12-criteres-a-verifier",
     "trend_source": "seed"
   },
   {
