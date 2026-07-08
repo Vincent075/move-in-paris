@@ -73,7 +73,9 @@ export const DEMO_DATA: PortalData = {
       id: "apt1",
       ref: "MIP-2026-004",
       shortAddress: "6, rue de Paradis · Paris 10ᵉ",
-      photo: "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-5.jpg",
+      // Vraie photo vitrine du champ Airtable "Photo de l'appartement" (APT-077),
+      // copiée en local pour la démo (les URLs de PJ Airtable expirent).
+      photo: "/espace-proprio/demo-vitrine-paradis.jpg",
     },
     {
       id: "apt2",
