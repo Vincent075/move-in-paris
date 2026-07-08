@@ -144,14 +144,14 @@ export default function DemoDashboard({
           )}
           <div className="w-[60px] h-px bg-gold mt-5" />
 
-          <div className="flex flex-nowrap gap-3.5 mt-9 overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-6 lg:mx-0">
+          <div className="flex flex-nowrap gap-3.5 mt-9 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
             {data.apartments.map((apt, i) => (
               <button
                 key={apt.id}
                 onClick={() =>
                   showToast(i === 0 ? "Appartement déjà affiché" : "Le contenu basculerait sur cet appartement")
                 }
-                className={`snap-start shrink-0 first:ml-6 last:mr-6 lg:first:ml-0 lg:last:mr-0 text-left px-6 py-4 border transition-all duration-300 cursor-pointer ${
+                className={`snap-start shrink-0 text-left px-6 py-4 border transition-all duration-300 cursor-pointer ${
                   i === 0
                     ? "border-gold bg-white shadow-sm"
                     : "border-gris-clair bg-white/60 hover:border-gold"
@@ -171,11 +171,11 @@ export default function DemoDashboard({
           <div className={EYEBROW}>Votre bien en un coup d’œil</div>
           <h2 className="font-serif text-3xl md:text-4xl mt-3">{data.apartments[0].shortAddress}</h2>
           <div className="w-[60px] h-px bg-gold mt-5 mb-10" />
-          <div className="flex gap-5 overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-6 pb-2 lg:mx-0 lg:pb-0 lg:grid lg:grid-cols-4">
+          <div className="flex gap-5 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-2 lg:pb-0 lg:grid lg:grid-cols-4">
             {data.glance.map((g) => (
               <div
                 key={g.k}
-                className="snap-center shrink-0 first:ml-6 last:mr-6 lg:first:ml-0 lg:last:mr-0 w-[78%] sm:w-[46%] lg:w-auto bg-blanc-chaud/50 border border-gris-clair/50 hover:bg-blanc-chaud hover:border-gold/30 transition-all duration-500 p-8"
+                className="snap-start shrink-0 w-[78%] sm:w-[46%] lg:w-auto bg-blanc-chaud/50 border border-gris-clair/50 hover:bg-blanc-chaud hover:border-gold/30 transition-all duration-500 p-8"
               >
                 <span className="block text-gris text-[11px] tracking-[0.2em] uppercase mb-3">{g.k}</span>
                 <div className="font-serif text-[21px] leading-[1.35]">{g.v}</div>
@@ -348,11 +348,11 @@ export default function DemoDashboard({
           <div className={EYEBROW}>La vie de votre bien</div>
           <h2 className="font-serif text-3xl md:text-4xl mt-3">Activité récente</h2>
           <div className="w-[60px] h-px bg-gold mt-5 mb-10" />
-          <div className="flex gap-5 overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-6 pb-2 lg:mx-0">
+          <div className="flex gap-5 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-2">
             {data.timeline.map((ev, i) => (
               <div
                 key={ev.title + ev.dateLabel}
-                className="snap-center shrink-0 first:ml-6 last:mr-6 lg:first:ml-0 lg:last:mr-0 w-[80%] sm:w-[46%] lg:w-[31.5%] bg-blanc-chaud/50 border border-gris-clair/50 hover:border-gold/30 hover:bg-blanc-chaud transition-all duration-500 p-7 flex flex-col"
+                className="snap-start shrink-0 w-[80%] sm:w-[46%] lg:w-[31.5%] bg-blanc-chaud/50 border border-gris-clair/50 hover:border-gold/30 hover:bg-blanc-chaud transition-all duration-500 p-7 flex flex-col"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="w-10 h-10 shrink-0 border border-gold/30 text-gold font-serif text-sm flex items-center justify-center">
