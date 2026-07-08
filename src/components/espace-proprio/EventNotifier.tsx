@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { NOTIFY_CATEGORIES } from "@/lib/espace-proprio/notify-categories";
+import DatePickerField from "./DatePickerField";
 
 type Props = {
   /** mode démonstration : aucun email réel, message pédagogique */
@@ -87,16 +88,10 @@ export default function EventNotifier({ demo = false, apartmentLabel, onDemoSubm
 
       <div className="grid sm:grid-cols-[220px_1fr] gap-5 mt-7">
         <div>
-          <label htmlFor="notify-date" className="block text-gris text-[11px] tracking-[0.2em] uppercase mb-2.5">
+          <div className="block text-gris text-[11px] tracking-[0.2em] uppercase mb-2.5">
             Date concernée
-          </label>
-          <input
-            id="notify-date"
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="w-full bg-white border border-gris-clair px-4 py-3.5 text-noir font-light text-[15px] focus:outline-none focus:border-gold transition-colors"
-          />
+          </div>
+          <DatePickerField value={date} onChange={setDate} />
           <p className="text-gris/70 font-light text-xs mt-2">Optionnelle</p>
         </div>
         <div>
