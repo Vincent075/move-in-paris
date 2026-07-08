@@ -5,13 +5,38 @@ import { redirect } from "next/navigation";
 import LoginForm from "@/components/espace-proprio/LoginForm";
 import { readSession } from "@/lib/espace-proprio/auth";
 
+const OG_TITLE = "Espace Propriétaire · Move in Paris";
+const OG_DESCRIPTION =
+  "Accédez à votre espace propriétaire : occupation, entretien, documents et interventions de vos appartements, réunis dans un espace sécurisé.";
+
 export const metadata: Metadata = {
-  title: "Espace Propriétaire · Move in Paris",
-  description: "Espace privé réservé aux propriétaires Move in Paris.",
+  title: OG_TITLE,
+  description: OG_DESCRIPTION,
   robots: {
     index: false,
     follow: false,
     googleBot: { index: false, follow: false },
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Move in Paris",
+    locale: "fr_FR",
+    title: OG_TITLE,
+    description: OG_DESCRIPTION,
+    images: [
+      {
+        url: "/apartments/hero-salon.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Espace Propriétaire Move in Paris",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: OG_TITLE,
+    description: OG_DESCRIPTION,
+    images: ["/apartments/hero-salon.jpg"],
   },
 };
 
