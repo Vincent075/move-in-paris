@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Footer from "@/components/Footer";
 import DemoDashboard from "@/components/espace-proprio/DemoDashboard";
+import SessionKeepAlive from "@/components/espace-proprio/SessionKeepAlive";
 import { readSession } from "@/lib/espace-proprio/auth";
 import { resolveOwnerByEmail, getPortalData, dataSourceLabel } from "@/lib/espace-proprio/provider";
 
@@ -43,6 +44,7 @@ export default async function MonEspace() {
 
   return (
     <>
+      <SessionKeepAlive />
       <DemoDashboard
         data={{ ...data, ownerName: owner.greetingName }}
         bannerLabel={banner}

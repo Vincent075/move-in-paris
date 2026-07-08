@@ -7,7 +7,7 @@ import { cookies } from "next/headers";
 
 export const SESSION_COOKIE = "mip_proprio_session";
 const LOGIN_TOKEN_TTL_MS = 15 * 60 * 1000; // 15 minutes
-const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 jours
+const SESSION_TTL_MS = 90 * 24 * 60 * 60 * 1000; // 90 jours, glissants (voir /api/espace-proprio/refresh)
 
 function secret(): string {
   const s = process.env.PORTAL_SESSION_SECRET;
@@ -90,6 +90,11 @@ export function createSessionToken(
     iat: now,
     exp: now + SESSION_TTL_MS,
   } satisfies PortalSession);
+}
+
+/** Ré-émet la session avec une nouvelle expiration (90 j glissants), sans toucher iat ni prevLogin. */
+export function refreshSessionToken(s: PortalSession): string {
+  return pack({ ...s, exp: Date.now() + SESSION_TTL_MS });
 }
 
 export async function readSession(): Promise<PortalSession | null> {
