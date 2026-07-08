@@ -4,21 +4,27 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { useT } from "@/i18n/LocaleProvider";
 
-const partners = [
+const partners: { name: string; file: string; wide?: boolean }[] = [
   { name: "AXA", file: "/logos/Axa-logo.png" },
   { name: "Danone", file: "/logos/Danone-Logo-2017-present.png" },
   { name: "LinkedIn", file: "/logos/LinkedIn_Logo.svg.png" },
+  { name: "Loro Piana", file: "/logos/loro-piana-v2.svg" },
   { name: "Engie", file: "/logos/Logo-engie.svg.png" },
   { name: "Renault", file: "/logos/Logo-Renault-thumb-1280x720-1.png" },
+  { name: "McKinsey & Company", file: "/logos/mckinsey-2026.svg" },
   { name: "Vinci", file: "/logos/Logo-Vinci-1.png" },
   { name: "L'Oréal", file: "/logos/loreal-2026.svg" },
   { name: "LVMH", file: "/logos/MC.PA-e4d57ba5.png" },
+  { name: "Saint-Gobain", file: "/logos/saint-gobain-v2.svg", wide: true },
   { name: "OCDE", file: "/logos/ocde-logo-900x213.webp" },
   { name: "Pernod Ricard", file: "/logos/Pernod-Ricard-logo.png" },
+  { name: "RIMOWA", file: "/logos/rimowa-2026.svg" },
   { name: "Accenture", file: "/logos/accenture-2026.svg" },
   { name: "Dior", file: "/logos/dior-2026.svg" },
+  { name: "Klépierre", file: "/logos/klepierre-v2.svg" },
   { name: "Goldman Sachs", file: "/logos/goldman-sachs-2026.svg" },
   { name: "Sanofi", file: "/logos/Sanofi-Logo-2011.png" },
+  { name: "TotalEnergies", file: "/logos/totalenergies-2026.png" },
   { name: "Technip Energies", file: "/logos/TECHNIP_ENERGIES_LOGO.png" },
 ];
 
@@ -45,7 +51,7 @@ export default function PartnerLogos() {
           100% { transform: translateX(-50%); }
         }
         .logos-track {
-          animation: logos-scroll-left 18s linear infinite;
+          animation: logos-scroll-left 25s linear infinite;
           width: max-content;
         }
         .logos-track:hover { animation-play-state: paused; }
@@ -79,7 +85,11 @@ export default function PartnerLogos() {
                 alt={p.name}
                 width={200}
                 height={80}
-                className="h-8 md:h-10 w-auto max-w-[140px] md:max-w-[160px] object-contain grayscale hover:grayscale-0 transition-all duration-500"
+                className={`h-8 md:h-10 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-500 ${
+                  p.wide
+                    ? "max-w-[180px] md:max-w-[210px]"
+                    : "max-w-[140px] md:max-w-[160px]"
+                }`}
               />
             </div>
           ))}
