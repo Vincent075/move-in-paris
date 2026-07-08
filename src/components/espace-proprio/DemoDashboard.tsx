@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { PortalData } from "@/lib/espace-proprio/mock";
+import EventNotifier from "./EventNotifier";
 
 const MONTHS = [
   "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
@@ -509,6 +510,21 @@ export default function DemoDashboard({
               </div>
             ))}
           </div>
+        </section>
+
+        {/* Signalement */}
+        <section id="signaler" className="pt-20">
+          <div className={EYEBROW}>Votre bien</div>
+          <h2 className="font-serif text-3xl md:text-4xl mt-3">Une information à nous transmettre ?</h2>
+          <div className="w-[60px] h-px bg-gold mt-5 mb-6" />
+          <p className="text-gris font-light max-w-[620px] mb-8">
+            Changement de code d’accès, coupure d’eau ou d’électricité, intervention prévue dans l’immeuble : prévenez-nous en quelques secondes, notre équipe prend le relais.
+          </p>
+          <EventNotifier
+            demo={!logoutHref}
+            apartmentLabel={`${data.apartments[0]?.ref || ""} · ${data.apartments[0]?.shortAddress || ""}`}
+            onDemoSubmit={showToast}
+          />
         </section>
 
         {/* Interlocuteur */}
