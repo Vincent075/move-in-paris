@@ -152,21 +152,23 @@ export default function DemoDashboard({
                 onClick={() =>
                   showToast(i === 0 ? "Appartement déjà affiché" : "Le contenu basculerait sur cet appartement")
                 }
-                className={`snap-start shrink-0 w-[280px] sm:w-[320px] text-left overflow-hidden border transition-all duration-300 cursor-pointer bg-white p-0 ${
-                  i === 0 ? "border-gold shadow-md" : "border-gris-clair opacity-80 hover:opacity-100 hover:border-gold"
+                className={`group snap-start shrink-0 w-[280px] sm:w-[320px] text-left overflow-hidden border transition-all duration-300 cursor-pointer bg-white p-0 ${
+                  i === 0 ? "border-gold shadow-md" : "border-gris-clair opacity-85 hover:opacity-100 hover:border-gold"
                 }`}
               >
                 {apt.photo && (
-                  /* eslint-disable-next-line @next/next/no-img-element -- photos Airtable distantes au go-live */
-                  <img
-                    src={apt.photo}
-                    alt={apt.shortAddress}
-                    className="w-full h-[130px] sm:h-[150px] object-cover rounded-none!"
-                  />
+                  <span className="block overflow-hidden rounded-none!">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- photos Airtable distantes au go-live */}
+                    <img
+                      src={apt.photo}
+                      alt={apt.shortAddress}
+                      className="w-full h-[130px] sm:h-[150px] object-cover rounded-none! transition-transform duration-700 group-hover:scale-105"
+                    />
+                  </span>
                 )}
-                <span className="block bg-noir-deep px-5 py-3.5 rounded-none!">
-                  <span className="block text-blanc/50 text-[10px] tracking-[0.2em] uppercase">{apt.ref}</span>
-                  <span className="block font-serif text-gold text-[16px] leading-snug mt-1">{apt.shortAddress}</span>
+                <span className="block px-5 py-4 rounded-none!">
+                  <span className="block text-gold text-[10px] tracking-[0.2em] uppercase">{apt.ref}</span>
+                  <span className="block font-serif text-noir text-[17px] leading-snug mt-1">{apt.shortAddress}</span>
                 </span>
               </button>
             ))}
