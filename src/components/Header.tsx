@@ -31,13 +31,14 @@ export default function Header() {
   const t = useT();
   const { locale, setLocale } = useLocale();
 
-  const navLinks = [
+  const navLinks: { href: string; label: string; desktopXlOnly?: boolean }[] = [
     { href: "/nos-appartements", label: t("nav.apartments") },
     { href: "/a-propos", label: t("nav.about") },
     { href: "/proprietaires", label: t("nav.owners") },
     { href: "/estimation", label: t("nav.estimation") },
     { href: "/blog", label: t("nav.blog") },
     { href: "/contact", label: t("nav.contact") },
+    { href: "/espace-proprio", label: t("nav.ownerPortal"), desktopXlOnly: true },
   ];
 
   useEffect(() => {
@@ -108,7 +109,9 @@ export default function Header() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`relative px-4 py-2 text-xs tracking-wide uppercase transition-all duration-300 rounded-full ${
+                    className={`relative px-3 py-2 text-xs tracking-wide uppercase whitespace-nowrap transition-all duration-300 rounded-full ${
+                      link.desktopXlOnly ? "hidden xl:block" : ""
+                    } ${
                       pathname === link.href
                         ? "bg-gold text-noir-deep font-semibold"
                         : "text-blanc/70 hover:text-white hover:bg-white/10"
@@ -120,7 +123,7 @@ export default function Header() {
               </div>
               <Link
                 href="/proposer-mon-appartement"
-                className="ml-4 px-6 py-2.5 bg-gradient-to-r from-gold to-gold-light text-noir-deep text-sm tracking-wider uppercase font-semibold rounded-full hover:shadow-lg hover:shadow-gold/25 transition-all duration-300 hover:scale-105"
+                className="ml-4 px-6 py-2.5 bg-gradient-to-r from-gold to-gold-light text-noir-deep text-sm tracking-wider uppercase font-semibold whitespace-nowrap rounded-full hover:shadow-lg hover:shadow-gold/25 transition-all duration-300 hover:scale-105"
               >
                 {t("nav.proposeCta")}
               </Link>

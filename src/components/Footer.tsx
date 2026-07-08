@@ -15,6 +15,7 @@ export default function Footer() {
     { href: "/blog", label: t("nav.blog") },
     { href: "/contact", label: t("nav.contact") },
     { href: "/faq", label: t("nav.faq") },
+    { href: "/espace-proprio", label: t("nav.ownerPortal") },
   ];
   return (
     <footer className="bg-noir-deep py-16">

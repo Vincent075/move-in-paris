@@ -75,19 +75,13 @@ export default async function EspaceProprio({
             <div className="flex-1 h-px bg-gris-clair" />
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
+          <div className="flex justify-center mt-6">
             <Link
               href="/espace-proprio/demo"
               className="border border-gold text-gold px-10 py-[15px] text-[13px] tracking-[0.1em] uppercase hover:bg-gold hover:text-noir-deep transition-all duration-300"
             >
               Découvrir la démonstration
             </Link>
-            <a
-              href="mailto:guillaume@move-in-paris.com"
-              className="text-gris hover:text-gold transition-colors px-6 py-[15px] text-[13px] tracking-[0.1em] uppercase"
-            >
-              Écrire à Guillaume
-            </a>
           </div>
         </div>
       </div>
