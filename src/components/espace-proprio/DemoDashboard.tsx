@@ -72,6 +72,21 @@ export default function DemoDashboard({
   const firstDow = (new Date(cal.y, cal.m, 1).getDay() + 6) % 7; // lundi = 0
   const nbDays = new Date(cal.y, cal.m + 1, 0).getDate();
 
+  /* ----- interventions par année ----- */
+  const intYears = useMemo(
+    () =>
+      [...new Set(data.interventions.map((i) => i.dateLabel.trim().split(" ").pop() || ""))]
+        .filter(Boolean)
+        .sort()
+        .reverse(),
+    [data.interventions],
+  );
+  const [intYear, setIntYear] = useState("");
+  const activeIntYear = intYear || intYears[0] || "";
+  const filteredInterventions = data.interventions.filter(
+    (i) => (i.dateLabel.trim().split(" ").pop() || "") === activeIntYear,
+  );
+
   const currentStay = data.stays.find((s) => s.current);
   const pastStays = data.stays.filter((s) => !s.current && isoToKey(s.departure) < isoToKey("2026-07-01"));
 
@@ -129,21 +144,21 @@ export default function DemoDashboard({
           )}
           <div className="w-[60px] h-px bg-gold mt-5" />
 
-          <div className="flex flex-wrap gap-3.5 mt-9">
+          <div className="flex flex-nowrap gap-3.5 mt-9 overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-6 px-6 lg:mx-0 lg:px-0">
             {data.apartments.map((apt, i) => (
               <button
                 key={apt.id}
                 onClick={() =>
                   showToast(i === 0 ? "Appartement déjà affiché" : "Le contenu basculerait sur cet appartement")
                 }
-                className={`text-left px-6 py-4 border transition-all duration-300 cursor-pointer ${
+                className={`snap-start shrink-0 text-left px-6 py-4 border transition-all duration-300 cursor-pointer ${
                   i === 0
                     ? "border-gold bg-white shadow-sm"
                     : "border-gris-clair bg-white/60 hover:border-gold"
                 }`}
               >
                 <span className="block text-gold text-[11px] tracking-[0.2em] uppercase mb-1">{apt.ref}</span>
-                <span className="font-serif text-noir text-[17px]">{apt.shortAddress}</span>
+                <span className="font-serif text-noir text-[17px] whitespace-nowrap">{apt.shortAddress}</span>
               </button>
             ))}
           </div>
@@ -156,11 +171,11 @@ export default function DemoDashboard({
           <div className={EYEBROW}>Votre bien en un coup d’œil</div>
           <h2 className="font-serif text-3xl md:text-4xl mt-3">{data.apartments[0].shortAddress}</h2>
           <div className="w-[60px] h-px bg-gold mt-5 mb-10" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="flex gap-5 overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-6 px-6 pb-2 lg:mx-0 lg:px-0 lg:pb-0 lg:grid lg:grid-cols-4">
             {data.glance.map((g) => (
               <div
                 key={g.k}
-                className="bg-blanc-chaud/50 border border-gris-clair/50 hover:bg-blanc-chaud hover:border-gold/30 transition-all duration-500 p-8"
+                className="snap-center shrink-0 w-[78%] sm:w-[46%] lg:w-auto bg-blanc-chaud/50 border border-gris-clair/50 hover:bg-blanc-chaud hover:border-gold/30 transition-all duration-500 p-8"
               >
                 <span className="block text-gris text-[11px] tracking-[0.2em] uppercase mb-3">{g.k}</span>
                 <div className="font-serif text-[21px] leading-[1.35]">{g.v}</div>
@@ -272,7 +287,7 @@ export default function DemoDashboard({
               <div className="grid grid-cols-[auto_1fr] gap-x-9 gap-y-3">
                 <span className="text-gris text-[11px] tracking-[0.2em] uppercase self-center">Occupants</span>
                 <span className="text-[15px] font-normal">
-                  <strong className="font-semibold">{currentStay.occupantName}</strong> · {currentStay.occupants} personnes · réf. {currentStay.ref}
+                  <strong className="font-semibold">{currentStay.occupantName}</strong>
                 </span>
                 <span className="text-gris text-[11px] tracking-[0.2em] uppercase self-center">Date d’arrivée</span>
                 <span className="text-[15px] font-semibold">{currentStay.arrivalLabel}</span>
@@ -333,20 +348,20 @@ export default function DemoDashboard({
           <div className={EYEBROW}>La vie de votre bien</div>
           <h2 className="font-serif text-3xl md:text-4xl mt-3">Activité récente</h2>
           <div className="w-[60px] h-px bg-gold mt-5 mb-10" />
-          <div className="bg-blanc-chaud/50 border border-gris-clair/50 px-6 md:px-10 py-4">
+          <div className="flex gap-5 overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-6 px-6 pb-2 lg:mx-0 lg:px-0">
             {data.timeline.map((ev, i) => (
               <div
                 key={ev.title + ev.dateLabel}
-                className={`flex items-center gap-6 py-[26px] ${i < data.timeline.length - 1 ? "border-b border-gris-clair/60" : ""}`}
+                className="snap-center shrink-0 w-[80%] sm:w-[46%] lg:w-[31.5%] bg-blanc-chaud/50 border border-gris-clair/50 hover:border-gold/30 hover:bg-blanc-chaud transition-all duration-500 p-7 flex flex-col"
               >
-                <div className="w-12 h-12 shrink-0 border border-gold/30 text-gold font-serif text-[15px] flex items-center justify-center">
-                  {String(i + 1).padStart(2, "0")}
+                <div className="flex items-center justify-between gap-3">
+                  <div className="w-10 h-10 shrink-0 border border-gold/30 text-gold font-serif text-sm flex items-center justify-center">
+                    {String(i + 1).padStart(2, "0")}
+                  </div>
+                  <div className="text-gold text-[11px] tracking-[0.2em] uppercase text-right">{ev.dateLabel}</div>
                 </div>
-                <div className="flex-1">
-                  <div className="text-gold text-[11px] tracking-[0.2em] uppercase mb-1">{ev.dateLabel}</div>
-                  <div className="font-serif text-lg">{ev.title}</div>
-                  <div className="text-gris text-sm mt-0.5">{ev.desc}</div>
-                </div>
+                <div className="font-serif text-lg mt-5">{ev.title}</div>
+                <p className="text-gris text-sm mt-1.5 flex-1">{ev.desc}</p>
                 <button
                   onClick={() =>
                     showToast(
@@ -355,7 +370,7 @@ export default function DemoDashboard({
                         : "Le document s’ouvrirait dans la visionneuse",
                     )
                   }
-                  className={`${GHOST_BTN} hidden md:block`}
+                  className={`${GHOST_BTN} mt-6 self-start`}
                 >
                   {ev.ref ? "Question" : "Voir"}
                 </button>
@@ -449,41 +464,50 @@ export default function DemoDashboard({
           <div className={EYEBROW}>Entretien</div>
           <h2 className="font-serif text-3xl md:text-4xl mt-3">Interventions techniques</h2>
           <div className="w-[60px] h-px bg-gold mt-5 mb-10" />
-          <div className="border border-gris-clair/50 overflow-hidden overflow-x-auto">
-            <table className="w-full bg-blanc-chaud/50 text-sm">
-              <thead>
-                <tr className="bg-blanc-chaud">
-                  {["Référence", "Date", "Nature", "Prestataire", "Statut", ""].map((h, i) => (
-                    <th key={i} className="text-left px-7 py-[18px] text-[10px] tracking-[0.2em] uppercase text-gris font-normal border-b border-gris-clair">
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {data.interventions.map((it) => (
-                  <tr key={it.ref}>
-                    <td className="px-7 py-[18px] border-b border-gris-clair/60">{it.ref}</td>
-                    <td className="px-7 py-[18px] border-b border-gris-clair/60 whitespace-nowrap">{it.dateLabel}</td>
-                    <td className="px-7 py-[18px] border-b border-gris-clair/60">{it.nature}</td>
-                    <td className="px-7 py-[18px] border-b border-gris-clair/60 whitespace-nowrap">{it.provider}</td>
-                    <td className="px-7 py-[18px] border-b border-gris-clair/60">
-                      <span className="rounded-full! border border-gold/40 text-gold-dark bg-gold/10 text-[10px] tracking-[0.1em] uppercase font-medium px-3.5 py-[5px] whitespace-nowrap inline-block">
-                        {it.status}
-                      </span>
-                    </td>
-                    <td className="px-7 py-[18px] border-b border-gris-clair/60">
-                      <button
-                        onClick={() => showToast(`Email pré-rempli (réf. ${it.ref}) vers votre Property Manager`)}
-                        className={`${GHOST_BTN} hidden lg:block`}
-                      >
-                        Question
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="flex gap-2 mb-5">
+            {intYears.map((year) => (
+              <button
+                key={year}
+                onClick={() => setIntYear(year)}
+                className={`rounded-full! px-[22px] py-[10px] text-xs tracking-[0.1em] border transition-all cursor-pointer ${
+                  year === activeIntYear
+                    ? "bg-gold border-gold text-noir-deep font-semibold"
+                    : "border-gris-clair text-gris hover:border-gold hover:text-gold-dark bg-transparent"
+                }`}
+              >
+                {year}
+              </button>
+            ))}
+          </div>
+          <div className="bg-blanc-chaud/50 border border-gris-clair/50 overflow-hidden">
+            {filteredInterventions.length === 0 && (
+              <p className="px-7 py-[22px] text-gris text-sm italic">Aucune intervention cette année : votre bien se porte bien.</p>
+            )}
+            {filteredInterventions.map((it, i) => (
+              <div
+                key={it.ref}
+                className={`flex items-center gap-5 px-7 py-[22px] ${i < filteredInterventions.length - 1 ? "border-b border-gris-clair/60" : ""}`}
+              >
+                <span className="text-gold text-[11px] shrink-0">◆</span>
+                <div className="min-w-0">
+                  <div className="font-serif text-[17px]">{it.nature}</div>
+                  <div className="text-gris text-xs mt-0.5">
+                    {it.dateLabel} · {it.provider} · réf. {it.ref}
+                  </div>
+                </div>
+                <div className="ml-auto flex items-center gap-2.5 shrink-0">
+                  <span className="rounded-full! border border-gold/40 text-gold-dark bg-gold/10 text-[10px] tracking-[0.1em] uppercase font-medium px-3.5 py-[5px] whitespace-nowrap inline-block">
+                    {it.status}
+                  </span>
+                  <button
+                    onClick={() => showToast(`Email pré-rempli (réf. ${it.ref}) vers votre Property Manager`)}
+                    className={`${GHOST_BTN} hidden md:block`}
+                  >
+                    Question
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 

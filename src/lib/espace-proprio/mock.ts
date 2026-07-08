@@ -199,5 +199,19 @@ export const DEMO_DATA: PortalData = {
       provider: "Ets Moreau",
       status: "Terminée",
     },
+    {
+      ref: "INT-2025-044",
+      dateLabel: "9 décembre 2025",
+      nature: "Chauffage · entretien annuel de la chaudière",
+      provider: "Ets Moreau",
+      status: "Terminée",
+    },
+    {
+      ref: "INT-2025-021",
+      dateLabel: "3 juin 2025",
+      nature: "Peinture · rafraîchissement du couloir d'entrée",
+      provider: "Atelier Blanc",
+      status: "Terminée",
+    },
   ],
 };
