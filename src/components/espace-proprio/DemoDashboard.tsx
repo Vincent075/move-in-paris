@@ -145,21 +145,29 @@ export default function DemoDashboard({
           )}
           <div className="w-[60px] h-px bg-gold mt-5" />
 
-          <div className="flex flex-nowrap gap-3.5 mt-9 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
+          <div className="flex flex-nowrap gap-4 mt-9 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
             {data.apartments.map((apt, i) => (
               <button
                 key={apt.id}
                 onClick={() =>
                   showToast(i === 0 ? "Appartement déjà affiché" : "Le contenu basculerait sur cet appartement")
                 }
-                className={`snap-start shrink-0 text-left px-6 py-4 border transition-all duration-300 cursor-pointer ${
-                  i === 0
-                    ? "border-gold bg-white shadow-sm"
-                    : "border-gris-clair bg-white/60 hover:border-gold"
+                className={`snap-start shrink-0 w-[280px] sm:w-[320px] text-left overflow-hidden border transition-all duration-300 cursor-pointer bg-white p-0 ${
+                  i === 0 ? "border-gold shadow-md" : "border-gris-clair opacity-80 hover:opacity-100 hover:border-gold"
                 }`}
               >
-                <span className="block text-gold text-[11px] tracking-[0.2em] uppercase mb-1">{apt.ref}</span>
-                <span className="font-serif text-noir text-[17px] whitespace-nowrap">{apt.shortAddress}</span>
+                {apt.photo && (
+                  /* eslint-disable-next-line @next/next/no-img-element -- photos Airtable distantes au go-live */
+                  <img
+                    src={apt.photo}
+                    alt={apt.shortAddress}
+                    className="w-full h-[130px] sm:h-[150px] object-cover rounded-none!"
+                  />
+                )}
+                <span className="block bg-noir-deep px-5 py-3.5 rounded-none!">
+                  <span className="block text-blanc/50 text-[10px] tracking-[0.2em] uppercase">{apt.ref}</span>
+                  <span className="block font-serif text-gold text-[16px] leading-snug mt-1">{apt.shortAddress}</span>
+                </span>
               </button>
             ))}
           </div>
@@ -169,35 +177,9 @@ export default function DemoDashboard({
       <main className="max-w-7xl mx-auto px-6 lg:px-12">
         {/* Vue d'ensemble */}
         <section className="pt-20">
-          {data.apartments[0]?.photo ? (
-            <div className="overflow-hidden border border-gris-clair/50 bg-white">
-              {/* eslint-disable-next-line @next/next/no-img-element -- photos Airtable distantes au go-live, hors allowlist next/image */}
-              <img
-                src={data.apartments[0].photo}
-                alt={data.apartments[0].shortAddress}
-                className="w-full h-[240px] md:h-[320px] object-cover rounded-b-none!"
-              />
-              <div className="bg-noir-deep px-6 md:px-9 py-5 md:py-6 flex flex-col md:flex-row md:items-center gap-3 md:gap-6 rounded-t-none!">
-                <div className="shrink-0">
-                  <div className="text-blanc/50 text-[10px] tracking-[0.25em] uppercase">
-                    Votre bien en un coup d’œil
-                  </div>
-                  <div className="text-blanc/40 text-[11px] tracking-[0.2em] uppercase mt-1">
-                    {data.apartments[0].ref}
-                  </div>
-                </div>
-                <h2 className="font-serif text-gold text-2xl md:text-[28px] leading-snug md:ml-auto md:text-right">
-                  {data.apartments[0].shortAddress}
-                </h2>
-              </div>
-            </div>
-          ) : (
-            <>
-              <div className={EYEBROW}>Votre bien en un coup d’œil</div>
-              <h2 className="font-serif text-3xl md:text-4xl mt-3">{data.apartments[0]?.shortAddress}</h2>
-              <div className="w-[60px] h-px bg-gold mt-5" />
-            </>
-          )}
+          <div className={EYEBROW}>Votre bien en un coup d’œil</div>
+          <h2 className="font-serif text-3xl md:text-4xl mt-3">{data.apartments[0]?.shortAddress}</h2>
+          <div className="w-[60px] h-px bg-gold mt-5" />
           <div className="mt-8 flex gap-5 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-2 lg:pb-0 lg:grid lg:grid-cols-4">
             {data.glance.map((g) => (
               <div
