@@ -37,6 +37,8 @@ export type PortalDocument = {
   meta: string;
   isNew?: boolean;
   transmittable?: boolean;
+  /** lien de consultation sécurisé (/api/espace-proprio/document?...) · absent en démo */
+  href?: string;
 };
 
 export type PortalTimelineEvent = {

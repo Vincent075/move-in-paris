@@ -452,9 +452,15 @@ export default function DemoDashboard({
                   <div className="text-gris text-xs mt-0.5">{doc.meta}</div>
                 </div>
                 <div className="ml-auto hidden md:flex gap-2.5">
-                  <button onClick={() => showToast("Le PDF s’ouvrirait dans la page, sans téléchargement")} className={GHOST_BTN}>
-                    Consulter
-                  </button>
+                  {doc.href ? (
+                    <a href={doc.href} target="_blank" rel="noopener noreferrer" className={GHOST_BTN}>
+                      Consulter
+                    </a>
+                  ) : (
+                    <button onClick={() => showToast("Démonstration · le PDF réel s’ouvrirait ici")} className={GHOST_BTN}>
+                      Consulter
+                    </button>
+                  )}
                   {doc.transmittable && (
                     <button onClick={() => showToast("V2 · lien sécurisé valable 72 h pour votre comptable")} className={GHOST_BTN}>
                       Transmettre

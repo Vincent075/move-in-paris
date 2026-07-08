@@ -180,22 +180,26 @@ async function airtableGetData(owner: PortalOwner): Promise<PortalData> {
     }
   }
 
-  // 4. Ménages, Interventions, Documents (whitelist)
+  // 4. Ménages, Interventions, Documents (whitelist) + contrat propriétaire
   const aptRef = `FIND('${esc(String(apt.fields["Code appartement"] || ""))}', ARRAYJOIN({Appartement}))`;
-  const [menages, interventions, documents] = await Promise.all([
+  const [menages, interventions, documents, ownerRecs] = await Promise.all([
     atList("Ménages", {
       filterByFormula: aptRef,
       fields: ["Date prévue", "Type", "Statut"],
     }),
     atList("Interventions", {
       filterByFormula: `FIND('${esc(String(apt.fields["Code appartement"] || ""))}', ARRAYJOIN({Appartement}))`,
-      fields: ["Code intervention", "Type d'intervention", "Statut", "Date de signalement", "Date résolution", "Facturable à", "Montant artisan (€)", "Description du problème"],
+      fields: ["Code intervention", "Type d'intervention", "Statut", "Date de signalement", "Date résolution", "Facturable à", "Montant artisan (€)", "Description du problème", "Facture artisan"],
       sort: [{ field: "Date de signalement", direction: "desc" }],
     }),
     atList("Documents", {
       filterByFormula: `FIND('${esc(owner.id)}', ARRAYJOIN({Propriétaire lié}))`,
-      fields: ["Nom document", "Type", "Statut", "Dernière modification"],
+      fields: ["Nom document", "Type", "Statut", "Dernière modification", "Fichier"],
       sort: [{ field: "Dernière modification", direction: "desc" }],
+    }),
+    atList("Propriétaires", {
+      filterByFormula: `RECORD_ID() = '${esc(owner.id)}'`,
+      fields: ["Contrat signé"],
     }),
   ]);
 
@@ -256,12 +260,50 @@ async function airtableGetData(owner: PortalOwner): Promise<PortalData> {
       cleanings2026: menages.filter((m) => String(m.fields["Date prévue"] || "").startsWith(year)).length,
       interventions2026: interventions.filter((i) => String(i.fields["Date de signalement"] || "").startsWith(year)).length,
     },
-    documents: documents.map((d) => ({
-      name: String(d.fields["Nom document"] || "Document"),
-      meta: [String(d.fields["Type"] || ""), String(d.fields["Dernière modification"] || "").slice(0, 10)]
-        .filter(Boolean)
-        .join(" · "),
-    })),
+    documents: [
+      // Contrat propriétaire signé (pièce jointe de la fiche Propriétaires)
+      ...(Array.isArray(ownerRecs[0]?.fields["Contrat signé"]) &&
+      (ownerRecs[0].fields["Contrat signé"] as unknown[]).length > 0
+        ? [
+            {
+              name: "Contrat propriétaire · signé",
+              meta: "PDF · votre contrat de gestion",
+              href: "/api/espace-proprio/document?kind=contrat",
+            },
+          ]
+        : []),
+      // Documents liés au propriétaire (table Documents)
+      ...documents.map((d) => {
+        const hasFile = Array.isArray(d.fields["Fichier"]) && (d.fields["Fichier"] as unknown[]).length > 0;
+        return {
+          name: String(d.fields["Nom document"] || "Document"),
+          meta: [String(d.fields["Type"] || ""), String(d.fields["Dernière modification"] || "").slice(0, 10)]
+            .filter(Boolean)
+            .join(" · "),
+          href: hasFile ? `/api/espace-proprio/document?kind=document&id=${d.id}` : undefined,
+        };
+      }),
+      // Factures artisan à la charge du propriétaire (table Interventions)
+      ...interventions
+        .filter((i) => {
+          const hasInvoice = Array.isArray(i.fields["Facture artisan"]) && (i.fields["Facture artisan"] as unknown[]).length > 0;
+          const chargedTo = String(i.fields["Facturable à"] || "").toLowerCase();
+          return hasInvoice && chargedTo.includes("propri"); // ⚠️ libellé exact du select à confirmer en recette
+        })
+        .map((i) => {
+          const montant = Number(i.fields["Montant artisan (€)"] || 0);
+          const montantLabel = montant
+            ? new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(montant)
+            : "";
+          return {
+            name: `Facture · ${String(i.fields["Type d'intervention"] || "intervention")} (${String(i.fields["Code intervention"] || "")})`,
+            meta: ["PDF", montantLabel, "à votre charge", i.fields["Date de signalement"] ? frDate(String(i.fields["Date de signalement"])) : ""]
+              .filter(Boolean)
+              .join(" · "),
+            href: `/api/espace-proprio/document?kind=facture&id=${i.id}`,
+          };
+        }),
+    ],
     interventions: interventions.slice(0, 10).map((i) => ({
       ref: String(i.fields["Code intervention"] || i.id),
       dateLabel: i.fields["Date de signalement"] ? frDate(String(i.fields["Date de signalement"])) : "",
@@ -280,6 +322,63 @@ async function airtableGetData(owner: PortalOwner): Promise<PortalData> {
 
 export async function resolveOwnerByEmail(email: string): Promise<PortalOwner | null> {
   return SOURCE() === "airtable" ? airtableResolveOwner(email) : mockResolveOwner(email);
+}
+
+type Attachment = { url?: string };
+
+/**
+ * Résout l'URL fraîche d'une pièce jointe Airtable APRÈS contrôle de propriété.
+ * Retourne null si la ressource n'appartient pas au propriétaire connecté.
+ * (Les URLs de PJ Airtable expirent en ~2 h : on les résout à chaque clic.)
+ */
+export async function portalGetAttachmentUrl(
+  owner: PortalOwner,
+  kind: "contrat" | "document" | "facture",
+  id?: string,
+): Promise<string | null> {
+  if (SOURCE() !== "airtable") return null;
+
+  if (kind === "contrat") {
+    const recs = await atList("Propriétaires", {
+      filterByFormula: `RECORD_ID() = '${esc(owner.id)}'`,
+      fields: ["Contrat signé"],
+    });
+    const att = recs[0]?.fields["Contrat signé"] as Attachment[] | undefined;
+    return att?.[0]?.url || null;
+  }
+
+  if (kind === "document") {
+    if (!id) return null;
+    const recs = await atList("Documents", {
+      filterByFormula: `AND(RECORD_ID() = '${esc(id)}', FIND('${esc(owner.id)}', ARRAYJOIN({Propriétaire lié})))`,
+      fields: ["Fichier"],
+    });
+    const att = recs[0]?.fields["Fichier"] as Attachment[] | undefined;
+    return att?.[0]?.url || null;
+  }
+
+  if (kind === "facture") {
+    if (!id) return null;
+    const recs = await atList("Interventions", {
+      filterByFormula: `RECORD_ID() = '${esc(id)}'`,
+      fields: ["Facture artisan", "Appartement"],
+    });
+    const rec = recs[0];
+    if (!rec) return null;
+    const aptId = (rec.fields["Appartement"] as string[] | undefined)?.[0];
+    if (!aptId) return null;
+    // contrôle de propriété : l'appartement de l'intervention appartient-il au proprio connecté ?
+    const apts = await atList("Appartements", {
+      filterByFormula: `RECORD_ID() = '${esc(aptId)}'`,
+      fields: ["Email propriétaire"],
+    });
+    const ownerEmails = String(apts[0]?.fields["Email propriétaire"] || "").toLowerCase();
+    if (!ownerEmails.includes(owner.email)) return null;
+    const att = rec.fields["Facture artisan"] as Attachment[] | undefined;
+    return att?.[0]?.url || null;
+  }
+
+  return null;
 }
 
 export async function getPortalData(owner: PortalOwner): Promise<PortalData> {

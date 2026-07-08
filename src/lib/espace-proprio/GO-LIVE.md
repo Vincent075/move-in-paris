@@ -22,10 +22,16 @@ Puis **Redeploy** (Deployments → ⋯ → Redeploy) pour prendre les env vars.
 
 - [ ] Valeurs exactes des single-selects `Statut` (Réservations : libellé "Annulée" ?
       Interventions : "Terminée" ?) → constantes `STATUTS_*` dans `provider.ts`
+- [ ] Libellé exact du select `Facturable à` sur Interventions : le filtre des factures
+      visibles par le proprio cherche "propri" (provider.ts) → ajuster si autre libellé
+- [ ] Le reporting annuel Excel (AUTO-19) est-il archivé dans la table Documents avec
+      `Propriétaire lié` renseigné ? Sinon le proprio ne le verra pas dans son coffre-fort
 - [ ] Le lookup `Email propriétaire` sur Appartements est bien rempli pour chaque appart
 - [ ] Champ `Email` renseigné sur chaque fiche Propriétaires (c'est la clé de connexion)
+- [ ] `Contrat signé` (PDF) déposé sur les fiches Propriétaires (bouton Consulter du contrat)
 - [ ] Tester avec UN propriétaire réel avant d'annoncer : son email → login → vérifier
-      qu'il ne voit QUE ses appartements
+      qu'il ne voit QUE ses appartements, et que Consulter ouvre bien contrat / documents /
+      factures artisan (route /api/espace-proprio/document, contrôle de propriété serveur)
 
 ### 3. Prérequis juridiques avant d'inviter les proprios (voir CLAUDE.md workspace)
 
