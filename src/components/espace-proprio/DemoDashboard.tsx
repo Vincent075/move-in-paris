@@ -20,7 +20,23 @@ const EYEBROW = "text-gold text-xs tracking-[0.3em] uppercase";
 const GHOST_BTN =
   "font-sans rounded-none! border border-gris-clair px-[18px] py-[10px] text-[11px] tracking-[0.1em] uppercase text-gris hover:border-gold hover:text-gold transition-all duration-300 whitespace-nowrap cursor-pointer bg-transparent";
 
-export default function DemoDashboard({ data }: { data: PortalData }) {
+type Props = {
+  data: PortalData;
+  /** null pour masquer le bandeau */
+  bannerLabel?: string | null;
+  chipName?: string;
+  lastLoginLabel?: string | null;
+  /** si fourni, remplace "Retour au site" par un lien de déconnexion */
+  logoutHref?: string;
+};
+
+export default function DemoDashboard({
+  data,
+  bannerLabel = "Espace de démonstration · données fictives",
+  chipName = "M. Philippe de Vasselot",
+  lastLoginLabel,
+  logoutHref,
+}: Props) {
   /* ----- toast ----- */
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -61,10 +77,12 @@ export default function DemoDashboard({ data }: { data: PortalData }) {
 
   return (
     <div className="bg-blanc text-noir font-sans font-light">
-      {/* Bandeau démo */}
-      <div className="bg-gold text-noir-deep text-center px-4 py-[7px] text-[11px] tracking-[0.2em] uppercase font-medium">
-        Espace de démonstration · données fictives
-      </div>
+      {/* Bandeau contextuel */}
+      {bannerLabel && (
+        <div className="bg-gold text-noir-deep text-center px-4 py-[7px] text-[11px] tracking-[0.2em] uppercase font-medium">
+          {bannerLabel}
+        </div>
+      )}
 
       {/* Header portail */}
       <header className="sticky top-0 z-50 bg-noir-deep/95 backdrop-blur-xl shadow-2xl shadow-black/20">
@@ -74,14 +92,23 @@ export default function DemoDashboard({ data }: { data: PortalData }) {
           </Link>
           <div className="hidden md:block text-blanc/70 text-xs tracking-[0.05em] text-right">
             Espace propriétaire
-            <span className="block text-gold text-[13px] font-medium">M. Philippe de Vasselot</span>
+            <span className="block text-gold text-[13px] font-medium">{chipName}</span>
           </div>
-          <Link
-            href="/"
-            className="text-xs tracking-wider uppercase text-blanc/70 hover:text-gold transition-colors whitespace-nowrap"
-          >
-            Retour au site
-          </Link>
+          {logoutHref ? (
+            <a
+              href={logoutHref}
+              className="text-xs tracking-wider uppercase text-blanc/70 hover:text-gold transition-colors whitespace-nowrap"
+            >
+              Se déconnecter
+            </a>
+          ) : (
+            <Link
+              href="/"
+              className="text-xs tracking-wider uppercase text-blanc/70 hover:text-gold transition-colors whitespace-nowrap"
+            >
+              Retour au site
+            </Link>
+          )}
         </div>
       </header>
 
@@ -102,6 +129,11 @@ export default function DemoDashboard({ data }: { data: PortalData }) {
           <p className="text-blanc/60 mt-4 text-[17px] max-w-[560px]">
             Voici les dernières nouvelles de vos appartements, suivis avec le plus grand soin par notre équipe.
           </p>
+          {lastLoginLabel && (
+            <p className="text-blanc/35 text-xs mt-3 tracking-[0.05em]">
+              Dernière connexion : {lastLoginLabel} · vos accès sont tracés et protégés
+            </p>
+          )}
           <div className="w-[60px] h-px bg-gold mt-5" />
 
           <div className="flex flex-wrap gap-3.5 mt-9">

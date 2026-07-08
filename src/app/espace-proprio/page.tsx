@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import LoginForm from "@/components/espace-proprio/LoginForm";
+import { readSession } from "@/lib/espace-proprio/auth";
 
 export const metadata: Metadata = {
   title: "Espace Propriétaire · Move in Paris",
@@ -12,7 +15,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function EspaceProprio() {
+export default async function EspaceProprio({
+  searchParams,
+}: {
+  searchParams: Promise<{ erreur?: string }>;
+}) {
+  // Déjà connecté → directement dans l'espace
+  const session = await readSession().catch(() => null);
+  if (session) redirect("/espace-proprio/mon-espace");
+
+  const { erreur } = await searchParams;
+
   return (
     <div className="relative min-h-screen bg-noir-deep flex flex-col items-center justify-center px-6 py-16 overflow-hidden">
       <div
@@ -22,7 +35,7 @@ export default function EspaceProprio() {
           backgroundSize: "40px 40px",
         }}
       />
-      <div className="relative max-w-xl text-center">
+      <div className="relative w-full max-w-xl text-center">
         <Link href="/" aria-label="Move in Paris">
           <Image
             src="/Logo-gold.png"
@@ -45,20 +58,27 @@ export default function EspaceProprio() {
         <p className="text-blanc/60 font-light mt-7 leading-relaxed">
           Suivez vos appartements en toute sérénité : occupation, entretien, documents et interventions, réunis dans un espace sécurisé réservé aux propriétaires Move in Paris.
         </p>
-        <p className="text-blanc/40 font-light text-sm mt-4">
-          L’accès personnalisé par lien sécurisé envoyé par email ouvre prochainement.
-        </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
+        <div className="mt-10">
+          <LoginForm initialError={erreur} />
+        </div>
+
+        <div className="flex items-center gap-4 mt-12 mb-2">
+          <div className="flex-1 h-px bg-white/10" />
+          <span className="text-blanc/30 text-xs tracking-[0.2em] uppercase">ou</span>
+          <div className="flex-1 h-px bg-white/10" />
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
           <Link
             href="/espace-proprio/demo"
-            className="bg-gold text-noir-deep px-10 py-4 text-[13px] tracking-[0.1em] uppercase font-medium hover:bg-gold-light transition-all duration-300"
+            className="border border-gold text-gold px-10 py-[15px] text-[13px] tracking-[0.1em] uppercase hover:bg-gold hover:text-noir-deep transition-all duration-300"
           >
             Découvrir la démonstration
           </Link>
           <a
             href="mailto:guillaume@move-in-paris.com"
-            className="border border-gold text-gold px-10 py-[15px] text-[13px] tracking-[0.1em] uppercase hover:bg-gold hover:text-noir-deep transition-all duration-300"
+            className="text-blanc/50 hover:text-gold transition-colors px-6 py-[15px] text-[13px] tracking-[0.1em] uppercase"
           >
             Écrire à Guillaume
           </a>
