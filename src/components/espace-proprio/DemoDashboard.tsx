@@ -170,18 +170,25 @@ export default function DemoDashboard({
         {/* Vue d'ensemble */}
         <section className="pt-20">
           {data.apartments[0]?.photo ? (
-            <div className="relative overflow-hidden border border-gris-clair/50">
+            <div className="overflow-hidden border border-gris-clair/50 bg-white">
               {/* eslint-disable-next-line @next/next/no-img-element -- photos Airtable distantes au go-live, hors allowlist next/image */}
               <img
                 src={data.apartments[0].photo}
                 alt={data.apartments[0].shortAddress}
-                className="w-full h-[240px] md:h-[340px] object-cover"
+                className="w-full h-[240px] md:h-[320px] object-cover rounded-b-none!"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-noir-deep/90 via-noir-deep/35 to-transparent" />
-              <div className="absolute bottom-0 inset-x-0 p-6 md:p-9">
-                <div className={EYEBROW}>Votre bien en un coup d’œil</div>
-                <h2 className="font-serif text-blanc text-3xl md:text-4xl mt-2">{data.apartments[0].shortAddress}</h2>
-                <div className="text-blanc/60 text-[11px] tracking-[0.2em] uppercase mt-2.5">{data.apartments[0].ref}</div>
+              <div className="bg-noir-deep px-6 md:px-9 py-5 md:py-6 flex flex-col md:flex-row md:items-center gap-3 md:gap-6 rounded-t-none!">
+                <div className="shrink-0">
+                  <div className="text-blanc/50 text-[10px] tracking-[0.25em] uppercase">
+                    Votre bien en un coup d’œil
+                  </div>
+                  <div className="text-blanc/40 text-[11px] tracking-[0.2em] uppercase mt-1">
+                    {data.apartments[0].ref}
+                  </div>
+                </div>
+                <h2 className="font-serif text-gold text-2xl md:text-[28px] leading-snug md:ml-auto md:text-right">
+                  {data.apartments[0].shortAddress}
+                </h2>
               </div>
             </div>
           ) : (
