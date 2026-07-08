@@ -112,25 +112,18 @@ export default function DemoDashboard({
         </div>
       </header>
 
-      {/* Hero sombre */}
-      <div className="relative bg-noir-deep overflow-hidden py-16">
-        <div
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)",
-            backgroundSize: "40px 40px",
-          }}
-        />
+      {/* Hero clair */}
+      <div className="relative bg-blanc-chaud overflow-hidden py-16 border-b border-gris-clair/60">
         <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
-          <div className={EYEBROW}>Espace propriétaire · Démonstration</div>
-          <h1 className="font-serif text-blanc text-4xl md:text-5xl lg:text-[54px] leading-[1.15] mt-3">
+          <div className={EYEBROW}>Espace propriétaire</div>
+          <h1 className="font-serif text-noir text-4xl md:text-5xl lg:text-[54px] leading-[1.15] mt-3">
             Bonjour <span className="text-gold">{data.ownerName}</span>,
           </h1>
-          <p className="text-blanc/60 mt-4 text-[17px] max-w-[560px]">
+          <p className="text-gris mt-4 text-[17px] max-w-[560px]">
             Voici les dernières nouvelles de vos appartements, suivis avec le plus grand soin par notre équipe.
           </p>
           {lastLoginLabel && (
-            <p className="text-blanc/35 text-xs mt-3 tracking-[0.05em]">
+            <p className="text-gris/70 text-xs mt-3 tracking-[0.05em]">
               Dernière connexion : {lastLoginLabel} · vos accès sont tracés et protégés
             </p>
           )}
@@ -141,16 +134,16 @@ export default function DemoDashboard({
               <button
                 key={apt.id}
                 onClick={() =>
-                  showToast(i === 0 ? "Démonstration · appartement déjà affiché" : "Démonstration · le contenu basculerait sur cet appartement")
+                  showToast(i === 0 ? "Appartement déjà affiché" : "Le contenu basculerait sur cet appartement")
                 }
                 className={`text-left px-6 py-4 border transition-all duration-300 cursor-pointer ${
                   i === 0
-                    ? "border-gold bg-gold/10"
-                    : "border-white/10 bg-white/5 hover:border-gold"
+                    ? "border-gold bg-white shadow-sm"
+                    : "border-gris-clair bg-white/60 hover:border-gold"
                 }`}
               >
                 <span className="block text-gold text-[11px] tracking-[0.2em] uppercase mb-1">{apt.ref}</span>
-                <span className="font-serif text-blanc text-[17px]">{apt.shortAddress}</span>
+                <span className="font-serif text-noir text-[17px]">{apt.shortAddress}</span>
               </button>
             ))}
           </div>
