@@ -160,7 +160,7 @@ export default function Header() {
             {/* Close button */}
             <div className="flex justify-between items-center px-6 py-6">
               <LogoLink onNavigate={() => setMobileOpen(false)}>
-                <Image src="/Logo-gold.png" alt="Move in Paris" width={640} height={640} className="h-32 w-auto" />
+                <Image src="/Logo-gold.png" alt="Move in Paris" width={640} height={640} className="h-20 w-auto" />
               </LogoLink>
               <div className="flex items-center gap-4">
                 <LocaleSwitcher dark />
@@ -175,7 +175,7 @@ export default function Header() {
             </div>
 
             {/* Links */}
-            <div className="flex-1 flex flex-col justify-center px-8 gap-2">
+            <div className="flex-1 flex flex-col justify-start overflow-y-auto px-8 pt-2 pb-4 gap-1.5">
               {navLinks.map((link, i) => (
                 <motion.div
                   key={link.href}
@@ -186,21 +186,21 @@ export default function Header() {
                   <Link
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className={`flex items-center gap-4 py-5 px-6 rounded-2xl transition-all ${
+                    className={`flex items-center gap-4 py-3.5 px-6 rounded-2xl transition-all ${
                       pathname === link.href
                         ? "bg-gold/10 border border-gold/20 text-gold"
                         : "text-blanc/70 hover:bg-white/5 hover:text-white border border-transparent"
                     }`}
                   >
-                    <div className={`w-1.5 h-8 rounded-full ${pathname === link.href ? "bg-gold" : "bg-white/10"}`} />
-                    <span className="font-serif text-2xl">{link.label}</span>
+                    <div className={`w-1.5 h-7 rounded-full ${pathname === link.href ? "bg-gold" : "bg-white/10"}`} />
+                    <span className="font-serif text-xl">{link.label}</span>
                   </Link>
                 </motion.div>
               ))}
             </div>
 
             {/* Bottom CTA */}
-            <div className="px-8 pb-10">
+            <div className="px-8 pb-6 pt-2 shrink-0">
               <Link
                 href="/proposer-mon-appartement"
                 onClick={() => setMobileOpen(false)}
