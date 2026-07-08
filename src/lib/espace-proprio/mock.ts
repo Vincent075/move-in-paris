@@ -7,6 +7,7 @@ export type PortalApartment = {
   id: string;
   ref: string; // Code appartement (MIP-XXXX-XXX)
   shortAddress: string; // "6, rue de Paradis · Paris 10ᵉ"
+  photo?: string; // futur : Appartements."Photo de l'appartement" (1ʳᵉ pièce jointe)
 };
 
 export type PortalStay = {
@@ -68,8 +69,18 @@ export type PortalData = {
 export const DEMO_DATA: PortalData = {
   ownerName: "Monsieur de Vasselot",
   apartments: [
-    { id: "apt1", ref: "MIP-2026-004", shortAddress: "6, rue de Paradis · Paris 10ᵉ" },
-    { id: "apt2", ref: "MIP-2026-011", shortAddress: "33, rue de Chazelles · Paris 17ᵉ" },
+    {
+      id: "apt1",
+      ref: "MIP-2026-004",
+      shortAddress: "6, rue de Paradis · Paris 10ᵉ",
+      photo: "/apartments/2-pieces-faubourg-saint-martin-paris-10e/photo-5.jpg",
+    },
+    {
+      id: "apt2",
+      ref: "MIP-2026-011",
+      shortAddress: "33, rue de Chazelles · Paris 17ᵉ",
+      photo: "/apartments/2-pieces-courcelles-paris-17e/01.jpg",
+    },
   ],
   glance: [
     { k: "Occupation actuelle", v: "Occupé jusqu’au 31 août 2026", s: "Séjour professionnel · 2 occupants" },

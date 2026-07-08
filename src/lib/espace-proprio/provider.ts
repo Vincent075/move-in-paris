@@ -130,7 +130,7 @@ async function airtableGetData(owner: PortalOwner): Promise<PortalData> {
   // 1. Appartements du propriétaire (via lookup Email propriétaire, whitelist)
   const apts = await atList("Appartements", {
     filterByFormula: `LOWER(ARRAYJOIN({Email propriétaire})) = '${esc(owner.email)}'`,
-    fields: ["Code appartement", "Nom / Référence", "adresse complète", "Adresse", "Ville"],
+    fields: ["Code appartement", "Nom / Référence", "adresse complète", "Adresse", "Ville", "Photo de l'appartement"],
   });
   if (apts.length === 0) {
     return { ...DEMO_DATA, ownerName: owner.greetingName, apartments: [], stays: [], timeline: [], documents: [], interventions: [] };
@@ -211,11 +211,17 @@ async function airtableGetData(owner: PortalOwner): Promise<PortalData> {
 
   return {
     ownerName: owner.greetingName,
-    apartments: apts.map((a) => ({
-      id: a.id,
-      ref: String(a.fields["Code appartement"] || a.fields["Nom / Référence"] || ""),
-      shortAddress: String(a.fields["adresse complète"] || a.fields["Adresse"] || ""),
-    })),
+    apartments: apts.map((a) => {
+      const attachments = a.fields["Photo de l'appartement"] as
+        | { url?: string; thumbnails?: { large?: { url?: string } } }[]
+        | undefined;
+      return {
+        id: a.id,
+        ref: String(a.fields["Code appartement"] || a.fields["Nom / Référence"] || ""),
+        shortAddress: String(a.fields["adresse complète"] || a.fields["Adresse"] || ""),
+        photo: attachments?.[0]?.thumbnails?.large?.url || attachments?.[0]?.url,
+      };
+    }),
     glance: [
       {
         k: "Occupation actuelle",

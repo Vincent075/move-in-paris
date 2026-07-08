@@ -169,10 +169,29 @@ export default function DemoDashboard({
       <main className="max-w-7xl mx-auto px-6 lg:px-12">
         {/* Vue d'ensemble */}
         <section className="pt-20">
-          <div className={EYEBROW}>Votre bien en un coup d’œil</div>
-          <h2 className="font-serif text-3xl md:text-4xl mt-3">{data.apartments[0].shortAddress}</h2>
-          <div className="w-[60px] h-px bg-gold mt-5 mb-10" />
-          <div className="flex gap-5 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-2 lg:pb-0 lg:grid lg:grid-cols-4">
+          {data.apartments[0]?.photo ? (
+            <div className="relative overflow-hidden border border-gris-clair/50">
+              {/* eslint-disable-next-line @next/next/no-img-element -- photos Airtable distantes au go-live, hors allowlist next/image */}
+              <img
+                src={data.apartments[0].photo}
+                alt={data.apartments[0].shortAddress}
+                className="w-full h-[240px] md:h-[340px] object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-noir-deep/90 via-noir-deep/35 to-transparent" />
+              <div className="absolute bottom-0 inset-x-0 p-6 md:p-9">
+                <div className={EYEBROW}>Votre bien en un coup d’œil</div>
+                <h2 className="font-serif text-blanc text-3xl md:text-4xl mt-2">{data.apartments[0].shortAddress}</h2>
+                <div className="text-blanc/60 text-[11px] tracking-[0.2em] uppercase mt-2.5">{data.apartments[0].ref}</div>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className={EYEBROW}>Votre bien en un coup d’œil</div>
+              <h2 className="font-serif text-3xl md:text-4xl mt-3">{data.apartments[0]?.shortAddress}</h2>
+              <div className="w-[60px] h-px bg-gold mt-5" />
+            </>
+          )}
+          <div className="mt-8 flex gap-5 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-2 lg:pb-0 lg:grid lg:grid-cols-4">
             {data.glance.map((g) => (
               <div
                 key={g.k}
