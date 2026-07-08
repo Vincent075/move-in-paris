@@ -527,10 +527,10 @@ export default function DemoDashboard({
           />
         </section>
 
-        {/* Interlocuteur */}
+        {/* Contact équipe */}
         <section className="pt-20 pb-20">
-          <div className={EYEBROW}>Votre interlocuteur</div>
-          <h2 className="font-serif text-3xl md:text-4xl mt-3">Une question ? Guillaume s’occupe de tout.</h2>
+          <div className={EYEBROW}>Notre équipe</div>
+          <h2 className="font-serif text-3xl md:text-4xl mt-3">Une question ? On s’occupe de tout.</h2>
           <div className="w-[60px] h-px bg-gold mt-5 mb-10" />
           <div className="relative bg-noir-deep p-9 md:p-14 flex flex-wrap items-center gap-10 overflow-hidden">
             <div
@@ -541,15 +541,15 @@ export default function DemoDashboard({
               }}
             />
             <div className="relative w-24 h-24 shrink-0 rounded-full! border border-gold/50 bg-gold/10 text-gold font-serif text-3xl flex items-center justify-center">
-              GF
+              ◆
             </div>
             <div className="relative">
-              <h3 className="font-serif text-blanc text-[26px]">Guillaume Formery</h3>
+              <h3 className="font-serif text-blanc text-[26px]">L’équipe Move in Paris</h3>
               <div className="text-gold text-[11px] tracking-[0.3em] uppercase mt-1.5">
-                Property Manager · votre contact dédié
+                Property management · à votre service
               </div>
               <p className="text-blanc/60 text-sm mt-3.5 max-w-[400px]">
-                Guillaume veille personnellement sur vos appartements. Il vous répond du lundi au vendredi, de 9 h à 19 h.
+                On veille sur vos appartements comme si c’étaient les nôtres. On vous répond du lundi au vendredi, de 9 h à 19 h.
               </p>
             </div>
             <div className="relative ml-auto flex flex-col gap-3 w-full md:w-auto">
@@ -557,7 +557,7 @@ export default function DemoDashboard({
                 href="mailto:guillaume@move-in-paris.com"
                 className="bg-gold text-noir-deep text-center px-10 py-4 text-[13px] tracking-[0.1em] uppercase font-medium hover:bg-gold-light transition-all duration-300"
               >
-                Écrire à Guillaume
+                Nous écrire
               </a>
               <a
                 href="tel:+33145200603"

@@ -47,7 +47,7 @@ export default function EventNotifier({ demo = false, apartmentLabel, onDemoSubm
           Bien reçu
         </div>
         <p className="text-noir font-light text-[15px] leading-relaxed max-w-[560px]">
-          Votre signalement a été transmis à Guillaume, votre Property Manager. Il revient vers vous rapidement par email.
+          Votre signalement a été transmis à notre équipe. On revient vers vous rapidement par email.
         </p>
         <button
           onClick={() => {
@@ -111,7 +111,7 @@ export default function EventNotifier({ demo = false, apartmentLabel, onDemoSubm
 
       {state === "error" && (
         <p className="text-gris font-light text-sm mt-4 border border-gold/40 bg-gold/10 px-4 py-3">
-          L’envoi n’a pas abouti. Réessayez dans une minute, ou écrivez directement à guillaume@move-in-paris.com.
+          L’envoi n’a pas abouti. Réessayez dans une minute, ou écrivez-nous directement à guillaume@move-in-paris.com.
         </p>
       )}
 
@@ -121,10 +121,10 @@ export default function EventNotifier({ demo = false, apartmentLabel, onDemoSubm
           disabled={!category || state === "sending"}
           className="bg-gold text-noir-deep px-10 py-4 text-[13px] tracking-[0.1em] uppercase font-medium hover:bg-gold-light transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
-          {state === "sending" ? "Envoi en cours" : "Prévenir Guillaume"}
+          {state === "sending" ? "Envoi en cours" : "Envoyer"}
         </button>
         <p className="text-gris font-light text-xs max-w-[320px]">
-          Votre signalement part par email à votre Property Manager, qui vous répond directement.
+          Votre signalement nous parvient immédiatement par email. On vous répond directement.
         </p>
       </div>
     </form>
