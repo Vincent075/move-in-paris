@@ -91,25 +91,25 @@ export default function Header() {
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="flex items-center justify-between h-24">
-            <LogoLink className="flex items-center group">
+            <LogoLink className="flex items-center group shrink-0">
               <Image
                 src="/Logo-gold.png"
                 alt="Move in Paris"
                 width={640}
                 height={640}
-                className="h-32 w-auto transition-transform duration-300 group-hover:scale-105"
+                className="h-24 w-auto transition-transform duration-300 group-hover:scale-105"
                 priority
               />
             </LogoLink>
 
             {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center">
+            <nav className="hidden xl:flex items-center">
               <div className="flex items-center bg-white/5 backdrop-blur-sm rounded-full px-2 py-1.5 border border-white/10">
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`relative px-3 py-2 text-xs tracking-wide uppercase whitespace-nowrap transition-all duration-300 rounded-full ${
+                    className={`relative px-2 py-2 text-xs tracking-wide uppercase whitespace-nowrap transition-all duration-300 rounded-full ${
                       link.desktopXlOnly ? "hidden xl:block" : ""
                     } ${
                       pathname === link.href
@@ -123,7 +123,7 @@ export default function Header() {
               </div>
               <Link
                 href="/proposer-mon-appartement"
-                className="ml-4 px-6 py-2.5 bg-gradient-to-r from-gold to-gold-light text-noir-deep text-sm tracking-wider uppercase font-semibold whitespace-nowrap rounded-full hover:shadow-lg hover:shadow-gold/25 transition-all duration-300 hover:scale-105"
+                className="ml-3 px-4 py-2.5 bg-gradient-to-r from-gold to-gold-light text-noir-deep text-sm tracking-wider uppercase font-semibold whitespace-nowrap rounded-full hover:shadow-lg hover:shadow-gold/25 transition-all duration-300 hover:scale-105"
               >
                 {t("nav.proposeCta")}
               </Link>
@@ -133,7 +133,7 @@ export default function Header() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden relative w-10 h-10 flex items-center justify-center rounded-full bg-white/10 border border-white/10"
+              className="xl:hidden relative w-10 h-10 flex items-center justify-center rounded-full bg-white/10 border border-white/10"
               aria-label={t("nav.menu")}
               style={{ borderRadius: '50%' }}
             >
