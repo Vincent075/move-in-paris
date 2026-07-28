@@ -216,6 +216,97 @@ function propositionEmail(fields: Record<string, string>) {
 </body></html>`;
 }
 
+// Table Airtable « Leads » (tblUxEm8sB4eHyNG1) — valeurs des selects Statut / Source formulaire
+const LEAD_SOURCE: Record<string, string> = {
+  proposer: "Proposer mon appartement",
+  estimation: "Estimation",
+  visite: "Visite appartement",
+  contact: "Contact général",
+  "owner-lead": "Proposer mon appartement",
+  "owner-lead-partial": "Lead partiel",
+};
+
+function mapFormToLead(formType: string, fields: Record<string, string>) {
+  const lead: Record<string, string> = {
+    "Statut": "Nouveau",
+    "Source formulaire": LEAD_SOURCE[formType] || "Contact général",
+    "Civilité": fields.civilite,
+    "Prénom": fields.prenom,
+    "Nom": fields.nom,
+    "Email": fields.email,
+    "Téléphone": fields.telephone,
+  };
+
+  switch (formType) {
+    case "proposer":
+    case "owner-lead":
+      Object.assign(lead, {
+        "Adresse du bien": fields.adresse,
+        "Surface (m²)": fields.surface,
+        "Pièces": fields.pieces,
+        "Étage": fields.etage,
+        "Chambres": fields.chambres,
+        "SdB": fields.sdb,
+        "Ascenseur": fields.ascenseur,
+        "État": fields.etat,
+        "Disponibilité": fields.disponibilite,
+        "Message": fields.description || fields.message,
+      });
+      break;
+    case "estimation":
+      Object.assign(lead, {
+        "Adresse du bien": [fields.adresse || fields.zone, fields.quartier].filter(Boolean).join(" — "),
+        "Surface (m²)": fields.surface,
+        "Pièces": fields.pieces,
+        "Loyer marché (€/mois)": fields.loyerMajore,
+        "Estimation MIP min (€/mois)": fields.loyerMIPMin,
+        "Estimation MIP max (€/mois)": fields.loyerMIPMax,
+      });
+      break;
+    case "visite":
+      Object.assign(lead, {
+        "Appartement concerné": [fields.appartement, fields.reference ? `réf. ${fields.reference}` : ""].filter(Boolean).join(" — "),
+        "Message": fields.message,
+      });
+      break;
+    case "contact":
+      Object.assign(lead, {
+        "Message": [fields.profil ? `Profil : ${fields.profil}` : "", fields.message].filter(Boolean).join("\n\n"),
+      });
+      break;
+  }
+
+  // typecast Airtable ne tolère pas les chaînes vides sur les champs nombre
+  return Object.fromEntries(
+    Object.entries(lead).filter(([, v]) => v !== undefined && v !== null && v !== "")
+  );
+}
+
+// Écrit le lead dans Airtable. Non bloquant : chaque canal (email / Airtable)
+// fonctionne même si l'autre échoue — c'est le double filet.
+async function writeLeadToAirtable(formType: string, fields: Record<string, string>) {
+  if (!process.env.AIRTABLE_BASE_ID || !process.env.AIRTABLE_LEADS_TOKEN) return;
+  try {
+    const res = await fetch(
+      `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/tblUxEm8sB4eHyNG1`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.AIRTABLE_LEADS_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          records: [{ fields: mapFormToLead(formType, fields) }],
+          typecast: true,
+        }),
+      }
+    );
+    if (!res.ok) console.error("Airtable lead:", res.status, await res.text());
+  } catch (e) {
+    console.error("Airtable lead:", e);
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const contentType = req.headers.get("content-type") || "";
@@ -255,6 +346,8 @@ export async function POST(req: NextRequest) {
       const { formType: _, ...rest } = data;
       fields = rest;
     }
+
+    await writeLeadToAirtable(formType, fields);
 
     const resend = new Resend(process.env.RESEND_API_KEY);
 
