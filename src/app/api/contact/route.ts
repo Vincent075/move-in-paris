@@ -282,10 +282,14 @@ function mapFormToLead(formType: string, fields: Record<string, string>) {
   );
 }
 
-// Écrit le lead dans Airtable. Non bloquant : chaque canal (email / Airtable)
-// fonctionne même si l'autre échoue — c'est le double filet.
-async function writeLeadToAirtable(formType: string, fields: Record<string, string>) {
-  if (!process.env.AIRTABLE_BASE_ID || !process.env.AIRTABLE_LEADS_TOKEN) return;
+// Écrit le lead dans Airtable et renvoie son Code lead (LD-…), ou null.
+// Non bloquant : chaque canal (email / Airtable / Slack) fonctionne même si
+// les autres échouent — c'est le double filet.
+async function writeLeadToAirtable(
+  formType: string,
+  fields: Record<string, string>
+): Promise<string | null> {
+  if (!process.env.AIRTABLE_BASE_ID || !process.env.AIRTABLE_LEADS_TOKEN) return null;
   try {
     const res = await fetch(
       `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/tblUxEm8sB4eHyNG1`,
@@ -301,9 +305,48 @@ async function writeLeadToAirtable(formType: string, fields: Record<string, stri
         }),
       }
     );
-    if (!res.ok) console.error("Airtable lead:", res.status, await res.text());
+    if (!res.ok) {
+      console.error("Airtable lead:", res.status, await res.text());
+      return null;
+    }
+    const data = await res.json();
+    return data.records?.[0]?.fields?.["Code lead"] ?? null;
   } catch (e) {
     console.error("Airtable lead:", e);
+    return null;
+  }
+}
+
+// Notifie le canal Slack #leads via webhook entrant (ne sait que poster là).
+async function notifyLeadSlack(
+  formType: string,
+  fields: Record<string, string>,
+  codeLead: string | null
+) {
+  if (!process.env.SLACK_LEADS_WEBHOOK_URL) return;
+  try {
+    const nom = [fields.civilite, fields.prenom, fields.nom].filter(Boolean).join(" ");
+    const contact = [
+      fields.telephone ? `📞 ${fields.telephone}` : "",
+      fields.email ? `✉️ ${fields.email}` : "",
+    ].filter(Boolean).join(" · ");
+    const fourchette =
+      fields.loyerMIPMin && fields.loyerMIPMax
+        ? `Estimation : ${Number(fields.loyerMIPMin).toLocaleString("fr-FR")} – ${Number(fields.loyerMIPMax).toLocaleString("fr-FR")} €/mois`
+        : "";
+    const text = [
+      `🆕 *Nouveau lead${codeLead ? ` ${codeLead}` : ""}* — ${nom || "sans nom"}`,
+      `Source : ${LEAD_SOURCE[formType] || "Contact général"}`,
+      contact,
+      fourchette,
+    ].filter(Boolean).join("\n");
+    await fetch(process.env.SLACK_LEADS_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text }),
+    });
+  } catch (e) {
+    console.error("Slack lead:", e);
   }
 }
 
@@ -347,7 +390,8 @@ export async function POST(req: NextRequest) {
       fields = rest;
     }
 
-    await writeLeadToAirtable(formType, fields);
+    const codeLead = await writeLeadToAirtable(formType, fields);
+    await notifyLeadSlack(formType, fields, codeLead);
 
     const resend = new Resend(process.env.RESEND_API_KEY);
 
