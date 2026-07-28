@@ -217,10 +217,10 @@
       "amortissement LMNP"
     ],
     "priority_score": 74,
-    "used": false,
+    "used": true,
     "created_at": "2026-05-20T00:00:00.000Z",
-    "used_at": null,
-    "generated_article_slug": null,
+    "used_at": "2026-07-28T09:01:09.566Z",
+    "generated_article_slug": "fiscalite-lmnp-en-2026-amortissements-charges-et-plus-values-ce-qui-change-vraim",
     "trend_source": "seed"
   },
   {
