@@ -22,3 +22,5 @@ jobs:
         run: node scripts/checkin-robot.mjs
         env:
           AIRTABLE_ROBOT_TOKEN: ${{ secrets.AIRTABLE_ROBOT_TOKEN }}
+          SLACK_CHECKIN_WEBHOOK_URL: ${{ secrets.SLACK_CHECKIN_WEBHOOK_URL }}
+          SLACK_LEADS_WEBHOOK_URL: ${{ secrets.SLACK_LEADS_WEBHOOK_URL }}
