@@ -74,7 +74,7 @@ const frDate = (iso) => {
 const resas = await listAll(T_RESA, {
   filterByFormula:
     "AND(" +
-    "OR(Statut='Booking validé',Statut='Contrat envoyé',Statut='Contrat signé')," +
+    "OR(Statut='Booking validé',Statut='Contrat envoyé',Statut='Contrat signé',Statut='En cours')," +
     "{Check-in lié}=BLANK()," +
     "IS_AFTER({Date d'entrée},DATEADD(TODAY(),-1,'days'))" +
     ")",
