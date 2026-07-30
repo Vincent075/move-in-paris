@@ -159,6 +159,41 @@ if (!WH_CHECKIN) {
   if (changes.length) console.log("  notifications #check-in envoyées, marqueurs à jour");
 }
 
+// ── 3a-bis. Alerte J-1 : arrivée demain (ou aujourd'hui) et toujours À planifier ─
+if (WH_CHECKIN) {
+  const enRetard = await listAll(T_CHK, {
+    filterByFormula: "AND(Statut='À planifier',NOT({Alerte J-1 envoyée}))",
+    "fields[]": ["Code check-in", "Nom occupant", "Adresse appartement", "Début du bail (résa)"],
+  });
+  const parisDay = (d) => d.toLocaleDateString("en-CA", { timeZone: "Europe/Paris" });
+  const aujourdHui = parisDay(new Date());
+  const demain = parisDay(new Date(Date.now() + 24 * 3600 * 1000));
+  const urgents = enRetard.filter((r) => {
+    const bail = String(first(r.fields["Début du bail (résa)"])).slice(0, 10);
+    return bail === demain || bail === aujourdHui;
+  });
+  console.log(`${urgents.length} check-in(s) non planifié(s) à J-1 ou jour J`);
+  const lines = urgents.map((r) => {
+    const f = r.fields;
+    const bail = String(first(f["Début du bail (résa)"])).slice(0, 10);
+    const quand = bail === aujourdHui ? "AUJOURD'HUI" : "DEMAIN";
+    return `⚠️ *Check-in NON PLANIFIÉ — arrivée ${quand} (${frDate(bail)})* : *${f["Code check-in"]}* — ${first(f["Nom occupant"])} · ${first(f["Adresse appartement"])}. Date, heure et agent à fixer.`;
+  });
+  await slack(WH_CHECKIN, lines);
+  for (let i = 0; i < urgents.length; i += 10) {
+    await api(`${BASE}/${T_CHK}`, {
+      method: "PATCH",
+      body: {
+        records: urgents.slice(i, i + 10).map((r) => ({
+          id: r.id,
+          fields: { "Alerte J-1 envoyée": true },
+        })),
+      },
+    });
+  }
+  if (urgents.length) console.log("  alertes J-1 envoyées et marquées");
+}
+
 // ── 3b. Notifications #leads (changements de statut uniquement) ──────────────
 if (!WH_LEADS) {
   console.log("SLACK_LEADS_WEBHOOK_URL absent — notifications leads sautées (marqueurs conservés).");
