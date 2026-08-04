@@ -9163,5 +9163,118 @@
       "Wifi"
     ],
     "hasElevator": true
+  },
+  {
+    "slug": "2-pieces-bizet-paris-16e",
+    "title": "2 Pièces Bizet",
+    "address": "Rue Georges Bizet, Paris 16e",
+    "district": "Paris 16e",
+    "surface": 35,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "3e étage",
+    "status": "À louer",
+    "description": "2 pièces entièrement meublé et équipé d'une surface d'environ 35 m², rénové en avril 2019.  3ème étage avec ascenseur d'un immeuble ancien de standing.\nSalon avec canapé-lit, table basse et télévision à écran plat. \nCuisine moderne entièrement équipée dans l'entrée  Chambre avec un lit 2 places et un dressing.  \nDouche attenante à la chambre. Toilettes séparées  Appartement très lumineux et proche de tout commodités.  Petite terrasse avec table et 2 chaises d'extérieur. Chauffage et eau chaude collectifs.\n",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Balcon",
+      "Bouilloire",
+      "Chauffage collectif",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Fer à repasser",
+      "Draps fournis",
+      "Fibre optique",
+      "Four",
+      "Gardien",
+      "Lave-linge séchant",
+      "Linge de maison fourni",
+      "Lit double",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Toilettes séparées",
+      "Wifi"
+    ],
+    "photos": "2-pieces-bizet-paris-16e",
+    "images": [
+      "/apartments/2-pieces-bizet-paris-16e/photo-1.jpg",
+      "/apartments/2-pieces-bizet-paris-16e/photo-2.jpg",
+      "/apartments/2-pieces-bizet-paris-16e/photo-3.jpg",
+      "/apartments/2-pieces-bizet-paris-16e/photo-4.jpg",
+      "/apartments/2-pieces-bizet-paris-16e/photo-5.jpg",
+      "/apartments/2-pieces-bizet-paris-16e/photo-6.jpg",
+      "/apartments/2-pieces-bizet-paris-16e/photo-7.jpg",
+      "/apartments/2-pieces-bizet-paris-16e/photo-8.jpg",
+      "/apartments/2-pieces-bizet-paris-16e/photo-9.jpg",
+      "/apartments/2-pieces-bizet-paris-16e/photo-10.jpg",
+      "/apartments/2-pieces-bizet-paris-16e/photo-11.jpg",
+      "/apartments/2-pieces-bizet-paris-16e/photo-12.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Alma-Marceau",
+        "distance": "4 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Iéna",
+        "distance": "5 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "G20",
+        "distance": "1 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Brignole-Galliera",
+        "distance": "3 min"
+      }
+    ],
+    "title_en": "1-Bedroom Apartment Bizet",
+    "description_en": "1-bedroom fully furnished and equipped apartment of approximately 35 sqm, renovated in April 2019. 3rd floor with elevator in a prestigious period building.\nLiving room with sofa bed, coffee table and flat-screen television.\nModern equipped kitchen in the entrance. Bedroom with a double bed and dressing room.\nEnsuite shower to the bedroom. Separate toilet. Very bright apartment close to all amenities. Small terrace with table and 2 outdoor chairs. Collective heating and hot water.\n",
+    "floor_en": "3rd floor",
+    "features_en": [
+      "Elevator",
+      "Vacuum cleaner",
+      "Balcony",
+      "Kettle",
+      "Collective heating",
+      "Equipped kitchen",
+      "Double glazing",
+      "Iron",
+      "Bed linens provided",
+      "Fiber optic internet",
+      "Oven",
+      "Concierge",
+      "Washer dryer",
+      "Linens provided",
+      "Double bed",
+      "Microwave",
+      "Parquet",
+      "Cooktop",
+      "Refrigerator",
+      "Towels provided",
+      "Smart TV",
+      "Ironing board",
+      "Toaster",
+      "Separate toilet",
+      "Wifi"
+    ]
   }
 ]
