@@ -9045,7 +9045,7 @@
   },
   {
     "slug": "3-chambre-bureau-paris-11e",
-    "title": "3 Chambre / Bureau",
+    "title": "Dahomey, 3 Chambres / Bureau",
     "address": "Rue du Dahomey, Paris 11e",
     "district": "Paris 11e",
     "surface": 160,
@@ -9130,8 +9130,8 @@
         "distance": "2 min"
       }
     ],
-    "title_en": "3-Bedroom Apartment Faubourg Saint-Antoine",
-    "description_en": "Stunning 3-bedroom high-end apartment of approximately 160 sqm on the 3rd floor with elevator.\n\nFeatures an entrance hall, a spacious double living room opening onto a fully equipped and fitted kitchen (traditional oven, cooktop, refrigerator, dishwasher, etc.). Three bedrooms, one office, three bathrooms, and three separate toilets.\n\nBeautiful volumes, very bright with abundant storage and expansive living areas.\n\nTwo parking spaces included.\n\nTRANSPORT\n\nFaidherbe-Chaligny, Line 8: 3 minutes on foot\nLedru-Rollin, Line 8: 6 minutes\nBastille, Lines 1, 5, and 8: 13 minutes\nNation, RER A and Lines 1, 2, 6, 9: 13 minutes. La Défense in 20 minutes\nGare de Lyon: 15 minutes on foot. TGV South-East, RER A and D, direct Line 14 to Orly\n\nNEIGHBORHOOD\nFaubourg Saint-Antoine. Aligre Market and covered Beauvau market 5 minutes away. Square Trousseau and Coulée verte René-Dumont nearby. Shops, restaurants, and services within minutes.",
+    "title_en": "3-Bedroom Apartment Dahomey",
+    "description_en": "3-bedroom high-end apartment of 160 sqm on the 3rd floor with elevator.\n\nFeatures an entrance, a large double living room opening onto a fully equipped and fitted kitchen (oven, cooktop, refrigerator, dishwasher...). Three bedrooms, one office, three bathrooms, and three separate toilets.\n\nBeautiful volumes, very bright, abundant storage, spacious living room.\n\nTwo parking spaces.\n\nTRANSPORT\n\nFaidherbe-Chaligny, line 8: 3 minutes on foot\nLedru-Rollin, line 8: 6 minutes\nBastille, lines 1, 5, and 8: 13 minutes\nNation, RER A and lines 1, 2, 6, 9: 13 minutes. La Défense in 20 minutes\nGare de Lyon: 15 minutes on foot. Southeast TGV, RER A and D, direct line 14 to Orly\n\nNEIGHBORHOOD\nFaubourg Saint-Antoine. Aligre Market and Beauvau covered market 5 minutes away. Square Trousseau and Coulée Verte René-Dumont nearby. Shops, restaurants, and services within minutes.",
     "floor_en": "3rd floor",
     "features_en": [
       "Elevator",
@@ -9139,28 +9139,29 @@
       "Bathtub",
       "Kettle",
       "Coffee maker",
-      "Convertible sofa",
+      "Sofa bed",
       "Equipped kitchen",
       "Double glazing",
       "Walk-in shower",
       "Iron",
-      "Linens provided",
-      "Traditional oven",
+      "Bed linens provided",
+      "Oven",
       "Washing machine",
       "Dishwasher",
       "Household linens provided",
       "Queen-size bed",
       "Nespresso machine",
       "Microwave",
-      "Parquet flooring",
+      "Parquet",
       "Cooktop",
       "Refrigerator",
       "Dryer",
       "Smart TV",
       "Ironing board",
       "Toaster",
-      "Separate toilet",
+      "Separate toilets",
       "Wifi"
-    ]
+    ],
+    "hasElevator": true
   }
 ]
