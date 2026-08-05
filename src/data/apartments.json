@@ -9288,7 +9288,7 @@
     "bathrooms": 2,
     "floor": "7e étage",
     "status": "À louer",
-    "description": "4 pièces d’une surface d’environ 85 m2, refait à neuf.\nAu 7eme étage avec ascenseur d’un immeuble ancien. Un séjour avec canapé, une table basse et un Tv écran plat, un espace dinatoire avec table et chaise.\nUne cuisine semi-ouverte toute équipée et aménagée \nÉquipement : lave-vaisselle, four micro-onde, plaque, réfrigérateur, machine à café Nespresso\nMachine a laver.\nUne chambre parentale avec un lit queen size et du rangement avec salle d’eau attenante\n2ème chambre avec un lit queen size et rangements.\n3ème Chambre avec un lit simple, un bureau et du rangement.\nSalle de bain avec baignoire et WC séparés. \nChauffage et eau chaude individuel électriques.\n",
+    "description": "4 pièces d’une surface d’environ 85 m2, refait à neuf.\nAu 7eme étage avec ascenseur d’un immeuble ancien. Un séjour avec canapé, une table basse et un Tv écran plat, un espace dinatoire avec table et chaise.\nUne cuisine semi-ouverte toute équipée et aménagée \nÉquipement : lave-vaisselle, four micro-onde, plaque, réfrigérateur, machine à café Nespresso\nMachine a laver.\nUne chambre parentale avec un lit queen size et du rangement avec salle d’eau attenante\n2ème chambre avec un lit queen size et rangements.\n3ème Chambre avec un lit simple, un bureau et du rangement.\nSalle de bain avec baignoire et WC séparés. \nChauffage et eau chaude individuel électriques.\nTerrace sans vis à vis",
     "features": [
       "Ascenseur",
       "Aspirateur",
@@ -9363,7 +9363,7 @@
       }
     ],
     "title_en": "3-Bedroom Apartment Quai de la Gare",
-    "description_en": "3-bedroom high-end apartment of approximately 85 sqm, recently renovated.\nOn the 7th floor with elevator in a classic building. A living room with sofa, coffee table and flat-screen TV, a dining area with table and chairs.\nA semi-open fully equipped and fitted kitchen.\nEquipment: dishwasher, microwave, cooktop, refrigerator, Nespresso machine.\nWashing machine.\nA master bedroom with a queen-size bed and storage with en-suite bathroom.\n2nd bedroom with a queen-size bed and storage.\n3rd bedroom with a single bed, desk and storage.\nBathroom with bathtub and separate WC.\nIndividual electric heating and hot water.",
+    "description_en": "3-bedroom high-end apartment of approximately 85 sqm, fully renovated.\nOn the 7th floor with elevator in a classic building. A living room with sofa, coffee table and flat-screen TV, a dining area with table and chairs.\nA semi-open equipped and fitted kitchen.\nEquipment: dishwasher, microwave, cooktop, refrigerator, Nespresso machine.\nWashing machine.\nA master bedroom with a queen-size bed and storage with ensuite bathroom.\n2nd bedroom with a queen-size bed and storage.\n3rd bedroom with a single bed, desk and storage.\nBathroom with bathtub and separate WC.\nIndividual electric heating and hot water.\nTerrace with no overlooking.",
     "floor_en": "7th floor",
     "features_en": [
       "Elevator",
@@ -9375,14 +9375,14 @@
       "Equipped kitchen",
       "Double glazing",
       "Walk-in shower",
-      "Bedding provided",
+      "Bed linens provided",
       "Iron",
       "Fiber optic internet",
       "Oven",
       "Intercom",
       "Washing machine",
       "Dishwasher",
-      "Linens provided",
+      "Household linens provided",
       "Queen-size bed",
       "Parquet",
       "Cooktop",
@@ -9391,7 +9391,7 @@
       "Smart TV",
       "Terrace",
       "Toaster",
-      "Separate toilet",
+      "Separate WC",
       "Wifi",
       "Freezer"
     ],
