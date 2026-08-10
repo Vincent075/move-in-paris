@@ -9398,5 +9398,138 @@
       "Dryer"
     ],
     "hasElevator": true
+  },
+  {
+    "slug": "3-pieces-madeleine-paris-8e",
+    "title": "3 Pièces Madeleine",
+    "address": "Rue Cambacérès, Paris 8e",
+    "district": "Paris 8e",
+    "surface": 60,
+    "rooms": 3,
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "floor": "2e étage",
+    "status": "À louer",
+    "description": "\n3 pièces de standing. Meublé et équipé d'une surface d'environ 60 m².\n2ème étage avec ascenseur d'un immeuble moderne et sécurisé. Décoration moderne et contemporaine. \nSalon avec canapé 3 places et télévision à écran plasma Chambre 1 avec lit double et rangement. \nChambre 2 avec lit double.\nSalle d’eau avec douche. Toilettes séparées. \nCuisine ouverte entièrement équipée.\nAppartement donnant sur une rue calme. Chauffage et eau chaude individuels électrique.\nNombreux commerces au pied de l'immeuble.\n",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Balcon",
+      "Cafetière",
+      "Bouilloire",
+      "Canapé convertible",
+      "Chauffage collectif",
+      "Congélateur",
+      "Cuisine équipée",
+      "Digicode",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Interphone",
+      "Lave-linge séchant",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Lit double",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toilettes séparées",
+      "Volets roulants",
+      "Wifi"
+    ],
+    "photos": "3-pieces-madeleine-paris-8e",
+    "images": [
+      "/apartments/3-pieces-madeleine-paris-8e/photo-1.jpg",
+      "/apartments/3-pieces-madeleine-paris-8e/photo-2.jpg",
+      "/apartments/3-pieces-madeleine-paris-8e/photo-3.jpg",
+      "/apartments/3-pieces-madeleine-paris-8e/photo-4.jpg",
+      "/apartments/3-pieces-madeleine-paris-8e/photo-5.jpg",
+      "/apartments/3-pieces-madeleine-paris-8e/photo-6.jpg",
+      "/apartments/3-pieces-madeleine-paris-8e/photo-7.jpg",
+      "/apartments/3-pieces-madeleine-paris-8e/photo-8.jpg",
+      "/apartments/3-pieces-madeleine-paris-8e/photo-9.jpg",
+      "/apartments/3-pieces-madeleine-paris-8e/photo-10.jpg",
+      "/apartments/3-pieces-madeleine-paris-8e/photo-11.jpg",
+      "/apartments/3-pieces-madeleine-paris-8e/photo-12.jpg",
+      "/apartments/3-pieces-madeleine-paris-8e/photo-13.jpg",
+      "/apartments/3-pieces-madeleine-paris-8e/photo-14.jpg",
+      "/apartments/3-pieces-madeleine-paris-8e/photo-15.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Miromesnil",
+        "distance": "3 min",
+        "lines": [
+          "13",
+          "9"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Saint-Augustin",
+        "distance": "4 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Monoprix",
+        "distance": "3 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Marcel Pagnol",
+        "distance": "5 min"
+      }
+    ],
+    "title_en": "2-Bedroom Apartment Madeleine",
+    "description_en": "2-bedroom high-end apartment of approximately 60 sqm, fully furnished and equipped.\n2nd floor with elevator in a modern and secure building. Contemporary and modern décor.\nLiving room with 3-seater sofa and plasma screen television. Bedroom 1 with double bed and storage. Bedroom 2 with double bed.\nBathroom with walk-in shower. Separate toilet.\nOpen-plan fully equipped kitchen.\nApartment overlooking a quiet street. Individual electric heating and hot water.\nNumerous shops at the foot of the building.",
+    "floor_en": "2nd floor",
+    "features_en": [
+      "Elevator",
+      "Vacuum cleaner",
+      "Balcony",
+      "Coffee maker",
+      "Kettle",
+      "Sofa bed",
+      "Collective heating",
+      "Freezer",
+      "Equipped kitchen",
+      "Keypad entry",
+      "Double glazing",
+      "Walk-in shower",
+      "Bed linens provided",
+      "Iron",
+      "Fiber optic internet",
+      "Oven",
+      "Intercom",
+      "Washer dryer",
+      "Dishwasher",
+      "Housekeeping linens provided",
+      "Queen-size bed",
+      "Double bed",
+      "Nespresso machine",
+      "Microwave",
+      "Parquet flooring",
+      "Cooktop",
+      "Refrigerator",
+      "Towels provided",
+      "Smart TV",
+      "Ironing board",
+      "Separate toilet",
+      "Roller shutters",
+      "Wifi"
+    ]
   }
 ]
