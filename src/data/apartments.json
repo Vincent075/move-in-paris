@@ -9477,20 +9477,20 @@
       }
     ],
     "title_en": "1-Bedroom Apartment Morland",
-    "description_en": "1-bedroom high-end apartment of approximately 50 sqm, entirely renovated and furnished in a contemporary style.\nOn the top floor with elevator (6th floor), east-west facing. Double exposure, very bright. Small balcony.\n\nOpen-plan living room leading to a fully equipped kitchen.\nEquipment: dishwasher, microwave, cooktop, refrigerator, Nespresso machine, television.\nWashing machine and dryer.\n\nOne bedroom. Bathroom with WC.\n\nMezzanine under the eaves with two additional sleeping spaces (maximum height 1.50 m, accessed by staircase).\n\nAir conditioning in the bedroom and living room, complemented by ceiling-mounted fans.",
+    "description_en": "1-bedroom high-end apartment of approximately 50 sqm, entirely renovated and furnished in a contemporary style.\nOn the top floor with elevator (6th floor), east-west facing. Double exposure, very bright. Small balcony.\n\nOpen-plan living room leading to a fully equipped kitchen.\nEquipment: dishwasher, microwave, cooktop, refrigerator, Nespresso machine, television.\nWashing machine and dryer.\n\nOne bedroom. Bathroom with WC.\n\nMezzanine under the eaves with two additional beds (maximum height 1.50 m, accessed by staircase).\n\nAir conditioning in the bedroom and living room, complemented by ceiling-mounted fans.",
     "floor_en": "6th floor",
     "features_en": [
       "Elevator",
       "Vacuum cleaner",
       "Balcony",
       "Kettle",
-      "Nespresso machine",
+      "Coffee maker",
       "Air conditioning",
       "Freezer",
       "Equipped kitchen",
       "Double glazing",
       "Walk-in shower",
-      "Bed linens provided",
+      "Sheets provided",
       "Iron",
       "Oven",
       "Individual gas heating",
@@ -9500,8 +9500,8 @@
       "Washing machine",
       "Dryer",
       "Dishwasher",
-      "Household linens provided",
-      "Queen size bed",
+      "Linens provided",
+      "Queen-size bed",
       "Nespresso machine",
       "Microwave",
       "Parquet",
@@ -9510,6 +9510,7 @@
       "Ironing board",
       "Toaster",
       "Wifi"
-    ]
+    ],
+    "hasElevator": true
   }
 ]
