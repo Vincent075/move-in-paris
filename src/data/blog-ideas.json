@@ -329,10 +329,10 @@
       "appartement meublé luxe paris"
     ],
     "priority_score": 70,
-    "used": false,
+    "used": true,
     "created_at": "2026-05-20T00:00:00.000Z",
-    "used_at": null,
-    "generated_article_slug": null,
+    "used_at": "2026-08-11T09:01:29.355Z",
+    "generated_article_slug": "equipement-obligatoire-et-ideal-dun-meuble-corporate-haut-de-gamme-a-paris",
     "trend_source": "seed"
   },
   {
