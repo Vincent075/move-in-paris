@@ -9398,5 +9398,118 @@
       "Roller shutters",
       "Wifi"
     ]
+  },
+  {
+    "slug": "2-pieces-morland-paris-4e",
+    "title": "2 Pièces Morland",
+    "address": "Boulevard Morland, Paris 4e",
+    "district": "Paris 4e",
+    "surface": 50,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "6e étage",
+    "status": "À louer",
+    "description": "2 pièces d'une surface d'environ 50 m2, entièrement rénové et meublé dans un style contemporain.\nAu dernier étage avec ascenseur(6eme), traversant est-ouest. Double exposition, très lumineux. Petit balcon.\n\nSéjour ouvert sur une cuisine entièrement équipée.\nÉquipement : lave-vaisselle, micro-ondes, plaque, réfrigérateur, machine à café Nespresso, téléviseur.\nLave-linge et sèche-linge.\n\nUne chambre. Salle de bain avec WC.\n\nMezzanine sous combles avec deux couchages d'appoint (hauteur maximale 1,50 m, accès par escalier).\n\nClimatisation dans la chambre et le séjour, complétée par des ventilateurs fixés au plafond.",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Balcon",
+      "Bouilloire",
+      "Cafetière",
+      "Climatisation",
+      "Congélateur",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Four",
+      "Chauffage individuel gaz",
+      "Fibre optique",
+      "Digicode",
+      "Interphone",
+      "Lave-linge",
+      "Sèche-linge",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Table à repasser",
+      "Toaster",
+      "Wifi"
+    ],
+    "photos": "2-pieces-morland-paris-4e",
+    "images": [
+      "/apartments/2-pieces-morland-paris-4e/photo-1.jpg",
+      "/apartments/2-pieces-morland-paris-4e/photo-2.jpg",
+      "/apartments/2-pieces-morland-paris-4e/photo-3.jpg",
+      "/apartments/2-pieces-morland-paris-4e/photo-4.jpg",
+      "/apartments/2-pieces-morland-paris-4e/photo-5.jpg",
+      "/apartments/2-pieces-morland-paris-4e/photo-6.jpg",
+      "/apartments/2-pieces-morland-paris-4e/photo-7.jpg",
+      "/apartments/2-pieces-morland-paris-4e/photo-8.jpg",
+      "/apartments/2-pieces-morland-paris-4e/photo-9.jpg",
+      "/apartments/2-pieces-morland-paris-4e/photo-10.jpg",
+      "/apartments/2-pieces-morland-paris-4e/photo-11.jpg",
+      "/apartments/2-pieces-morland-paris-4e/photo-12.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Quai de la Rapée",
+        "distance": "2 min",
+        "lines": [
+          "5"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Sully - Morland",
+        "distance": "5 min",
+        "lines": [
+          "7"
+        ]
+      }
+    ],
+    "title_en": "1-Bedroom Apartment Morland",
+    "description_en": "1-bedroom high-end apartment of approximately 50 sqm, entirely renovated and furnished in a contemporary style.\nOn the top floor with elevator (6th floor), east-west facing. Double exposure, very bright. Small balcony.\n\nOpen-plan living room leading to a fully equipped kitchen.\nEquipment: dishwasher, microwave, cooktop, refrigerator, Nespresso machine, television.\nWashing machine and dryer.\n\nOne bedroom. Bathroom with WC.\n\nMezzanine under the eaves with two additional sleeping spaces (maximum height 1.50 m, accessed by staircase).\n\nAir conditioning in the bedroom and living room, complemented by ceiling-mounted fans.",
+    "floor_en": "6th floor",
+    "features_en": [
+      "Elevator",
+      "Vacuum cleaner",
+      "Balcony",
+      "Kettle",
+      "Nespresso machine",
+      "Air conditioning",
+      "Freezer",
+      "Equipped kitchen",
+      "Double glazing",
+      "Walk-in shower",
+      "Bed linens provided",
+      "Iron",
+      "Oven",
+      "Individual gas heating",
+      "Fiber optic internet",
+      "Keypad entry",
+      "Intercom",
+      "Washing machine",
+      "Dryer",
+      "Dishwasher",
+      "Household linens provided",
+      "Queen size bed",
+      "Nespresso machine",
+      "Microwave",
+      "Parquet",
+      "Cooktop",
+      "Refrigerator",
+      "Ironing board",
+      "Toaster",
+      "Wifi"
+    ]
   }
 ]
