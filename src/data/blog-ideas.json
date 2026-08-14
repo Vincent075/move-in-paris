@@ -297,10 +297,10 @@
       "loyer HT TTC bail société"
     ],
     "priority_score": 68,
-    "used": false,
+    "used": true,
     "created_at": "2026-05-20T00:00:00.000Z",
-    "used_at": null,
-    "generated_article_slug": null,
+    "used_at": "2026-08-14T09:00:55.890Z",
+    "generated_article_slug": "tva-sur-le-bail-societe-a-paris-quand-sapplique-t-elle-vraiment",
     "trend_source": "seed"
   },
   {
