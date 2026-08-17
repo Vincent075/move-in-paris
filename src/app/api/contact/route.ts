@@ -227,8 +227,10 @@ const LEAD_SOURCE: Record<string, string> = {
 };
 
 function mapFormToLead(formType: string, fields: Record<string, string>) {
-  const lead: Record<string, string> = {
+  const lead: Record<string, string | string[]> = {
     "Statut": "Nouveau",
+    // Alimente le rollup « Leads à contacter » de la ligne Cockpit KPI (recfkTJJy7isZzJSl)
+    "Cockpit KPI": ["recfkTJJy7isZzJSl"],
     "Source formulaire": LEAD_SOURCE[formType] || "Contact général",
     "Civilité": fields.civilite,
     "Prénom": fields.prenom,
