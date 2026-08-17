@@ -289,6 +289,9 @@ async function writeLeadToAirtable(
   formType: string,
   fields: Record<string, string>
 ): Promise<string | null> {
+  // Les demandes de visite ne sont pas des prospects propriétaires :
+  // email + Slack seulement, pas de record dans la table Leads (décision Vincent 17/08).
+  if (formType === "visite") return null;
   if (!process.env.AIRTABLE_BASE_ID || !process.env.AIRTABLE_LEADS_TOKEN) return null;
   try {
     const res = await fetch(
