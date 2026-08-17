@@ -326,6 +326,9 @@ async function notifyLeadSlack(
   fields: Record<string, string>,
   codeLead: string | null
 ) {
+  // Les demandes de visite ne sont pas des leads : pas de notification #leads non plus
+  // (elles restent traitées via l'email à contact@).
+  if (formType === "visite") return;
   if (!process.env.SLACK_LEADS_WEBHOOK_URL) return;
   try {
     const nom = [fields.civilite, fields.prenom, fields.nom].filter(Boolean).join(" ");
