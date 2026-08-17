@@ -24,10 +24,10 @@ type Check = {
 };
 
 const CHECKS: Check[] = [
-  { nom: "AUTO-00 routeur request@", workflowId: "FrnZPqeYoZzG67MJ", mode: "trigger", maxAgeHours: 30 },
-  { nom: "AUTO-11 assistance@", workflowId: "gedYOrIn44VBTMUo", mode: "trigger", maxAgeHours: 96 },
-  { nom: "AUTO-16 facturation (cron 8h)", workflowId: "wIprQ1tdkkXrMFNx", dailyByHourParis: 9 },
-  { nom: "AUTO-17 paiements (cron 7h)", workflowId: "H2UffqEU4CFsT3No", dailyByHourParis: 8 },
+  { nom: "Demandes entrantes · request@ (AUTO-00)", workflowId: "FrnZPqeYoZzG67MJ", mode: "trigger", maxAgeHours: 30 },
+  { nom: "Interventions · assistance@ (AUTO-11)", workflowId: "gedYOrIn44VBTMUo", mode: "trigger", maxAgeHours: 96 },
+  { nom: "Facturation quotidienne (AUTO-16)", workflowId: "wIprQ1tdkkXrMFNx", dailyByHourParis: 9 },
+  { nom: "Paiements Pennylane (AUTO-17)", workflowId: "H2UffqEU4CFsT3No", dailyByHourParis: 8 },
 ];
 
 function parisParts(d: Date) {
