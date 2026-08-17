@@ -8,6 +8,10 @@
     {
       "path": "/api/blog-generate",
       "schedule": "0 9 * * 5"
+    },
+    {
+      "path": "/api/cron/watchdog",
+      "schedule": "0 * * * *"
     }
   ]
 }
