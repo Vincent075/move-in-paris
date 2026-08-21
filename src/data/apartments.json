@@ -9604,7 +9604,7 @@
       }
     ],
     "title_en": "3-Bedroom Apartment Rodin",
-    "description_en": "Paris 16th arrondissement – Avenue du Recteur Point Carré\n3-bedroom apartment within a modern, secure and immaculately maintained building, with concierge and elevator.\n\nLocated on the 2nd floor, this apartment offers generous volumes, functional layout and numerous storage spaces.\n\nA comfortable and welcoming living space\nThe apartment features an elegant entrance leading to a spacious double living room, appointed with:\nA comfortable sofa, coffee table, television, dining area\nA separate, fully equipped kitchen: oven, microwave, refrigerator, dishwasher...\n\nThe sleeping quarters comprise:\nA master bedroom with ensuite bathroom featuring bathtub and WC\nTwo additional bedrooms with adjoining bathroom\nTwo separate WCs\nNumerous storage areas throughout the apartment\n\nThrough apartment - Double glazing - Concierge - Parking space available",
+    "description_en": "Paris 16th arrondissement – Avenue du Recteur Point Carré\n3-bedroom apartment within a modern, secure and impeccably maintained building, with concierge and elevator.\n\nLocated on the 2nd floor, this apartment offers generous volumes, functional layout and numerous storage spaces.\n\nA comfortable and welcoming living space\nThe apartment features a beautiful entrance leading to a spacious double living room, appointed with:\nA comfortable sofa, a coffee table, a television, a dining area\nThe separate equipped kitchen: oven, microwave, refrigerator, dishwasher...\n\nThe sleeping area comprises:\nA master bedroom with its private bathroom featuring a bathtub and WC\nTwo additional bedrooms with adjoining shower room\nTwo separate WCs\nExtensive storage distributed throughout the apartment\n\nThrough apartment - Double glazing - Concierge - Parking available",
     "floor_en": "2nd floor",
     "features_en": [
       "Elevator",
@@ -9623,10 +9623,10 @@
       "Fiber optic internet",
       "Oven",
       "Concierge",
-      "Washer-dryer",
+      "Washing machine with dryer",
       "Dishwasher",
       "Household linens provided",
-      "Queen size bed",
+      "Queen-size bed",
       "Nespresso machine",
       "Microwave",
       "Parquet",
@@ -9635,8 +9635,9 @@
       "Smart TV",
       "Ironing board",
       "Toaster",
-      "Separate WCs",
+      "Separate toilets",
       "Roller shutters"
-    ]
+    ],
+    "hasElevator": true
   }
 ]
