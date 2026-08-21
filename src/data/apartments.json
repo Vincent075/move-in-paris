@@ -9639,5 +9639,125 @@
       "Roller shutters"
     ],
     "hasElevator": true
+  },
+  {
+    "slug": "1-chambre-mozart-paris-16e",
+    "title": "1 chambre Mozart",
+    "address": "Square Mozart, Paris 16e",
+    "district": "Paris 16e",
+    "surface": 62,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "4e étage",
+    "status": "À louer",
+    "description": "Grand 2 pièces d'environ 62 m² au 4ème étage avec ascenseur.  Salon canapé 3 places et télévision à écran plat. Cuisine ouverte avec un bar \nChambre avec un lit confortable 160 * 200cm\nSalle de bain avec une grande baignoire. Toilettes séparées.  Lave-linge / sèche-linge dans la salle de bain. \nAvec un grand balcon orienté sud donnant sur une belle cour verte. Grande armoire / rangements dans la chambre et dans l'entrée. \nSitué dans le quartier de la Muette. \nAppartement très lumineux et très calme. \nChauffage et eau chaude collectifs.\n",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Baignoire",
+      "Bouilloire",
+      "Cafetière",
+      "Congélateur",
+      "Cuisine équipée",
+      "Digicode",
+      "Double vitrage",
+      "Draps fournis",
+      "Fer à repasser",
+      "Four",
+      "Gardien",
+      "Interphone",
+      "Lave-linge",
+      "Linge de maison fourni",
+      "Lave-vaisselle",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Télévision 4K",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Plaques de cuisson",
+      "Micro-ondes",
+      "Toaster",
+      "Toilettes séparées",
+      "Balcon"
+    ],
+    "photos": "1-chambre-mozart-paris-16e",
+    "images": [
+      "/apartments/1-chambre-mozart-paris-16e/photo-1.jpg",
+      "/apartments/1-chambre-mozart-paris-16e/photo-2.jpg",
+      "/apartments/1-chambre-mozart-paris-16e/photo-3.jpg",
+      "/apartments/1-chambre-mozart-paris-16e/photo-4.jpg",
+      "/apartments/1-chambre-mozart-paris-16e/photo-5.jpg",
+      "/apartments/1-chambre-mozart-paris-16e/photo-6.jpg",
+      "/apartments/1-chambre-mozart-paris-16e/photo-7.jpg",
+      "/apartments/1-chambre-mozart-paris-16e/photo-8.jpg",
+      "/apartments/1-chambre-mozart-paris-16e/photo-9.jpg",
+      "/apartments/1-chambre-mozart-paris-16e/photo-10.jpg",
+      "/apartments/1-chambre-mozart-paris-16e/photo-11.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Ranelagh",
+        "distance": "2 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "La Muette",
+        "distance": "3 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Bio C' Bon",
+        "distance": "5 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Jardin du Ranelagh",
+        "distance": "4 min"
+      }
+    ],
+    "title_en": "1-Bedroom Apartment Mozart",
+    "description_en": "Spacious 1-bedroom apartment of approximately 62 sqm on the 4th floor with elevator. Living room with 3-seater sofa and flat-screen television. Open-plan kitchen with bar counter. Bedroom with comfortable 160 x 200 cm bed. Bathroom with large bathtub. Separate toilet. Washing machine and dryer in the bathroom. Large south-facing balcony overlooking a beautiful green courtyard. Large wardrobe and storage in the bedroom and entrance. Located in the Muette neighborhood. Very bright and peaceful apartment. Collective heating and hot water.",
+    "floor_en": "4th floor",
+    "features_en": [
+      "Elevator",
+      "Vacuum cleaner",
+      "Bathtub",
+      "Kettle",
+      "Coffee maker",
+      "Freezer",
+      "Equipped kitchen",
+      "Keypad entry",
+      "Double glazing",
+      "Bed linens provided",
+      "Iron",
+      "Oven",
+      "Concierge",
+      "Intercom",
+      "Washing machine",
+      "Linens provided",
+      "Dishwasher",
+      "Refrigerator",
+      "Towels provided",
+      "Smart TV",
+      "Ironing board",
+      "Smart TV",
+      "Queen-size bed",
+      "Nespresso machine",
+      "Cooktop",
+      "Microwave",
+      "Toaster",
+      "Separate toilet",
+      "Balcony"
+    ]
   }
 ]
