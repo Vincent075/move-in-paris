@@ -9512,5 +9512,131 @@
       "Wifi"
     ],
     "hasElevator": true
+  },
+  {
+    "slug": "3-chambres-rodin-paris-16e",
+    "title": "3 Chambres Rodin",
+    "address": "Avenue du Recteur Poincaré, Paris 16e",
+    "district": "Paris 16e",
+    "surface": 141,
+    "rooms": 5,
+    "bedrooms": 3,
+    "bathrooms": 3,
+    "floor": "2e étage",
+    "status": "À louer",
+    "description": "Paris 16e – Avenue du Recteur Point Carré\nAppartement 5 pièces au sein d’un immeuble moderne, sécurisé et parfaitement entretenu, avec gardienne et ascenseur.\n\nSitué au 2e étage, cet appartement offre de beaux volumes, une distribution fonctionnelle et de nombreux espaces de rangement.\n\nUn espace de vie confortable et convivial\nL’appartement dispose d’une belle entrée desservant un vaste double séjour, aménagé avec :\nUn canapé confortable, une table basse, une télévision, un espace salle à manger\nLa cuisine séparée, entièrement équipée : four, micro-ondes, réfrigérateur, lave-vaisselle...\n\nL’espace nuit se compose de :\nUne master bedroom avec sa salle de bain privative comprenant baignoire et WC\nDeux chambres supplémentaires avec salle d'eau attenante\nDeux WC indépendants\nDe nombreux rangements répartis dans l’ensemble de l’appartement\n\nAppartement traversant - Double vitrage - Gardienne -Possibilité de place de parking",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Baignoire",
+      "Bouilloire",
+      "Cafetière",
+      "Congélateur",
+      "Cuisine équipée",
+      "Deux lit simple",
+      "Digicode",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Draps fournis",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Gardien",
+      "Lave-linge séchant",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Toilettes séparées",
+      "Volets roulants"
+    ],
+    "photos": "3-chambres-rodin-paris-16e",
+    "images": [
+      "/apartments/3-chambres-rodin-paris-16e/photo-1.jpg",
+      "/apartments/3-chambres-rodin-paris-16e/photo-2.jpg",
+      "/apartments/3-chambres-rodin-paris-16e/photo-3.jpg",
+      "/apartments/3-chambres-rodin-paris-16e/photo-4.jpg",
+      "/apartments/3-chambres-rodin-paris-16e/photo-5.jpg",
+      "/apartments/3-chambres-rodin-paris-16e/photo-6.jpg",
+      "/apartments/3-chambres-rodin-paris-16e/photo-7.jpg",
+      "/apartments/3-chambres-rodin-paris-16e/photo-8.jpg",
+      "/apartments/3-chambres-rodin-paris-16e/photo-9.jpg",
+      "/apartments/3-chambres-rodin-paris-16e/photo-10.jpg",
+      "/apartments/3-chambres-rodin-paris-16e/photo-11.jpg",
+      "/apartments/3-chambres-rodin-paris-16e/photo-12.jpg",
+      "/apartments/3-chambres-rodin-paris-16e/photo-13.jpg",
+      "/apartments/3-chambres-rodin-paris-16e/photo-14.jpg",
+      "/apartments/3-chambres-rodin-paris-16e/photo-15.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Jasmin",
+        "distance": "4 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Ranelagh",
+        "distance": "5 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Franprix",
+        "distance": "3 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Henri Collet",
+        "distance": "2 min"
+      }
+    ],
+    "title_en": "3-Bedroom Apartment Rodin",
+    "description_en": "Paris 16th arrondissement – Avenue du Recteur Point Carré\n3-bedroom apartment within a modern, secure and immaculately maintained building, with concierge and elevator.\n\nLocated on the 2nd floor, this apartment offers generous volumes, functional layout and numerous storage spaces.\n\nA comfortable and welcoming living space\nThe apartment features an elegant entrance leading to a spacious double living room, appointed with:\nA comfortable sofa, coffee table, television, dining area\nA separate, fully equipped kitchen: oven, microwave, refrigerator, dishwasher...\n\nThe sleeping quarters comprise:\nA master bedroom with ensuite bathroom featuring bathtub and WC\nTwo additional bedrooms with adjoining bathroom\nTwo separate WCs\nNumerous storage areas throughout the apartment\n\nThrough apartment - Double glazing - Concierge - Parking space available",
+    "floor_en": "2nd floor",
+    "features_en": [
+      "Elevator",
+      "Vacuum cleaner",
+      "Bathtub",
+      "Kettle",
+      "Coffee maker",
+      "Freezer",
+      "Equipped kitchen",
+      "Two single beds",
+      "Keypad entry",
+      "Double glazing",
+      "Walk-in shower",
+      "Linens provided",
+      "Iron",
+      "Fiber optic internet",
+      "Oven",
+      "Concierge",
+      "Washer-dryer",
+      "Dishwasher",
+      "Household linens provided",
+      "Queen size bed",
+      "Nespresso machine",
+      "Microwave",
+      "Parquet",
+      "Cooktop",
+      "Refrigerator",
+      "Smart TV",
+      "Ironing board",
+      "Toaster",
+      "Separate WCs",
+      "Roller shutters"
+    ]
   }
 ]
