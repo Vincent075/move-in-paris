@@ -20,6 +20,10 @@
     {
       "path": "/api/cron/transferts-alerte",
       "schedule": "0 7,15 * * *"
+    },
+    {
+      "path": "/api/cron/finance-mensuelle",
+      "schedule": "0 2 * * *"
     }
   ]
 }
