@@ -168,6 +168,12 @@ export async function GET(request: Request) {
     const factParResa = new Map<string, Map<string, Ventil>>();
     const factOrphelines = new Map<string, number>();
     const factRefs = new Map<string, Set<string>>();
+    // Ce qu'on nous doit : même ventilation que le CA facturé, mais restreinte aux factures
+    // non encaissées. « Envoyée » = partie chez le client, pas encore payée.
+    const encoursParMois = new Map<string, number>();
+    const encoursVieuxParMois = new Map<string, number>();
+    const impayeesParMois = new Map<string, Set<string>>();
+    const AUJOURDHUI = new Date();
 
     for (const f of factures) {
       const champs = f.fields;
@@ -177,6 +183,20 @@ export async function GET(request: Request) {
       const d2 = texte(champs["Période facturée fin"]);
       const resa = liens(champs["Réservation liée"])[0];
 
+      // Une facture « Envoyée » n'est pas encore encaissée. On date son ancienneté sur la date
+      // d'envoi quand elle existe (19 factures sur 44 au 22/08), sinon sur le début de période.
+      const impayee = texte(champs["Statut"]) === "Envoyée";
+      const dateAge = texte(champs["Date d'envoi"]) || d1;
+      const vieille =
+        impayee && dateAge ? ecartJours(jour(dateAge), AUJOURDHUI) > 30 : false;
+      const noteEncours = (k: string, part: number) => {
+        if (!impayee) return;
+        encoursParMois.set(k, (encoursParMois.get(k) || 0) + part);
+        if (vieille) encoursVieuxParMois.set(k, (encoursVieuxParMois.get(k) || 0) + part);
+        if (!impayeesParMois.has(k)) impayeesParMois.set(k, new Set());
+        impayeesParMois.get(k)!.add(f.id);
+      };
+
       if (d1 && d2) {
         const a = jour(d1);
         const b = jour(d2);
@@ -185,6 +205,7 @@ export async function GET(request: Request) {
           const k = cle(c.getUTCFullYear(), c.getUTCMonth());
           if (!factRefs.has(k)) factRefs.set(k, new Set());
           factRefs.get(k)!.add(f.id);
+          noteEncours(k, montant / total);
           if (resa) {
             if (!factParResa.has(resa)) factParResa.set(resa, new Map());
             const parMois = factParResa.get(resa)!;
@@ -205,6 +226,7 @@ export async function GET(request: Request) {
         factOrphelines.set(k, (factOrphelines.get(k) || 0) + montant);
         if (!factRefs.has(k)) factRefs.set(k, new Set());
         factRefs.get(k)!.add(f.id);
+        noteEncours(k, montant);
       }
     }
 
@@ -593,6 +615,9 @@ export async function GET(request: Request) {
         "Marge nette": margeNette,
         "Taux de marge nette": caTotal > 0 ? arrondi(margeNette / caTotal, 4) : null,
         "Arriéré des mois précédents": arriere,
+        "Encours client": arrondi(encoursParMois.get(l.k) || 0),
+        "Factures en attente": impayeesParMois.get(l.k)?.size || 0,
+        "Encours de plus de 30 jours": arrondi(encoursVieuxParMois.get(l.k) || 0),
         "Nuitées vendues": l.nuiteesVendues,
         "Nuitées disponibles": l.nuiteesDispo,
         "Taux d'occupation": l.nuiteesDispo > 0 ? arrondi(l.nuiteesVendues / l.nuiteesDispo, 4) : 0,
