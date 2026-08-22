@@ -319,9 +319,11 @@ export async function GET(request: Request) {
 
         // Les bornes sont exclusives côté fin : une résa du 01/09 au 01/10 fait 30 nuitées,
         // qui vont du 01/09 au 30/09. D'où le retrait d'un jour à l'affichage.
-        const periode = fusionnes
-          .map(([deb, fin]) => `${jjmm(deb)} → ${jjmm(ajouteJours(fin, -1))}`)
-          .join(" · ");
+        // Format voulu par Vincent, volontairement court : « du 01/09 au 30/09 (30 nuits) ».
+        const bornes = fusionnes
+          .map(([deb, fin]) => `du ${jjmm(deb)} au ${jjmm(ajouteJours(fin, -1))}`)
+          .join(" et ");
+        const periode = `${bornes} (${nuits} ${nuits > 1 ? "nuits" : "nuit"})`;
 
         loyersDetail.push({
           apptId,
@@ -365,10 +367,132 @@ export async function GET(request: Request) {
       });
     }
 
+    const horodatage = new Date().toISOString();
+
+    // ------------------------------------------------------------ écriture « Loyers à verser »
+    // Clé = « AAAA-MM · APT-xxx ». Statut et Date de paiement ne sont JAMAIS touchés.
+    const loyersParRef = new Map(loyersExistants.map((r) => [texte(r.fields["Référence"]), r]));
+    const creerLoyers: { ref: string; mois: string; fields: Record<string, unknown> }[] = [];
+    const majLoyers: { id: string; ref: string; mois: string; fields: Record<string, unknown> }[] = [];
+    const refsAttendues = new Set<string>();
+    // Totaux par mois, pour alimenter « Finance mensuelle » juste après.
+    const suivi = new Map<string, { verses: number; reste: number; nbReste: number }>();
+    const cumule = (k: string, verses: number, reste: number) => {
+      const e = suivi.get(k) || { verses: 0, reste: 0, nbReste: 0 };
+      e.verses += verses;
+      e.reste += reste;
+      if (reste > 0.01) e.nbReste += 1;
+      suivi.set(k, e);
+    };
+
+    for (const l of lignes) {
+      for (const d of l.loyersDetail) {
+        if (d.montant <= 0 && d.charges <= 0) continue;
+        const ref = `${l.k} · ${d.code}`;
+        refsAttendues.add(ref);
+        const futur = l.a > moisCourant.a || (l.a === moisCourant.a && l.m > moisCourant.m);
+
+        const fields: Record<string, unknown> = {
+          "Référence": ref,
+          Mois: l.k,
+          "Libellé mois": `${NOMS_MOIS[l.m]} ${l.a}`,
+          "Début de mois": iso(debutMois(l.a, l.m)),
+          Appartement: [d.apptId],
+          "Propriétaire": d.proprio,
+          "Réservations": d.resas,
+          "Nuitées occupées": d.nuits,
+          "Période occupée": d.periode,
+          "Jours du mois": d.joursMois,
+          Occupation: arrondi(d.nuits / d.joursMois, 4),
+          "Loyer plein": d.loyerPlein,
+          "Montant à virer": d.montant,
+          "Charges à virer": d.charges,
+          "Total à virer": arrondi(d.montant + d.charges),
+          "Détail": `Loyer ${d.periode}`,
+          "Dernier calcul": horodatage,
+        };
+        const total = arrondi(d.montant + d.charges);
+        const existant = loyersParRef.get(ref);
+
+        if (existant) {
+          // Statut, Date de paiement et Rattrapage appartiennent à Vincent ou au passé :
+          // ils ne figurent pas dans le payload, donc ils survivent au recalcul.
+          const paye = texte(existant.fields["Statut"]) === "Payé";
+          if (paye) {
+            // Photographie du montant au moment du paiement. Si le montant bouge ensuite
+            // (séjour prolongé, avenant), l'écart devient visible au lieu d'être perdu.
+            const snapshot = nombre(existant.fields["Montant payé"]) || total;
+            const ecart = arrondi(total - snapshot);
+            fields["Montant payé"] = snapshot;
+            fields["Écart à régulariser"] = ecart;
+            fields["À régler"] = ecart > 0.01;
+            cumule(l.k, snapshot, Math.max(0, ecart));
+          } else {
+            fields["Montant payé"] = null;
+            fields["Écart à régulariser"] = null;
+            fields["À régler"] = !futur;
+            cumule(l.k, 0, futur ? 0 : total);
+          }
+          majLoyers.push({ id: existant.id, ref, mois: l.k, fields });
+        } else {
+          // Ligne qui naît alors que son mois a déjà commencé : réservation saisie en cours
+          // de route. Elle se paiera avec le lot suivant, d'où le marqueur « Rattrapage ».
+          const passe = l.a < moisCourant.a || (l.a === moisCourant.a && l.m < moisCourant.m);
+          const enCours = l.a === moisCourant.a && l.m === moisCourant.m;
+          creerLoyers.push({
+            ref,
+            mois: l.k,
+            fields: {
+              ...fields,
+              Statut: futur ? "En attente" : "À payer",
+              "À régler": !futur,
+              Rattrapage: passe || enCours,
+            },
+          });
+          cumule(l.k, 0, futur ? 0 : total);
+        }
+      }
+    }
+
+
+
+    // Une ligne dont la réservation a disparu ne doit plus réclamer un virement.
+    // On la neutralise sans la supprimer, sauf si elle est déjà payée : dans ce cas on alerte.
+    const orphelines = loyersExistants.filter(
+      (r) => !refsAttendues.has(texte(r.fields["Référence"])) && nombre(r.fields["Total à virer"]) > 0
+    );
+    const orphelinesPayees = orphelines.filter((r) => texte(r.fields["Statut"]) === "Payé");
+    const orphelinesAnnulables = orphelines.filter((r) => texte(r.fields["Statut"]) !== "Payé");
+
+    if (orphelinesAnnulables.length) {
+      await ecrire(
+        T_LOYERS,
+        "PATCH",
+        orphelinesAnnulables.map((r) => ({
+          id: r.id,
+          fields: {
+            "Montant à virer": 0,
+            "Charges à virer": 0,
+            "Total à virer": 0,
+            "Nuitées occupées": 0,
+            "Détail": "Plus aucune réservation ne couvre ce mois pour cet appartement : rien à verser.",
+            "Dernier calcul": horodatage,
+          },
+        }))
+      );
+    }
+
+    if (orphelinesPayees.length) {
+      await slack(
+        `:warning: *Finance mensuelle — ${orphelinesPayees.length} loyer(s) déjà payé(s) sans réservation en face*\n` +
+          orphelinesPayees.map((r) => `• ${texte(r.fields["Référence"])} — ${nombre(r.fields["Total à virer"]).toLocaleString("fr-FR")} €`).join("\n") +
+          `\n\n_La réservation a été supprimée ou son statut a changé après le virement. À vérifier._`
+      );
+    }
+
     // ------------------------------------------------------------ écriture « Finance mensuelle »
     const parCle = new Map(lignes.map((l) => [l.k, l]));
     const financeParCle = new Map(financeExistant.map((r) => [texte(r.fields["Mois"]), r]));
-    const horodatage = new Date().toISOString();
 
     const aCreer: unknown[] = [];
     const aMettreAJour: unknown[] = [];
@@ -424,6 +548,12 @@ export async function GET(request: Request) {
         "Loyers propriétaires dus": l.loyers,
         "Charges dues": l.charges,
         "Total à virer": arrondi(l.loyers + l.charges),
+        "Loyers versés": arrondi(suivi.get(l.k)?.verses || 0),
+        "Reste à verser": arrondi(suivi.get(l.k)?.reste || 0),
+        "Avancement des virements":
+          (suivi.get(l.k)?.verses || 0) + (suivi.get(l.k)?.reste || 0) > 0
+            ? arrondi((suivi.get(l.k)?.verses || 0) / ((suivi.get(l.k)?.verses || 0) + (suivi.get(l.k)?.reste || 0)), 4)
+            : 1,
         Marge: marge,
         "Taux de marge": caTotal > 0 ? arrondi(marge / caTotal, 4) : 0,
         "Nuitées vendues": l.nuiteesVendues,
@@ -453,95 +583,21 @@ export async function GET(request: Request) {
       }
     }
 
+    // Écriture, dans l'ordre : les mois d'abord (pour obtenir leurs identifiants),
+    // puis les loyers auxquels on rattache le mois correspondant.
     if (aCreer.length) await ecrire(T_FINANCE, "POST", aCreer);
     if (aMettreAJour.length) await ecrire(T_FINANCE, "PATCH", aMettreAJour);
-
-    // Les lignes créées à l'instant n'ont pas encore d'id : on relit pour pouvoir les lier.
     if (aCreer.length) {
       for (const r of await lireTable(T_FINANCE)) idParMois.set(texte(r.fields["Mois"]), r.id);
     }
 
-    // ------------------------------------------------------------ écriture « Loyers à verser »
-    // Clé = « AAAA-MM · APT-xxx ». Statut et Date de paiement ne sont JAMAIS touchés.
-    const loyersParRef = new Map(loyersExistants.map((r) => [texte(r.fields["Référence"]), r]));
-    const creerLoyers: unknown[] = [];
-    const majLoyers: unknown[] = [];
-    const refsAttendues = new Set<string>();
-
-    for (const l of lignes) {
-      for (const d of l.loyersDetail) {
-        if (d.montant <= 0 && d.charges <= 0) continue;
-        const ref = `${l.k} · ${d.code}`;
-        refsAttendues.add(ref);
-        const futur = l.a > moisCourant.a || (l.a === moisCourant.a && l.m > moisCourant.m);
-
-        const fields: Record<string, unknown> = {
-          "Référence": ref,
-          Mois: l.k,
-          "Libellé mois": `${NOMS_MOIS[l.m]} ${l.a}`,
-          "Début de mois": iso(debutMois(l.a, l.m)),
-          Appartement: [d.apptId],
-          "Propriétaire": d.proprio,
-          "Réservations": d.resas,
-          "Nuitées occupées": d.nuits,
-          "Période occupée": d.periode,
-          "Jours du mois": d.joursMois,
-          Occupation: arrondi(d.nuits / d.joursMois, 4),
-          "Loyer plein": d.loyerPlein,
-          "Montant à virer": d.montant,
-          "Charges à virer": d.charges,
-          "Total à virer": arrondi(d.montant + d.charges),
-          "Détail": `Occupé du ${d.periode} — ${d.loyerPlein.toLocaleString("fr-FR")} € × ${d.nuits} nuitées ÷ ${d.joursMois} jours = ${d.montant.toLocaleString("fr-FR")} €, plus ${d.charges.toLocaleString("fr-FR")} € de charges au même prorata.`,
-          "Dernier calcul": horodatage,
-        };
-        const mois = idParMois.get(l.k);
-        if (mois) fields["Mois lié"] = [mois];
-
-        const existant = loyersParRef.get(ref);
-        if (existant) {
-          majLoyers.push({ id: existant.id, fields }); // Statut et Date de paiement absents : préservés
-        } else {
-          creerLoyers.push({ fields: { ...fields, Statut: futur ? "En attente" : "À payer" } });
-        }
-      }
-    }
-
-    if (creerLoyers.length) await ecrire(T_LOYERS, "POST", creerLoyers);
-    if (majLoyers.length) await ecrire(T_LOYERS, "PATCH", majLoyers);
-
-    // Une ligne dont la réservation a disparu ne doit plus réclamer un virement.
-    // On la neutralise sans la supprimer, sauf si elle est déjà payée : dans ce cas on alerte.
-    const orphelines = loyersExistants.filter(
-      (r) => !refsAttendues.has(texte(r.fields["Référence"])) && nombre(r.fields["Total à virer"]) > 0
-    );
-    const orphelinesPayees = orphelines.filter((r) => texte(r.fields["Statut"]) === "Payé");
-    const orphelinesAnnulables = orphelines.filter((r) => texte(r.fields["Statut"]) !== "Payé");
-
-    if (orphelinesAnnulables.length) {
-      await ecrire(
-        T_LOYERS,
-        "PATCH",
-        orphelinesAnnulables.map((r) => ({
-          id: r.id,
-          fields: {
-            "Montant à virer": 0,
-            "Charges à virer": 0,
-            "Total à virer": 0,
-            "Nuitées occupées": 0,
-            "Détail": "Plus aucune réservation ne couvre ce mois pour cet appartement : rien à verser.",
-            "Dernier calcul": horodatage,
-          },
-        }))
-      );
-    }
-
-    if (orphelinesPayees.length) {
-      await slack(
-        `:warning: *Finance mensuelle — ${orphelinesPayees.length} loyer(s) déjà payé(s) sans réservation en face*\n` +
-          orphelinesPayees.map((r) => `• ${texte(r.fields["Référence"])} — ${nombre(r.fields["Total à virer"]).toLocaleString("fr-FR")} €`).join("\n") +
-          `\n\n_La réservation a été supprimée ou son statut a changé après le virement. À vérifier._`
-      );
-    }
+    const rattache = <T extends { mois: string; fields: Record<string, unknown> }>(x: T) => {
+      const id = idParMois.get(x.mois);
+      if (id) x.fields["Mois lié"] = [id];
+      return x;
+    };
+    if (creerLoyers.length) await ecrire(T_LOYERS, "POST", creerLoyers.map((x) => ({ fields: rattache(x).fields })));
+    if (majLoyers.length) await ecrire(T_LOYERS, "PATCH", majLoyers.map((x) => ({ id: x.id, fields: rattache(x).fields })));
 
     const courant = parCle.get(cle(moisCourant.a, moisCourant.m));
     return NextResponse.json({
@@ -550,6 +606,7 @@ export async function GET(request: Request) {
       mois_calcules: lignes.length,
       finance: { crees: aCreer.length, mis_a_jour: aMettreAJour.length },
       loyers: { crees: creerLoyers.length, mis_a_jour: majLoyers.length, neutralises: orphelinesAnnulables.length },
+      rattrapages: creerLoyers.filter((x) => x.fields["Rattrapage"] === true).length,
       alertes: orphelinesPayees.length,
       mois_courant: courant
         ? {
