@@ -128,6 +128,18 @@ async function ecrire(tableId: string, method: "POST" | "PATCH", records: unknow
   }
 }
 
+async function supprimer(tableId: string, ids: string[]) {
+  for (let i = 0; i < ids.length; i += 10) {
+    const url = new URL(`https://api.airtable.com/v0/${AT_BASE}/${tableId}`);
+    for (const id of ids.slice(i, i + 10)) url.searchParams.append("records[]", id);
+    const r = await fetch(url.toString(), {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${AT_TOKEN}` },
+    });
+    if (!r.ok) throw new Error(`suppression ${tableId} : HTTP ${r.status}`);
+  }
+}
+
 // ---------------------------------------------------------------- dates
 // Tout se calcule en dates civiles pures (midi UTC) : pas de piège d'heure d'été.
 const jour = (s: string) => new Date(`${s.slice(0, 10)}T12:00:00Z`);
@@ -358,11 +370,9 @@ export async function GET(request: Request) {
 
     // ------------------------------------------------------------ écriture « Finance mensuelle »
     const parCle = new Map(lignes.map((l) => [l.k, l]));
-    const financeParCle = new Map(financeExistant.map((r) => [texte(r.fields["Mois"]), r]));
     const horodatage = new Date().toISOString();
 
     const aCreer: unknown[] = [];
-    const aMettreAJour: unknown[] = [];
     const idParMois = new Map<string, string>();
 
     for (const l of lignes) {
@@ -435,22 +445,25 @@ export async function GET(request: Request) {
         "Dernier calcul": horodatage,
       };
 
-      const existant = financeParCle.get(l.k);
-      if (existant) {
-        idParMois.set(l.k, existant.id);
-        aMettreAJour.push({ id: existant.id, fields });
-      } else {
-        aCreer.push({ fields });
-      }
+      aCreer.push({ fields });
     }
 
-    if (aCreer.length) await ecrire(T_FINANCE, "POST", aCreer);
-    if (aMettreAJour.length) await ecrire(T_FINANCE, "PATCH", aMettreAJour);
+    // Une page « Liste » d'interface Airtable n'a pas de tri persistant : elle affiche les
+    // enregistrements dans leur ordre de création. On reconstruit donc la table entière à chaque
+    // passage, du mois le plus récent au plus ancien, pour que l'ordre naturel soit le bon.
+    // C'est sans risque : « Finance mensuelle » est une table de pure lecture, rien n'y est saisi
+    // à la main. La table des loyers, elle, n'est JAMAIS reconstruite (Vincent y saisit le statut).
+    aCreer.sort((x, y) => {
+      const a = (x as { fields: Record<string, unknown> }).fields["Mois"] as string;
+      const b = (y as { fields: Record<string, unknown> }).fields["Mois"] as string;
+      return b.localeCompare(a);
+    });
 
-    // Les lignes créées à l'instant n'ont pas encore d'id : on relit pour pouvoir les lier.
-    if (aCreer.length) {
-      for (const r of await lireTable(T_FINANCE)) idParMois.set(texte(r.fields["Mois"]), r.id);
-    }
+    if (financeExistant.length) await supprimer(T_FINANCE, financeExistant.map((r) => r.id));
+    await ecrire(T_FINANCE, "POST", aCreer);
+
+    // Les identifiants ont changé : on relit pour pouvoir lier les loyers au bon mois.
+    for (const r of await lireTable(T_FINANCE)) idParMois.set(texte(r.fields["Mois"]), r.id);
 
     // ------------------------------------------------------------ écriture « Loyers à verser »
     // Clé = « AAAA-MM · APT-xxx ». Statut et Date de paiement ne sont JAMAIS touchés.
@@ -538,7 +551,7 @@ export async function GET(request: Request) {
       ok: true,
       duree_ms: Date.now() - debut,
       mois_calcules: lignes.length,
-      finance: { crees: aCreer.length, mis_a_jour: aMettreAJour.length },
+      finance: { reconstruites: aCreer.length },
       loyers: { crees: creerLoyers.length, mis_a_jour: majLoyers.length, neutralises: orphelinesAnnulables.length },
       alertes: orphelinesPayees.length,
       mois_courant: courant
