@@ -499,8 +499,11 @@ export async function GET(request: Request) {
         const dejaPaye = texte(existant?.fields["Statut"] ?? "") === "Payé";
 
         // Sur un mois déjà payé on ne touche plus aux déductions : elles sont figées.
+        // Et si Vincent a coché « Sans déduction », il vire le loyer plein ce mois-ci :
+        // les interventions ne sont pas consommées, elles repartiront sur le mois suivant.
+        const sansDeduction = existant?.fields["Sans déduction"] === true;
         const finDuMois = debutMois(l.a, l.m + 1);
-        const retenues = dejaPaye
+        const retenues = dejaPaye || sansDeduction
           ? []
           : aDeduire.filter((i) => {
               if (dejaAffectee.has(i.id)) return false;
