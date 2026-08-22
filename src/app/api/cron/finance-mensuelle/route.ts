@@ -43,6 +43,7 @@ const T_FINANCE = "tbleTNIQZjch1WQ6O";
 const T_LOYERS = "tblLnbrAH1AfVvTb7";
 const T_CHARGES = "tble8Op6dPxj0N94t";
 const T_ANNEE = "tblTOg5qWyjdlRvy9";
+const T_INTERVENTIONS = "tblUjK6taP6ti0kGa";
 
 // Réservations qui engagent un loyer propriétaire et génèrent du CA.
 const STATUTS_RESA = ["Contrat signé", "En cours", "Check-out", "Clôturée"];
@@ -170,6 +171,7 @@ export async function GET(request: Request) {
         lireTable(T_LOYERS),
         lireTable(T_CHARGES),
       ]);
+    const interventions = await lireTable(T_INTERVENTIONS);
     const anneesExistantes = await lireTable(T_ANNEE);
 
     const parAppartement = new Map(appartements.map((a) => [a.id, a]));
@@ -411,6 +413,26 @@ export async function GET(request: Request) {
 
     const horodatage = new Date().toISOString();
 
+    // Interventions à la charge du propriétaire : elles se retiennent sur son loyer.
+    // L'information vit sur l'intervention (« Facturable à = Propriétaire »), pas sur la facture :
+    // quand le propriétaire paie par déduction, il n'y a pas de facture client à émettre.
+    // Une intervention n'est éligible qu'une fois close et chiffrée, et tant qu'elle n'a pas
+    // déjà été déduite d'un virement précédent.
+    const STATUTS_INTERVENTION_CLOSE = ["Terminée", "Cloturée"];
+    const aDeduire = interventions.filter(
+      (i) =>
+        texte(i.fields["Facturable à"]) === "Propriétaire" &&
+        STATUTS_INTERVENTION_CLOSE.includes(texte(i.fields["Statut"])) &&
+        nombre(i.fields["Montant facturé intervention (€)"]) > 0 &&
+        i.fields["Déduite du loyer"] !== true
+    );
+    // Une intervention ne doit être retenue qu'UNE fois : on la réserve au premier mois
+    // non encore payé de son appartement, dans l'ordre chronologique.
+    const dejaAffectee = new Set<string>();
+    // Quand Vincent coche « Payé » sur un loyer, les interventions qui y étaient retenues
+    // sont réputées réglées : on les marque, elles ne réapparaîtront plus sur aucun virement.
+    const aSolder: { id: string; fields: Record<string, unknown> }[] = [];
+
     // Charges de structure : une ligne par charge récurrente, pas par mois. Une charge compte
     // sur un mois si elle avait déjà commencé et n'était pas encore terminée. « Depuis le » vide
     // = a toujours existé ; « Jusqu au » vide = toujours en cours. Ainsi une embauche de mars
@@ -474,6 +496,57 @@ export async function GET(request: Request) {
         };
         const total = arrondi(d.montant + d.charges);
         const existant = loyersParRef.get(ref);
+        const dejaPaye = texte(existant?.fields["Statut"] ?? "") === "Payé";
+
+        // Sur un mois déjà payé on ne touche plus aux déductions : elles sont figées.
+        const finDuMois = debutMois(l.a, l.m + 1);
+        const retenues = dejaPaye
+          ? []
+          : aDeduire.filter((i) => {
+              if (dejaAffectee.has(i.id)) return false;
+              if (liens(i.fields["Appartement"])[0] !== d.apptId) return false;
+              const res = texte(i.fields["Date résolution"]);
+              return !res || jour(res) < finDuMois;
+            });
+        for (const i of retenues) dejaAffectee.add(i.id);
+
+        if (dejaPaye && existant) {
+          for (const idInterv of liens(existant.fields["Interventions à déduire"])) {
+            dejaAffectee.add(idInterv);
+            const interv = interventions.find((x) => x.id === idInterv);
+            if (interv && interv.fields["Déduite du loyer"] !== true) {
+              aSolder.push({
+                id: idInterv,
+                fields: {
+                  "Déduite du loyer": true,
+                  "Déduite le": texte(existant.fields["Date de paiement"]) || iso(new Date()),
+                  "Loyer de déduction": [existant.id],
+                },
+              });
+            }
+          }
+        }
+
+        const deduction = arrondi(
+          retenues.reduce((somme, i) => somme + nombre(i.fields["Montant facturé intervention (€)"]), 0)
+        );
+        fields["Interventions à déduire"] = dejaPaye
+          ? liens(existant?.fields["Interventions à déduire"])
+          : retenues.map((i) => i.id);
+        if (!dejaPaye) {
+          fields["Montant à déduire"] = deduction;
+          fields["Net à virer"] = arrondi(total - deduction);
+          fields["Détail des déductions"] = retenues.length
+            ? retenues
+                .map(
+                  (i) =>
+                    `${texte(i.fields["Code intervention"])} — ${texte(i.fields["Type d'intervention"])} — ${nombre(
+                      i.fields["Montant facturé intervention (€)"]
+                    ).toLocaleString("fr-FR")} €`
+                )
+                .join("\n")
+            : "";
+        }
 
         if (existant) {
           // Statut, Date de paiement et Rattrapage appartiennent à Vincent ou au passé :
@@ -723,6 +796,7 @@ export async function GET(request: Request) {
       if (id) x.fields["Mois lié"] = [id];
       return x;
     };
+    if (aSolder.length) await ecrire(T_INTERVENTIONS, "PATCH", aSolder);
     if (creerLoyers.length) await ecrire(T_LOYERS, "POST", creerLoyers.map((x) => ({ fields: rattache(x).fields })));
     if (majLoyers.length) await ecrire(T_LOYERS, "PATCH", majLoyers.map((x) => ({ id: x.id, fields: rattache(x).fields })));
 
@@ -833,6 +907,7 @@ export async function GET(request: Request) {
       rattrapages: creerLoyers.filter((x) => x.fields["Rattrapage"] === true).length,
       alertes: orphelinesPayees.length,
       charges_fixes: chargesFixes.length,
+      interventions: { a_deduire: aDeduire.length, soldees: aSolder.length },
       annees: { crees: creerAns.length, mis_a_jour: majAns.length },
       mois_courant: courant
         ? {
