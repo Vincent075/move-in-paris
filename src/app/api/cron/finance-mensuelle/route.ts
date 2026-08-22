@@ -595,7 +595,13 @@ export async function GET(request: Request) {
         if (existant) {
           // Statut, Date de paiement et Rattrapage appartiennent à Vincent ou au passé :
           // ils ne figurent pas dans le payload, donc ils survivent au recalcul.
-          const paye = texte(existant.fields["Statut"]) === "Payé";
+          const statutActuel = texte(existant.fields["Statut"]);
+          // Seule exception : une ligne créée quand son mois était encore à venir porte
+          // « En attente ». Le mois arrivé, le loyer est dû et doit rejoindre les autres,
+          // sinon l'onglet « À payer » raterait le mois en cours. La bascule ne concerne
+          // que « En attente » : « Payé » n'est jamais touché.
+          if (!futur && statutActuel === "En attente") fields["Statut"] = "À payer";
+          const paye = statutActuel === "Payé";
           if (paye) {
             // Photographie du montant au moment du paiement. Si le montant bouge ensuite
             // (séjour prolongé, avenant), l'écart devient visible au lieu d'être perdu.
