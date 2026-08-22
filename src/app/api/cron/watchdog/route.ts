@@ -3,6 +3,15 @@ import { NextResponse } from "next/server";
 // Chien de garde des automatisations MIP (n8n + crons).
 // Lecture seule sur n8n. État + historique dans la table Airtable « Monitoring ».
 // Alerte Slack #automatisations_failures, ré-alerte au plus toutes les 6 h.
+//
+// Principe (revu le 22/08) : une boîte email silencieuse n'est PAS une panne.
+//   - request@ : c'est MIP qui transfère les demandes → pas de transfert = pas d'alerte à avoir.
+//   - assistance@ : ce sont les locataires qui écrivent → pas de mail = aucun problème signalé, tant mieux.
+// On distingue donc deux familles de contrôles :
+//   1) PANNE AVÉRÉE (alerte immédiate) : workflow désactivé, ou dernières exécutions en erreur, ou API n8n muette.
+//      C'est ce qui a réellement cassé par le passé (désactivations auto du trigger IMAP le 27/07).
+//   2) SILENCE ANORMAL (alerte tardive) : plus aucune réception depuis un délai calibré sur l'historique réel.
+//      Filet de sécurité pour le cas « trigger mort sans erreur » (panne des 14-17/08), sans bruit quotidien.
 
 export const dynamic = "force-dynamic";
 
@@ -17,15 +26,19 @@ const REALERT_HOURS = 6;
 
 type Check = {
   nom: string;
-  workflowId?: string;
-  mode?: "trigger";        // ne compter que les exécutions de production
-  maxAgeHours?: number;    // fraîcheur exigée
-  dailyByHourParis?: number; // cron quotidien : doit avoir tourné aujourd'hui avant cette heure
+  workflowId: string;
+  // Boîte email : on ne juge pas le volume reçu, seulement la santé technique.
+  // silenceHours = filet de sécurité, calibré au-dessus du plus grand écart observé.
+  silenceHours?: number;
+  // Cron quotidien : une exécution manquante EST une panne.
+  dailyByHourParis?: number;
 };
 
 const CHECKS: Check[] = [
-  { nom: "Demandes entrantes · request@ (AUTO-00)", workflowId: "FrnZPqeYoZzG67MJ", mode: "trigger", maxAgeHours: 30 },
-  { nom: "Interventions · assistance@ (AUTO-11)", workflowId: "gedYOrIn44VBTMUo", mode: "trigger", maxAgeHours: 96 },
+  // request@ : écart observé médian 3 h, max 45 h → on ne s'inquiète qu'au-delà de 72 h.
+  { nom: "Demandes entrantes · request@ (AUTO-00)", workflowId: "FrnZPqeYoZzG67MJ", silenceHours: 72 },
+  // assistance@ : les locataires signalent quand ils ont un souci. Une semaine sans rien est plausible.
+  { nom: "Interventions · assistance@ (AUTO-11)", workflowId: "gedYOrIn44VBTMUo", silenceHours: 168 },
   { nom: "Facturation quotidienne (AUTO-16)", workflowId: "wIprQ1tdkkXrMFNx", dailyByHourParis: 9 },
   { nom: "Paiements Pennylane (AUTO-17)", workflowId: "H2UffqEU4CFsT3No", dailyByHourParis: 8 },
 ];
@@ -38,17 +51,12 @@ function parisParts(d: Date) {
   return { date: `${p.year}-${p.month}-${p.day}`, hour: parseInt(p.hour, 10) };
 }
 
-async function lastExecution(workflowId: string, triggerOnly: boolean): Promise<Date | null> {
-  const r = await fetch(`${N8N_URL}/api/v1/executions?workflowId=${workflowId}&limit=20`, {
-    headers: { "X-N8N-API-KEY": N8N_KEY }, cache: "no-store",
-  });
+type Exec = { startedAt: string; mode?: string; status?: string };
+
+async function n8n(path: string) {
+  const r = await fetch(`${N8N_URL}${path}`, { headers: { "X-N8N-API-KEY": N8N_KEY }, cache: "no-store" });
   if (!r.ok) throw new Error(`n8n HTTP ${r.status}`);
-  const data = (await r.json()).data || [];
-  for (const e of data) {
-    if (triggerOnly && e.mode !== "trigger") continue;
-    return new Date(e.startedAt);
-  }
-  return null;
+  return r.json();
 }
 
 async function airtable(method: string, path: string, body?: unknown) {
@@ -79,7 +87,6 @@ export async function GET(request: Request) {
   const paris = parisParts(now);
   const results: Record<string, string> = {};
 
-  // état existant (une ligne par contrôle)
   const existing = await airtable("GET", `${AT_MONITORING}?pageSize=100`);
   const rows: Record<string, { id: string; lastAlert?: string }> = {};
   for (const rec of existing.records || []) {
@@ -90,17 +97,47 @@ export async function GET(request: Request) {
     let statut = "OK";
     let detail = "";
     try {
-      const last = await lastExecution(check.workflowId!, check.mode === "trigger");
-      if (!last) {
-        statut = "ALERTE"; detail = "Aucune exécution trouvée dans l'historique.";
-      } else if (check.maxAgeHours) {
-        const ageH = (now.getTime() - last.getTime()) / 3.6e6;
-        detail = `Dernière exécution il y a ${ageH.toFixed(1)} h.`;
-        if (ageH > check.maxAgeHours) statut = "ALERTE";
-      } else if (check.dailyByHourParis) {
-        const ranToday = parisParts(last).date === paris.date;
-        detail = ranToday ? "A tourné aujourd'hui." : `Pas d'exécution aujourd'hui (dernière : ${last.toISOString()}).`;
-        if (!ranToday && paris.hour >= check.dailyByHourParis) statut = "ALERTE";
+      const wf = await n8n(`/api/v1/workflows/${check.workflowId}`);
+      const execs: Exec[] = (await n8n(`/api/v1/executions?workflowId=${check.workflowId}&limit=20`)).data || [];
+
+      // ── 1. Panne avérée ─────────────────────────────────────────────
+      if (wf.active === false) {
+        statut = "ALERTE";
+        detail = "Le workflow est DÉSACTIVÉ dans n8n : plus rien ne tourne.";
+      } else {
+        const enErreur = execs.filter((e) => e.status && !["success", "running", "waiting", "new"].includes(e.status));
+        if (enErreur.length) {
+          statut = "ALERTE";
+          detail = `${enErreur.length} exécution(s) en échec récemment (dernier statut : ${enErreur[0].status}).`;
+        } else {
+          // ── 2. Rythme attendu ─────────────────────────────────────────
+          const triggers = execs.filter((e) => e.mode === "trigger");
+          const last = check.dailyByHourParis
+            ? (execs[0] ? new Date(execs[0].startedAt) : null)
+            : (triggers[0] ? new Date(triggers[0].startedAt) : null);
+
+          if (check.dailyByHourParis) {
+            if (!last) {
+              statut = "ALERTE"; detail = "Aucune exécution trouvée dans l'historique.";
+            } else {
+              const ranToday = parisParts(last).date === paris.date;
+              detail = ranToday ? "A tourné aujourd'hui." : `Pas d'exécution aujourd'hui (dernière : ${last.toISOString()}).`;
+              if (!ranToday && paris.hour >= check.dailyByHourParis) statut = "ALERTE";
+            }
+          } else if (check.silenceHours) {
+            if (!last) {
+              detail = "Aucune réception dans l'historique — workflow actif et sans erreur.";
+            } else {
+              const ageH = (now.getTime() - last.getTime()) / 3.6e6;
+              detail = `Workflow actif, aucune erreur. Dernière réception il y a ${ageH.toFixed(0)} h.`;
+              if (ageH > check.silenceHours) {
+                statut = "ALERTE";
+                detail = `Aucune réception depuis ${ageH.toFixed(0)} h (seuil ${check.silenceHours} h). ` +
+                  "Le workflow est actif et sans erreur : c'est peut-être normal (personne n'a écrit), mais à vérifier.";
+              }
+            }
+          }
+        }
       }
     } catch (e) {
       statut = "ALERTE"; detail = `API n8n injoignable : ${e instanceof Error ? e.message : e}`;
@@ -121,7 +158,7 @@ export async function GET(request: Request) {
     else await airtable("POST", AT_MONITORING, { records: [{ fields }], typecast: true });
 
     if (doAlert) {
-      await slack(`:rotating_light: *Chien de garde — ${check.nom}*\n${detail}\nAucune alerte n8n n'a été émise : panne probablement *silencieuse* (trigger mort, publication coincée ou cron arrêté). Vérifier n8n.`);
+      await slack(`:rotating_light: *Chien de garde — ${check.nom}*\n${detail}`);
     }
   }
 
