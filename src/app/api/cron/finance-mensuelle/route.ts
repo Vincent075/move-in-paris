@@ -42,6 +42,7 @@ const T_FACTURES = "tblC97ei6ZPWhWUwe";
 const T_FINANCE = "tbleTNIQZjch1WQ6O";
 const T_LOYERS = "tblLnbrAH1AfVvTb7";
 const T_CHARGES = "tble8Op6dPxj0N94t";
+const T_ANNEE = "tblTOg5qWyjdlRvy9";
 
 // Réservations qui engagent un loyer propriétaire et génèrent du CA.
 const STATUTS_RESA = ["Contrat signé", "En cours", "Check-out", "Clôturée"];
@@ -156,6 +157,7 @@ export async function GET(request: Request) {
         lireTable(T_LOYERS),
         lireTable(T_CHARGES),
       ]);
+    const anneesExistantes = await lireTable(T_ANNEE);
 
     const parAppartement = new Map(appartements.map((a) => [a.id, a]));
     const maintenant = new Date();
@@ -541,6 +543,11 @@ export async function GET(request: Request) {
     const aCreer: unknown[] = [];
     const aMettreAJour: unknown[] = [];
     const idParMois = new Map<string, string>();
+    type CumulAn = {
+      mois: number; caFacture: number; caEstime: number; loyers: number; charges: number;
+      chargesFixes: number; reste: number; encours: number; nuitees: number; dispo: number; fiable: boolean;
+    };
+    const parAnnee = new Map<string, CumulAn>();
 
     for (const l of lignes) {
       const caTotal = arrondi(l.caFacture + l.caEstime);
@@ -592,6 +599,7 @@ export async function GET(request: Request) {
 
       const fields: Record<string, unknown> = {
         Mois: l.k,
+        "Année": String(l.a),
         "Libellé": `${NOMS_MOIS[l.m]} ${l.a}`,
         "Début de mois": iso(debutMois(l.a, l.m)),
         "Statut du mois": passe ? "Clôturé" : futur ? "Prévisionnel" : "En cours",
@@ -609,8 +617,8 @@ export async function GET(request: Request) {
           (suivi.get(l.k)?.verses || 0) + (suivi.get(l.k)?.reste || 0) > 0
             ? arrondi((suivi.get(l.k)?.verses || 0) / ((suivi.get(l.k)?.verses || 0) + (suivi.get(l.k)?.reste || 0)), 4)
             : null,
-        Marge: marge,
-        "Taux de marge": caTotal > 0 ? arrondi(marge / caTotal, 4) : 0,
+        "Marge brute": marge,
+        "Taux de marge brute": caTotal > 0 ? arrondi(marge / caTotal, 4) : 0,
         "Charges fixes": chargesFixesMois,
         "Marge nette": margeNette,
         "Taux de marge nette": caTotal > 0 ? arrondi(margeNette / caTotal, 4) : null,
@@ -635,6 +643,24 @@ export async function GET(request: Request) {
         "Détail": detail,
         "Dernier calcul": horodatage,
       };
+
+      const an = String(l.a);
+      const cumulAn = parAnnee.get(an) || {
+        mois: 0, caFacture: 0, caEstime: 0, loyers: 0, charges: 0, chargesFixes: 0,
+        reste: 0, encours: 0, nuitees: 0, dispo: 0, fiable: false,
+      };
+      cumulAn.mois += 1;
+      cumulAn.caFacture += l.caFacture;
+      cumulAn.caEstime += l.caEstime;
+      cumulAn.loyers += l.loyers;
+      cumulAn.charges += l.charges;
+      cumulAn.chargesFixes += chargesFixesMois;
+      cumulAn.reste += suivi.get(l.k)?.reste || 0;
+      cumulAn.encours += encoursParMois.get(l.k) || 0;
+      cumulAn.nuitees += l.nuiteesVendues;
+      cumulAn.dispo += l.nuiteesDispo;
+      if (!avantMiseEnService) cumulAn.fiable = true;
+      parAnnee.set(an, cumulAn);
 
       const existant = financeParCle.get(l.k);
       if (existant) {
@@ -661,6 +687,82 @@ export async function GET(request: Request) {
     if (creerLoyers.length) await ecrire(T_LOYERS, "POST", creerLoyers.map((x) => ({ fields: rattache(x).fields })));
     if (majLoyers.length) await ecrire(T_LOYERS, "PATCH", majLoyers.map((x) => ({ id: x.id, fields: rattache(x).fields })));
 
+    // ------------------------------------------------------------ « Finance annuelle »
+    // Agrégation des mois déjà calculés. Une année n'est comparable à la précédente que si
+    // les deux sont postérieures à la mise en service : sinon on comparerait un vrai chiffre
+    // à un résidu de saisie, et la croissance affichée serait absurde.
+    const anneeCourante = String(moisCourant.a);
+    const annuel = [...parAnnee.entries()].sort(([x], [y]) => x.localeCompare(y));
+    const totalAn = (c: CumulAn) => arrondi(c.caFacture + c.caEstime);
+    const margeBruteAn = (c: CumulAn) => arrondi(totalAn(c) - c.loyers - c.charges);
+    const margeNetteAn = (c: CumulAn) => arrondi(margeBruteAn(c) - c.chargesFixes);
+
+    const anneesParCle = new Map(anneesExistantes.map((r) => [texte(r.fields["Année"]), r]));
+    const creerAns: unknown[] = [];
+    const majAns: unknown[] = [];
+
+    for (const [an, c] of annuel) {
+      const total = totalAn(c);
+      const brute = margeBruteAn(c);
+      const nette = margeNetteAn(c);
+      const prec = parAnnee.get(String(Number(an) - 1));
+      const precFiable = prec && prec.fiable && c.fiable;
+      const precTotal = precFiable ? totalAn(prec) : null;
+
+      const fiabilite = !c.fiable
+        ? "Historique incomplet"
+        : an === anneeCourante
+          ? "Année en cours"
+          : an > anneeCourante
+            ? "Année à venir"
+            : c.mois >= 12
+              ? "Année complète"
+              : "Historique incomplet";
+
+      const moisLies = annuel.length
+        ? [...idParMois.entries()].filter(([k]) => k.startsWith(an + "-")).map(([, id]) => id)
+        : [];
+
+      const fields: Record<string, unknown> = {
+        "Année": an,
+        "Fiabilité": fiabilite,
+        "Mois couverts": c.mois,
+        "CA facturé": arrondi(c.caFacture),
+        "CA estimé": arrondi(c.caEstime),
+        "CA total": total,
+        "% facturé": total > 0 ? arrondi(c.caFacture / total, 4) : 0,
+        "Loyers propriétaires dus": arrondi(c.loyers),
+        "Charges appartements": arrondi(c.charges),
+        "Charges fixes": arrondi(c.chargesFixes),
+        "Marge brute": brute,
+        "Taux de marge brute": total > 0 ? arrondi(brute / total, 4) : null,
+        "Marge nette": nette,
+        "Taux de marge nette": total > 0 ? arrondi(nette / total, 4) : null,
+        "Reste à verser": arrondi(c.reste),
+        "Encours client": arrondi(c.encours),
+        "Nuitées vendues": c.nuitees,
+        "Nuitées disponibles": c.dispo,
+        "Taux d occupation": c.dispo > 0 ? arrondi(c.nuitees / c.dispo, 4) : null,
+        "Δ CA vs année précédente": precTotal === null ? null : arrondi(total - precTotal),
+        "Δ CA vs année précédente %": precTotal ? arrondi((total - precTotal) / precTotal, 4) : null,
+        "Δ Marge nette vs année précédente": precFiable ? arrondi(nette - margeNetteAn(prec)) : null,
+        "Mois de l année": moisLies,
+        "Détail":
+          (c.fiable
+            ? ""
+            : "⚠️ Année antérieure à la mise en service d'Airtable : seuls quelques baux longs y figurent. Le CA réel était bien plus élevé, ne pas lire cette ligne comme une performance.\n") +
+          `${total.toLocaleString("fr-FR")} € de CA sur ${c.mois} mois — marge brute ${brute.toLocaleString("fr-FR")} €, marge nette ${nette.toLocaleString("fr-FR")} € après ${arrondi(c.chargesFixes).toLocaleString("fr-FR")} € de charges de structure.`,
+        "Dernier calcul": horodatage,
+      };
+
+      const existant = anneesParCle.get(an);
+      if (existant) majAns.push({ id: existant.id, fields });
+      else creerAns.push({ fields });
+    }
+
+    if (creerAns.length) await ecrire(T_ANNEE, "POST", creerAns);
+    if (majAns.length) await ecrire(T_ANNEE, "PATCH", majAns);
+
     const courant = parCle.get(cle(moisCourant.a, moisCourant.m));
     return NextResponse.json({
       ok: true,
@@ -671,6 +773,7 @@ export async function GET(request: Request) {
       rattrapages: creerLoyers.filter((x) => x.fields["Rattrapage"] === true).length,
       alertes: orphelinesPayees.length,
       charges_fixes: chargesFixes.length,
+      annees: { crees: creerAns.length, mis_a_jour: majAns.length },
       mois_courant: courant
         ? {
             mois: courant.k,
