@@ -4,10 +4,11 @@ import { NextResponse } from "next/server";
 //
 // Chaîne réelle : « À planifier » → [bouton Airtable, AUTO-13 envoie la demande au prestataire]
 // → « Envoyé » → [bouton Airtable, AUTO-14 envoie la confirmation à l'occupant] → « Planifié ».
-// Donc tant que le statut n'est pas « Planifié », l'occupant n'a PAS reçu sa confirmation.
+// Donc tant que le statut n'est pas « Planifié », l'occupant n'a PAS reçu sa confirmation de transfert.
 //
-// AUTO-31 (J-6) et AUTO-13 (J+1) ne relancent que les transferts déjà « Envoyé ».
-// Ceux restés « À planifier » ou « Infos demandées » ne sont surveillés par personne : c'est ce trou qu'on ferme.
+// AUTO-31 (J-6) relance l'occupant, mais uniquement si le transfert est déjà « Envoyé ».
+// Les transferts restés « À planifier » ou « Infos demandées » ne sont surveillés par personne :
+// c'est ce trou qu'on ferme ici, à J-4 de l'arrivée.
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +18,8 @@ const AT_TRANSFERTS = "tbl6rACvIe41eKXCt";
 const SLACK_TOKEN = process.env.SLACK_BOT_TOKEN_MIP || "";
 const SLACK_CHANNEL = "C0BC1NZGWRM";
 
-const SEUIL_HEURES = 72;
+const SEUIL_JOURS = 4;
+const SEUIL_HEURES = SEUIL_JOURS * 24;
 const STATUTS_OK = ["Planifié", "Terminé"]; // confirmation partie à l'occupant
 
 type Rec = { id: string; fields: Record<string, unknown> };
@@ -72,7 +74,7 @@ export async function GET(request: Request) {
     });
 
   await slack(
-    `:red_circle: *${enRetard.length} transfert(s) non confirmé(s) à moins de ${SEUIL_HEURES} h*\n` +
+    `:red_circle: *${enRetard.length} transfert(s) non confirmé(s) à moins de ${SEUIL_JOURS} jours*\n` +
       `Le statut n'est pas « Planifié » : l'occupant n'a donc pas reçu sa confirmation de transfert.\n` +
       lignes.join("\n")
   );
