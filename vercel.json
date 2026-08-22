@@ -12,6 +12,10 @@
     {
       "path": "/api/cron/watchdog",
       "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/leads-relance",
+      "schedule": "0 7 * * 1-5"
     }
   ]
 }
