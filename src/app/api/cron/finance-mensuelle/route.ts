@@ -59,8 +59,12 @@ const CHAMPS_CHARGES = [
   "Entretien chaudière",
 ];
 
-const MOIS_AVANT = 24;
-const MOIS_APRES = 12;
+// Fenêtre de calcul. En arrière, on ne descend jamais avant la mise en service : les mois
+// antérieurs ne contenaient que trois ou quatre baux longs et donnaient une image fausse.
+// L'histoire d'avant vient des liasses fiscales, saisie à la main dans « Finance annuelle ».
+// En avant, trois mois : au-delà, un montant n'est plus une prévision mais un maximum
+// contractuel — les baux longs sont résiliables avec un mois de préavis.
+const MOIS_APRES = 3;
 
 // Mise en service de la facturation dans Airtable. Avant cette date, seuls les baux longs
 // ont été saisis : le CA de ces mois-là est réel mais très incomplet, et il ne faut surtout
@@ -127,6 +131,15 @@ async function ecrire(tableId: string, method: "POST" | "PATCH", records: unknow
       const detail = await r.text();
       throw new Error(`écriture ${tableId} : HTTP ${r.status} — ${detail.slice(0, 300)}`);
     }
+  }
+}
+
+async function supprimer(tableId: string, ids: string[]) {
+  for (let i = 0; i < ids.length; i += 10) {
+    const url = new URL(`https://api.airtable.com/v0/${AT_BASE}/${tableId}`);
+    for (const id of ids.slice(i, i + 10)) url.searchParams.append("records[]", id);
+    const r = await fetch(url.toString(), { method: "DELETE", headers: { Authorization: `Bearer ${AT_TOKEN}` } });
+    if (!r.ok) throw new Error(`suppression ${tableId} : HTTP ${r.status}`);
   }
 }
 
@@ -234,9 +247,11 @@ export async function GET(request: Request) {
 
     // ------------------------------------------------------------ fenêtre de calcul
     const moisList: { a: number; m: number; k: string }[] = [];
-    for (let i = -MOIS_AVANT; i <= MOIS_APRES; i++) {
+    for (let i = -60; i <= MOIS_APRES; i++) {
       const d = debutMois(moisCourant.a, moisCourant.m + i);
-      moisList.push({ a: d.getUTCFullYear(), m: d.getUTCMonth(), k: cle(d.getUTCFullYear(), d.getUTCMonth()) });
+      const k = cle(d.getUTCFullYear(), d.getUTCMonth());
+      if (k < MISE_EN_SERVICE) continue;
+      moisList.push({ a: d.getUTCFullYear(), m: d.getUTCMonth(), k });
     }
 
     type Ligne = {
@@ -680,6 +695,12 @@ export async function GET(request: Request) {
 
     // Écriture, dans l'ordre : les mois d'abord (pour obtenir leurs identifiants),
     // puis les loyers auxquels on rattache le mois correspondant.
+    // Les mois sortis de la fenêtre (historique d'avant la mise en service, prévisionnel trop
+    // lointain) n'ont plus lieu d'être : on les supprime plutôt que de les laisser se figer.
+    const clesAttendues = new Set(lignes.map((l) => l.k));
+    const financeObsoletes = financeExistant.filter((r) => !clesAttendues.has(texte(r.fields["Mois"])));
+    if (financeObsoletes.length) await supprimer(T_FINANCE, financeObsoletes.map((r) => r.id));
+
     if (aCreer.length) await ecrire(T_FINANCE, "POST", aCreer);
     if (aMettreAJour.length) await ecrire(T_FINANCE, "PATCH", aMettreAJour);
     if (aCreer.length) {
@@ -758,6 +779,7 @@ export async function GET(request: Request) {
         "Δ CA vs année précédente %": precTotal ? arrondi((total - precTotal) / precTotal, 4) : null,
         "Δ Marge nette vs année précédente": precFiable ? arrondi(nette - margeNetteAn(prec)) : null,
         "Mois de l année": moisLies,
+        Source: "Calculé depuis Airtable",
         "Détail": [
           !c.fiable
             ? "⚠️ Année entièrement antérieure à la mise en service d'Airtable : seuls quelques baux longs y figurent. Le CA réel était bien plus élevé, ne pas lire cette ligne comme une performance."
@@ -772,8 +794,14 @@ export async function GET(request: Request) {
       };
 
       const existant = anneesParCle.get(an);
-      if (existant) majAns.push({ id: existant.id, fields });
-      else creerAns.push({ fields });
+      if (existant) {
+        // Une année reprise d'une liasse fiscale est de la donnée comptable certifiée :
+        // le calcul ne doit jamais l'écraser.
+        if (texte(existant.fields["Source"]) === "Saisi depuis la liasse fiscale") continue;
+        majAns.push({ id: existant.id, fields });
+      } else {
+        creerAns.push({ fields: { ...fields, Source: "Calculé depuis Airtable" } });
+      }
     }
 
     if (creerAns.length) await ecrire(T_ANNEE, "POST", creerAns);
