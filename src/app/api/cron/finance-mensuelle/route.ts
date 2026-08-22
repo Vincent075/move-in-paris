@@ -60,6 +60,11 @@ const CHAMPS_CHARGES = [
 const MOIS_AVANT = 24;
 const MOIS_APRES = 12;
 
+// Mise en service de la facturation dans Airtable. Avant cette date, seuls les baux longs
+// ont été saisis : le CA de ces mois-là est réel mais très incomplet, et il ne faut surtout
+// pas le lire comme une performance. D'où le marqueur « Historique incomplet ».
+const MISE_EN_SERVICE = "2026-07";
+
 const NOMS_MOIS = [
   "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
   "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre",
@@ -372,17 +377,33 @@ export async function GET(request: Request) {
       const passe = l.a < moisCourant.a || (l.a === moisCourant.a && l.m < moisCourant.m);
       const futur = l.a > moisCourant.a || (l.a === moisCourant.a && l.m > moisCourant.m);
 
+      const avantMiseEnService = l.k < MISE_EN_SERVICE;
+      const partFacturee = caTotal > 0 ? l.caFacture / caTotal : 0;
+      const fiabilite = avantMiseEnService
+        ? "Historique incomplet"
+        : partFacturee >= 0.95
+          ? "Chiffre consolidé"
+          : partFacturee > 0
+            ? "Facturation en cours"
+            : "Estimé sur réservations";
+
       const detail = [
+        avantMiseEnService
+          ? "⚠️ Mois antérieur à la mise en service d'Airtable : seuls les baux longs y figurent. Le CA réel de ce mois était plus élevé, ne pas lire cette ligne comme une performance."
+          : "",
         `${caTotal.toLocaleString("fr-FR")} € de CA — ${l.caFacture.toLocaleString("fr-FR")} € facturés, ${l.caEstime.toLocaleString("fr-FR")} € estimés d'après les réservations.`,
         `${l.loyers.toLocaleString("fr-FR")} € de loyers propriétaires + ${l.charges.toLocaleString("fr-FR")} € de charges, au prorata de ${l.nuiteesVendues} nuitées occupées.`,
         `Marge ${marge.toLocaleString("fr-FR")} € sur ${l.apptsLoues} appartement(s) loué(s), parc de ${l.apptsParc}.`,
-      ].join("\n");
+      ]
+        .filter(Boolean)
+        .join("\n");
 
       const fields: Record<string, unknown> = {
         Mois: l.k,
         "Libellé": `${NOMS_MOIS[l.m]} ${l.a}`,
         "Début de mois": iso(debutMois(l.a, l.m)),
         "Statut du mois": passe ? "Clôturé" : futur ? "Prévisionnel" : "En cours",
+        "Fiabilité": fiabilite,
         "CA facturé": l.caFacture,
         "CA estimé": l.caEstime,
         "CA total": caTotal,
