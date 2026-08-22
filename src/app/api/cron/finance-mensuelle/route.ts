@@ -386,6 +386,10 @@ export async function GET(request: Request) {
     };
 
     for (const l of lignes) {
+      // Avant la mise en service, seuls quelques baux longs étaient saisis et Vincent a réglé
+      // ces mois-là hors Airtable. Générer des lignes « à payer » pour eux ferait apparaître
+      // une dette fantôme de plus de 200 000 €. On commence donc au premier mois fiable.
+      if (l.k < MISE_EN_SERVICE) continue;
       for (const d of l.loyersDetail) {
         if (d.montant <= 0 && d.charges <= 0) continue;
         const ref = `${l.k} · ${d.code}`;
@@ -431,7 +435,7 @@ export async function GET(request: Request) {
             fields["Montant payé"] = null;
             fields["Écart à régulariser"] = null;
             fields["À régler"] = !futur;
-            cumule(l.k, 0, futur ? 0 : total);
+            cumule(l.k, 0, total);
           }
           majLoyers.push({ id: existant.id, ref, mois: l.k, fields });
         } else {
@@ -449,7 +453,7 @@ export async function GET(request: Request) {
               Rattrapage: passe || enCours,
             },
           });
-          cumule(l.k, 0, futur ? 0 : total);
+          cumule(l.k, 0, total);
         }
       }
     }
@@ -553,7 +557,7 @@ export async function GET(request: Request) {
         "Avancement des virements":
           (suivi.get(l.k)?.verses || 0) + (suivi.get(l.k)?.reste || 0) > 0
             ? arrondi((suivi.get(l.k)?.verses || 0) / ((suivi.get(l.k)?.verses || 0) + (suivi.get(l.k)?.reste || 0)), 4)
-            : 1,
+            : null,
         Marge: marge,
         "Taux de marge": caTotal > 0 ? arrondi(marge / caTotal, 4) : 0,
         "Nuitées vendues": l.nuiteesVendues,
