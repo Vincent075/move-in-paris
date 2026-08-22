@@ -136,6 +136,7 @@ const ajouteJours = (d: Date, n: number) => new Date(d.getTime() + n * 86400000)
 const ecartJours = (a: Date, b: Date) => Math.round((b.getTime() - a.getTime()) / 86400000);
 const debutMois = (a: number, m: number) => new Date(Date.UTC(a, m, 1, 12));
 const cle = (a: number, m: number) => `${a}-${String(m + 1).padStart(2, "0")}`;
+const jjmm = (d: Date) => `${String(d.getUTCDate()).padStart(2, "0")}/${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
 
 export async function GET(request: Request) {
   const auth = request.headers.get("authorization");
@@ -236,6 +237,7 @@ export async function GET(request: Request) {
         charges: number;
         resas: string[];
         proprio: string[];
+        periode: string;
       }[];
     };
 
@@ -315,6 +317,12 @@ export async function GET(request: Request) {
         loyers += montant;
         charges += chargesProrata;
 
+        // Les bornes sont exclusives côté fin : une résa du 01/09 au 01/10 fait 30 nuitées,
+        // qui vont du 01/09 au 30/09. D'où le retrait d'un jour à l'affichage.
+        const periode = fusionnes
+          .map(([deb, fin]) => `${jjmm(deb)} → ${jjmm(ajouteJours(fin, -1))}`)
+          .join(" · ");
+
         loyersDetail.push({
           apptId,
           code: texte(appt.fields["Code appartement"]) || apptId,
@@ -327,6 +335,7 @@ export async function GET(request: Request) {
             .filter((r) => liens(r.fields["Appartement"])[0] === apptId && resasDuMois.has(r.id))
             .map((r) => r.id),
           proprio: liens(appt.fields["Propriétaire"]),
+          periode,
         });
       }
 
@@ -475,13 +484,14 @@ export async function GET(request: Request) {
           "Propriétaire": d.proprio,
           "Réservations": d.resas,
           "Nuitées occupées": d.nuits,
+          "Période occupée": d.periode,
           "Jours du mois": d.joursMois,
           Occupation: arrondi(d.nuits / d.joursMois, 4),
           "Loyer plein": d.loyerPlein,
           "Montant à virer": d.montant,
           "Charges à virer": d.charges,
           "Total à virer": arrondi(d.montant + d.charges),
-          "Détail": `${d.loyerPlein.toLocaleString("fr-FR")} € × ${d.nuits} nuitées ÷ ${d.joursMois} jours = ${d.montant.toLocaleString("fr-FR")} €, plus ${d.charges.toLocaleString("fr-FR")} € de charges au même prorata.`,
+          "Détail": `Occupé du ${d.periode} — ${d.loyerPlein.toLocaleString("fr-FR")} € × ${d.nuits} nuitées ÷ ${d.joursMois} jours = ${d.montant.toLocaleString("fr-FR")} €, plus ${d.charges.toLocaleString("fr-FR")} € de charges au même prorata.`,
           "Dernier calcul": horodatage,
         };
         const mois = idParMois.get(l.k);
