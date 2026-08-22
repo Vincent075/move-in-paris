@@ -371,7 +371,11 @@ export async function GET(request: Request) {
       const prec = parCle.get(cle(l.a, l.m - 1));
       const precTotal = prec ? arrondi(prec.caFacture + prec.caEstime) : null;
       const precMarge = prec ? arrondi(precTotal! - prec.loyers - prec.charges) : null;
-      const n1 = parCle.get(cle(l.a - 1, l.m));
+      // Comparer à un mois « Historique incomplet » produirait une évolution absurde
+      // (+482 % en août 2026 face à un août 2025 où seuls 3 baux longs étaient saisis).
+      // Tant que le N-1 n'est pas fiable, la colonne reste vide.
+      const cleN1 = cle(l.a - 1, l.m);
+      const n1 = cleN1 >= MISE_EN_SERVICE ? parCle.get(cleN1) : undefined;
       const n1Total = n1 ? arrondi(n1.caFacture + n1.caEstime) : null;
 
       const passe = l.a < moisCourant.a || (l.a === moisCourant.a && l.m < moisCourant.m);
