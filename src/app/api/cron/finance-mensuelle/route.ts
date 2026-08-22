@@ -429,9 +429,28 @@ export async function GET(request: Request) {
     // Une intervention ne doit être retenue qu'UNE fois : on la réserve au premier mois
     // non encore payé de son appartement, dans l'ordre chronologique.
     const dejaAffectee = new Set<string>();
+
+    // AUTO-33 émet bien une facture quand l'intervention est à la charge du propriétaire, mais
+    // il n'écrit pas de lien vers l'intervention : la facture ne porte que « Réservation liée ».
+    // On rapproche donc sur trois critères — catégorie Intervention, même réservation, et montant
+    // cohérent (le montant de l'intervention est TTC, la facture est HT, soit un rapport de 1,20).
+    const TVA = 1.2;
+    const factureDeLIntervention = (interv: Rec): Rec | undefined => {
+      const resa = liens(interv.fields["Réservation liée"])[0];
+      if (!resa) return undefined;
+      const ttc = nombre(interv.fields["Montant facturé intervention (€)"]);
+      return factures.find(
+        (f) =>
+          texte(f.fields["Catégorie"]) === "Intervention" &&
+          texte(f.fields["Statut"]) === "Envoyée" &&
+          liens(f.fields["Réservation liée"])[0] === resa &&
+          Math.abs(nombre(f.fields["Montant total HT"]) - ttc / TVA) < 1
+      );
+    };
     // Quand Vincent coche « Payé » sur un loyer, les interventions qui y étaient retenues
     // sont réputées réglées : on les marque, elles ne réapparaîtront plus sur aucun virement.
     const aSolder: { id: string; fields: Record<string, unknown> }[] = [];
+    const facturesASolder: { id: string; fields: Record<string, unknown> }[] = [];
 
     // Charges de structure : une ligne par charge récurrente, pas par mois. Une charge compte
     // sur un mois si elle avait déjà commencé et n'était pas encore terminée. « Depuis le » vide
@@ -514,6 +533,22 @@ export async function GET(request: Request) {
         for (const i of retenues) dejaAffectee.add(i.id);
 
         if (dejaPaye && existant) {
+          // Le propriétaire s'est acquitté de sa facture par la retenue sur son loyer :
+          // elle est encaissée, même si aucun virement entrant n'apparaîtra en banque.
+          for (const idFacture of liens(existant.fields["Factures à régler"])) {
+            const fac = factures.find((f) => f.id === idFacture);
+            if (fac && texte(fac.fields["Statut"]) === "Envoyée") {
+              facturesASolder.push({
+                id: idFacture,
+                fields: {
+                  Statut: "Payée",
+                  "Date de paiement": texte(existant.fields["Date de paiement"]) || iso(new Date()),
+                  Notes:
+                    `${texte(fac.fields["Notes"])}\nRéglée par retenue sur le loyer ${texte(existant.fields["Référence"])}.`.trim(),
+                },
+              });
+            }
+          }
           for (const idInterv of liens(existant.fields["Interventions à déduire"])) {
             dejaAffectee.add(idInterv);
             const interv = interventions.find((x) => x.id === idInterv);
@@ -533,10 +568,14 @@ export async function GET(request: Request) {
         const deduction = arrondi(
           retenues.reduce((somme, i) => somme + nombre(i.fields["Montant facturé intervention (€)"]), 0)
         );
+        const facturesLiees = retenues
+          .map((i) => factureDeLIntervention(i))
+          .filter((f): f is Rec => Boolean(f));
         fields["Interventions à déduire"] = dejaPaye
           ? liens(existant?.fields["Interventions à déduire"])
           : retenues.map((i) => i.id);
         if (!dejaPaye) {
+          fields["Factures à régler"] = facturesLiees.map((f) => f.id);
           fields["Montant à déduire"] = deduction;
           fields["Net à virer"] = arrondi(total - deduction);
           fields["Détail des déductions"] = retenues.length
@@ -545,7 +584,9 @@ export async function GET(request: Request) {
                   (i) =>
                     `${texte(i.fields["Code intervention"])} — ${texte(i.fields["Type d'intervention"])} — ${nombre(
                       i.fields["Montant facturé intervention (€)"]
-                    ).toLocaleString("fr-FR")} €`
+                    ).toLocaleString("fr-FR")} € TTC${
+                      factureDeLIntervention(i) ? ` (${texte(factureDeLIntervention(i)!.fields["Numéro facture"])})` : ""
+                    }`
                 )
                 .join("\n")
             : "";
@@ -800,6 +841,7 @@ export async function GET(request: Request) {
       return x;
     };
     if (aSolder.length) await ecrire(T_INTERVENTIONS, "PATCH", aSolder);
+    if (facturesASolder.length) await ecrire(T_FACTURES, "PATCH", facturesASolder);
     if (creerLoyers.length) await ecrire(T_LOYERS, "POST", creerLoyers.map((x) => ({ fields: rattache(x).fields })));
     if (majLoyers.length) await ecrire(T_LOYERS, "PATCH", majLoyers.map((x) => ({ id: x.id, fields: rattache(x).fields })));
 
@@ -911,6 +953,7 @@ export async function GET(request: Request) {
       alertes: orphelinesPayees.length,
       charges_fixes: chargesFixes.length,
       interventions: { a_deduire: aDeduire.length, soldees: aSolder.length },
+      factures_proprietaire_soldees: facturesASolder.length,
       annees: { crees: creerAns.length, mis_a_jour: majAns.length },
       mois_courant: courant
         ? {
