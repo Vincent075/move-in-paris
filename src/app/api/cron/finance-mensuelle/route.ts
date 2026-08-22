@@ -41,6 +41,7 @@ const T_RESERVATIONS = "tbl5uN32egP4YCvUi";
 const T_FACTURES = "tblC97ei6ZPWhWUwe";
 const T_FINANCE = "tbleTNIQZjch1WQ6O";
 const T_LOYERS = "tblLnbrAH1AfVvTb7";
+const T_CHARGES = "tble8Op6dPxj0N94t";
 
 // Réservations qui engagent un loyer propriétaire et génèrent du CA.
 const STATUTS_RESA = ["Contrat signé", "En cours", "Check-out", "Clôturée"];
@@ -146,13 +147,15 @@ export async function GET(request: Request) {
   const debut = Date.now();
 
   try {
-    const [appartements, reservations, factures, financeExistant, loyersExistants] = await Promise.all([
-      lireTable(T_APPARTEMENTS),
-      lireTable(T_RESERVATIONS),
-      lireTable(T_FACTURES),
-      lireTable(T_FINANCE),
-      lireTable(T_LOYERS),
-    ]);
+    const [appartements, reservations, factures, financeExistant, loyersExistants, chargesFixes] =
+      await Promise.all([
+        lireTable(T_APPARTEMENTS),
+        lireTable(T_RESERVATIONS),
+        lireTable(T_FACTURES),
+        lireTable(T_FINANCE),
+        lireTable(T_LOYERS),
+        lireTable(T_CHARGES),
+      ]);
 
     const parAppartement = new Map(appartements.map((a) => [a.id, a]));
     const maintenant = new Date();
@@ -369,6 +372,21 @@ export async function GET(request: Request) {
 
     const horodatage = new Date().toISOString();
 
+    // Charges de structure : une ligne par charge récurrente, pas par mois. Une charge compte
+    // sur un mois si elle avait déjà commencé et n'était pas encore terminée. « Depuis le » vide
+    // = a toujours existé ; « Jusqu au » vide = toujours en cours. Ainsi une embauche de mars
+    // ne pèse pas sur janvier, et une résiliation ne réécrit pas le passé.
+    const chargesDuMois = (d1: Date, d2: Date) =>
+      arrondi(
+        chargesFixes.reduce((somme, c) => {
+          const debut = texte(c.fields["Depuis le"]);
+          const fin = texte(c.fields["Jusqu au"]);
+          if (debut && jour(debut) >= d2) return somme;
+          if (fin && jour(fin) < d1) return somme;
+          return somme + nombre(c.fields["Montant mensuel"]);
+        }, 0)
+      );
+
     // ------------------------------------------------------------ écriture « Loyers à verser »
     // Clé = « AAAA-MM · APT-xxx ». Statut et Date de paiement ne sont JAMAIS touchés.
     const loyersParRef = new Map(loyersExistants.map((r) => [texte(r.fields["Référence"]), r]));
@@ -519,6 +537,17 @@ export async function GET(request: Request) {
       const futur = l.a > moisCourant.a || (l.a === moisCourant.a && l.m > moisCourant.m);
 
       const avantMiseEnService = l.k < MISE_EN_SERVICE;
+      const chargesFixesMois = avantMiseEnService
+        ? 0
+        : chargesDuMois(debutMois(l.a, l.m), debutMois(l.a, l.m + 1));
+      const margeNette = arrondi(caTotal - l.loyers - l.charges - chargesFixesMois);
+      // Ce qui traîne encore sur les mois d'AVANT celui-ci : à régler avec le lot du mois
+      // pour ne pas laisser filer un loyer oublié.
+      const arriere = arrondi(
+        [...suivi.entries()]
+          .filter(([k]) => k < l.k && k >= MISE_EN_SERVICE)
+          .reduce((somme, [, v]) => somme + v.reste, 0)
+      );
       const partFacturee = caTotal > 0 ? l.caFacture / caTotal : 0;
       const fiabilite = avantMiseEnService
         ? "Historique incomplet"
@@ -560,6 +589,10 @@ export async function GET(request: Request) {
             : null,
         Marge: marge,
         "Taux de marge": caTotal > 0 ? arrondi(marge / caTotal, 4) : 0,
+        "Charges fixes": chargesFixesMois,
+        "Marge nette": margeNette,
+        "Taux de marge nette": caTotal > 0 ? arrondi(margeNette / caTotal, 4) : null,
+        "Arriéré des mois précédents": arriere,
         "Nuitées vendues": l.nuiteesVendues,
         "Nuitées disponibles": l.nuiteesDispo,
         "Taux d'occupation": l.nuiteesDispo > 0 ? arrondi(l.nuiteesVendues / l.nuiteesDispo, 4) : 0,
@@ -612,6 +645,7 @@ export async function GET(request: Request) {
       loyers: { crees: creerLoyers.length, mis_a_jour: majLoyers.length, neutralises: orphelinesAnnulables.length },
       rattrapages: creerLoyers.filter((x) => x.fields["Rattrapage"] === true).length,
       alertes: orphelinesPayees.length,
+      charges_fixes: chargesFixes.length,
       mois_courant: courant
         ? {
             mois: courant.k,
