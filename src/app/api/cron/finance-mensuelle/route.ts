@@ -546,6 +546,7 @@ export async function GET(request: Request) {
     type CumulAn = {
       mois: number; caFacture: number; caEstime: number; loyers: number; charges: number;
       chargesFixes: number; reste: number; encours: number; nuitees: number; dispo: number; fiable: boolean;
+      moisFiables: number; caFiable: number; margeFiable: number;
     };
     const parAnnee = new Map<string, CumulAn>();
 
@@ -648,6 +649,7 @@ export async function GET(request: Request) {
       const cumulAn = parAnnee.get(an) || {
         mois: 0, caFacture: 0, caEstime: 0, loyers: 0, charges: 0, chargesFixes: 0,
         reste: 0, encours: 0, nuitees: 0, dispo: 0, fiable: false,
+        moisFiables: 0, caFiable: 0, margeFiable: 0,
       };
       cumulAn.mois += 1;
       cumulAn.caFacture += l.caFacture;
@@ -659,7 +661,12 @@ export async function GET(request: Request) {
       cumulAn.encours += encoursParMois.get(l.k) || 0;
       cumulAn.nuitees += l.nuiteesVendues;
       cumulAn.dispo += l.nuiteesDispo;
-      if (!avantMiseEnService) cumulAn.fiable = true;
+      if (!avantMiseEnService) {
+        cumulAn.fiable = true;
+        cumulAn.moisFiables += 1;
+        cumulAn.caFiable += caTotal;
+        cumulAn.margeFiable += marge;
+      }
       parAnnee.set(an, cumulAn);
 
       const existant = financeParCle.get(l.k);
@@ -706,7 +713,8 @@ export async function GET(request: Request) {
       const brute = margeBruteAn(c);
       const nette = margeNetteAn(c);
       const prec = parAnnee.get(String(Number(an) - 1));
-      const precFiable = prec && prec.fiable && c.fiable;
+      const complet = (x: CumulAn) => x.moisFiables === x.mois && x.mois > 0;
+      const precFiable = !!prec && complet(prec) && complet(c);
       const precTotal = precFiable ? totalAn(prec) : null;
 
       const fiabilite = !c.fiable
@@ -727,6 +735,9 @@ export async function GET(request: Request) {
         "Année": an,
         "Fiabilité": fiabilite,
         "Mois couverts": c.mois,
+        "Mois fiables": c.moisFiables,
+        "CA des mois fiables": arrondi(c.caFiable),
+        "Marge brute des mois fiables": arrondi(c.margeFiable),
         "CA facturé": arrondi(c.caFacture),
         "CA estimé": arrondi(c.caEstime),
         "CA total": total,
@@ -747,11 +758,16 @@ export async function GET(request: Request) {
         "Δ CA vs année précédente %": precTotal ? arrondi((total - precTotal) / precTotal, 4) : null,
         "Δ Marge nette vs année précédente": precFiable ? arrondi(nette - margeNetteAn(prec)) : null,
         "Mois de l année": moisLies,
-        "Détail":
-          (c.fiable
-            ? ""
-            : "⚠️ Année antérieure à la mise en service d'Airtable : seuls quelques baux longs y figurent. Le CA réel était bien plus élevé, ne pas lire cette ligne comme une performance.\n") +
+        "Détail": [
+          !c.fiable
+            ? "⚠️ Année entièrement antérieure à la mise en service d'Airtable : seuls quelques baux longs y figurent. Le CA réel était bien plus élevé, ne pas lire cette ligne comme une performance."
+            : c.moisFiables < c.mois
+              ? `⚠️ Année à moitié fiable : ${c.mois - c.moisFiables} mois sur ${c.mois} sont antérieurs à juillet 2026 et très incomplets. Le chiffre à regarder est celui des ${c.moisFiables} mois fiables : ${arrondi(c.caFiable).toLocaleString("fr-FR")} € de CA et ${arrondi(c.margeFiable).toLocaleString("fr-FR")} € de marge brute.`
+              : "",
           `${total.toLocaleString("fr-FR")} € de CA sur ${c.mois} mois — marge brute ${brute.toLocaleString("fr-FR")} €, marge nette ${nette.toLocaleString("fr-FR")} € après ${arrondi(c.chargesFixes).toLocaleString("fr-FR")} € de charges de structure.`,
+        ]
+          .filter(Boolean)
+          .join("\n"),
         "Dernier calcul": horodatage,
       };
 
