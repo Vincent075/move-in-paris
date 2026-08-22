@@ -525,17 +525,28 @@ export async function GET(request: Request) {
     const orphelinesPayees = orphelines.filter((r) => texte(r.fields["Statut"]) === "Payé");
     const orphelinesAnnulables = orphelines.filter((r) => texte(r.fields["Statut"]) !== "Payé");
 
-    if (orphelinesAnnulables.length) {
+    // Deux cas distincts. Une ligne dont le MOIS est sorti de la fenêtre n'a plus de raison
+    // d'exister : on la supprime, sauf si elle est payée (on ne détruit jamais une trace de
+    // virement). Une ligne dont le mois est toujours dans la fenêtre mais dont la réservation
+    // a disparu est simplement remise à zéro, pour que l'historique reste lisible.
+    const dansLaFenetre = new Set(lignes.map((l) => l.k));
+    const horsFenetre = orphelinesAnnulables.filter((r) => !dansLaFenetre.has(texte(r.fields["Mois"])));
+    const aNeutraliser = orphelinesAnnulables.filter((r) => dansLaFenetre.has(texte(r.fields["Mois"])));
+
+    if (horsFenetre.length) await supprimer(T_LOYERS, horsFenetre.map((r) => r.id));
+
+    if (aNeutraliser.length) {
       await ecrire(
         T_LOYERS,
         "PATCH",
-        orphelinesAnnulables.map((r) => ({
+        aNeutraliser.map((r) => ({
           id: r.id,
           fields: {
             "Montant à virer": 0,
             "Charges à virer": 0,
             "Total à virer": 0,
             "Nuitées occupées": 0,
+            "À régler": false,
             "Détail": "Plus aucune réservation ne couvre ce mois pour cet appartement : rien à verser.",
             "Dernier calcul": horodatage,
           },
@@ -813,7 +824,12 @@ export async function GET(request: Request) {
       duree_ms: Date.now() - debut,
       mois_calcules: lignes.length,
       finance: { crees: aCreer.length, mis_a_jour: aMettreAJour.length },
-      loyers: { crees: creerLoyers.length, mis_a_jour: majLoyers.length, neutralises: orphelinesAnnulables.length },
+      loyers: {
+        crees: creerLoyers.length,
+        mis_a_jour: majLoyers.length,
+        neutralises: aNeutraliser.length,
+        supprimes_hors_fenetre: horsFenetre.length,
+      },
       rattrapages: creerLoyers.filter((x) => x.fields["Rattrapage"] === true).length,
       alertes: orphelinesPayees.length,
       charges_fixes: chargesFixes.length,
