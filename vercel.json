@@ -16,6 +16,10 @@
     {
       "path": "/api/cron/leads-relance",
       "schedule": "0 7 * * 1-5"
+    },
+    {
+      "path": "/api/cron/transferts-alerte",
+      "schedule": "0 7,15 * * *"
     }
   ]
 }
