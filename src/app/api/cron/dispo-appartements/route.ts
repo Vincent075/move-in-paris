@@ -42,9 +42,6 @@ const AT_TOKEN = process.env.AIRTABLE_WATCHDOG_TOKEN || "";
 const T_APPARTEMENTS = "tbltFlpzQWXjoWg88";
 const T_RESERVATIONS = "tbl5uN32egP4YCvUi";
 const T_DISPONIBILITES = "tblQUgzOEXMnMoqhB";
-// Pages d'interface, pour reconstruire le lien « Fiche » vers l'appartement.
-const PAGE_FICHE_APPART = "pag6W9Iefur9cmNyi";
-const PAGE_APPARTS = "pagCE82m1lpdPFWkS";
 
 // Sentinelle interne « sans terme connu ». N'est jamais écrite dans Airtable.
 const SANS_TERME = "2099-12-31";
@@ -151,6 +148,7 @@ export async function GET(request: Request) {
   const appts = await lire(T_APPARTEMENTS, [
     "Code appartement", "Statut pipeline", "Disponibilité", "Libre à partir du", "Source dispo",
     "Nom / Référence", "Type", "Code postal", "Ville", "Zone", "Adresse", "Surface m²",
+    "Lien vers le site",
   ]);
   const resas = await lire(T_RESERVATIONS, ["Statut", "Date d'entrée", "Date de sortie", "Appartement"]);
 
@@ -231,7 +229,9 @@ export async function GET(request: Request) {
         "Code postal": String(a.fields["Code postal"] ?? ""),
         "Ville": String(a.fields["Ville"] ?? ""),
         "Surface m²": a.fields["Surface m²"] ?? null,
-        "Fiche": `https://airtable.com/${AT_BASE}/${PAGE_FICHE_APPART}/${a.id}?home=${PAGE_APPARTS}`,
+        // Lien vers la page publique du site, pas vers la fiche Airtable : c'est
+        // celui qu'on envoie au client.
+        "Fiche": String(a.fields["Lien vers le site"] ?? ""),
         "Type": String(a.fields["Type"] ?? ""),
         "Typologie": String(a.fields["Type"] ?? ""),
         "Zone": zoneDe(a.fields["Code postal"], a.fields["Ville"]),
