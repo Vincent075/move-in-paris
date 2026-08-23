@@ -83,6 +83,19 @@ function aujourdhuiParis(): string {
 
 const jour = (v: unknown) => String(v ?? "").slice(0, 10);
 
+// Zone commerciale, déduite du code postal plutôt que de la ville : la ville est
+// saisie à la main et comporte des variantes (« Paris » avec espace final,
+// « Levallois-Perret » et « Levallois Perret »). Le code postal, lui, est fiable.
+export function zoneDe(codePostal: unknown, ville: unknown): string {
+  const cp = String(codePostal ?? "").replace(/\D/g, "");
+  if (cp.length === 5 && cp.startsWith("75")) {
+    const n = parseInt(cp.slice(3), 10);
+    return `Paris ${n === 1 ? "1er" : `${n}e`}`;
+  }
+  const v = String(ville ?? "").replace(/[\s-]+/g, " ").trim();
+  return v || "Non renseigné";
+}
+
 // null = occupé sans terme connu.
 export function libreAPartirDe(creneaux: Creneau[], aujourdhui: string): string | null {
   const derniereSortie = creneaux.reduce((m, c) => (c.fin > m ? c.fin : m), "");
@@ -134,6 +147,7 @@ export async function GET(request: Request) {
   const aujourdhui = aujourdhuiParis();
   const appts = await lire(T_APPARTEMENTS, [
     "Code appartement", "Statut pipeline", "Disponibilité", "Libre à partir du", "Source dispo",
+    "Nom / Référence", "Type", "Code postal", "Ville",
   ]);
   const resas = await lire(T_RESERVATIONS, ["Statut", "Date d'entrée", "Date de sortie", "Appartement"]);
 
@@ -200,6 +214,8 @@ export async function GET(request: Request) {
         "Code appartement": code,
         "Appartement": String(a.fields["Nom / Référence"] ?? ""),
         "Type": String(a.fields["Type"] ?? ""),
+        "Typologie": String(a.fields["Type"] ?? ""),
+        "Zone": zoneDe(a.fields["Code postal"], a.fields["Ville"]),
         "Début": f.debut,
         "Fin": f.fin,
         "Sans fin": f.sansFin,
