@@ -34,7 +34,8 @@ export const maxDuration = 300;
 const AT_BASE = process.env.AIRTABLE_BASE_ID || "";
 const AT_TOKEN = process.env.AIRTABLE_WATCHDOG_TOKEN || "";
 const SLACK_TOKEN = process.env.SLACK_BOT_TOKEN_MIP || "";
-const SLACK_CHANNEL = "C0BC1NZGWRM"; // #automatisations_failures
+const SLACK_CHANNEL = "C0BC1NZGWRM"; // #automatisations_failures — les erreurs
+const SLACK_LOYERS = "C0BCF50TN78"; // #propriétaires — le récap mensuel des virements
 
 const T_APPARTEMENTS = "tbltFlpzQWXjoWg88";
 const T_RESERVATIONS = "tbl5uN32egP4YCvUi";
@@ -50,6 +51,12 @@ const STATUTS_RESA = ["Contrat signé", "En cours", "Check-out", "Clôturée"];
 // Appartements pour lesquels MIP est engagé auprès du propriétaire.
 const STATUTS_PARC = ["Actif", "Contrat signé"];
 
+// Ces charges sont DÉJÀ COMPRISES dans « Loyer propriétaire / mois » (confirmé par Vincent
+// le 22/08/2026 : « le propriétaire reçoit par exemple 2800 € qui inclut toutes les charges »).
+// Preuve dans la donnée : sur 44 appartements sur 46, « Loyer propriétaire / mois » moins
+// « Loyer propriétaire HC (€) » vaut exactement la somme de ces champs. Elles ne sont donc
+// JAMAIS ajoutées au virement ni retranchées de la marge : on ne les calcule que pour dire
+// quelle part du loyer versé couvre les charges.
 const CHAMPS_CHARGES = [
   "Charges électriques",
   "Charges gaz",
@@ -88,13 +95,13 @@ const texte = (v: unknown): string => {
 const liens = (v: unknown): string[] => (Array.isArray(v) ? (v as string[]) : []);
 const arrondi = (n: number, d = 2) => Math.round(n * 10 ** d) / 10 ** d;
 
-async function slack(text: string) {
+async function slack(text: string, canal: string = SLACK_CHANNEL) {
   if (!SLACK_TOKEN) return;
   try {
     await fetch("https://slack.com/api/chat.postMessage", {
       method: "POST",
       headers: { Authorization: `Bearer ${SLACK_TOKEN}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ channel: SLACK_CHANNEL, text }),
+      body: JSON.stringify({ channel: canal, text }),
     });
   } catch {
     /* une alerte qui échoue ne doit pas faire tomber le calcul */
@@ -419,13 +426,30 @@ export async function GET(request: Request) {
     // Une intervention n'est éligible qu'une fois close et chiffrée, et tant qu'elle n'a pas
     // déjà été déduite d'un virement précédent.
     const STATUTS_INTERVENTION_CLOSE = ["Terminée", "Cloturée"];
-    const aDeduire = interventions.filter(
-      (i) =>
-        texte(i.fields["Facturable à"]) === "Propriétaire" &&
-        STATUTS_INTERVENTION_CLOSE.includes(texte(i.fields["Statut"])) &&
-        nombre(i.fields["Montant facturé intervention (€)"]) > 0 &&
-        i.fields["Déduite du loyer"] !== true
-    );
+    const TVA = 1.2;
+    // Facture d'intervention rapprochée par réservation + montant, TOUS statuts confondus.
+    // Sert de garde-fou : si le propriétaire a déjà réglé sa facture par virement (AUTO-17 la
+    // passe alors en « Payée » depuis Pennylane), la retenir AUSSI sur son loyer le ferait
+    // payer deux fois. On ne déduit donc que tant que la facture est encore « Envoyée ».
+    const factureRapprochee = (interv: Rec): Rec | undefined => {
+      const resa = liens(interv.fields["Réservation liée"])[0];
+      if (!resa) return undefined;
+      const ttc = nombre(interv.fields["Montant facturé intervention (€)"]);
+      return factures.find(
+        (f) =>
+          texte(f.fields["Catégorie"]) === "Intervention" &&
+          liens(f.fields["Réservation liée"])[0] === resa &&
+          Math.abs(nombre(f.fields["Montant total HT"]) - ttc / TVA) < 1
+      );
+    };
+    const aDeduire = interventions.filter((i) => {
+      if (texte(i.fields["Facturable à"]) !== "Propriétaire") return false;
+      if (!STATUTS_INTERVENTION_CLOSE.includes(texte(i.fields["Statut"]))) return false;
+      if (nombre(i.fields["Montant facturé intervention (€)"]) <= 0) return false;
+      if (i.fields["Déduite du loyer"] === true) return false;
+      const fac = factureRapprochee(i);
+      return !fac || texte(fac.fields["Statut"]) === "Envoyée";
+    });
     // Une intervention ne doit être retenue qu'UNE fois : on la réserve au premier mois
     // non encore payé de son appartement, dans l'ordre chronologique.
     const dejaAffectee = new Set<string>();
@@ -434,7 +458,6 @@ export async function GET(request: Request) {
     // il n'écrit pas de lien vers l'intervention : la facture ne porte que « Réservation liée ».
     // On rapproche donc sur trois critères — catégorie Intervention, même réservation, et montant
     // cohérent (le montant de l'intervention est TTC, la facture est HT, soit un rapport de 1,20).
-    const TVA = 1.2;
     const factureDeLIntervention = (interv: Rec): Rec | undefined => {
       const resa = liens(interv.fields["Réservation liée"])[0];
       if (!resa) return undefined;
@@ -472,6 +495,9 @@ export async function GET(request: Request) {
     const loyersParRef = new Map(loyersExistants.map((r) => [texte(r.fields["Référence"]), r]));
     const creerLoyers: { ref: string; mois: string; fields: Record<string, unknown> }[] = [];
     const majLoyers: { id: string; ref: string; mois: string; fields: Record<string, unknown> }[] = [];
+    // Lignes qui viennent de devenir exigibles ce passage-ci : c'est ce qui déclenche
+    // la notification Slack, une seule fois, le jour où le mois bascule.
+    const basculees: string[] = [];
     const refsAttendues = new Set<string>();
     // Totaux par mois, pour alimenter « Finance mensuelle » juste après.
     const suivi = new Map<string, { verses: number; reste: number; nbReste: number }>();
@@ -508,12 +534,12 @@ export async function GET(request: Request) {
           Occupation: arrondi(d.nuits / d.joursMois, 4),
           "Loyer plein": d.loyerPlein,
           "Montant à virer": d.montant,
-          "Charges à virer": d.charges,
-          "Total à virer": arrondi(d.montant + d.charges),
+          "Charges à virer": d.charges, // informatif : part du loyer qui couvre les charges
+          "Total à virer": d.montant,
           "Détail": `Loyer ${d.periode}`,
           "Dernier calcul": horodatage,
         };
-        const total = arrondi(d.montant + d.charges);
+        const total = d.montant;
         const existant = loyersParRef.get(ref);
         const dejaPaye = texte(existant?.fields["Statut"] ?? "") === "Payé";
 
@@ -600,7 +626,10 @@ export async function GET(request: Request) {
           // « En attente ». Le mois arrivé, le loyer est dû et doit rejoindre les autres,
           // sinon l'onglet « À payer » raterait le mois en cours. La bascule ne concerne
           // que « En attente » : « Payé » n'est jamais touché.
-          if (!futur && statutActuel === "En attente") fields["Statut"] = "À payer";
+          if (!futur && statutActuel === "En attente") {
+            fields["Statut"] = "À payer";
+            basculees.push(ref);
+          }
           const paye = statutActuel === "Payé";
           if (paye) {
             // Photographie du montant au moment du paiement. Si le montant bouge ensuite
@@ -701,10 +730,10 @@ export async function GET(request: Request) {
 
     for (const l of lignes) {
       const caTotal = arrondi(l.caFacture + l.caEstime);
-      const marge = arrondi(caTotal - l.loyers - l.charges);
+      const marge = arrondi(caTotal - l.loyers);
       const prec = parCle.get(cle(l.a, l.m - 1));
       const precTotal = prec ? arrondi(prec.caFacture + prec.caEstime) : null;
-      const precMarge = prec ? arrondi(precTotal! - prec.loyers - prec.charges) : null;
+      const precMarge = prec ? arrondi(precTotal! - prec.loyers) : null;
       // Comparer à un mois « Historique incomplet » produirait une évolution absurde
       // (+482 % en août 2026 face à un août 2025 où seuls 3 baux longs étaient saisis).
       // Tant que le N-1 n'est pas fiable, la colonne reste vide.
@@ -719,7 +748,7 @@ export async function GET(request: Request) {
       const chargesFixesMois = avantMiseEnService
         ? 0
         : chargesDuMois(debutMois(l.a, l.m), debutMois(l.a, l.m + 1));
-      const margeNette = arrondi(caTotal - l.loyers - l.charges - chargesFixesMois);
+      const margeNette = arrondi(caTotal - l.loyers - chargesFixesMois);
       // Ce qui traîne encore sur les mois d'AVANT celui-ci : à régler avec le lot du mois
       // pour ne pas laisser filer un loyer oublié.
       const arriere = arrondi(
@@ -741,7 +770,7 @@ export async function GET(request: Request) {
           ? "⚠️ Mois antérieur à la mise en service d'Airtable : seuls les baux longs y figurent. Le CA réel de ce mois était plus élevé, ne pas lire cette ligne comme une performance."
           : "",
         `${caTotal.toLocaleString("fr-FR")} € de CA — ${l.caFacture.toLocaleString("fr-FR")} € facturés, ${l.caEstime.toLocaleString("fr-FR")} € estimés d'après les réservations.`,
-        `${l.loyers.toLocaleString("fr-FR")} € de loyers propriétaires + ${l.charges.toLocaleString("fr-FR")} € de charges, au prorata de ${l.nuiteesVendues} nuitées occupées.`,
+        `${l.loyers.toLocaleString("fr-FR")} € de loyers propriétaires au prorata de ${l.nuiteesVendues} nuitées occupées, dont ${l.charges.toLocaleString("fr-FR")} € de charges déjà comprises dans le loyer.`,
         `Marge ${marge.toLocaleString("fr-FR")} € sur ${l.apptsLoues} appartement(s) loué(s), parc de ${l.apptsParc}.`,
       ]
         .filter(Boolean)
@@ -760,7 +789,7 @@ export async function GET(request: Request) {
         "% facturé": caTotal > 0 ? arrondi(l.caFacture / caTotal, 4) : 0,
         "Loyers propriétaires dus": l.loyers,
         "Charges dues": l.charges,
-        "Total à virer": arrondi(l.loyers + l.charges),
+        "Total à virer": l.loyers,
         "Loyers versés": arrondi(suivi.get(l.k)?.verses || 0),
         "Reste à verser": arrondi(suivi.get(l.k)?.reste || 0),
         "Avancement des virements":
@@ -851,6 +880,43 @@ export async function GET(request: Request) {
     if (creerLoyers.length) await ecrire(T_LOYERS, "POST", creerLoyers.map((x) => ({ fields: rattache(x).fields })));
     if (majLoyers.length) await ecrire(T_LOYERS, "PATCH", majLoyers.map((x) => ({ id: x.id, fields: rattache(x).fields })));
 
+    // ------------------------------------------------------- notification mensuelle Slack
+    // Les lignes existent trois mois à l'avance ; ce qui se passe le 1er, c'est qu'elles
+    // deviennent exigibles. On poste donc le récap au moment de cette bascule — une seule
+    // fois, et si le cron avait sauté le 1er, le lendemain fait aussi bien l'affaire.
+    if (basculees.length) {
+      const kMois = cle(moisCourant.a, moisCourant.m);
+      const duMois = lignes.find((l) => l.k === kMois)?.loyersDetail ?? [];
+      const totalMois = arrondi(duMois.reduce((s, d) => s + d.montant, 0));
+      const anterieurs = [...suivi.entries()].filter(([k]) => k < kMois && k >= MISE_EN_SERVICE);
+      const arriere = arrondi(anterieurs.reduce((s, [, v]) => s + v.reste, 0));
+      const nbArriere = anterieurs.reduce((s, [, v]) => s + v.nbReste, 0);
+      const eur = (n: number) => `${n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
+      const top = [...duMois].sort((a, b) => b.montant - a.montant).slice(0, 5);
+
+      await slack(
+        [
+          `:key: *Loyers propriétaires — ${NOMS_MOIS[moisCourant.m]} ${moisCourant.a}*`,
+          "",
+          `${duMois.length} loyer(s) viennent de passer à payer : *${eur(totalMois)}*`,
+          arriere > 0.01
+            ? `Reste des mois précédents : *${eur(arriere)}* sur ${nbArriere} ligne(s)`
+            : "Aucun arriéré : tous les mois précédents sont soldés.",
+          arriere > 0.01 ? `*Total à virer aujourd'hui : ${eur(totalMois + arriere)}*` : "",
+          "",
+          "Les plus gros virements du mois :",
+          ...top.map((d) => `• ${d.code} — ${eur(d.montant)} — ${d.periode}`),
+          "",
+          "Les montants sont au prorata des nuitées occupées et incluent déjà les charges.",
+          "Passez chaque ligne en « Payé » au fil des virements :",
+          "https://airtable.com/appcLt70GQiR1FAbT/pagG2ImBSleukjpdt",
+        ]
+          .filter((x) => x !== "")
+          .join("\n"),
+        SLACK_LOYERS
+      );
+    }
+
     // ------------------------------------------------------------ « Finance annuelle »
     // Agrégation des mois déjà calculés. Une année n'est comparable à la précédente que si
     // les deux sont postérieures à la mise en service : sinon on comparerait un vrai chiffre
@@ -858,7 +924,7 @@ export async function GET(request: Request) {
     const anneeCourante = String(moisCourant.a);
     const annuel = [...parAnnee.entries()].sort(([x], [y]) => x.localeCompare(y));
     const totalAn = (c: CumulAn) => arrondi(c.caFacture + c.caEstime);
-    const margeBruteAn = (c: CumulAn) => arrondi(totalAn(c) - c.loyers - c.charges);
+    const margeBruteAn = (c: CumulAn) => arrondi(totalAn(c) - c.loyers);
     const margeNetteAn = (c: CumulAn) => arrondi(margeBruteAn(c) - c.chargesFixes);
 
     const anneesParCle = new Map(anneesExistantes.map((r) => [texte(r.fields["Année"]), r]));
