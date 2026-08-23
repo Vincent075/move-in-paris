@@ -24,6 +24,10 @@
     {
       "path": "/api/cron/finance-mensuelle",
       "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/dispo-appartements",
+      "schedule": "5 * * * *"
     }
   ]
 }
