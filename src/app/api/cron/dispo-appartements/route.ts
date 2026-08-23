@@ -8,20 +8,23 @@ import { NextResponse } from "next/server";
 // « Prochaine disponibilité » comptait en plus les réservations ANNULÉES :
 // APT-106 Rivoli passait pour occupé jusqu'au 30/11 à cause d'un booking annulé.
 //
-// MODÈLE RETENU : « libre à partir de la fin de la dernière réservation ».
-// On avait d'abord essayé « première fenêtre libre depuis aujourd'hui ». Testé sur
-// 6 périodes réelles, ce modèle ratait 42 appartements pourtant libres : un logement
-// occupé jusqu'au 28/10 était décrit comme libre du 23 au 29 août, donc invisible
-// pour une demande de novembre. Le modèle retenu n'en rate que 10, et uniquement
-// sur des trous inter-séjours.
+// DEUX SORTIES, PARCE QU'UNE DATE NE SUFFIT PAS.
 //
-// Ces trous ne coûtent rien : le séjour le plus court jamais enregistré fait 29 nuits,
-// et les 4 trous existants du parc font 13, 4, 2 et 1 jours. Ce sont des délais de
-// rotation, pas des créneaux vendables.
+// 1) Sur Appartements : « Libre à partir du » = fin de la dernière réservation.
+//    Répond à « qu'est-ce qui est libre durablement à partir de telle date ».
+//    Compresse volontairement toutes les fenêtres en une seule date, donc PERD
+//    les trous entre deux séjours.
 //
-// Aucun des deux modèles ne produit de faux positif : on ne propose jamais un
-// appartement occupé. C'est la propriété qu'il faut préserver en priorité si ce
-// calcul évolue un jour.
+// 2) Sur Disponibilités : une ligne par fenêtre réellement libre, trous compris.
+//    C'est la sortie complète. Un trou de 13 jours sur le 3P Ternes redevient du
+//    stock vendable pour un dépannage, au lieu de disparaître du calcul.
+//    Correction du 23/08 : j'avais écarté les trous en constatant que le séjour le
+//    plus court en base faisait 29 nuits. La base ne contenait que l'historique
+//    depuis le lancement ; les dépannages de 7 à 12 jours existent bel et bien.
+//    Ne jamais reconclure « pas de séjours courts » à partir de cette table seule.
+//
+// Propriété à préserver en priorité si ce calcul évolue : aucun faux positif.
+// On ne propose jamais un appartement occupé.
 //
 // Règles :
 //   - Toute réservation NON annulée bloque. Prudence volontaire.
@@ -38,6 +41,7 @@ const AT_TOKEN = process.env.AIRTABLE_WATCHDOG_TOKEN || "";
 
 const T_APPARTEMENTS = "tbltFlpzQWXjoWg88";
 const T_RESERVATIONS = "tbl5uN32egP4YCvUi";
+const T_DISPONIBILITES = "tblQUgzOEXMnMoqhB";
 
 // Sentinelle interne « sans terme connu ». N'est jamais écrite dans Airtable.
 const SANS_TERME = "2099-12-31";
@@ -85,6 +89,41 @@ export function libreAPartirDe(creneaux: Creneau[], aujourdhui: string): string 
   if (derniereSortie >= SANS_TERME) return null;
   return derniereSortie > aujourdhui ? derniereSortie : aujourdhui;
 }
+
+const enJours = (a: string, b: string) =>
+  Math.round((Date.parse(b + "T00:00:00Z") - Date.parse(a + "T00:00:00Z")) / 864e5);
+
+export type Fenetre = { debut: string; fin: string; sansFin: boolean; nature: string };
+
+// Toutes les fenêtres libres à partir d'aujourd'hui, trous inter-séjours compris.
+// Les réservations sont d'abord fusionnées : deux séjours qui se chevauchent ou
+// s'enchaînent ne doivent pas fabriquer un faux trou de zéro jour.
+export function fenetresLibres(creneaux: Creneau[], aujourdhui: string): Fenetre[] {
+  const tries = [...creneaux].sort((a, b) => (a.debut < b.debut ? -1 : a.debut > b.debut ? 1 : 0));
+  const fusion: Creneau[] = [];
+  for (const c of tries) {
+    const last = fusion[fusion.length - 1];
+    if (last && c.debut <= last.fin) { if (c.fin > last.fin) last.fin = c.fin; }
+    else fusion.push({ ...c });
+  }
+
+  const out: Fenetre[] = [];
+  let curseur = aujourdhui;
+  for (const c of fusion) {
+    if (c.fin <= aujourdhui) continue;               // séjour terminé
+    if (c.debut > curseur) {
+      out.push({ debut: curseur, fin: c.debut, sansFin: false, nature: "Trou entre deux séjours" });
+    }
+    if (c.fin >= SANS_TERME) return out;             // bail sans préavis : plus rien après
+    if (c.fin > curseur) curseur = c.fin;
+  }
+  out.push({ debut: curseur, fin: SANS_TERME, sansFin: true, nature: "Après le dernier séjour" });
+  return out;
+}
+
+const jjmmaaaa = (d: string) => `${d.slice(8, 10)}/${d.slice(5, 7)}/${d.slice(0, 4)}`;
+const cleCreneau = (code: string, f: Fenetre) =>
+  `${code} · ${jjmmaaaa(f.debut)} → ${f.sansFin ? "sans fin" : jjmmaaaa(f.fin)}`;
 
 export async function GET(request: Request) {
   const auth = request.headers.get("authorization");
@@ -140,5 +179,51 @@ export async function GET(request: Request) {
     await airtable("PATCH", T_APPARTEMENTS, { records: maj.slice(i, i + 10), typecast: true });
   }
 
-  return NextResponse.json({ ok: true, aujourdhui, misAJour: maj.length, compte });
+  // ── Table Disponibilités : une ligne par fenêtre libre ────────────────────
+  // La clé « Créneau » encode appartement + bornes : toute modification produit
+  // une clé différente, donc un diff création/suppression suffit, sans PATCH.
+  const voulues = new Map<string, Record<string, unknown>>();
+  for (const a of appts) {
+    if (!PARC.includes(String(a.fields["Statut pipeline"] ?? ""))) continue;
+    const code = String(a.fields["Code appartement"] ?? "");
+    const creneaux = parAppart.get(a.id) ?? [];
+    const fenetres = creneaux.length
+      ? fenetresLibres(creneaux, aujourdhui)
+      : String(a.fields["Disponibilité"] ?? "") === "Disponible"
+        ? [{ debut: aujourdhui, fin: SANS_TERME, sansFin: true, nature: "Aucune donnée" }]
+        : [];
+    for (const f of fenetres) {
+      if (!f.sansFin && enJours(f.debut, f.fin) <= 0) continue;   // rotation le même jour
+      const cle = cleCreneau(code, f);
+      voulues.set(cle, {
+        "Créneau": cle,
+        "Code appartement": code,
+        "Appartement": String(a.fields["Nom / Référence"] ?? ""),
+        "Type": String(a.fields["Type"] ?? ""),
+        "Début": f.debut,
+        "Fin": f.fin,
+        "Sans fin": f.sansFin,
+        "Durée (jours)": f.sansFin ? null : enJours(f.debut, f.fin),
+        "Nature": f.nature,
+      });
+    }
+  }
+
+  const existantes = await lire(T_DISPONIBILITES, ["Créneau"]);
+  const parCle = new Map(existantes.map((r) => [String(r.fields["Créneau"] ?? ""), r.id]));
+  const aCreer = [...voulues.entries()].filter(([c]) => !parCle.has(c)).map(([, f]) => ({ fields: f }));
+  const aSupprimer = [...parCle.entries()].filter(([c]) => !voulues.has(c)).map(([, id]) => id);
+
+  for (let i = 0; i < aCreer.length; i += 10) {
+    await airtable("POST", T_DISPONIBILITES, { records: aCreer.slice(i, i + 10), typecast: true });
+  }
+  for (let i = 0; i < aSupprimer.length; i += 10) {
+    const q = aSupprimer.slice(i, i + 10).map((id) => `records[]=${id}`).join("&");
+    await airtable("DELETE", `${T_DISPONIBILITES}?${q}`);
+  }
+
+  return NextResponse.json({
+    ok: true, aujourdhui, misAJour: maj.length, compte,
+    creneaux: { total: voulues.size, crees: aCreer.length, supprimes: aSupprimer.length },
+  });
 }
