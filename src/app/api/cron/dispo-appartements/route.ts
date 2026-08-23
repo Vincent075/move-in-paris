@@ -223,7 +223,10 @@ export async function GET(request: Request) {
         // être lue, et elle est masquée dans l'interface.
         "Créneau": cle,
         "Code appartement": code,
-        "Appartement": String(a.fields["Nom / Référence"] ?? ""),
+        // « Appartement » est un champ de LIAISON vers Appartements : il attend un
+        // tableau d'identifiants d'enregistrement, pas un nom. Écrire une chaîne
+        // ici renvoie un 422 et le créneau n'est pas créé.
+        "Appartement": [a.id],
         "Adresse": String(a.fields["Adresse"] ?? ""),
         "Code postal": String(a.fields["Code postal"] ?? ""),
         "Ville": String(a.fields["Ville"] ?? ""),
