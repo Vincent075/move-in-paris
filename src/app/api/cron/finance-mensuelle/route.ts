@@ -368,11 +368,14 @@ export async function GET(request: Request) {
         loyers += montant;
         charges += chargesProrata;
 
-        // Les bornes sont exclusives côté fin : une résa du 01/09 au 01/10 fait 30 nuitées,
-        // qui vont du 01/09 au 30/09. D'où le retrait d'un jour à l'affichage.
+        // Décompte hôtelier : une nuit = un coucher. Le jour du départ n'est pas une nuit.
+        // Nuits = date de sortie − date d'entrée. Une résa du 01/09 au 01/10 fait donc 30 nuitées,
+        // celles du 01/09 au 30/09 inclus. D'où le retrait d'un jour à l'affichage et le mot
+        // « inclus » : sans lui, « du 01/07 au 31/07 (31 nuits) » se lit comme un départ le 31.
+        // Un locataire encore présent le 1er août a bien dormi 31 nuits en juillet.
         // Format voulu par Vincent, volontairement court : « du 01/09 au 30/09 (30 nuits) ».
         const bornes = fusionnes
-          .map(([deb, fin]) => `du ${jjmm(deb)} au ${jjmm(ajouteJours(fin, -1))}`)
+          .map(([deb, fin]) => `du ${jjmm(deb)} au ${jjmm(ajouteJours(fin, -1))} inclus`)
           .join(" et ");
         const periode = `${bornes} (${nuits} ${nuits > 1 ? "nuits" : "nuit"})`;
 
