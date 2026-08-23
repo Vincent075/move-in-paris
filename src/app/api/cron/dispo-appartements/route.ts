@@ -42,6 +42,9 @@ const AT_TOKEN = process.env.AIRTABLE_WATCHDOG_TOKEN || "";
 const T_APPARTEMENTS = "tbltFlpzQWXjoWg88";
 const T_RESERVATIONS = "tbl5uN32egP4YCvUi";
 const T_DISPONIBILITES = "tblQUgzOEXMnMoqhB";
+// Pages d'interface, pour reconstruire le lien « Fiche » vers l'appartement.
+const PAGE_FICHE_APPART = "pag6W9Iefur9cmNyi";
+const PAGE_APPARTS = "pagCE82m1lpdPFWkS";
 
 // Sentinelle interne « sans terme connu ». N'est jamais écrite dans Airtable.
 const SANS_TERME = "2099-12-31";
@@ -147,7 +150,7 @@ export async function GET(request: Request) {
   const aujourdhui = aujourdhuiParis();
   const appts = await lire(T_APPARTEMENTS, [
     "Code appartement", "Statut pipeline", "Disponibilité", "Libre à partir du", "Source dispo",
-    "Nom / Référence", "Type", "Code postal", "Ville", "Zone",
+    "Nom / Référence", "Type", "Code postal", "Ville", "Zone", "Adresse", "Surface m²",
   ]);
   const resas = await lire(T_RESERVATIONS, ["Statut", "Date d'entrée", "Date de sortie", "Appartement"]);
 
@@ -215,14 +218,22 @@ export async function GET(request: Request) {
       if (!f.sansFin && enJours(f.debut, f.fin) <= 0) continue;   // rotation le même jour
       const cle = cleCreneau(code, f);
       voulues.set(cle, {
+        // « Créneau » reste la clé de synchronisation : elle encode appartement + bornes,
+        // donc toute modification produit une clé différente. Elle n'est pas faite pour
+        // être lue, et elle est masquée dans l'interface.
         "Créneau": cle,
         "Code appartement": code,
         "Appartement": String(a.fields["Nom / Référence"] ?? ""),
+        "Adresse": String(a.fields["Adresse"] ?? ""),
+        "Code postal": String(a.fields["Code postal"] ?? ""),
+        "Ville": String(a.fields["Ville"] ?? ""),
+        "Surface m²": a.fields["Surface m²"] ?? null,
+        "Fiche": `https://airtable.com/${AT_BASE}/${PAGE_FICHE_APPART}/${a.id}?home=${PAGE_APPARTS}`,
         "Type": String(a.fields["Type"] ?? ""),
         "Typologie": String(a.fields["Type"] ?? ""),
         "Zone": zoneDe(a.fields["Code postal"], a.fields["Ville"]),
-        "Début": f.debut,
-        "Fin": f.fin,
+        "Libre à partir du": f.debut,
+        "Libre jusqu'au": f.fin,
         "Sans fin": f.sansFin,
         "Durée (jours)": f.sansFin ? null : enJours(f.debut, f.fin),
         "Nature": f.nature,
