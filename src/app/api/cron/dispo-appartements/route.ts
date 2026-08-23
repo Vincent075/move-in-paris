@@ -147,7 +147,7 @@ export async function GET(request: Request) {
   const aujourdhui = aujourdhuiParis();
   const appts = await lire(T_APPARTEMENTS, [
     "Code appartement", "Statut pipeline", "Disponibilité", "Libre à partir du", "Source dispo",
-    "Nom / Référence", "Type", "Code postal", "Ville",
+    "Nom / Référence", "Type", "Code postal", "Ville", "Zone",
   ]);
   const resas = await lire(T_RESERVATIONS, ["Statut", "Date d'entrée", "Date de sortie", "Appartement"]);
 
@@ -183,10 +183,15 @@ export async function GET(request: Request) {
       else { source = "Réservations"; compte.reservations++; }
     }
 
-    if (jour(a.fields["Libre à partir du"]) === (libre ?? "") &&
-        String(a.fields["Source dispo"] ?? "") === source) continue;
+    // « Zone » est une liste de choix, donc filtrable dans les interfaces, contrairement
+    // à une formule qu'Airtable refuse comme filtre. C'est pour ça qu'elle est écrite ici.
+    const zone = zoneDe(a.fields["Code postal"], a.fields["Ville"]);
 
-    maj.push({ id: a.id, fields: { "Libre à partir du": libre, "Source dispo": source } });
+    if (jour(a.fields["Libre à partir du"]) === (libre ?? "") &&
+        String(a.fields["Source dispo"] ?? "") === source &&
+        String(a.fields["Zone"] ?? "") === zone) continue;
+
+    maj.push({ id: a.id, fields: { "Libre à partir du": libre, "Source dispo": source, "Zone": zone } });
   }
 
   for (let i = 0; i < maj.length; i += 10) {
