@@ -44,8 +44,11 @@ type Check = {
 };
 
 const CHECKS: Check[] = [
-  // request@ : écart observé médian 3 h, max 45 h → on ne s'inquiète qu'au-delà de 72 h.
-  { nom: "Demandes entrantes · request@ (AUTO-00)", workflowId: "FrnZPqeYoZzG67MJ", silenceHours: 72 },
+  // request@ : canal d'entrée de TOUTES les demandes clients. Le 24/08/2026 le trigger IMAP est
+  // resté figé 69 h sans que personne ne le sache, seuil 72 h. Ramené à 24 h : le week-end sans
+  // trafic peut produire une fausse alerte, c'est assumé — savoir en 24 h que le canal est mort
+  // vaut mieux que trois jours de demandes perdues.
+  { nom: "Demandes entrantes · request@ (AUTO-00)", workflowId: "FrnZPqeYoZzG67MJ", silenceHours: 24 },
   // assistance@ : les locataires signalent quand ils ont un souci. Une semaine sans rien est plausible.
   { nom: "Interventions · assistance@ (AUTO-11)", workflowId: "gedYOrIn44VBTMUo", silenceHours: 168 },
   { nom: "Facturation quotidienne (AUTO-16)", workflowId: "wIprQ1tdkkXrMFNx", dailyByHourParis: 9 },
