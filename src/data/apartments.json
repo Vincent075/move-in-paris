@@ -9114,12 +9114,12 @@
       }
     ],
     "title_en": "1-Bedroom Apartment Bizet",
-    "description_en": "1-bedroom fully furnished and equipped apartment of approximately 35 sqm, renovated in April 2019. 3rd floor with elevator in a prestigious period building.\nLiving room with sofa bed, coffee table and flat-screen television.\nModern equipped kitchen in the entrance. Bedroom with a double bed and dressing room.\nEnsuite shower to the bedroom. Separate toilet. Very bright apartment close to all amenities. Small terrace with table and 2 outdoor chairs. Collective heating and hot water.\n",
+    "description_en": "1-bedroom fully furnished and equipped apartment of approximately 35 sqm, renovated in April 2019. 3rd floor with elevator in a prestigious historic building.\nLiving room with sofa bed, coffee table, and flat-screen Smart TV.\nModern fully equipped kitchen in the entrance. Bedroom with a double bed and dressing room.\nWalk-in shower adjoining the bedroom. Separate toilet. Very bright apartment close to all amenities. Small terrace with table and 2 outdoor chairs. Collective heating and hot water.\n",
     "floor_en": "3rd floor",
     "features_en": [
       "Elevator",
       "Vacuum cleaner",
-      "Balcony",
+      "Terrace",
       "Kettle",
       "Collective heating",
       "Equipped kitchen",
@@ -9130,7 +9130,7 @@
       "Oven",
       "Concierge",
       "Washer dryer",
-      "Linens provided",
+      "Household linens provided",
       "Double bed",
       "Microwave",
       "Parquet",
@@ -9142,7 +9142,8 @@
       "Toaster",
       "Separate toilet",
       "Wifi"
-    ]
+    ],
+    "hasElevator": true
   },
   {
     "slug": "3-chambres-quai-de-la-gare-paris-13e",
