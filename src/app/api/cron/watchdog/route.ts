@@ -80,13 +80,62 @@ function parisParts(d: Date) {
   return { date: `${p.year}-${p.month}-${p.day}`, hour: parseInt(p.hour, 10) };
 }
 
-type Exec = { startedAt: string; mode?: string; status?: string };
+type Exec = { id: string; workflowId?: string; startedAt: string; mode?: string; status?: string };
 type Rec = { id: string; fields: Record<string, unknown> };
 
 async function n8n(path: string) {
   const r = await fetch(`${N8N_URL}${path}`, { headers: { "X-N8N-API-KEY": N8N_KEY }, cache: "no-store" });
   if (!r.ok) throw new Error(`n8n HTTP ${r.status}`);
   return r.json();
+}
+
+// « 1 exécution en échec » ne dit pas SUR QUOI. Pour agir il faut le dossier, et
+// aller le chercher dans n8n à chaque alerte est exactement le frottement qui fait
+// qu'on finit par ne plus ouvrir les alertes. Le watchdog rouvre donc lui-même
+// l'exécution fautive et en extrait le code réservation / facture / demande.
+// Les codes MIP ont un format assez distinctif pour être trouvés par recherche
+// directe dans la trace, quelle que soit la forme des données du workflow — un
+// parcours structuré casserait au premier workflow qui range ses champs autrement.
+const CODES_MIP = /\b(?:RES|FAC|DEM|PRO|INT|AVO)-\d{4}-\d{3,4}\b/g;
+const MAX_EXECS_DETAILLEES = 3;
+
+const champ = (o: unknown, k: string): unknown =>
+  o && typeof o === "object" ? (o as Record<string, unknown>)[k] : undefined;
+
+async function detailExec(e: Exec): Promise<string> {
+  const quand = new Intl.DateTimeFormat("fr-FR", {
+    timeZone: "Europe/Paris", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit",
+  }).format(new Date(e.startedAt));
+  const lien = e.workflowId ? `${N8N_URL}/workflow/${e.workflowId}/executions/${e.id}` : "";
+  try {
+    const full = await n8n(`/api/v1/executions/${e.id}?includeData=true`);
+    const donnees = champ(full, "data");
+    const brut = JSON.stringify(typeof donnees === "string" ? JSON.parse(donnees) : donnees ?? full);
+
+    const codes = [...new Set(brut.match(CODES_MIP) || [])].slice(0, 3);
+    const noms = [...new Set(
+      [...brut.matchAll(/"Nom occupant":\s*\[?\s*"([^"]{2,60})"/g)].map((m) => m[1]),
+    )].slice(0, 2);
+
+    const resultData = champ(donnees, "resultData");
+    const node = String(
+      champ(resultData, "lastNodeExecuted") ??
+        /"lastNodeExecuted":\s*"([^"]+)"/.exec(brut)?.[1] ??
+        "n/a",
+    );
+    const msg = String(champ(champ(resultData, "error"), "message") ?? "")
+      .split("\n")[0]
+      .slice(0, 180);
+
+    const dossier = codes.length
+      ? `${codes.join(", ")}${noms.length ? ` (${noms.join(", ")})` : ""}`
+      : "dossier non identifié dans la trace";
+    return `• ${quand} · *${dossier}* — node « ${node} »${msg ? ` : ${msg}` : ""}${lien ? `\n  ${lien}` : ""}`;
+  } catch {
+    // L'alerte reste utile même si la trace est illisible : mieux vaut un lien nu
+    // qu'une alerte avalée par une exception de confort.
+    return `• ${quand} · dossier illisible (trace inaccessible)${lien ? `\n  ${lien}` : ""}`;
+  }
 }
 
 async function airtable(method: string, path: string, body?: unknown) {
@@ -244,7 +293,12 @@ export async function GET(request: Request) {
         const enErreur = depuisDernierSucces.filter((e) => e.status && !["success", "running", "waiting", "new"].includes(e.status));
         if (enErreur.length) {
           statut = "ALERTE";
-          detail = `${enErreur.length} exécution(s) en échec récemment (dernier statut : ${enErreur[0].status}).`;
+          const lignes = await Promise.all(enErreur.slice(0, MAX_EXECS_DETAILLEES).map(detailExec));
+          const reste = enErreur.length - lignes.length;
+          detail =
+            `${enErreur.length} exécution(s) en échec depuis le dernier succès ` +
+            `(dernier statut : ${enErreur[0].status}).\n${lignes.join("\n")}` +
+            (reste > 0 ? `\n…et ${reste} autre(s) plus ancienne(s).` : "");
         } else {
           // ── 2. Rythme attendu ─────────────────────────────────────────
           const triggers = execs.filter((e) => e.mode === "trigger");
