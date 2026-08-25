@@ -180,6 +180,70 @@ const libelle = (r: Rec) =>
 
 type Resultat = { nom: string; statut: string; detail: string };
 
+// ── Cohérence du ménage hebdomadaire ────────────────────────────────────────
+// Depuis le 25/08/2026, la case « Weekly cleaning inclus » de la réservation
+// commande le ménage régulier dans AUTO-12. Deux façons de se tromper restent
+// possibles, et aucune ne se voit à l'œil nu :
+//   A. case cochée mais l'appartement n'a pas de « Jour de ménage régulier » →
+//      on a vendu un ménage que la planification ne créera jamais. C'est le cas
+//      qu'on a trouvé à la main sur RES-2026-0144, et personne ne l'avait vu.
+//   B. case oubliée sur une location à venir dont l'appartement a bien un jour →
+//      le client perdra son ménage en silence. Vincent a choisi le défaut
+//      décoché en connaissance de cause ; ce rappel est la contrepartie.
+// Le rappel B ne sort que le JEUDI, veille du passage d'AUTO-12 le vendredi 8h :
+// c'est une revue avant planification, pas une alarme permanente. Une fois le
+// locataire entré, on considère le choix délibéré et on se tait.
+const AT_APPARTEMENTS = "tbltFlpzQWXjoWg88";
+const JOUR_REVUE_MENAGE = 4; // jeudi
+
+async function controlesMenageHebdo(paris: { date: string; hour: number }): Promise<Resultat[]> {
+  const apts = await airtableAll(AT_APPARTEMENTS, ["Jour de ménage régulier"]);
+  const jourDe = new Map(apts.map((a) => [a.id, String(a.fields["Jour de ménage régulier"] ?? "")]));
+  const resas = await airtableAll(AT_RESERVATIONS, [
+    "Code réservation", "Statut", "Nom occupant", "Appartement", "Weekly cleaning inclus", "Date d'entrée",
+  ]);
+  const actives = resas.filter((r) => STATUTS_RESA_ACTIVES.includes(String(r.fields["Statut"] ?? "")));
+  const jourResa = (r: Rec) => jourDe.get(String((r.fields["Appartement"] as string[] | undefined)?.[0] ?? "")) || "";
+  const cochee = (r: Rec) => r.fields["Weekly cleaning inclus"] === true;
+
+  const promis = actives.filter((r) => cochee(r) && !jourResa(r));
+  const oublis = actives.filter((r) => !cochee(r) && jourResa(r) && jour(r.fields["Date d'entrée"]) >= paris.date);
+
+  const a: Resultat = promis.length
+    ? {
+        nom: "Ménage vendu mais impossible à planifier",
+        statut: "ALERTE",
+        detail:
+          `${promis.length} réservation(s) avec « Weekly cleaning inclus » coché sur un appartement sans jour de ménage :\n` +
+          promis.map((r) => `• ${libelle(r)}`).join("\n") +
+          "\nAucun ménage régulier ne sera créé. Renseigner le jour de ménage sur l'appartement, ou décocher la case.",
+      }
+    : { nom: "Ménage vendu mais impossible à planifier", statut: "OK", detail: "Toutes les cases cochées portent sur un appartement avec un jour de ménage." };
+
+  // getUTCDay sur la date-calendrier de Paris, fixée à midi pour éviter tout
+  // glissement de fuseau : 4 = jeudi.
+  const jeudi = new Date(`${paris.date}T12:00:00Z`).getUTCDay() === JOUR_REVUE_MENAGE;
+  const b: Resultat = oublis.length && jeudi
+    ? {
+        nom: "Ménages à confirmer avant planification",
+        statut: "ALERTE",
+        detail:
+          `AUTO-12 planifie demain 8h. ${oublis.length} location(s) à venir n'auront PAS de ménage hebdomadaire ` +
+          `alors que leur appartement en propose un :\n` +
+          oublis.map((r) => `• ${libelle(r)} — entrée le ${jour(r.fields["Date d'entrée"])}, ménage le ${jourResa(r)}`).join("\n") +
+          "\nCocher « Weekly cleaning inclus » sur celles qui doivent en avoir.",
+      }
+    : {
+        nom: "Ménages à confirmer avant planification",
+        statut: "OK",
+        detail: oublis.length
+          ? `${oublis.length} location(s) à venir sans ménage hebdomadaire — revue envoyée le jeudi.`
+          : "Rien à confirmer.",
+      };
+
+  return [a, b];
+}
+
 // ── Reconnexion préventive des triggers IMAP ────────────────────────────────
 // OVH n'expose aucun push : la seule façon de lire request@ et assistance@ est
 // l'IMAP, et le nœud n8n perd sa connexion sans jamais le dire — trois gels en
@@ -483,6 +547,7 @@ export async function GET(request: Request) {
     for (const r of await controlesResultat(paris)) await rapporter(r.nom, r.statut, r.detail);
     const fac = await controleFacturesSansPennylane(now);
     await rapporter(fac.nom, fac.statut, fac.detail);
+    for (const r of await controlesMenageHebdo(paris)) await rapporter(r.nom, r.statut, r.detail);
   } catch (e) {
     await rapporter("Contrôles par le résultat", "ALERTE",
       `Impossible de lire Airtable : ${e instanceof Error ? e.message : e}`);
