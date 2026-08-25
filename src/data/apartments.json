@@ -9760,5 +9760,120 @@
       "Separate toilet",
       "Balcony"
     ]
+  },
+  {
+    "slug": "2-pieces-boileau-paris-16e",
+    "title": "2 Pièces Boileau",
+    "address": "Rue Boileau, Paris 16e",
+    "district": "Paris 16e",
+    "surface": 53,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "3e étage",
+    "status": "À louer",
+    "description": "2 pièce d’une surface d’environ 53 m2, en bon état\nAu 3eme étage avec ascenseur d’un immeuble ancien\nUn séjour avec canapé convertible, une table basse et\nun Tv écran plat.\nMange debout.\nUne cuisine toute équipée et aménagée\nÉquipement : lave-vaisselle, four, micro-onde, plaque\n, réfrigérateur…\nUne chambre avec un lit double, du rangement, une\nTv.\nSalle de bain avec douche et baignoire, lave-linge,\nsèche-linge et WC .\nChauffage collectif.",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Baignoire",
+      "Bouilloire",
+      "Cafetière",
+      "Congélateur",
+      "Chauffage collectif",
+      "Lave-linge",
+      "Sèche-linge",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Digicode",
+      "Draps fournis",
+      "Douche à l'italienne",
+      "Fer à repasser",
+      "Fibre optique",
+      "Four",
+      "Gardien",
+      "Interphone",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Parquet",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Serviettes fournies",
+      "Smart TV",
+      "Table à repasser",
+      "Toaster",
+      "Wifi"
+    ],
+    "photos": "2-pieces-boileau-paris-16e",
+    "images": [],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Michel-Ange - Molitor",
+        "distance": "3 min",
+        "lines": [
+          "10",
+          "9"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Exelmans",
+        "distance": "3 min",
+        "lines": [
+          "9"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "monop'",
+        "distance": "3 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Parc Sainte-Périne",
+        "distance": "6 min"
+      }
+    ],
+    "title_en": "1-Bedroom Apartment Boileau",
+    "description_en": "1-bedroom apartment of approximately 53 sqm, in good condition\nOn the 3rd floor with elevator in a historic building\nA living room with convertible sofa, coffee table and flat-screen TV.\nBreakfast bar.\nA fully equipped and fitted kitchen\nEquipment: dishwasher, oven, microwave, cooktop, refrigerator…\nA bedroom with a double bed, storage, and TV.\nBathroom with shower and bathtub, washing machine, dryer and WC.\nCollective heating.",
+    "floor_en": "3rd floor",
+    "features_en": [
+      "Elevator",
+      "Vacuum cleaner",
+      "Bathtub",
+      "Kettle",
+      "Coffee maker",
+      "Freezer",
+      "Collective heating",
+      "Washing machine",
+      "Dryer",
+      "Equipped kitchen",
+      "Double glazing",
+      "Keypad entry",
+      "Bed linens provided",
+      "Walk-in shower",
+      "Iron",
+      "Fiber optic internet",
+      "Oven",
+      "Concierge",
+      "Intercom",
+      "Dishwasher",
+      "Household linens provided",
+      "Queen-size bed",
+      "Nespresso machine",
+      "Microwave",
+      "Parquet",
+      "Cooktop",
+      "Refrigerator",
+      "Towels provided",
+      "Smart TV",
+      "Ironing board",
+      "Toaster",
+      "Wifi"
+    ]
   }
 ]
