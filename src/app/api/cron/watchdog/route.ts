@@ -81,7 +81,7 @@ function parisParts(d: Date) {
 }
 
 type Exec = { id: string; workflowId?: string; startedAt: string; mode?: string; status?: string };
-type Rec = { id: string; fields: Record<string, unknown> };
+type Rec = { id: string; createdTime?: string; fields: Record<string, unknown> };
 
 async function n8n(path: string) {
   const r = await fetch(`${N8N_URL}${path}`, { headers: { "X-N8N-API-KEY": N8N_KEY }, cache: "no-store" });
@@ -179,6 +179,69 @@ const libelle = (r: Rec) =>
   }`;
 
 type Resultat = { nom: string; statut: string; detail: string };
+
+// ── Contrôle : facture créée dans Airtable, absente de Pennylane ─────────────
+// Le lien Pennylane n'est écrit qu'à partir de la réponse de l'API : une facture
+// sans lien exploitable n'existe donc pas chez Pennylane. C'est exactement ce qui
+// s'est produit le 24/08 — jeton mort, AUTO-16 a créé les lignes Airtable, la
+// création Pennylane a échoué, et personne ne l'a su. La facturation et la
+// comptabilité ont divergé en silence pendant dix-neuf jours, et on ne l'a
+// découvert qu'en allant regarder. C'est le genre d'écart qui ne se voit jamais
+// tant qu'on ne le cherche pas : il doit donc venir à nous, pas l'inverse.
+// AUTO-16 crée la ligne en « À préparer » puis enchaîne sur la création Pennylane :
+// deux heures de grâce suffisent à ne pas alerter sur une facture en cours de route.
+const AT_FACTURES = "tblC97ei6ZPWhWUwe";
+const GRACE_FACTURE_H = 2;
+const MAX_FACTURES_LISTEES = 10;
+
+// Même lecture que celle d'AUTO-17 : invoice_id en premier, repli sur une longue
+// suite de chiffres en fin d'URL pour les liens restés à l'ancien format. Le seuil
+// de 7 chiffres écarte le « page=1 » qui traîne à la fin des liens récents.
+const idPennylane = (lien: string) =>
+  /invoice_id=(\d+)/.exec(lien)?.[1] ?? /(\d{7,})\D*$/.exec(lien)?.[1] ?? null;
+
+const liste = (v: unknown) =>
+  (Array.isArray(v) ? v : v == null ? [] : [v]).map(String).filter(Boolean).join(", ");
+
+async function controleFacturesSansPennylane(now: Date): Promise<Resultat> {
+  const nom = "Factures Airtable sans facture Pennylane";
+  const factures = await airtableAll(AT_FACTURES, [
+    "Numéro facture", "Statut", "Montant total HT", "Lien Pennylane",
+    "Code réservation (récap)", "Occupants",
+  ]);
+  const orphelines = factures.filter((r) => {
+    if (idPennylane(String(r.fields["Lien Pennylane"] ?? ""))) return false;
+    const cree = r.createdTime ? new Date(r.createdTime).getTime() : 0;
+    return cree > 0 && (now.getTime() - cree) / 3.6e6 >= GRACE_FACTURE_H;
+  });
+
+  if (!orphelines.length) {
+    return { nom, statut: "OK", detail: `Les ${factures.length} factures ont bien leur contrepartie Pennylane.` };
+  }
+
+  const lignes = orphelines
+    .sort((a, b) => String(b.createdTime).localeCompare(String(a.createdTime)))
+    .slice(0, MAX_FACTURES_LISTEES)
+    .map((r) => {
+      const f = r.fields;
+      const resa = liste(f["Code réservation (récap)"]) || "sans réservation";
+      const qui = liste(f["Occupants"]);
+      return `• *${f["Numéro facture"] ?? r.id}* — ${f["Montant total HT"] ?? "?"} € HT · ${resa}` +
+        `${qui ? ` (${qui})` : ""} · statut « ${f["Statut"] ?? "?"} » · créée le ${jour(r.createdTime)}`;
+    });
+  const reste = orphelines.length - lignes.length;
+
+  return {
+    nom,
+    statut: "ALERTE",
+    detail:
+      `${orphelines.length} facture(s) existent dans Airtable sans facture Pennylane :\n` +
+      lignes.join("\n") +
+      (reste > 0 ? `\n…et ${reste} autre(s).` : "") +
+      "\nElles n'ont donc jamais été émises côté comptabilité : à recréer, ou à supprimer si elles n'ont pas lieu d'être.",
+  };
+}
+
 
 // Renvoie les deux contrôles « le locataire a-t-il reçu son email ? ».
 // Aucune lecture n8n ici : uniquement l'état réel des données.
@@ -340,6 +403,8 @@ export async function GET(request: Request) {
   // Vincent des quatre contrôles n8n déjà écrits plus haut.
   try {
     for (const r of await controlesResultat(paris)) await rapporter(r.nom, r.statut, r.detail);
+    const fac = await controleFacturesSansPennylane(now);
+    await rapporter(fac.nom, fac.statut, fac.detail);
   } catch (e) {
     await rapporter("Contrôles par le résultat", "ALERTE",
       `Impossible de lire Airtable : ${e instanceof Error ? e.message : e}`);
