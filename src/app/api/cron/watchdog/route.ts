@@ -196,7 +196,7 @@ const IMAP_WORKFLOWS = [
   { nom: "assistance@ (AUTO-11)", id: "gedYOrIn44VBTMUo" },
 ];
 // À l'écart des crons de 7h, 8h et 9h, pour ne pas croiser une exécution en cours.
-const HEURES_RECONNEXION_PARIS = [4, 10, 12, 16, 22];
+const HEURES_RECONNEXION_PARIS = [4, 10, 16, 22];
 const N8N_WRITE_KEY = process.env.N8N_WATCHDOG_WRITE_KEY || "";
 
 async function n8nPost(path: string) {
