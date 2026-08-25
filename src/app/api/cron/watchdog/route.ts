@@ -234,7 +234,14 @@ export async function GET(request: Request) {
         statut = "ALERTE";
         detail = "Le workflow est DÉSACTIVÉ dans n8n : plus rien ne tourne.";
       } else {
-        const enErreur = execs.filter((e) => e.status && !["success", "running", "waiting", "new"].includes(e.status));
+        // On ne regarde que les échecs SURVENUS APRÈS le dernier succès. Sans ça, un échec
+        // isolé reste dans la fenêtre des 20 dernières exécutions et déclenche une alerte
+        // toutes les heures pendant des jours — AUTO-16 ne tourne qu'une fois par jour, son
+        // échec du 24/08 aurait crié pendant trois semaines alors qu'il était réglé le jour même.
+        // Un dispositif qui crie pour rien finit par ne plus être lu.
+        const iDernierSucces = execs.findIndex((e) => e.status === "success");
+        const depuisDernierSucces = iDernierSucces === -1 ? execs : execs.slice(0, iDernierSucces);
+        const enErreur = depuisDernierSucces.filter((e) => e.status && !["success", "running", "waiting", "new"].includes(e.status));
         if (enErreur.length) {
           statut = "ALERTE";
           detail = `${enErreur.length} exécution(s) en échec récemment (dernier statut : ${enErreur[0].status}).`;
