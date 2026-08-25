@@ -180,6 +180,71 @@ const libelle = (r: Rec) =>
 
 type Resultat = { nom: string; statut: string; detail: string };
 
+// ── Reconnexion préventive des triggers IMAP ────────────────────────────────
+// OVH n'expose aucun push : la seule façon de lire request@ et assistance@ est
+// l'IMAP, et le nœud n8n perd sa connexion sans jamais le dire — trois gels en
+// onze jours (69 h début août, puis à peine 21 h après le redémarrage du 24/08).
+// Surveiller ne suffit pas, parce que le silence d'une boîte est ambigu : sur
+// AUTO-00 l'écart médian entre deux réceptions est de 3 h et le maximum observé
+// de 45 h, donc aucun seuil ne sépare « personne n'écrit » de « la connexion est
+// morte » sans crier à tort. On renonce donc à détecter le gel et on le rend
+// improbable : la connexion est refaite toutes les six heures. Un email arrivé
+// pendant la reconnexion reste non lu et sera pris au passage suivant, rien ne
+// se perd.
+const IMAP_WORKFLOWS = [
+  { nom: "request@ (AUTO-00)", id: "FrnZPqeYoZzG67MJ" },
+  { nom: "assistance@ (AUTO-11)", id: "gedYOrIn44VBTMUo" },
+];
+// À l'écart des crons de 7h, 8h et 9h, pour ne pas croiser une exécution en cours.
+const HEURES_RECONNEXION_PARIS = [4, 10, 12, 16, 22];
+const N8N_WRITE_KEY = process.env.N8N_WATCHDOG_WRITE_KEY || "";
+
+async function n8nPost(path: string) {
+  const r = await fetch(`${N8N_URL}${path}`, {
+    method: "POST",
+    headers: { "X-N8N-API-KEY": N8N_WRITE_KEY, "Content-Type": "application/json" },
+    body: "{}",
+    cache: "no-store",
+  });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+
+async function reconnecterImap(heureParis: number): Promise<Resultat | null> {
+  if (!HEURES_RECONNEXION_PARIS.includes(heureParis)) return null;
+  const nom = "Reconnexion IMAP (request@ · assistance@)";
+  if (!N8N_WRITE_KEY) {
+    return { nom, statut: "ALERTE", detail: "N8N_WATCHDOG_WRITE_KEY absente : les connexions IMAP ne sont plus refaites." };
+  }
+
+  const faits: string[] = [];
+  const rates: string[] = [];
+  for (const w of IMAP_WORKFLOWS) {
+    try {
+      await n8nPost(`/api/v1/workflows/${w.id}/deactivate`);
+      // Le danger de la manœuvre est de laisser un workflow ÉTEINT : plus aucune
+      // demande ne rentrerait, et en silence. On réessaie donc la réactivation
+      // avant d'abandonner, et un échec complet devient une alerte immédiate.
+      let actif = false;
+      for (let essai = 0; essai < 3 && !actif; essai++) {
+        try {
+          const a = await n8nPost(`/api/v1/workflows/${w.id}/activate`);
+          actif = a?.active === true;
+        } catch { /* on retente */ }
+      }
+      if (actif) faits.push(w.nom);
+      else rates.push(`${w.nom} — RESTÉ ÉTEINT, à réactiver à la main immédiatement`);
+    } catch (e) {
+      rates.push(`${w.nom} : ${e instanceof Error ? e.message : e}`);
+    }
+  }
+
+  if (rates.length) {
+    return { nom, statut: "ALERTE", detail: `Reconnexion IMAP en échec :\n• ${rates.join("\n• ")}` };
+  }
+  return { nom, statut: "OK", detail: `Connexions refaites à ${heureParis}h : ${faits.join(", ")}.` };
+}
+
 // ── Contrôle : facture créée dans Airtable, absente de Pennylane ─────────────
 // Le lien Pennylane n'est écrit qu'à partir de la réponse de l'API : une facture
 // sans lien exploitable n'existe donc pas chez Pennylane. C'est exactement ce qui
@@ -408,6 +473,17 @@ export async function GET(request: Request) {
   } catch (e) {
     await rapporter("Contrôles par le résultat", "ALERTE",
       `Impossible de lire Airtable : ${e instanceof Error ? e.message : e}`);
+  }
+
+  // ── 4. Reconnexion préventive des boîtes mail ───────────────────────────
+  // Isolée elle aussi : si n8n refuse l'écriture, les contrôles précédents ont
+  // déjà été rapportés et ne doivent pas être perdus.
+  try {
+    const rec = await reconnecterImap(paris.hour);
+    if (rec) await rapporter(rec.nom, rec.statut, rec.detail);
+  } catch (e) {
+    await rapporter("Reconnexion IMAP (request@ · assistance@)", "ALERTE",
+      `Reconnexion impossible : ${e instanceof Error ? e.message : e}`);
   }
 
   return NextResponse.json({ ok: true, paris, results });
