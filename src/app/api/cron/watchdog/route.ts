@@ -219,8 +219,19 @@ async function reconnecterImap(heureParis: number): Promise<Resultat | null> {
 
   const faits: string[] = [];
   const rates: string[] = [];
+  const reportes: string[] = [];
   for (const w of IMAP_WORKFLOWS) {
     try {
+      // Ne jamais couper sous les pieds d'une exécution en cours. AUTO-00 appelle
+      // deux fois OpenAI et enchaîne une dizaine de recherches Airtable : traiter
+      // une demande peut prendre une minute, et l'interrompre laisserait une
+      // demande à moitié créée, sans notification Slack, sans que personne ne le
+      // sache. Si le workflow travaille, on le laisse finir — la prochaine fenêtre
+      // est dans six heures, et une connexion qui vient de servir n'est de toute
+      // façon pas celle qui est en train de mourir.
+      const enCours = (await n8n(`/api/v1/executions?workflowId=${w.id}&status=running&limit=1`))?.data || [];
+      if (enCours.length) { reportes.push(w.nom); continue; }
+
       await n8nPost(`/api/v1/workflows/${w.id}/deactivate`);
       // Le danger de la manœuvre est de laisser un workflow ÉTEINT : plus aucune
       // demande ne rentrerait, et en silence. On réessaie donc la réactivation
@@ -239,10 +250,12 @@ async function reconnecterImap(heureParis: number): Promise<Resultat | null> {
     }
   }
 
+  const report = reportes.length ? ` Reporté (exécution en cours) : ${reportes.join(", ")}.` : "";
   if (rates.length) {
-    return { nom, statut: "ALERTE", detail: `Reconnexion IMAP en échec :\n• ${rates.join("\n• ")}` };
+    return { nom, statut: "ALERTE", detail: `Reconnexion IMAP en échec :\n• ${rates.join("\n• ")}${report}` };
   }
-  return { nom, statut: "OK", detail: `Connexions refaites à ${heureParis}h : ${faits.join(", ")}.` };
+  const refaites = faits.length ? `Connexions refaites à ${heureParis}h : ${faits.join(", ")}.` : `Aucune connexion refaite à ${heureParis}h.`;
+  return { nom, statut: "OK", detail: `${refaites}${report}` };
 }
 
 // ── Contrôle : facture créée dans Airtable, absente de Pennylane ─────────────
