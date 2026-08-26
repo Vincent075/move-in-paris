@@ -9984,5 +9984,105 @@
       "Separate toilet",
       "Wifi"
     ]
+  },
+  {
+    "slug": "2-pieces-saint-pierre-paris-18e",
+    "title": "2 Pièces Saint Pierre",
+    "address": "Place Saint-Pierre, Paris 18e",
+    "district": "Paris 18e",
+    "surface": 47,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "2e étage",
+    "status": "À louer",
+    "description": "2 pièces d’une surface d’environ 47 m2, en très bon état\n\nAu 2eme étage avec ascenseur d’un immeuble ancien\n\nUn séjour avec canapé, une table basse et un Tv écran plat.\n\nUne salle à manger avec table et chaises.\nUne cuisine toute équipée et aménagée \nÉquipement : lave-vaisselle, four micro-onde, plaque, réfrigérateur, lave-linge séchant…\n\nUne chambre avec un lit double et du rangement.\nSalle d’eau avec douche et WC séparé. \n\nChauffage individuel électrique.\n",
+    "features": [
+      "Ascenseur",
+      "Aspirateur",
+      "Bouilloire",
+      "Cafetière",
+      "Chauffage électrique individuel",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Douche à l'italienne",
+      "Fer à repasser",
+      "Four",
+      "Lave-linge",
+      "Lit Queen size",
+      "Lave-vaisselle",
+      "Linge de maison fourni",
+      "Réfrigérateur",
+      "Table à repasser",
+      "Toaster",
+      "Toilettes séparées",
+      "Wifi",
+      "Micro-ondes",
+      "Machine Nespresso",
+      "Plaques de cuisson"
+    ],
+    "photos": "2-pieces-saint-pierre-paris-18e",
+    "images": [
+      "/apartments/2-pieces-saint-pierre-paris-18e/photo-1.jpg",
+      "/apartments/2-pieces-saint-pierre-paris-18e/photo-2.jpg",
+      "/apartments/2-pieces-saint-pierre-paris-18e/photo-3.jpg",
+      "/apartments/2-pieces-saint-pierre-paris-18e/photo-4.jpg",
+      "/apartments/2-pieces-saint-pierre-paris-18e/photo-5.jpg",
+      "/apartments/2-pieces-saint-pierre-paris-18e/photo-6.jpg",
+      "/apartments/2-pieces-saint-pierre-paris-18e/photo-7.jpg",
+      "/apartments/2-pieces-saint-pierre-paris-18e/photo-8.jpg",
+      "/apartments/2-pieces-saint-pierre-paris-18e/photo-9.jpg",
+      "/apartments/2-pieces-saint-pierre-paris-18e/photo-10.jpg",
+      "/apartments/2-pieces-saint-pierre-paris-18e/photo-11.jpg",
+      "/apartments/2-pieces-saint-pierre-paris-18e/photo-12.jpg",
+      "/apartments/2-pieces-saint-pierre-paris-18e/photo-13.jpg",
+      "/apartments/2-pieces-saint-pierre-paris-18e/photo-14.jpg",
+      "/apartments/2-pieces-saint-pierre-paris-18e/photo-15.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Anvers",
+        "distance": "2 min",
+        "lines": [
+          "2"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Abbesses",
+        "distance": "4 min",
+        "lines": [
+          "12"
+        ]
+      }
+    ],
+    "title_en": "1-Bedroom Apartment Saint Pierre",
+    "description_en": "1-bedroom apartment of approximately 47 sqm, in excellent condition\n\nOn the 2nd floor with elevator in a historic building\n\nA living room with sofa, coffee table and flat-screen TV.\n\nA dining room with table and chairs.\nA fully equipped and fitted kitchen\nEquipment: dishwasher, microwave, cooktop, refrigerator, washing machine with dryer function…\n\nOne bedroom with a double bed and storage.\nBathroom with walk-in shower and separate WC.\n\nIndividual electric heating.",
+    "floor_en": "2nd floor",
+    "features_en": [
+      "Elevator",
+      "Vacuum cleaner",
+      "Kettle",
+      "Coffee maker",
+      "Individual electric heating",
+      "Equipped kitchen",
+      "Double glazing",
+      "Walk-in shower",
+      "Iron",
+      "Oven",
+      "Washing machine",
+      "Queen size bed",
+      "Dishwasher",
+      "Household linens provided",
+      "Refrigerator",
+      "Ironing board",
+      "Toaster",
+      "Separate toilet",
+      "Wifi",
+      "Microwave",
+      "Nespresso machine",
+      "Cooktop"
+    ]
   }
 ]
