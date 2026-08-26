@@ -9875,5 +9875,114 @@
       "Toaster",
       "Wifi"
     ]
+  },
+  {
+    "slug": "grand-2-pieces-lille-paris-7e",
+    "title": "Grand 2 Pièces Lille",
+    "address": "Rue de Lille, Paris 7e",
+    "district": "Paris 7e",
+    "surface": 65,
+    "rooms": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "floor": "3e étage",
+    "status": "À louer",
+    "description": "Appartement 2 Pièces d'environ 65m2 au 3eme étage sans ascenseur d'un immeuble ancien.\nUn séjour avec canapé lit , une table basse et une Tv.\nUne cuisine ouverte  tout équipée et amenagée.\nEquipement : four micro onde, plaque de cuisson, réfrigerateur ...\nUne chambre avec un lit double et du rangement.\nUne salle de bain avec baignoire et Wc séparé\nUne terrasse lumineuse \nchauffage individuel",
+    "features": [
+      "Aspirateur",
+      "Baignoire",
+      "Bouilloire",
+      "Cafetière",
+      "Canapé convertible",
+      "Chauffage électrique individuel",
+      "Cuisine équipée",
+      "Double vitrage",
+      "Fer à repasser",
+      "Four",
+      "Lave-linge séchant",
+      "Lit Queen size",
+      "Machine Nespresso",
+      "Micro-ondes",
+      "Plaques de cuisson",
+      "Réfrigérateur",
+      "Smart TV",
+      "Serviettes fournies",
+      "Table à repasser",
+      "Terrasse",
+      "Toaster",
+      "Toilettes séparées",
+      "Wifi"
+    ],
+    "photos": "grand-2-pieces-lille-paris-7e",
+    "images": [
+      "/apartments/grand-2-pieces-lille-paris-7e/photo-1.jpg",
+      "/apartments/grand-2-pieces-lille-paris-7e/photo-2.jpg",
+      "/apartments/grand-2-pieces-lille-paris-7e/photo-3.jpg",
+      "/apartments/grand-2-pieces-lille-paris-7e/photo-4.jpg",
+      "/apartments/grand-2-pieces-lille-paris-7e/photo-5.jpg",
+      "/apartments/grand-2-pieces-lille-paris-7e/photo-6.jpg",
+      "/apartments/grand-2-pieces-lille-paris-7e/photo-7.jpg",
+      "/apartments/grand-2-pieces-lille-paris-7e/photo-8.jpg",
+      "/apartments/grand-2-pieces-lille-paris-7e/photo-9.jpg",
+      "/apartments/grand-2-pieces-lille-paris-7e/photo-10.jpg",
+      "/apartments/grand-2-pieces-lille-paris-7e/photo-11.jpg",
+      "/apartments/grand-2-pieces-lille-paris-7e/photo-12.jpg"
+    ],
+    "nearby": [
+      {
+        "type": "Métro",
+        "name": "Solférino",
+        "distance": "6 min",
+        "lines": [
+          "12"
+        ]
+      },
+      {
+        "type": "Métro",
+        "name": "Rue du Bac",
+        "distance": "6 min",
+        "lines": [
+          "12"
+        ]
+      },
+      {
+        "type": "Commerce",
+        "name": "Naturalia",
+        "distance": "6 min"
+      },
+      {
+        "type": "Parc",
+        "name": "Square Tarass-Chevtchenko",
+        "distance": "5 min"
+      }
+    ],
+    "title_en": "1-Bedroom Apartment Lille",
+    "description_en": "1-bedroom apartment of approximately 65 sqm on the 3rd floor without elevator in an old building.\nA living room with sofa bed, coffee table and Smart TV.\nAn open equipped and fitted kitchen.\nEquipment: microwave, cooktop, refrigerator...\nOne bedroom with a double bed and storage.\nA bathroom with bathtub and separate toilet.\nA bright terrace.\nIndividual electric heating.",
+    "floor_en": "3rd floor",
+    "features_en": [
+      "Vacuum cleaner",
+      "Bathtub",
+      "Kettle",
+      "Coffee maker",
+      "Sofa bed",
+      "Individual electric heating",
+      "Equipped kitchen",
+      "Double glazing",
+      "Iron",
+      "Oven",
+      "Washing machine dryer",
+      "Queen size bed",
+      "Nespresso machine",
+      "Microwave",
+      "Cooktop",
+      "Refrigerator",
+      "Smart TV",
+      "Towels provided",
+      "Ironing board",
+      "Terrace",
+      "Toaster",
+      "Separate toilet",
+      "Wifi"
+    ]
   }
 ]
