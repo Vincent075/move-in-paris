@@ -306,6 +306,47 @@ async function controlesMenageHebdo(paris: { date: string; hour: number }): Prom
   return [a, b];
 }
 
+// ── Webhooks Airtable du temps réel ─────────────────────────────────────────
+// Depuis le 29/08/2026, six webhooks Airtable pingent /api/airtable-webhook à la
+// seconde où Factures, Loyers, Interventions, Charges, Réservations ou
+// Appartements changent — c'est le « temps réel » exigé par Vincent. Airtable
+// les fait EXPIRER au bout de 7 jours : sans rafraîchissement, le temps réel
+// meurt en silence un vendredi et personne ne s'en aperçoit avant le cron filet.
+// Chaque passage horaire prolonge donc leur bail, et crie s'il en manque un.
+// Le jeton du watchdog n'a pas le scope webhook : on utilise celui qui les a
+// créés (AIRTABLE_WEBHOOK_PAT = claude-lecture-mip).
+const WEBHOOK_PAT = process.env.AIRTABLE_WEBHOOK_PAT || "";
+const WEBHOOKS_ATTENDUS = 6;
+
+async function controleWebhooksTempsReel(): Promise<Resultat> {
+  const nom = "Webhooks temps réel Airtable";
+  if (!WEBHOOK_PAT) {
+    return { nom, statut: "ALERTE", detail: "AIRTABLE_WEBHOOK_PAT absent : les webhooks ne sont plus rafraîchis et mourront sous 7 jours." };
+  }
+  const H = { Authorization: `Bearer ${WEBHOOK_PAT}`, "Content-Type": "application/json" };
+  const r = await fetch(`https://api.airtable.com/v0/bases/${AT_BASE}/webhooks`, { headers: H, cache: "no-store" });
+  if (!r.ok) {
+    return { nom, statut: "ALERTE", detail: `Liste des webhooks illisible (HTTP ${r.status}) : temps réel non vérifiable.` };
+  }
+  const liste = ((await r.json()).webhooks as { id: string; isHookEnabled?: boolean }[]) ?? [];
+  let rafraichis = 0;
+  for (const w of liste) {
+    const rf = await fetch(`https://api.airtable.com/v0/bases/${AT_BASE}/webhooks/${w.id}/refresh`, {
+      method: "POST", headers: H, cache: "no-store",
+    });
+    if (rf.ok) rafraichis++;
+  }
+  const inactifs = liste.filter((w) => w.isHookEnabled === false).length;
+  if (liste.length < WEBHOOKS_ATTENDUS || inactifs) {
+    return {
+      nom, statut: "ALERTE",
+      detail: `${liste.length}/${WEBHOOKS_ATTENDUS} webhook(s) présents${inactifs ? `, ${inactifs} désactivé(s)` : ""} — ` +
+        "le temps réel est partiellement mort : relancer creer_webhooks.py puis mettre à jour AIRTABLE_WEBHOOK_CONF.",
+    };
+  }
+  return { nom, statut: "OK", detail: `${liste.length} webhooks actifs, bail prolongé (${rafraichis} rafraîchis).` };
+}
+
 // ── Reconnexion préventive des triggers IMAP ────────────────────────────────
 // OVH n'expose aucun push : la seule façon de lire request@ et assistance@ est
 // l'IMAP, et le nœud n8n perd sa connexion sans jamais le dire — trois gels en
@@ -612,6 +653,8 @@ export async function GET(request: Request) {
     for (const r of await controlesMenageHebdo(paris)) await rapporter(r.nom, r.statut, r.detail);
     const dbl = await controleNuitsDoubles();
     await rapporter(dbl.nom, dbl.statut, dbl.detail);
+    const wh = await controleWebhooksTempsReel();
+    await rapporter(wh.nom, wh.statut, wh.detail);
   } catch (e) {
     await rapporter("Contrôles par le résultat", "ALERTE",
       `Impossible de lire Airtable : ${e instanceof Error ? e.message : e}`);
