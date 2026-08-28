@@ -11,7 +11,9 @@ const AT_BASE = process.env.AIRTABLE_BASE_ID || "";
 const AT_TOKEN = process.env.AIRTABLE_WATCHDOG_TOKEN || "";
 const AT_LEADS = "tblUxEm8sB4eHyNG1";
 const SLACK_TOKEN = process.env.SLACK_BOT_TOKEN_MIP || "";
-const SLACK_CHANNEL = "C0BC1NZGWRM";
+// #leads — le canal de l'équipe commerciale. Posté un temps dans #automatisations_failures,
+// que les employés ne voient pas : les relances n'atteignaient personne (corrigé le 28/08/2026).
+const SLACK_CHANNEL = "C0BLK75UCAG";
 
 const RELANCE_JOURS = 3; // délai commercial : on relance un lead 3 jours après le 1er contact
 
