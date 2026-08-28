@@ -25,8 +25,15 @@ import { NextResponse } from "next/server";
 // réservations se chevauchent sur le même appartement, les intervalles sont FUSIONNÉS avant calcul,
 // pour ne jamais payer deux fois la même nuit.
 //
-// CE QUE LE CRON NE TOUCHE JAMAIS : « Statut » et « Date de paiement » sur les lignes de loyers.
-// Ces deux champs appartiennent à Vincent ; tout le reste est recalculé et écrasé à chaque passage.
+// STATUT ET DATE DE PAIEMENT (règles revues le 28/08/2026, GO Vincent — « bloc A ») :
+// « Statut » appartient à Vincent, avec trois automatismes précis et rien d'autre :
+//   1. « En attente » devient « À payer » quand le mois arrive (bascule historique) ;
+//   2. un mois PASSÉ non payé devient « Rattrapage » et remonte dans le lot en cours
+//      via « Mois de règlement » — le champ « Mois », vérité comptable, ne bouge jamais ;
+//   3. quand Vincent passe une ligne à « Payé », la « Date de paiement » se remplit au
+//      premier passage du cron (heure suivante) si elle est vide, puis n'est plus jamais
+//      touchée, et « Mois de règlement » se fige sur le mois du paiement.
+// « Payé » lui-même n'est JAMAIS écrit par le cron.
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -94,6 +101,45 @@ const texte = (v: unknown): string => {
 };
 const liens = (v: unknown): string[] => (Array.isArray(v) ? (v as string[]) : []);
 const arrondi = (n: number, d = 2) => Math.round(n * 10 ** d) / 10 ** d;
+
+// Date calendaire de Paris : un virement se date au jour de Vincent, jamais en UTC.
+// Seule limite assumée : un statut passé à « Payé » entre 23h31 et minuit sera daté
+// du lendemain par le passage suivant du cron.
+const aujourdhuiParis = (): string => {
+  const p = new Intl.DateTimeFormat("fr-FR", {
+    timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit",
+  }).formatToParts(new Date());
+  const g = Object.fromEntries(p.map((x) => [x.type, x.value]));
+  return `${g.year}-${g.month}-${g.day}`;
+};
+const heureParis = (): number =>
+  parseInt(new Intl.DateTimeFormat("fr-FR", { timeZone: "Europe/Paris", hour: "2-digit", hour12: false })
+    .format(new Date()), 10);
+
+// ── Écritures sélectives (28/08/2026) ────────────────────────────────────────
+// Le cron passe désormais toutes les heures : réécrire les ~160 lignes de loyers
+// et les 5 mois à chaque passage multiplierait par 24 des écritures qui ne
+// changent rien, pollueraient l'historique de révision Airtable et rapprocheraient
+// du quota API. On ne PATCHe une ligne que si un champ UTILE a changé —
+// « Dernier calcul » n'est pas un champ utile, c'est un horodatage : il ne
+// justifie jamais une écriture à lui seul.
+const memeValeur = (a: unknown, b: unknown): boolean => {
+  const vide = (x: unknown) =>
+    x === null || x === undefined || x === "" || x === false || (Array.isArray(x) && x.length === 0);
+  if (vide(a) && vide(b)) return true;
+  if (Array.isArray(a) || Array.isArray(b)) return JSON.stringify(a ?? []) === JSON.stringify(b ?? []);
+  if (typeof a === "number" || typeof b === "number") return Math.abs(Number(a ?? 0) - Number(b ?? 0)) < 0.005;
+  return String(a) === String(b);
+};
+const champsChangent = (
+  exist: Record<string, unknown>, fields: Record<string, unknown>, ignorer: string[] = ["Dernier calcul"],
+): boolean => {
+  for (const k of Object.keys(fields)) {
+    if (ignorer.includes(k)) continue;
+    if (!memeValeur(exist[k], fields[k])) return true;
+  }
+  return false;
+};
 
 async function slack(text: string, canal: string = SLACK_CHANNEL) {
   if (!SLACK_TOKEN) return;
@@ -634,6 +680,29 @@ export async function GET(request: Request) {
             basculees.push(ref);
           }
           const paye = statutActuel === "Payé";
+
+          // ── Rattrapages et date de paiement (28/08/2026) ──────────────────
+          // Deux notions que la table confondait :
+          //   « Mois » = le mois CONCERNÉ, vérité comptable, ne bouge jamais ;
+          //   « Mois de règlement » = le LOT dans lequel la ligne se paie.
+          // Règles de Vincent : une ligne payée reste figée dans le mois de son
+          // paiement ; une ligne d'un mois passé non payée remonte dans le lot
+          // en cours, marquée « Rattrapage » ; les autres restent sur leur mois.
+          const moisPasse = l.a < moisCourant.a || (l.a === moisCourant.a && l.m < moisCourant.m);
+          if (paye) {
+            // Date de paiement automatique : posée au premier passage qui voit le
+            // statut « Payé » sans date, puis plus jamais touchée. Le mois de
+            // règlement se fige sur le mois de cette date.
+            const datePaiement = texte(existant.fields["Date de paiement"]) || aujourdhuiParis();
+            if (!texte(existant.fields["Date de paiement"])) fields["Date de paiement"] = datePaiement;
+            fields["Mois de règlement"] = texte(existant.fields["Mois de règlement"]) || datePaiement.slice(0, 7);
+          } else if (moisPasse) {
+            fields["Mois de règlement"] = cle(moisCourant.a, moisCourant.m);
+            if (statutActuel !== "Rattrapage") fields["Statut"] = "Rattrapage";
+          } else {
+            fields["Mois de règlement"] = l.k;
+          }
+
           if (paye) {
             // Photographie du montant au moment du paiement. Si le montant bouge ensuite
             // (séjour prolongé, avenant), l'écart devient visible au lieu d'être perdu.
@@ -649,7 +718,10 @@ export async function GET(request: Request) {
             fields["À régler"] = !futur;
             cumule(l.k, 0, total);
           }
-          majLoyers.push({ id: existant.id, ref, mois: l.k, fields });
+          // Écriture sélective : si rien d'utile n'a changé, on ne touche pas la ligne.
+          if (champsChangent(existant.fields, fields)) {
+            majLoyers.push({ id: existant.id, ref, mois: l.k, fields });
+          }
         } else {
           // Ligne qui naît alors que son mois a déjà commencé : réservation saisie en cours
           // de route. Elle se paiera avec le lot suivant, d'où le marqueur « Rattrapage ».
@@ -660,7 +732,10 @@ export async function GET(request: Request) {
             mois: l.k,
             fields: {
               ...fields,
-              Statut: futur ? "En attente" : "À payer",
+              // Un mois passé naît directement en « Rattrapage » : il se paiera
+              // avec le lot en cours, jamais en remontant dans les mois clos.
+              Statut: futur ? "En attente" : passe ? "Rattrapage" : "À payer",
+              "Mois de règlement": passe ? cle(moisCourant.a, moisCourant.m) : l.k,
               "À régler": !futur,
               Rattrapage: passe || enCours,
             },
@@ -709,7 +784,10 @@ export async function GET(request: Request) {
       );
     }
 
-    if (orphelinesPayees.length) {
+    // Le cron passe toutes les heures : cette anomalie persiste tant qu'un humain
+    // n'a pas tranché, donc on ne la crie qu'une fois par jour, au passage de 8h,
+    // au lieu de 24 fois. Un rappel quotidien suffit à ne pas l'oublier.
+    if (orphelinesPayees.length && heureParis() === 8) {
       await slack(
         `:warning: *Finance mensuelle — ${orphelinesPayees.length} loyer(s) déjà payé(s) sans réservation en face*\n` +
           orphelinesPayees.map((r) => `• ${texte(r.fields["Référence"])} — ${nombre(r.fields["Total à virer"]).toLocaleString("fr-FR")} €`).join("\n") +
@@ -853,7 +931,9 @@ export async function GET(request: Request) {
       const existant = financeParCle.get(l.k);
       if (existant) {
         idParMois.set(l.k, existant.id);
-        aMettreAJour.push({ id: existant.id, fields });
+        if (champsChangent(existant.fields, fields)) {
+          aMettreAJour.push({ id: existant.id, fields });
+        }
       } else {
         aCreer.push({ fields });
       }
@@ -1003,7 +1083,7 @@ export async function GET(request: Request) {
         // Une année reprise d'une liasse fiscale est de la donnée comptable certifiée :
         // le calcul ne doit jamais l'écraser.
         if (texte(existant.fields["Source"]) === "Saisi depuis la liasse fiscale") continue;
-        majAns.push({ id: existant.id, fields });
+        if (champsChangent(existant.fields, fields)) majAns.push({ id: existant.id, fields });
       } else {
         creerAns.push({ fields: { ...fields, Source: "Calculé depuis Airtable" } });
       }
