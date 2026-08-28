@@ -180,6 +180,68 @@ const libelle = (r: Rec) =>
 
 type Resultat = { nom: string; statut: string; detail: string };
 
+// ── Nuits facturées plusieurs fois ──────────────────────────────────────────
+// Le 28/08/2026, le batch a réémis 12 périodes déjà facturées (36 958 € HT) :
+// AUTO-04A enchaîne ses échéances au 30/09 quand le batch part du 01/10, et le
+// verrou anti-doublon ne comparait que la date de début — un jour d'écart le
+// rendait aveugle. Les trois créateurs de factures ont depuis un rognage nuit
+// par nuit, mais un verrou qui a déjà été aveugle une fois ne mérite plus une
+// confiance sans contrôle : ce filet rebalaye toutes les factures chaque heure
+// et crie tant qu'une nuit est portée par deux factures vivantes. Une facture
+// annulée par avoir (lien « From field: Avoir associé ») ne compte pas.
+async function controleNuitsDoubles(): Promise<Resultat> {
+  const nom = "Nuits facturées plusieurs fois";
+  const factures = await airtableAll(AT_FACTURES, [
+    "Numéro facture", "Catégorie", "Statut", "Type",
+    "Période facturée début", "Période facturée fin",
+    "Réservation liée", "From field: Avoir associé",
+  ]);
+  const resas = await airtableAll(AT_RESERVATIONS, ["Code réservation", "Nom occupant"]);
+  const nomResa = new Map(resas.map((r) => [r.id, libelle(r)]));
+
+  const parResa = new Map<string, { nuit: string; num: string }[]>();
+  for (const f of factures) {
+    const g = f.fields;
+    if (String(g["Catégorie"] ?? "") !== "Loyer") continue;
+    if (String(g["Statut"] ?? "") === "Avoir" || String(g["Type"] ?? "") === "Avoir") continue;
+    if ((g["From field: Avoir associé"] as string[] | undefined)?.length) continue;
+    const a = jour(g["Période facturée début"]);
+    const b = jour(g["Période facturée fin"]);
+    if (!a || !b) continue;
+    for (const rid of (g["Réservation liée"] as string[] | undefined) ?? []) {
+      const liste = parResa.get(rid) ?? [];
+      // fin exclusive : la nuit du départ appartient à l'échéance suivante
+      for (let d = new Date(`${a}T00:00:00Z`); d < new Date(`${b}T00:00:00Z`); d = new Date(d.getTime() + 864e5)) {
+        liste.push({ nuit: d.toISOString().slice(0, 10), num: String(g["Numéro facture"] ?? f.id) });
+      }
+      parResa.set(rid, liste);
+    }
+  }
+
+  const lignes: string[] = [];
+  for (const [rid, nuits] of parResa) {
+    const parNuit = new Map<string, Set<string>>();
+    for (const { nuit, num } of nuits) {
+      parNuit.set(nuit, (parNuit.get(nuit) ?? new Set()).add(num));
+    }
+    const doubles = [...parNuit.entries()].filter(([, nums]) => nums.size > 1);
+    if (!doubles.length) continue;
+    const facs = [...new Set(doubles.flatMap(([, nums]) => [...nums]))].sort().join(" / ");
+    lignes.push(`• ${nomResa.get(rid) ?? rid} — ${doubles.length} nuit(s) en double : ${facs}`);
+  }
+
+  if (!lignes.length) {
+    return { nom, statut: "OK", detail: "Chaque nuit de loyer n'est portée que par une seule facture vivante." };
+  }
+  return {
+    nom,
+    statut: "ALERTE",
+    detail:
+      `${lignes.length} réservation(s) avec des nuits facturées plusieurs fois :\n${lignes.join("\n")}` +
+      "\nSupprimer le brouillon en double (ou générer un avoir si la facture est émise) avant que le client ne paie deux fois.",
+  };
+}
+
 // ── Cohérence du ménage hebdomadaire ────────────────────────────────────────
 // Depuis le 25/08/2026, la case « Weekly cleaning inclus » de la réservation
 // commande le ménage régulier dans AUTO-12. Deux façons de se tromper restent
@@ -548,6 +610,8 @@ export async function GET(request: Request) {
     const fac = await controleFacturesSansPennylane(now);
     await rapporter(fac.nom, fac.statut, fac.detail);
     for (const r of await controlesMenageHebdo(paris)) await rapporter(r.nom, r.statut, r.detail);
+    const dbl = await controleNuitsDoubles();
+    await rapporter(dbl.nom, dbl.statut, dbl.detail);
   } catch (e) {
     await rapporter("Contrôles par le résultat", "ALERTE",
       `Impossible de lire Airtable : ${e instanceof Error ? e.message : e}`);
