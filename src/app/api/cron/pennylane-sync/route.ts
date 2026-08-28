@@ -155,7 +155,9 @@ export async function GET(request: Request) {
       if (!id || connus.has(id)) continue;
       const label = texte(inv.label);
       if (texte(inv.status) === "draft" || inv.draft === true) { ignorees.brouillons++; continue; }
-      if (texte(inv.invoice_type) === "credit_note" || montant(inv.currency_amount ?? inv.amount) < 0) { ignorees.avoirs++; continue; }
+      // Sondé le 28/08 sur l'API réelle : un avoir se signale par status="credit_note",
+      // et son montant peut être POSITIF — le seul test du signe le laissait passer.
+      if (texte(inv.status) === "credit_note" || texte(inv.invoice_type) === "credit_note" || montant(inv.currency_amount ?? inv.amount) < 0) { ignorees.avoirs++; continue; }
       if (estInterne(label)) { ignorees.internes++; continue; }
       const cree = Date.parse(texte(inv.created_at) || texte(inv.date));
       if (Number.isFinite(cree) && Date.now() - cree < GRACE_MS) { ignorees.grace++; continue; }
@@ -198,7 +200,7 @@ export async function GET(request: Request) {
         const id = texte(inv.id);
         if (!id || connus.has(id)) return false;
         if (texte(inv.status) === "draft" || inv.draft === true) return false;
-        if (texte(inv.invoice_type) === "credit_note" || montant(inv.currency_amount ?? inv.amount) < 0) return false;
+        if (texte(inv.status) === "credit_note" || texte(inv.invoice_type) === "credit_note" || montant(inv.currency_amount ?? inv.amount) < 0) return false;
         return texte(inv.date) >= MISE_EN_SERVICE;
       });
       backlog = manquantes.length;
