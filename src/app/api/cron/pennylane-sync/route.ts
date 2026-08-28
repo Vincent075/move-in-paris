@@ -62,15 +62,18 @@ async function pennylane(path: string): Promise<Dict> {
   return r.json();
 }
 
-// La liste Pennylane est paginée ; on borne à 40 pages (4 000 factures) — très
-// au-dessus du réel, mais jamais de boucle infinie si l'API change de contrat.
+// Pagination par CURSEUR — sondée le 28/08 sur l'API réelle : `per_page` et `page`
+// sont ignorés (la liste rend 20 items quoi qu'il arrive), la taille se règle par
+// `limit` (100 max) et la suite se suit via `has_more`/`next_cursor`. Borne à 40
+// tours (4 000 factures) pour ne jamais boucler si le contrat change.
 async function listePennylane(params: string): Promise<Dict[]> {
   const out: Dict[] = [];
-  for (let page = 1; page <= 40; page++) {
-    const d = await pennylane(`/customer_invoices?per_page=100&page=${page}${params}`);
-    const items = (d.items as Dict[]) ?? [];
-    out.push(...items);
-    if (items.length < 100) break;
+  let cursor = "";
+  for (let i = 0; i < 40; i++) {
+    const d = await pennylane(`/customer_invoices?limit=100${params}${cursor ? `&cursor=${encodeURIComponent(cursor)}` : ""}`);
+    out.push(...(((d.items as Dict[]) ?? [])));
+    if (d.has_more !== true || !d.next_cursor) break;
+    cursor = texte(d.next_cursor);
   }
   return out;
 }
