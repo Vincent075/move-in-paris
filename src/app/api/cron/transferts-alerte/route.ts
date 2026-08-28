@@ -21,7 +21,8 @@ const AT_BASE = process.env.AIRTABLE_BASE_ID || "";
 const AT_TOKEN = process.env.AIRTABLE_WATCHDOG_TOKEN || "";
 const AT_TRANSFERTS = "tbl6rACvIe41eKXCt";
 const SLACK_TOKEN = process.env.SLACK_BOT_TOKEN_MIP || "";
-const SLACK_CHANNEL = "C0BC1NZGWRM";
+// #transferts — l'équipe y suit les transferts. Même correction que leads-relance (28/08/2026).
+const SLACK_CHANNEL = "C0BCK2WKXGR";
 
 const SEUIL_JOURS = 4;
 const STATUTS_OK = ["Planifié", "Terminé"]; // confirmation partie à l'occupant
