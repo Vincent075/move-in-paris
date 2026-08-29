@@ -81,10 +81,16 @@ const CHAMPS_CHARGES = [
 // contractuel — les baux longs sont résiliables avec un mois de préavis.
 const MOIS_APRES = 3;
 
-// Mise en service de la facturation dans Airtable. Avant cette date, seuls les baux longs
-// ont été saisis : le CA de ces mois-là est réel mais très incomplet, et il ne faut surtout
-// pas le lire comme une performance. D'où le marqueur « Historique incomplet ».
-const MISE_EN_SERVICE = "2026-07";
+// Premier mois calculé. C'était « 2026-07 », la mise en service de la facturation dans
+// Airtable : avant, seuls les baux longs y étaient saisis, et lire ces mois-là comme une
+// performance n'aurait eu aucun sens.
+//
+// Ramené à janvier le 29/08/2026 : les 488 factures du fichier FACTURATION 2026, émises
+// hors plateforme de janvier à septembre, ont été importées. L'année est donc complète,
+// et la borne de juillet amputait le CA des six premiers mois — la table n'affichait que
+// 5 mois couverts. Ne pas remonter au-delà de janvier 2026 : 2025 relève d'un exercice
+// clos, dont les factures ont été volontairement sorties d'Airtable.
+const MISE_EN_SERVICE = "2026-01";
 
 const NOMS_MOIS = [
   "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
