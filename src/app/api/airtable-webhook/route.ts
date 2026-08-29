@@ -34,6 +34,8 @@ const CONF: Record<string, { secret: string; table: string; nom: string }> =
   JSON.parse(process.env.AIRTABLE_WEBHOOK_CONF || "{}");
 const T_MONITORING = "tblDEkjIyKoKJG5Yj";
 const TABLES_DISPO = new Set(["tbl5uN32egP4YCvUi", "tbltFlpzQWXjoWg88"]);
+// Ménages et Check-in : suivi terrain, aucun impact financier.
+const TABLES_TERRAIN = new Set(["tblVE8HEtnuTeCi8r", "tbl8SktZKbyopdQ7l"]);
 
 type Dict = Record<string, unknown>;
 
@@ -105,7 +107,12 @@ export async function POST(request: Request) {
       });
     } catch { /* le filet horaire repassera */ }
   };
-  const travaux = [lance("/api/cron/finance-mensuelle")];
+  // Chaque table réveille ce qui la concerne, et rien d'autre : les tables terrain
+  // (ménages, check-ins) n'ont aucun effet sur la finance, les relancer serait du
+  // travail pur perte et des écritures en cascade pour rien.
+  const travaux = TABLES_TERRAIN.has(conf.table)
+    ? [lance("/api/cron/terrain-notifs")]
+    : [lance("/api/cron/finance-mensuelle")];
   if (TABLES_DISPO.has(conf.table)) travaux.push(lance("/api/cron/dispo-appartements"));
   await Promise.all(travaux);
 
