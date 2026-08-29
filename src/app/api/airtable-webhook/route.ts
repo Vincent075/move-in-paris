@@ -113,12 +113,13 @@ export async function POST(request: Request) {
   const travaux = TABLES_TERRAIN.has(conf.table)
     ? [lance("/api/cron/terrain-notifs")]
     : [lance("/api/cron/finance-mensuelle")];
-  if (TABLES_DISPO.has(conf.table)) {
-    travaux.push(lance("/api/cron/dispo-appartements"));
-    // Une extension, un départ anticipé ou un changement de jour de ménage doivent
-    // se voir au planning tout de suite, pas au prochain vendredi.
-    travaux.push(lance("/api/cron/menages-projection"));
-  }
+  if (TABLES_DISPO.has(conf.table)) travaux.push(lance("/api/cron/dispo-appartements"));
+  // PAS de projection des ménages ici, et c'est une leçon payée cher le 29/08/2026 :
+  // créer un ménage écrit le lien inverse sur sa réservation, ce qui modifie la table
+  // Réservations, ce qui repingue CE webhook, qui relance la projection. Plusieurs
+  // passages se sont retrouvés en vol en même temps, chacun lisant un état d'avant
+  // écriture, et ont créé 467 ménages chacun : 1 754 lignes au lieu de 493.
+  // Le planning est donc recalculé par son cron horaire, séquentiel par construction.
   await Promise.all(travaux);
 
   return NextResponse.json({ ok: true, table: conf.nom, cursor: c });
