@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { nomAffiche } from "@/lib/alias";
 
 // Suivi terrain : ménages et check-ins soldés par l'équipe → Slack.
 //
@@ -50,12 +51,10 @@ const premier = (v: unknown) => (Array.isArray(v) ? texte(v[0]) : texte(v));
 // « par [object Object] ». « Assignée à » est un lien vers Utilisateurs et arrive
 // comme identifiant rec…, illisible tel quel : on le résout sur la table.
 //
-// L'annuaire renvoie le NOM D'USAGE : si la fiche Utilisateurs porte un « Alias »,
-// c'est lui qui s'affiche. Certaines personnes de l'équipe sont connues sous un autre
-// prénom que leur état civil, et un message qui les nomme autrement que ce que tout
-// le monde dit dans les couloirs oblige à traduire à chaque lecture. L'alias se règle
-// dans Airtable, pas ici : ajouter quelqu'un ne demande aucune modification de code.
-type Annuaire = { parId: Map<string, string>; parNom: Map<string, string> };
+// Ce qu'on affiche au bout, c'est le PRÉNOM seul, ou l'alias de la personne quand
+// elle en a un (voir src/lib/alias.ts) : dans un message d'équipe, le nom de famille
+// n'apprend rien à personne et alourdit la lecture.
+type Annuaire = { parId: Map<string, string> };
 
 function nomPersonne(v: unknown, annuaire: Annuaire): string {
   if (v == null || v === "") return "";
@@ -64,12 +63,11 @@ function nomPersonne(v: unknown, annuaire: Annuaire): string {
   }
   if (typeof v === "object") {
     const o = v as Dict;
-    const brut = texte(o["name"]) || texte(o["email"]) || "";
-    return annuaire.parNom.get(brut.trim().toLowerCase()) || brut;
+    return nomAffiche(texte(o["name"]) || texte(o["email"]));
   }
   const s = texte(v);
   if (s.startsWith("rec")) return annuaire.parId.get(s) || "";
-  return annuaire.parNom.get(s.trim().toLowerCase()) || s;
+  return nomAffiche(s);
 }
 
 async function airtable(method: string, path: string, body?: unknown): Promise<Dict> {
@@ -180,22 +178,11 @@ export async function GET(request: Request) {
   const bilan = { menages: 0, checkins: 0, amorces: 0, echecs: 0 };
 
   try {
-    const annuaire: Annuaire = { parId: new Map(), parNom: new Map() };
+    const annuaire: Annuaire = { parId: new Map() };
     for (const u of await lireTable(T_UTILISATEURS)) {
       const nom = [texte(u.fields["Prénom"]), texte(u.fields["Nom"])].filter(Boolean).join(" ");
-      const usage = texte(u.fields["Alias"]).trim() || nom;
-      if (!usage) continue;
-      annuaire.parId.set(u.id, usage);
-      // Le compte Airtable ne porte pas l'identifiant de la fiche : on retrouve la
-      // personne par son nom, dans un sens comme dans l'autre (« Prénom Nom » et
-      // « Nom Prénom »), pour que l'alias s'applique quel que soit le champ source.
-      if (nom) {
-        annuaire.parNom.set(nom.toLowerCase(), usage);
-        const [p, ...reste] = nom.split(" ");
-        if (reste.length) annuaire.parNom.set([...reste, p].join(" ").toLowerCase(), usage);
-      }
-      const mail = texte(u.fields["Email"]).trim().toLowerCase();
-      if (mail) annuaire.parNom.set(mail, usage);
+      const affiche = nomAffiche(nom || texte(u.fields["Email"]));
+      if (affiche) annuaire.parId.set(u.id, affiche);
     }
 
     const lots: Array<{
