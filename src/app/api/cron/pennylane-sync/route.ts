@@ -46,6 +46,8 @@ const T_MONITORING = "tblDEkjIyKoKJG5Yj";
 const MISE_EN_SERVICE = "2026-07-01";
 const FENETRE_H = 48;
 const GRACE_MS = 3600_000;
+// Au-delà, on suspend au lieu d'importer : un déversement de masse est un signal, pas une routine.
+const PLAFOND_IMPORT = 20;
 
 type Dict = Record<string, unknown>;
 const texte = (v: unknown) => (typeof v === "string" ? v : v == null ? "" : String(v));
@@ -151,7 +153,7 @@ export async function GET(request: Request) {
     const depuis = new Date(Date.now() - FENETRE_H * 3600_000).toISOString().slice(0, 19);
     const recentes = await listePennylane(`&created_after=${encodeURIComponent(depuis)}`);
 
-    const ignorees = { brouillons: 0, avoirs: 0, internes: 0, grace: 0 };
+    const ignorees = { brouillons: 0, avoirs: 0, internes: 0, grace: 0, anterieures: 0 };
     const aImporter: Dict[] = [];
     for (const inv of recentes) {
       const id = texte(inv.id);
@@ -162,9 +164,28 @@ export async function GET(request: Request) {
       // et son montant peut être POSITIF — le seul test du signe le laissait passer.
       if (texte(inv.status) === "credit_note" || texte(inv.invoice_type) === "credit_note" || montant(inv.currency_amount ?? inv.amount) < 0) { ignorees.avoirs++; continue; }
       if (estInterne(label)) { ignorees.internes++; continue; }
+      // ANTÉRIEURES À LA MISE EN SERVICE : jamais. Le paramètre created_after étant
+      // ignoré par l'API v2, ce cron balaie en réalité TOUT l'historique Pennylane à
+      // chaque passage. Le 28/08 il a donc importé 531 factures de 2025 — un exercice
+      // clos, sans réservation ni client rattachés, qui n'a rien à faire dans l'outil
+      // de pilotage. Elles ont été supprimées le 29/08 ; ce filtre est ce qui les
+      // empêche de revenir au passage suivant. On se fie à la date de la FACTURE,
+      // pas à sa date de création chez Pennylane : une facture de 2025 saisie
+      // tardivement reste une facture de 2025.
+      if (texte(inv.date) < MISE_EN_SERVICE) { ignorees.anterieures++; continue; }
       const cree = Date.parse(texte(inv.created_at) || texte(inv.date));
       if (Number.isFinite(cree) && Date.now() - cree < GRACE_MS) { ignorees.grace++; continue; }
       aImporter.push(inv);
+    }
+
+    // Garde-fou de volume : un import normal, c'est quelques factures par heure. Au-delà,
+    // quelque chose a changé côté Pennylane et on préfère alerter que déverser en masse.
+    if (aImporter.length > PLAFOND_IMPORT) {
+      await slack(CANAL_ERREURS,
+        `*Sync Pennylane suspendue* — ${aImporter.length} factures à importer d'un coup ` +
+        `(plafond ${PLAFOND_IMPORT}). Rien n'a été écrit : à regarder avant de débloquer.`);
+      await monitoring("ALERTE", `${aImporter.length} factures à importer d'un coup — import suspendu.`);
+      return NextResponse.json({ ok: false, suspendu: aImporter.length });
     }
 
     const importees: string[] = [];
@@ -216,7 +237,8 @@ export async function GET(request: Request) {
     }
     if (backlog <= 0) {
       await monitoring("OK", `Sync horaire OK — ${importees.length} importée(s), ` +
-        `${ignorees.brouillons} brouillon(s), ${ignorees.avoirs} avoir(s), ${ignorees.internes} interne(s), ${ignorees.grace} en grâce.`);
+        `${ignorees.brouillons} brouillon(s), ${ignorees.avoirs} avoir(s), ${ignorees.internes} interne(s), ` +
+        `${ignorees.anterieures} antérieure(s) à la mise en service, ${ignorees.grace} en grâce.`);
     }
 
     return NextResponse.json({ ok: true, importees: importees.length, ignorees, backlog });
