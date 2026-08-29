@@ -34,6 +34,7 @@ const SLACK_TOKEN = process.env.SLACK_BOT_TOKEN_MIP || "";
 const T_MENAGES = "tblVE8HEtnuTeCi8r";
 const T_CHECKIN = "tbl8SktZKbyopdQ7l";
 const T_MONITORING = "tblDEkjIyKoKJG5Yj";
+const T_UTILISATEURS = "tblCTaXoRZpJGSesQ";
 const CANAL_MENAGES = "C0BCH7FRDC2";
 const CANAL_CHECKIN = "C0BLGARJ8R0";
 const CHAMP_NOTIFIE = "Dernier statut notifié";
@@ -43,6 +44,23 @@ type Dict = Record<string, unknown>;
 type Rec = { id: string; fields: Dict };
 const texte = (v: unknown) => (typeof v === "string" ? v : v == null ? "" : String(v));
 const premier = (v: unknown) => (Array.isArray(v) ? texte(v[0]) : texte(v));
+
+// Qui a fait le travail : deux champs, deux formes. « Collaborateur » est un compte
+// Airtable et arrive comme objet {id, email, name} — l'écrire tel quel affichait
+// « par [object Object] ». « Assignée à » est un lien vers Utilisateurs et arrive
+// comme identifiant rec…, illisible tel quel : on le résout sur la table.
+function nomPersonne(v: unknown, annuaire: Map<string, string>): string {
+  if (v == null || v === "") return "";
+  if (Array.isArray(v)) {
+    return v.map((x) => nomPersonne(x, annuaire)).filter(Boolean).join(", ");
+  }
+  if (typeof v === "object") {
+    const o = v as Dict;
+    return texte(o["name"]) || texte(o["email"]) || "";
+  }
+  const s = texte(v);
+  return s.startsWith("rec") ? (annuaire.get(s) || "") : s;
+}
 
 async function airtable(method: string, path: string, body?: unknown): Promise<Dict> {
   const r = await fetch(`https://api.airtable.com/v0/${AT_BASE}/${path}`, {
@@ -115,11 +133,11 @@ const jourFr = (v: unknown) => {
   return new Intl.DateTimeFormat("fr-FR", { timeZone: "Europe/Paris", day: "2-digit", month: "2-digit" }).format(new Date(t));
 };
 
-function messageMenage(f: Dict): string {
+function messageMenage(f: Dict, annuaire: Map<string, string>): string {
   const type = texte(f["Type"]) || "Ménage";
   const adresse = premier(f["Adresse appartement"]) || "appartement non précisé";
   const occupant = premier(f["Nom occupant"]);
-  const par = texte(f["Collaborateur"]) || premier(f["Assignée à"]);
+  const par = nomPersonne(f["Collaborateur"], annuaire) || nomPersonne(f["Assignée à"], annuaire);
   const notes = texte(f["Notes / Dégâts"]).trim();
   let m = `*Ménage ${type.toLowerCase()} terminé* — ${adresse}\n` +
     `Prévu le ${jourFr(f["Date prévue"])}, confirmé à ${heureParis()}` +
@@ -128,11 +146,11 @@ function messageMenage(f: Dict): string {
   return m;
 }
 
-function messageCheckin(f: Dict): string {
+function messageCheckin(f: Dict, annuaire: Map<string, string>): string {
   const adresse = premier(f["Adresse appartement"]) || "appartement non précisé";
   const occupant = premier(f["Nom occupant"]) || "occupant non précisé";
   const cles = f["Nb de clés remises"];
-  const par = texte(f["Collaborateur"]) || premier(f["Assigné à"]);
+  const par = nomPersonne(f["Collaborateur"], annuaire) || nomPersonne(f["Assigné à"], annuaire);
   const com = texte(f["Commentaires"]).trim();
   let m = `*Check-in effectué* — ${occupant}, ${adresse}\n` +
     `Prévu le ${jourFr(f["Date du check-in"])}${texte(f["Heure du check-in"]) ? ` à ${texte(f["Heure du check-in"])}` : ""}, ` +
@@ -152,8 +170,14 @@ export async function GET(request: Request) {
   const bilan = { menages: 0, checkins: 0, amorces: 0, echecs: 0 };
 
   try {
+    const annuaire = new Map<string, string>();
+    for (const u of await lireTable(T_UTILISATEURS)) {
+      const nom = [texte(u.fields["Prénom"]), texte(u.fields["Nom"])].filter(Boolean).join(" ");
+      if (nom) annuaire.set(u.id, nom);
+    }
+
     const lots: Array<{
-      recs: Rec[]; canal: string; message: (f: Dict) => string; table: string; quoi: "menages" | "checkins";
+      recs: Rec[]; canal: string; message: (f: Dict, a: Map<string, string>) => string; table: string; quoi: "menages" | "checkins";
     }> = [
       { recs: await lireTable(T_MENAGES), canal: CANAL_MENAGES, message: messageMenage, table: T_MENAGES, quoi: "menages" },
       { recs: await lireTable(T_CHECKIN), canal: CANAL_CHECKIN, message: messageCheckin, table: T_CHECKIN, quoi: "checkins" },
@@ -175,7 +199,7 @@ export async function GET(request: Request) {
           marquer.push({ id: r.id, fields: { [CHAMP_NOTIFIE]: "Terminé" } });
           continue;
         }
-        const envoye = await slack(lot.canal, lot.message(r.fields));
+        const envoye = await slack(lot.canal, lot.message(r.fields, annuaire));
         if (!envoye) { bilan.echecs++; continue; } // pas de marquage : on réessaiera
         bilan[lot.quoi]++;
         marquer.push({ id: r.id, fields: { [CHAMP_NOTIFIE]: "Terminé" } });
