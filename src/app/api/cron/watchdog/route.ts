@@ -506,21 +506,29 @@ async function controleAvoirsNonFinalises(now: Date): Promise<Resultat> {
     "Numéro facture", "Statut", "Type", "Montant total HT", "Lien Pennylane",
     "Code réservation (récap)",
   ]);
-  const avoirs = factures.filter((r) => {
+  // Deux populations distinctes, deux défauts opposés :
+  //   A. les AVOIRS eux-mêmes (Type « Avoir ») : un avoir encore brouillon n'annule rien.
+  //   B. les factures NEUTRALISÉES à la main (Statut « Avoir », Type « Facture ») : si leur
+  //      objet Pennylane est toujours vivant, la créance existe encore malgré Airtable.
+  // Ne pas confondre les deux : une facture neutralisée dont le brouillon Pennylane n'a
+  // jamais été finalisé (FAC-2026-0102/0103) est un cas SAIN — rien n'a été émis.
+  const candidates = factures.filter((r) => {
     const f = r.fields;
-    const estAvoir = String(f["Type"] ?? "") === "Avoir" || String(f["Statut"] ?? "") === "Avoir";
-    if (!estAvoir || !idPennylane(String(f["Lien Pennylane"] ?? ""))) return false;
+    const pertinent =
+      String(f["Type"] ?? "") === "Avoir" || String(f["Statut"] ?? "") === "Avoir";
+    if (!pertinent || !idPennylane(String(f["Lien Pennylane"] ?? ""))) return false;
     const cree = r.createdTime ? new Date(r.createdTime).getTime() : 0;
     return cree > 0 && (now.getTime() - cree) / 3.6e6 >= GRACE_AVOIR_H;
   });
-  if (!avoirs.length) return { nom, statut: "OK", detail: "Aucun avoir en attente de contrôle." };
+  if (!candidates.length) return { nom, statut: "OK", detail: "Aucun avoir en attente de contrôle." };
 
   const enSouffrance: string[] = [];
   let verifies = 0;
-  for (const r of avoirs) {
+  for (const r of candidates) {
     const f = r.fields;
     const id = idPennylane(String(f["Lien Pennylane"] ?? ""));
     if (!id) continue;
+    const estAvoir = String(f["Type"] ?? "") === "Avoir";
     try {
       const rep = await fetch(
         `https://app.pennylane.com/api/external/v2/customer_invoices/${id}?use_2026_api_changes=true`,
@@ -529,24 +537,30 @@ async function controleAvoirsNonFinalises(now: Date): Promise<Resultat> {
       if (!rep.ok) continue;
       const d = (await rep.json()) as { draft?: boolean; invoice_number?: string; status?: string };
       verifies++;
-      if (d.draft === true || !String(d.invoice_number ?? "").trim()) {
+      const brouillon = d.draft === true || !String(d.invoice_number ?? "").trim();
+      const etiquette =
+        `• *${f["Numéro facture"] ?? r.id}* — ${f["Montant total HT"] ?? "?"} € · ` +
+        `${liste(f["Code réservation (récap)"]) || "sans réservation"} · Pennylane ${id}`;
+
+      if (estAvoir && brouillon) {
+        enSouffrance.push(`${etiquette} : avoir encore brouillon (« ${d.status ?? "?"} »), il n'annule rien.`);
+      } else if (!estAvoir && !brouillon && d.status !== "cancelled") {
         enSouffrance.push(
-          `• *${f["Numéro facture"] ?? r.id}* — ${f["Montant total HT"] ?? "?"} € · ` +
-          `${liste(f["Code réservation (récap)"]) || "sans réservation"} · ` +
-          `Pennylane ${id} encore brouillon (statut « ${d.status ?? "?"} »)`,
+          `${etiquette} : neutralisée dans Airtable mais toujours vivante chez Pennylane ` +
+          `(« ${d.status ?? "?"} ») — la créance court encore.`,
         );
       }
     } catch { /* réseau : on ne fait pas échouer le passage pour autant */ }
   }
 
   if (!enSouffrance.length) {
-    return { nom, statut: "OK", detail: `${verifies} avoir(s) contrôlé(s), tous finalisés chez Pennylane.` };
+    return { nom, statut: "OK", detail: `${verifies} avoir(s) contrôlé(s), tous cohérents avec Pennylane.` };
   }
   return {
     nom,
     statut: "ALERTE",
     detail:
-      `${enSouffrance.length} avoir(s) sans existence comptable :\n` +
+      `${enSouffrance.length} avoir(s) ou annulation(s) incohérents entre Airtable et Pennylane :\n` +
       enSouffrance.slice(0, MAX_FACTURES_LISTEES).join("\n") +
       "\nTant qu'un avoir est brouillon il n'annule rien : la facture d'origine reste due, " +
       "et le client peut la payer. À finaliser dans Pennylane (PUT /customer_invoices/{id}/finalize).",
