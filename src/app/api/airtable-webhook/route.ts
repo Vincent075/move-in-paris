@@ -37,6 +37,22 @@ const TABLES_DISPO = new Set(["tbl5uN32egP4YCvUi", "tbltFlpzQWXjoWg88"]);
 // Ménages et Check-in : suivi terrain, aucun impact financier.
 const TABLES_TERRAIN = new Set(["tblVE8HEtnuTeCi8r", "tbl8SktZKbyopdQ7l"]);
 
+// Les SEULS champs dont le changement peut modifier le planning des ménages.
+// C'est une liste blanche, et c'est volontaire : le 29/08/2026, relancer la
+// projection sur n'importe quelle modification a créé une boucle. Créer un ménage
+// écrit le lien inverse « Ménages » de sa réservation, ce qui modifie la table
+// Réservations, ce qui repingue ce webhook, qui relance la projection… 1 754 lignes
+// au lieu de 493. En n'écoutant que ces champs-là, le lien inverse ne réveille plus
+// rien : la boucle ne peut plus démarrer, au lieu d'être seulement amortie.
+const CHAMPS_PLANNING = new Set([
+  "fld5dNHHJbwwosc3m", // Réservations · Date d'entrée
+  "flda6ctcQYNFsR8rK", // Réservations · Date de sortie
+  "fldrL3Ub0cKCAE44d", // Réservations · Statut
+  "fldO6C01fvh0YciBF", // Réservations · Weekly cleaning inclus
+  "flddB6umdxk4anofN", // Réservations · Appartement
+  "fldYfBKSIK0bm5O6r", // Appartements · Jour de ménage régulier
+]);
+
 type Dict = Record<string, unknown>;
 
 async function airtable(method: string, path: string, body?: unknown): Promise<Dict> {
@@ -90,8 +106,26 @@ export async function POST(request: Request) {
   //    sert pas (les recalculs relisent tout), seul le curseur compte.
   const { rowId, cursor } = await lireCurseur(webhookId);
   let c = cursor;
+  let toucheLePlanning = false;
   for (let i = 0; i < 20; i++) {
     const d = await airtable("GET", `bases/${AT_BASE}/webhooks/${webhookId}/payloads?cursor=${c}&limit=50`);
+    // On lit le contenu, uniquement pour savoir si un champ du planning a bougé.
+    for (const p of ((d.payloads as Dict[]) ?? [])) {
+      for (const t of Object.values((p.changedTablesById as Dict) ?? {})) {
+        const tt = t as Dict;
+        const modifs = { ...((tt.changedRecordsById as Dict) ?? {}), ...((tt.createdRecordsById as Dict) ?? {}) };
+        for (const r of Object.values(modifs)) {
+          const cur = ((r as Dict).current ?? r) as Dict;
+          for (const fid of Object.keys((cur.cellValuesByFieldId as Dict) ?? {})) {
+            if (CHAMPS_PLANNING.has(fid)) toucheLePlanning = true;
+          }
+        }
+        // Une réservation créée ou supprimée change le planning, quels que soient
+        // les champs remontés.
+        if (Object.keys((tt.createdRecordsById as Dict) ?? {}).length) toucheLePlanning = true;
+        if (((tt.destroyedRecordIds as string[]) ?? []).length) toucheLePlanning = true;
+      }
+    }
     c = parseInt(String(d.cursor ?? c), 10) || c;
     if (d.mightHaveMore !== true) break;
   }
@@ -113,13 +147,14 @@ export async function POST(request: Request) {
   const travaux = TABLES_TERRAIN.has(conf.table)
     ? [lance("/api/cron/terrain-notifs")]
     : [lance("/api/cron/finance-mensuelle")];
-  if (TABLES_DISPO.has(conf.table)) travaux.push(lance("/api/cron/dispo-appartements"));
-  // PAS de projection des ménages ici, et c'est une leçon payée cher le 29/08/2026 :
-  // créer un ménage écrit le lien inverse sur sa réservation, ce qui modifie la table
-  // Réservations, ce qui repingue CE webhook, qui relance la projection. Plusieurs
-  // passages se sont retrouvés en vol en même temps, chacun lisant un état d'avant
-  // écriture, et ont créé 467 ménages chacun : 1 754 lignes au lieu de 493.
-  // Le planning est donc recalculé par son cron horaire, séquentiel par construction.
+  if (TABLES_DISPO.has(conf.table)) {
+    travaux.push(lance("/api/cron/dispo-appartements"));
+    // Le planning ne se recalcule que si un champ qui le détermine a réellement
+    // changé (liste blanche ci-dessus) : une extension signée ou un jour de ménage
+    // modifié se voient dans la seconde, un lien inverse ne réveille rien. Le
+    // recalcul pose en plus son propre verrou, pour qu'il n'en tourne jamais deux.
+    if (toucheLePlanning) travaux.push(lance("/api/cron/menages-projection"));
+  }
   await Promise.all(travaux);
 
   return NextResponse.json({ ok: true, table: conf.nom, cursor: c });
