@@ -44,6 +44,10 @@
     {
       "path": "/api/cron/menages-projection",
       "schedule": "20 * * * *"
+    },
+    {
+      "path": "/api/cron/cockpit-kpi",
+      "schedule": "40 * * * *"
     }
   ]
 }
