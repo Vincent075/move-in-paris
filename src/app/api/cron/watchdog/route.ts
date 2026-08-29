@@ -488,6 +488,72 @@ async function controleFacturesSansPennylane(now: Date): Promise<Resultat> {
 }
 
 
+// Un avoir qui reste BROUILLON chez Pennylane n'a aucune existence comptable : il ne
+// porte pas de numéro, il n'annule rien, et la facture qu'il devait créditer reste
+// exigible — pendant qu'Airtable, lui, affiche l'affaire comme réglée. C'est exactement
+// ce qui s'est produit le 28/08/2026 : les deux avoirs de l'incident doublons (3 458,02 €)
+// sont restés draft cinq jours sans que rien ne le signale, parce qu'AUTO-18 comme le
+// script correctif créent l'avoir avec draft:true et ne finalisent jamais. Ce contrôle
+// est le filet : tout avoir Airtable est confronté à l'état réel de son objet Pennylane.
+const GRACE_AVOIR_H = 2;
+
+async function controleAvoirsNonFinalises(now: Date): Promise<Resultat> {
+  const nom = "Avoirs restés brouillons chez Pennylane";
+  const cle = process.env.PENNYLANE_API_KEY || "";
+  if (!cle) return { nom, statut: "OK", detail: "Clé Pennylane absente : contrôle non exécuté." };
+
+  const factures = await airtableAll(AT_FACTURES, [
+    "Numéro facture", "Statut", "Type", "Montant total HT", "Lien Pennylane",
+    "Code réservation (récap)",
+  ]);
+  const avoirs = factures.filter((r) => {
+    const f = r.fields;
+    const estAvoir = String(f["Type"] ?? "") === "Avoir" || String(f["Statut"] ?? "") === "Avoir";
+    if (!estAvoir || !idPennylane(String(f["Lien Pennylane"] ?? ""))) return false;
+    const cree = r.createdTime ? new Date(r.createdTime).getTime() : 0;
+    return cree > 0 && (now.getTime() - cree) / 3.6e6 >= GRACE_AVOIR_H;
+  });
+  if (!avoirs.length) return { nom, statut: "OK", detail: "Aucun avoir en attente de contrôle." };
+
+  const enSouffrance: string[] = [];
+  let verifies = 0;
+  for (const r of avoirs) {
+    const f = r.fields;
+    const id = idPennylane(String(f["Lien Pennylane"] ?? ""));
+    if (!id) continue;
+    try {
+      const rep = await fetch(
+        `https://app.pennylane.com/api/external/v2/customer_invoices/${id}?use_2026_api_changes=true`,
+        { headers: { Authorization: `Bearer ${cle}` }, cache: "no-store" },
+      );
+      if (!rep.ok) continue;
+      const d = (await rep.json()) as { draft?: boolean; invoice_number?: string; status?: string };
+      verifies++;
+      if (d.draft === true || !String(d.invoice_number ?? "").trim()) {
+        enSouffrance.push(
+          `• *${f["Numéro facture"] ?? r.id}* — ${f["Montant total HT"] ?? "?"} € · ` +
+          `${liste(f["Code réservation (récap)"]) || "sans réservation"} · ` +
+          `Pennylane ${id} encore brouillon (statut « ${d.status ?? "?"} »)`,
+        );
+      }
+    } catch { /* réseau : on ne fait pas échouer le passage pour autant */ }
+  }
+
+  if (!enSouffrance.length) {
+    return { nom, statut: "OK", detail: `${verifies} avoir(s) contrôlé(s), tous finalisés chez Pennylane.` };
+  }
+  return {
+    nom,
+    statut: "ALERTE",
+    detail:
+      `${enSouffrance.length} avoir(s) sans existence comptable :\n` +
+      enSouffrance.slice(0, MAX_FACTURES_LISTEES).join("\n") +
+      "\nTant qu'un avoir est brouillon il n'annule rien : la facture d'origine reste due, " +
+      "et le client peut la payer. À finaliser dans Pennylane (PUT /customer_invoices/{id}/finalize).",
+  };
+}
+
+
 // Renvoie les deux contrôles « le locataire a-t-il reçu son email ? ».
 // Aucune lecture n8n ici : uniquement l'état réel des données.
 async function controlesResultat(paris: { date: string; hour: number }): Promise<Resultat[]> {
@@ -655,6 +721,8 @@ export async function GET(request: Request) {
     await rapporter(dbl.nom, dbl.statut, dbl.detail);
     const wh = await controleWebhooksTempsReel();
     await rapporter(wh.nom, wh.statut, wh.detail);
+    const av = await controleAvoirsNonFinalises(now);
+    await rapporter(av.nom, av.statut, av.detail);
   } catch (e) {
     await rapporter("Contrôles par le résultat", "ALERTE",
       `Impossible de lire Airtable : ${e instanceof Error ? e.message : e}`);
