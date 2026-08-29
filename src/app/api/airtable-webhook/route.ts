@@ -113,7 +113,12 @@ export async function POST(request: Request) {
   const travaux = TABLES_TERRAIN.has(conf.table)
     ? [lance("/api/cron/terrain-notifs")]
     : [lance("/api/cron/finance-mensuelle")];
-  if (TABLES_DISPO.has(conf.table)) travaux.push(lance("/api/cron/dispo-appartements"));
+  if (TABLES_DISPO.has(conf.table)) {
+    travaux.push(lance("/api/cron/dispo-appartements"));
+    // Une extension, un départ anticipé ou un changement de jour de ménage doivent
+    // se voir au planning tout de suite, pas au prochain vendredi.
+    travaux.push(lance("/api/cron/menages-projection"));
+  }
   await Promise.all(travaux);
 
   return NextResponse.json({ ok: true, table: conf.nom, cursor: c });
