@@ -328,6 +328,7 @@ export async function GET(request: Request) {
       a: number;
       m: number;
       caFacture: number;
+      caHorsPerimetre: number;
       caEstime: number;
       loyers: number;
       charges: number;
@@ -400,7 +401,14 @@ export async function GET(request: Request) {
         }
       }
 
-      caFacture += factOrphelines.get(k) || 0;
+      // CA SANS COÛTS CONNUS. Une facture sans réservation liée n'a aucun loyer
+      // propriétaire en face : ce sont les 488 factures du fichier FACTURATION 2026,
+      // émises hors plateforme. Les compter dans le CA est juste — c'est du vrai
+      // chiffre d'affaires — mais les compter dans la MARGE ne l'est pas : on
+      // soustrairait des coûts qui ne couvrent qu'une partie du périmètre, et août
+      // affichait ainsi 72 % de marge dans un métier qui en fait 17 à 29 %.
+      const caHorsPerimetre = arrondi(factOrphelines.get(k) || 0);
+      caFacture += caHorsPerimetre;
 
       // Loyers propriétaires : fusion des intervalles avant prorata.
       let loyers = 0;
@@ -467,6 +475,7 @@ export async function GET(request: Request) {
         a,
         m,
         caFacture: arrondi(caFacture),
+        caHorsPerimetre,
         caEstime: arrondi(caEstime),
         loyers: arrondi(loyers),
         charges: arrondi(charges),
@@ -825,7 +834,6 @@ export async function GET(request: Request) {
 
     for (const l of lignes) {
       const caTotal = arrondi(l.caFacture + l.caEstime);
-      const marge = arrondi(caTotal - l.loyers);
       const prec = parCle.get(cle(l.a, l.m - 1));
       const precTotal = prec ? arrondi(prec.caFacture + prec.caEstime) : null;
       const precMarge = prec ? arrondi(precTotal! - prec.loyers) : null;
@@ -843,7 +851,17 @@ export async function GET(request: Request) {
       const chargesFixesMois = avantMiseEnService
         ? 0
         : chargesDuMois(debutMois(l.a, l.m), debutMois(l.a, l.m + 1));
-      const margeNette = arrondi(caTotal - l.loyers - chargesFixesMois);
+      // MARGE : uniquement sur le périmètre dont on connaît les coûts.
+      // Le CA total est la vérité et reste affiché tel quel. Mais une facture sans
+      // réservation liée n'a pas de loyer propriétaire en face : l'inclure dans la
+      // marge revient à soustraire les coûts d'un périmètre à des recettes d'un
+      // périmètre plus large. C'est ce qui affichait 72 % de marge en août.
+      const caPerimetreGere = arrondi(caTotal - l.caHorsPerimetre);
+      const marge = arrondi(caPerimetreGere - l.loyers);
+      const margeNette = arrondi(marge - chargesFixesMois);
+      // Quelle part du CA est adossée à des coûts connus. En dessous de 90 %, la marge
+      // ne décrit plus le mois mais une fraction de celui-ci, et il faut le dire.
+      const couverture = caTotal > 0 ? arrondi(caPerimetreGere / caTotal, 4) : 1;
       // Ce qui traîne encore sur les mois d'AVANT celui-ci : à régler avec le lot du mois
       // pour ne pas laisser filer un loyer oublié.
       const arriere = arrondi(
@@ -852,7 +870,9 @@ export async function GET(request: Request) {
           .reduce((somme, [, v]) => somme + v.reste, 0)
       );
       const partFacturee = caTotal > 0 ? l.caFacture / caTotal : 0;
-      const fiabilite = avantMiseEnService
+      const fiabilite = couverture < 0.9
+        ? "Marge partielle"
+        : avantMiseEnService
         ? "Historique incomplet"
         : partFacturee >= 0.95
           ? "Chiffre consolidé"
@@ -866,6 +886,9 @@ export async function GET(request: Request) {
           : "",
         `${caTotal.toLocaleString("fr-FR")} € de CA — ${l.caFacture.toLocaleString("fr-FR")} € facturés, ${l.caEstime.toLocaleString("fr-FR")} € estimés d'après les réservations.`,
         `${l.loyers.toLocaleString("fr-FR")} € de loyers propriétaires au prorata de ${l.nuiteesVendues} nuitées occupées, dont ${l.charges.toLocaleString("fr-FR")} € de charges déjà comprises dans le loyer.`,
+        l.caHorsPerimetre > 0
+          ? `⚠️ ${l.caHorsPerimetre.toLocaleString("fr-FR")} € de CA sans réservation rattachée (factures émises hors plateforme) : aucun loyer propriétaire en face, donc EXCLUS du calcul de marge. La marge ci-dessous porte sur ${caPerimetreGere.toLocaleString("fr-FR")} € seulement.`
+          : "",
         `Marge ${marge.toLocaleString("fr-FR")} € sur ${l.apptsLoues} appartement(s) loué(s), parc de ${l.apptsParc}.`,
       ]
         .filter(Boolean)
@@ -891,11 +914,13 @@ export async function GET(request: Request) {
           (suivi.get(l.k)?.verses || 0) + (suivi.get(l.k)?.reste || 0) > 0
             ? arrondi((suivi.get(l.k)?.verses || 0) / ((suivi.get(l.k)?.verses || 0) + (suivi.get(l.k)?.reste || 0)), 4)
             : null,
+        "CA hors périmètre géré": l.caHorsPerimetre,
+        "Couverture des coûts": couverture,
         "Marge brute": marge,
-        "Taux de marge brute": caTotal > 0 ? arrondi(marge / caTotal, 4) : 0,
+        "Taux de marge brute": caPerimetreGere > 0 ? arrondi(marge / caPerimetreGere, 4) : 0,
         "Charges fixes": chargesFixesMois,
         "Marge nette": margeNette,
-        "Taux de marge nette": caTotal > 0 ? arrondi(margeNette / caTotal, 4) : null,
+        "Taux de marge nette": caPerimetreGere > 0 ? arrondi(margeNette / caPerimetreGere, 4) : null,
         "Arriéré des mois précédents": arriere,
         "Encours client": arrondi(encoursParMois.get(l.k) || 0),
         "Factures en attente": impayeesParMois.get(l.k)?.size || 0,
