@@ -97,6 +97,40 @@ async function monitoring(statut: string, detail: string) {
   } catch { /* le tableau de bord ne conditionne pas le planning */ }
 }
 
+// Verrou porté par une ligne de la table Monitoring. Airtable n'offre pas d'opération
+// atomique, donc ce n'est pas un mutex parfait : deux appels à la même milliseconde
+// pourraient encore passer. Mais les rafales qu'on subit viennent de webhooks espacés
+// de plusieurs centaines de millisecondes, et le verrou les arrête toutes. Il expire
+// seul au bout de VERROU_S : une fonction tuée en vol ne bloque pas le planning.
+const VERROU = "lock:menages-projection";
+const VERROU_S = 240;
+
+async function prendreVerrou(): Promise<boolean> {
+  try {
+    const d = await airtable("GET", `${T_MONITORING}?pageSize=100`);
+    const row = ((d.records as Dict[]) ?? []).find((r) => texte((r.fields as Dict)?.["Contrôle"]) === VERROU);
+    const pose = row ? Date.parse(texte((row.fields as Dict)["Détail"])) : NaN;
+    if (Number.isFinite(pose) && Date.now() - pose < VERROU_S * 1000) return false;
+    const fields = {
+      "Contrôle": VERROU, Statut: "OK", "Détail": new Date().toISOString(),
+      "Dernière vérification": new Date().toISOString(),
+    };
+    if (row) await airtable("PATCH", `${T_MONITORING}/${row.id}`, { fields, typecast: true });
+    else await airtable("POST", T_MONITORING, { records: [{ fields }], typecast: true });
+    return true;
+  } catch {
+    return true; // un tableau de bord en panne ne doit pas geler le planning
+  }
+}
+
+async function libererVerrou() {
+  try {
+    const d = await airtable("GET", `${T_MONITORING}?pageSize=100`);
+    const row = ((d.records as Dict[]) ?? []).find((r) => texte((r.fields as Dict)?.["Contrôle"]) === VERROU);
+    if (row) await airtable("PATCH", `${T_MONITORING}/${row.id}`, { fields: { "Détail": "" }, typecast: true });
+  } catch { /* il expirera tout seul */ }
+}
+
 // Dates manipulées en jour civil pur (AAAA-MM-JJ), jamais en instants : la « Date
 // prévue » est un dateTime stocké à minuit UTC, et raisonner en heures décalerait
 // les ménages d'un jour selon la saison.
@@ -111,6 +145,17 @@ export async function GET(request: Request) {
   }
   const simulation = new URL(request.url).searchParams.get("simulation") === "1";
   const debut = Date.now();
+
+  // VERROU. Deux recalculs en vol en même temps ne sont PAS idempotents : chacun lit
+  // l'état d'avant écriture, ne voit rien en base, et crée l'intégralité du planning.
+  // C'est ce qui a produit 1 754 ménages au lieu de 493 le 29/08/2026. Un seul passage
+  // à la fois, donc — le suivant repassera de toute façon, il n'y a rien à perdre.
+  if (!simulation) {
+    const pris = await prendreVerrou();
+    if (!pris) {
+      return NextResponse.json({ ok: true, ignore: "un recalcul est déjà en cours" });
+    }
+  }
 
   try {
     const [resas, appartements, menages] = await Promise.all([
@@ -217,6 +262,7 @@ export async function GET(request: Request) {
     }
 
     const detail = `${attendus.size} ménage(s) au planning · ${aCreer.length} créé(s) · ${aSupprimer.length} retiré(s).`;
+    await libererVerrou();
     await monitoring("OK", detail);
     return NextResponse.json({
       ok: true, attendus: attendus.size, crees: aCreer.length, supprimes: aSupprimer.length,
@@ -224,6 +270,7 @@ export async function GET(request: Request) {
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
+    await libererVerrou();
     await monitoring("ALERTE", `Projection du planning en échec : ${msg}`);
     return NextResponse.json({ ok: false, erreur: msg }, { status: 500 });
   }
