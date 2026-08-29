@@ -247,7 +247,15 @@ export async function GET(request: Request) {
 
     for (const f of factures) {
       const champs = f.fields;
+      // Une facture annulée ne compte ni au CA ni à l'encours, et l'annulation se lit sur
+      // TROIS marqueurs — les mêmes que controleNuitsDoubles du watchdog, qui les teste déjà
+      // tous les trois. Ne tester que le Type laissait passer les factures neutralisées à la
+      // main : celles du 24/08 et du 28/08 ont reçu Statut « Avoir » en gardant Type
+      // « Facture », et gonflaient donc le CA de 3 458 € en septembre et 3 625 € sur
+      // septembre-octobre.
       if (texte(champs["Type"]) === "Avoir") continue;
+      if (texte(champs["Statut"]) === "Avoir") continue;
+      if (liens(champs["From field: Avoir associé"]).length) continue;
       const montant = nombre(champs["Montant total HT"]);
       const d1 = texte(champs["Période facturée début"]);
       const d2 = texte(champs["Période facturée fin"]);
