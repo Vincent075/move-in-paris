@@ -49,17 +49,27 @@ const premier = (v: unknown) => (Array.isArray(v) ? texte(v[0]) : texte(v));
 // Airtable et arrive comme objet {id, email, name} — l'écrire tel quel affichait
 // « par [object Object] ». « Assignée à » est un lien vers Utilisateurs et arrive
 // comme identifiant rec…, illisible tel quel : on le résout sur la table.
-function nomPersonne(v: unknown, annuaire: Map<string, string>): string {
+//
+// L'annuaire renvoie le NOM D'USAGE : si la fiche Utilisateurs porte un « Alias »,
+// c'est lui qui s'affiche. Certaines personnes de l'équipe sont connues sous un autre
+// prénom que leur état civil, et un message qui les nomme autrement que ce que tout
+// le monde dit dans les couloirs oblige à traduire à chaque lecture. L'alias se règle
+// dans Airtable, pas ici : ajouter quelqu'un ne demande aucune modification de code.
+type Annuaire = { parId: Map<string, string>; parNom: Map<string, string> };
+
+function nomPersonne(v: unknown, annuaire: Annuaire): string {
   if (v == null || v === "") return "";
   if (Array.isArray(v)) {
     return v.map((x) => nomPersonne(x, annuaire)).filter(Boolean).join(", ");
   }
   if (typeof v === "object") {
     const o = v as Dict;
-    return texte(o["name"]) || texte(o["email"]) || "";
+    const brut = texte(o["name"]) || texte(o["email"]) || "";
+    return annuaire.parNom.get(brut.trim().toLowerCase()) || brut;
   }
   const s = texte(v);
-  return s.startsWith("rec") ? (annuaire.get(s) || "") : s;
+  if (s.startsWith("rec")) return annuaire.parId.get(s) || "";
+  return annuaire.parNom.get(s.trim().toLowerCase()) || s;
 }
 
 async function airtable(method: string, path: string, body?: unknown): Promise<Dict> {
@@ -133,7 +143,7 @@ const jourFr = (v: unknown) => {
   return new Intl.DateTimeFormat("fr-FR", { timeZone: "Europe/Paris", day: "2-digit", month: "2-digit" }).format(new Date(t));
 };
 
-function messageMenage(f: Dict, annuaire: Map<string, string>): string {
+function messageMenage(f: Dict, annuaire: Annuaire): string {
   const type = texte(f["Type"]) || "Ménage";
   const adresse = premier(f["Adresse appartement"]) || "appartement non précisé";
   const occupant = premier(f["Nom occupant"]);
@@ -146,7 +156,7 @@ function messageMenage(f: Dict, annuaire: Map<string, string>): string {
   return m;
 }
 
-function messageCheckin(f: Dict, annuaire: Map<string, string>): string {
+function messageCheckin(f: Dict, annuaire: Annuaire): string {
   const adresse = premier(f["Adresse appartement"]) || "appartement non précisé";
   const occupant = premier(f["Nom occupant"]) || "occupant non précisé";
   const cles = f["Nb de clés remises"];
@@ -170,14 +180,26 @@ export async function GET(request: Request) {
   const bilan = { menages: 0, checkins: 0, amorces: 0, echecs: 0 };
 
   try {
-    const annuaire = new Map<string, string>();
+    const annuaire: Annuaire = { parId: new Map(), parNom: new Map() };
     for (const u of await lireTable(T_UTILISATEURS)) {
       const nom = [texte(u.fields["Prénom"]), texte(u.fields["Nom"])].filter(Boolean).join(" ");
-      if (nom) annuaire.set(u.id, nom);
+      const usage = texte(u.fields["Alias"]).trim() || nom;
+      if (!usage) continue;
+      annuaire.parId.set(u.id, usage);
+      // Le compte Airtable ne porte pas l'identifiant de la fiche : on retrouve la
+      // personne par son nom, dans un sens comme dans l'autre (« Prénom Nom » et
+      // « Nom Prénom »), pour que l'alias s'applique quel que soit le champ source.
+      if (nom) {
+        annuaire.parNom.set(nom.toLowerCase(), usage);
+        const [p, ...reste] = nom.split(" ");
+        if (reste.length) annuaire.parNom.set([...reste, p].join(" ").toLowerCase(), usage);
+      }
+      const mail = texte(u.fields["Email"]).trim().toLowerCase();
+      if (mail) annuaire.parNom.set(mail, usage);
     }
 
     const lots: Array<{
-      recs: Rec[]; canal: string; message: (f: Dict, a: Map<string, string>) => string; table: string; quoi: "menages" | "checkins";
+      recs: Rec[]; canal: string; message: (f: Dict, a: Annuaire) => string; table: string; quoi: "menages" | "checkins";
     }> = [
       { recs: await lireTable(T_MENAGES), canal: CANAL_MENAGES, message: messageMenage, table: T_MENAGES, quoi: "menages" },
       { recs: await lireTable(T_CHECKIN), canal: CANAL_CHECKIN, message: messageCheckin, table: T_CHECKIN, quoi: "checkins" },
