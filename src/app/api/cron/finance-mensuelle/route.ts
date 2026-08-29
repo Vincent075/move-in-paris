@@ -889,7 +889,7 @@ export async function GET(request: Request) {
         l.caHorsPerimetre > 0
           ? `⚠️ ${l.caHorsPerimetre.toLocaleString("fr-FR")} € de CA sans réservation rattachée (factures émises hors plateforme) : aucun loyer propriétaire en face, donc EXCLUS du calcul de marge. La marge ci-dessous porte sur ${caPerimetreGere.toLocaleString("fr-FR")} € seulement.`
           : "",
-        `Marge ${marge.toLocaleString("fr-FR")} € sur ${l.apptsLoues} appartement(s) loué(s), parc de ${l.apptsParc}.`,
+        `Marge ${marge.toLocaleString("fr-FR")} € pour ${caPerimetreGere.toLocaleString("fr-FR")} € de CA géré, soit ${caPerimetreGere > 0 ? Math.round((marge / caPerimetreGere) * 100) : 0} % — à ne jamais rapporter au CA total, qui couvre un périmètre plus large. ${l.apptsLoues} appartement(s) loué(s), parc de ${l.apptsParc}.`,
       ]
         .filter(Boolean)
         .join("\n");
@@ -914,6 +914,7 @@ export async function GET(request: Request) {
           (suivi.get(l.k)?.verses || 0) + (suivi.get(l.k)?.reste || 0) > 0
             ? arrondi((suivi.get(l.k)?.verses || 0) / ((suivi.get(l.k)?.verses || 0) + (suivi.get(l.k)?.reste || 0)), 4)
             : null,
+        "CA du périmètre géré": caPerimetreGere,
         "CA hors périmètre géré": l.caHorsPerimetre,
         "Couverture des coûts": couverture,
         "Marge brute": marge,
