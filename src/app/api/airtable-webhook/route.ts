@@ -39,6 +39,9 @@ const T_MONITORING = "tblDEkjIyKoKJG5Yj";
 const TABLES_DISPO = new Set(["tbl5uN32egP4YCvUi", "tbltFlpzQWXjoWg88", "tblUjK6taP6ti0kGa"]);
 // Ménages et Check-in : suivi terrain, aucun impact financier.
 const TABLES_TERRAIN = new Set(["tblVE8HEtnuTeCi8r", "tbl8SktZKbyopdQ7l"]);
+// Leads : un passage à « Signé » crée le propriétaire et l'appartement. Aucun
+// impact financier, donc pas de recalcul de finance sur cette table.
+const TABLE_LEADS = "tblUxEm8sB4eHyNG1";
 
 // Les SEULS champs dont le changement peut modifier le planning des ménages.
 // C'est une liste blanche, et c'est volontaire : le 29/08/2026, relancer la
@@ -147,9 +150,11 @@ export async function POST(request: Request) {
   // Chaque table réveille ce qui la concerne, et rien d'autre : les tables terrain
   // (ménages, check-ins) n'ont aucun effet sur la finance, les relancer serait du
   // travail pur perte et des écritures en cascade pour rien.
-  const travaux = TABLES_TERRAIN.has(conf.table)
-    ? [lance("/api/cron/terrain-notifs")]
-    : [lance("/api/cron/finance-mensuelle")];
+  const travaux = conf.table === TABLE_LEADS
+    ? [lance("/api/cron/leads-signes")]
+    : TABLES_TERRAIN.has(conf.table)
+      ? [lance("/api/cron/terrain-notifs")]
+      : [lance("/api/cron/finance-mensuelle")];
   if (TABLES_DISPO.has(conf.table)) {
     travaux.push(lance("/api/cron/dispo-appartements"));
     // Le planning ne se recalcule que si un champ qui le détermine a réellement
