@@ -64,6 +64,11 @@ const RESA_MORTE = ["Annulée", "Clôturée"];
 const SANS_TERME = "2099-12-31";
 const PARC = ["Actif", "Contrat signé"];
 
+// Verrou manuel. Posé à la main dans « Source dispo », il dit que le propriétaire
+// occupe son bien : aucune donnée de réservation ne peut le contredire, et le cron
+// ne le réécrit jamais. Sans ce verrou, la valeur serait effacée au passage suivant.
+const OCCUPE_PROPRIO = "Occupé par proprio";
+
 type Rec = { id: string; fields: Record<string, unknown> };
 type Creneau = { debut: string; fin: string };
 
@@ -203,15 +208,21 @@ export async function GET(request: Request) {
 
   const maj: { id: string; fields: Record<string, unknown> }[] = [];
   const compte = { reservations: 0, sansTerme: 0, manuel: 0, horsParc: 0,
-                   occupe: 0, disponible: 0, maintenance: 0, dispoCorrigee: 0 };
+                   occupe: 0, disponible: 0, maintenance: 0, dispoCorrigee: 0, proprio: 0 };
 
   for (const a of appts) {
     if (!PARC.includes(String(a.fields["Statut pipeline"] ?? ""))) { compte.horsParc++; continue; }
     const creneaux = parAppart.get(a.id) ?? [];
+    const parProprio = String(a.fields["Source dispo"] ?? "") === OCCUPE_PROPRIO;
     let libre: string | null = null;
     let source: string;
 
-    if (!creneaux.length) {
+    if (parProprio) {
+      // Occupé sans date de fin connue : on ne propose aucune date de libération.
+      source = OCCUPE_PROPRIO;
+      libre = null;
+      compte.proprio++;
+    } else if (!creneaux.length) {
       // Aucune donnée : on n'invente rien, on relaie le jugement de Vincent.
       source = "Champ manuel";
       if (String(a.fields["Disponibilité"] ?? "") === "Disponible") libre = aujourdhui;
@@ -231,7 +242,8 @@ export async function GET(request: Request) {
     // que d'annoncer « Disponible » un appartement peut-être loué hors plateforme.
     const actuelle = String(a.fields["Disponibilité"] ?? "");
     let dispo: string;
-    if (occupeAujourdhui.has(a.id)) { dispo = "Occupé"; compte.occupe++; }
+    if (parProprio) { dispo = "Occupé"; compte.occupe++; }
+    else if (occupeAujourdhui.has(a.id)) { dispo = "Occupé"; compte.occupe++; }
     else if (enMaintenance.has(a.id)) { dispo = "En maintenance"; compte.maintenance++; }
     else if (creneaux.length) { dispo = "Disponible"; compte.disponible++; }
     else dispo = actuelle;
@@ -259,6 +271,9 @@ export async function GET(request: Request) {
     if (!PARC.includes(String(a.fields["Statut pipeline"] ?? ""))) continue;
     const code = String(a.fields["Code appartement"] ?? "");
     const creneaux = parAppart.get(a.id) ?? [];
+    // Occupé par le propriétaire : jamais proposé au catalogue, quoi qu'en disent
+    // les réservations passées.
+    if (String(a.fields["Source dispo"] ?? "") === OCCUPE_PROPRIO) continue;
     const fenetres = creneaux.length
       ? fenetresLibres(creneaux, aujourdhui)
       : String(a.fields["Disponibilité"] ?? "") === "Disponible"
