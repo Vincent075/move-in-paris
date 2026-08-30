@@ -30,8 +30,14 @@ export const maxDuration = 300;
 
 const AT_BASE = process.env.AIRTABLE_BASE_ID || "";
 const AT_TOKEN = process.env.AIRTABLE_WATCHDOG_TOKEN || "";
-const CONF: Record<string, { secret: string; table: string; nom: string }> =
-  JSON.parse(process.env.AIRTABLE_WEBHOOK_CONF || "{}");
+// Deux variables fusionnées, et c'est volontaire : AIRTABLE_WEBHOOK_CONF est chiffrée
+// chez Vercel, donc illisible même pour la relire. Y ajouter une entrée obligerait à
+// réécrire tout le contenu de mémoire, au risque de perdre les secrets des webhooks
+// déjà en place. Une variable d'appoint évite d'y toucher.
+const CONF: Record<string, { secret: string; table: string; nom: string }> = {
+  ...JSON.parse(process.env.AIRTABLE_WEBHOOK_CONF || "{}"),
+  ...JSON.parse(process.env.AIRTABLE_WEBHOOK_CONF_2 || "{}"),
+};
 const T_MONITORING = "tblDEkjIyKoKJG5Yj";
 // Réservations, Appartements et Interventions : les trois tables dont dépend
 // « Disponibilité ». Les interventions y sont depuis le 30/08 — leur webhook
