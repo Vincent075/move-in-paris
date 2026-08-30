@@ -208,10 +208,26 @@ export async function GET(request: Request) {
 
   const maj: { id: string; fields: Record<string, unknown> }[] = [];
   const compte = { reservations: 0, sansTerme: 0, manuel: 0, horsParc: 0,
-                   occupe: 0, disponible: 0, maintenance: 0, dispoCorrigee: 0, proprio: 0 };
+                   occupe: 0, disponible: 0, maintenance: 0, dispoCorrigee: 0, proprio: 0, videes: 0 };
 
   for (const a of appts) {
-    if (!PARC.includes(String(a.fields["Statut pipeline"] ?? ""))) { compte.horsParc++; continue; }
+    if (!PARC.includes(String(a.fields["Statut pipeline"] ?? ""))) {
+      compte.horsParc++;
+      // Hors parc — Lead, En cours de signature, Résilié : l'appartement n'est pas
+      // commercialisable, la question « disponible ou occupé ? » ne se pose pas. On
+      // efface, sans quoi une valeur saisie autrefois reste figée et gonfle le
+      // compteur commercial : deux appartements en cours de signature s'affichaient
+      // encore « Disponible » et faisaient annoncer 15 biens libres au lieu de 13.
+      // Le verrou manuel est respecté : s'il est posé, on n'y touche pas.
+      if (String(a.fields["Source dispo"] ?? "") === OCCUPE_PROPRIO) continue;
+      if (a.fields["Disponibilité"] || a.fields["Libre à partir du"] || a.fields["Source dispo"]) {
+        maj.push({ id: a.id, fields: {
+          "Disponibilité": null, "Libre à partir du": null, "Source dispo": null,
+        } });
+        compte.videes++;
+      }
+      continue;
+    }
     const creneaux = parAppart.get(a.id) ?? [];
     const parProprio = String(a.fields["Source dispo"] ?? "") === OCCUPE_PROPRIO;
     let libre: string | null = null;
