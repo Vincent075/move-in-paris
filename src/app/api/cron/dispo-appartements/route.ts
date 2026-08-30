@@ -262,6 +262,12 @@ export async function GET(request: Request) {
     else if (occupeAujourdhui.has(a.id)) { dispo = "Occupé"; compte.occupe++; }
     else if (enMaintenance.has(a.id)) { dispo = "En maintenance"; compte.maintenance++; }
     else if (creneaux.length) { dispo = "Disponible"; compte.disponible++; }
+    // Aucune réservation en base : on ne peut rien conclure de l'occupation réelle,
+    // donc on respecte ce qui a été saisi à la main — un bien peut être loué hors
+    // plateforme. Mais si la case est VIDE il n'y a rien à respecter : un appartement
+    // entré au parc et jamais réservé est disponible. Sans ce défaut, tout bien venant
+    // d'un lead signé resterait sans disponibilité en passant En cours de signature → Actif.
+    else if (!actuelle) { dispo = "Disponible"; compte.disponible++; }
     else dispo = actuelle;
     if (dispo !== actuelle) compte.dispoCorrigee++;
 
