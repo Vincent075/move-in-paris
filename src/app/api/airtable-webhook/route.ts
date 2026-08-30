@@ -33,7 +33,10 @@ const AT_TOKEN = process.env.AIRTABLE_WATCHDOG_TOKEN || "";
 const CONF: Record<string, { secret: string; table: string; nom: string }> =
   JSON.parse(process.env.AIRTABLE_WEBHOOK_CONF || "{}");
 const T_MONITORING = "tblDEkjIyKoKJG5Yj";
-const TABLES_DISPO = new Set(["tbl5uN32egP4YCvUi", "tbltFlpzQWXjoWg88"]);
+// Réservations, Appartements et Interventions : les trois tables dont dépend
+// « Disponibilité ». Les interventions y sont depuis le 30/08 — leur webhook
+// existait déjà mais ne déclenchait que le recalcul financier.
+const TABLES_DISPO = new Set(["tbl5uN32egP4YCvUi", "tbltFlpzQWXjoWg88", "tblUjK6taP6ti0kGa"]);
 // Ménages et Check-in : suivi terrain, aucun impact financier.
 const TABLES_TERRAIN = new Set(["tblVE8HEtnuTeCi8r", "tbl8SktZKbyopdQ7l"]);
 
