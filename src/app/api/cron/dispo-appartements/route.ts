@@ -312,9 +312,23 @@ export async function GET(request: Request) {
   }
 
   const existantes = await lire(T_DISPONIBILITES, ["Créneau"]);
-  const parCle = new Map(existantes.map((r) => [String(r.fields["Créneau"] ?? ""), r.id]));
+  // Une clé peut exister en double quand deux passages se croisent — le webhook temps
+  // réel et le cron, par exemple : chacun voit le créneau absent et le crée. Indexer
+  // en Map<clé, id> masquait le second exemplaire, qui n'était donc jamais supprimé et
+  // faisait apparaître deux fois le même appartement dans la recherche.
+  const parCle = new Map<string, string[]>();
+  for (const r of existantes) {
+    const c = String(r.fields["Créneau"] ?? "");
+    if (!parCle.has(c)) parCle.set(c, []);
+    parCle.get(c)!.push(r.id);
+  }
   const aCreer = [...voulues.entries()].filter(([c]) => !parCle.has(c)).map(([, f]) => ({ fields: f }));
-  const aSupprimer = [...parCle.entries()].filter(([c]) => !voulues.has(c)).map(([, id]) => id);
+  const aSupprimer: string[] = [];
+  let doublons = 0;
+  for (const [c, ids] of parCle) {
+    if (!voulues.has(c)) aSupprimer.push(...ids);
+    else if (ids.length > 1) { aSupprimer.push(...ids.slice(1)); doublons += ids.length - 1; }
+  }
 
   for (let i = 0; i < aCreer.length; i += 10) {
     await airtable("POST", T_DISPONIBILITES, { records: aCreer.slice(i, i + 10), typecast: true });
@@ -326,6 +340,6 @@ export async function GET(request: Request) {
 
   return NextResponse.json({
     ok: true, aujourdhui, misAJour: maj.length, compte,
-    creneaux: { total: voulues.size, crees: aCreer.length, supprimes: aSupprimer.length },
+    creneaux: { total: voulues.size, crees: aCreer.length, supprimes: aSupprimer.length, doublons },
   });
 }
