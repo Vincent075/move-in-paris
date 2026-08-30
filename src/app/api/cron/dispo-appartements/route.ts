@@ -23,6 +23,16 @@ import { NextResponse } from "next/server";
 //    depuis le lancement ; les dépannages de 7 à 12 jours existent bel et bien.
 //    Ne jamais reconclure « pas de séjours courts » à partir de cette table seule.
 //
+// 3) Sur Appartements : « Disponibilité » — Occupé / Disponible / En maintenance.
+//    Ajouté le 30/08 : ce champ était un menu déroulant rempli à la main, que rien
+//    n'alimentait, et 32 des 59 appartements affichaient un statut faux. Le calcul
+//    existait déjà ici, il n'écrivait simplement pas dans ce champ-là.
+//    Priorité arbitrée par Vincent : OCCUPÉ L'EMPORTE SUR EN MAINTENANCE. Six des
+//    sept appartements ayant une intervention ouverte sont loués — une fuite d'eau
+//    ne libère pas le logement, et l'annoncer « en maintenance » le sortirait du
+//    parc commercialisable à tort. « En maintenance » ne concerne donc qu'un
+//    appartement VIDE avec une intervention non soldée.
+//
 // Propriété à préserver en priorité si ce calcul évolue : aucun faux positif.
 // On ne propose jamais un appartement occupé.
 //
@@ -42,6 +52,13 @@ const AT_TOKEN = process.env.AIRTABLE_WATCHDOG_TOKEN || "";
 const T_APPARTEMENTS = "tbltFlpzQWXjoWg88";
 const T_RESERVATIONS = "tbl5uN32egP4YCvUi";
 const T_DISPONIBILITES = "tblQUgzOEXMnMoqhB";
+const T_INTERVENTIONS = "tblUjK6taP6ti0kGa";
+
+// Une intervention non soldée bloque l'appartement. « En cours » n'a jamais été
+// utilisé une seule fois sur 19 interventions : s'y limiter ne déclencherait rien.
+const INTERVENTION_OUVERTE = ["Signalée", "En cours"];
+// Une réservation clôturée ne peut plus occuper, même si ses dates traînent.
+const RESA_MORTE = ["Annulée", "Clôturée"];
 
 // Sentinelle interne « sans terme connu ». N'est jamais écrite dans Airtable.
 const SANS_TERME = "2099-12-31";
@@ -151,6 +168,26 @@ export async function GET(request: Request) {
     "Lien vers le site",
   ]);
   const resas = await lire(T_RESERVATIONS, ["Statut", "Date d'entrée", "Date de sortie", "Appartement"]);
+  const interventions = await lire(T_INTERVENTIONS, ["Statut", "Appartement"]);
+
+  // Appartements portant au moins une intervention non soldée.
+  const enMaintenance = new Set<string>();
+  for (const i of interventions) {
+    if (!INTERVENTION_OUVERTE.includes(String(i.fields["Statut"] ?? ""))) continue;
+    for (const aid of (i.fields["Appartement"] as string[] | undefined) ?? []) enMaintenance.add(aid);
+  }
+
+  // Occupation à la date du jour. C'est la période qui fait foi, pas le statut :
+  // une réservation « Contrat signé » qui démarre dans trois semaines n'occupe rien.
+  const occupeAujourdhui = new Set<string>();
+  for (const r of resas) {
+    if (RESA_MORTE.includes(String(r.fields["Statut"] ?? ""))) continue;
+    const debut = jour(r.fields["Date d'entrée"]);
+    if (!debut || debut > aujourdhui) continue;
+    const fin = jour(r.fields["Date de sortie"]);
+    if (fin && fin <= aujourdhui) continue;
+    for (const aid of (r.fields["Appartement"] as string[] | undefined) ?? []) occupeAujourdhui.add(aid);
+  }
 
   const parAppart = new Map<string, Creneau[]>();
   for (const r of resas) {
@@ -165,7 +202,8 @@ export async function GET(request: Request) {
   }
 
   const maj: { id: string; fields: Record<string, unknown> }[] = [];
-  const compte = { reservations: 0, sansTerme: 0, manuel: 0, horsParc: 0 };
+  const compte = { reservations: 0, sansTerme: 0, manuel: 0, horsParc: 0,
+                   occupe: 0, disponible: 0, maintenance: 0, dispoCorrigee: 0 };
 
   for (const a of appts) {
     if (!PARC.includes(String(a.fields["Statut pipeline"] ?? ""))) { compte.horsParc++; continue; }
@@ -188,11 +226,25 @@ export async function GET(request: Request) {
     // à une formule qu'Airtable refuse comme filtre. C'est pour ça qu'elle est écrite ici.
     const zone = zoneDe(a.fields["Code postal"], a.fields["Ville"]);
 
+    // Occupé prime sur En maintenance. Sans aucune réservation en base on ne peut
+    // rien conclure sur l'occupation : on garde la valeur saisie à la main plutôt
+    // que d'annoncer « Disponible » un appartement peut-être loué hors plateforme.
+    const actuelle = String(a.fields["Disponibilité"] ?? "");
+    let dispo: string;
+    if (occupeAujourdhui.has(a.id)) { dispo = "Occupé"; compte.occupe++; }
+    else if (enMaintenance.has(a.id)) { dispo = "En maintenance"; compte.maintenance++; }
+    else if (creneaux.length) { dispo = "Disponible"; compte.disponible++; }
+    else dispo = actuelle;
+    if (dispo !== actuelle) compte.dispoCorrigee++;
+
     if (jour(a.fields["Libre à partir du"]) === (libre ?? "") &&
         String(a.fields["Source dispo"] ?? "") === source &&
-        String(a.fields["Zone"] ?? "") === zone) continue;
+        String(a.fields["Zone"] ?? "") === zone &&
+        dispo === actuelle) continue;
 
-    maj.push({ id: a.id, fields: { "Libre à partir du": libre, "Source dispo": source, "Zone": zone } });
+    maj.push({ id: a.id, fields: {
+      "Libre à partir du": libre, "Source dispo": source, "Zone": zone, "Disponibilité": dispo,
+    } });
   }
 
   for (let i = 0; i < maj.length; i += 10) {
