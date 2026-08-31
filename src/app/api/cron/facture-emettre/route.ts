@@ -162,12 +162,22 @@ export async function GET(request: Request) {
   if (process.env.CRON_SECRET && auth !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
-  const simulation = new URL(request.url).searchParams.get("simulation") === "1";
+  const simulation = new URL(request.url).searchParams.get("simulation") === "1"
+    || !!new URL(request.url).searchParams.get("ligne");
   if (!PL_KEY) return NextResponse.json({ ok: false, erreur: "PENNYLANE_API_KEY absente" }, { status: 500 });
 
-  const q = new URLSearchParams({ pageSize: "100" });
-  q.set("filterByFormula", "AND({Statut}='A envoyer', {Lien Pennylane}=BLANK())");
-  const aEmettre: Rec[] = (await airtable("GET", `${T_FACTURES}?${q}`)).records ?? [];
+  // Essai à blanc sur une ligne précise, quel que soit son statut : permet de vérifier
+  // le destinataire et le libellé AVANT de passer la facture à « A envoyer ». N'émet
+  // jamais rien — il impose la simulation.
+  const ligne = new URL(request.url).searchParams.get("ligne");
+  let aEmettre: Rec[];
+  if (ligne) {
+    aEmettre = [(await airtable("GET", `${T_FACTURES}/${ligne}`)) as Rec];
+  } else {
+    const q = new URLSearchParams({ pageSize: "100" });
+    q.set("filterByFormula", "AND({Statut}='A envoyer', {Lien Pennylane}=BLANK())");
+    aEmettre = (await airtable("GET", `${T_FACTURES}?${q}`)).records ?? [];
+  }
 
   const faits: string[] = [];
   const refus: string[] = [];
