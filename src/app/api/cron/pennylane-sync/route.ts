@@ -292,8 +292,18 @@ async function rattraper(simulation: boolean) {
       const inv = await pennylane(`/customer_invoices/${plId}`);
       const { champs, trouve } = await identifier(inv);
       if (!trouve.length) { faits.push(`${num} — rien d'identifiable`); continue; }
-      if (!simulation) await airtable("PATCH", T_FACTURES, { records: [{ id: texte(f.id), fields: champs }] });
-      faits.push(`${num} — ${trouve.join(", ")}`);
+      // Ne combler que les cases vides : une valeur saisie à la main fait foi, même
+      // si notre déduction tombe juste. Réécrire par-dessus, c'est prendre le risque
+      // d'effacer une correction sans que personne ne s'en aperçoive.
+      const aEcrire: Dict = {};
+      for (const [k, v] of Object.entries(champs)) {
+        const actuel = champsFac[k];
+        const vide = actuel == null || actuel === "" || (Array.isArray(actuel) && actuel.length === 0);
+        if (vide) aEcrire[k] = v;
+      }
+      if (!Object.keys(aEcrire).length) { faits.push(`${num} — déjà renseigné, rien à ajouter`); continue; }
+      if (!simulation) await airtable("PATCH", T_FACTURES, { records: [{ id: texte(f.id), fields: aEcrire }] });
+      faits.push(`${num} — ${Object.keys(aEcrire).join(", ")}`);
     } catch (e) {
       faits.push(`${num} — échec : ${e instanceof Error ? e.message : e}`);
     }
