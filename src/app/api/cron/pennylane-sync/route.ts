@@ -138,8 +138,173 @@ const heureParis = () =>
 // Une facture née de NOS workflows porte toujours la réservation dans son libellé.
 const estInterne = (label: string) => /—\s*(Extension\s*—\s*)?Résa\s+RES-/i.test(label) || /\bRésa\s+RES-\d{4}/i.test(label);
 
+
+// ── Identification automatique ───────────────────────────────────────────────
+// Une facture née chez Pennylane arrive nue : ni période, ni occupant, ni séjour.
+// Pennylane sait pourtant beaucoup de choses — la ligne porte « Loyer du 01/09/26 au
+// 01/11/26 », et le client est une personne physique nommée. On remplit donc tout ce
+// qui se DÉDUIT, et rien de ce qui se devine : un homonyme, deux séjours possibles,
+// un libellé illisible, et on laisse le champ vide. Une case vide se voit et se
+// corrige ; une case fausse se propage dans la finance sans que personne ne la relise.
+
+const T_OCCUPANTS = "tblgcFnDwxjqVJy8L";
+const T_CLIENT_FINAL = "tblIzSOniHXHCLWQJ";
+const T_AGENCES = "tblINIOlKNzndfDRX";
+const T_RESAS = "tbl5uN32egP4YCvUi";
+
+// Comparaison insensible aux accents, à la casse et à la ponctuation.
+const clef = (v: unknown) =>
+  texte(v).normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase().replace(/[^A-Z0-9]+/g, " ").trim();
+
+async function toutesLesLignes(table: string, champs: string[]): Promise<Dict[]> {
+  const out: Dict[] = [];
+  let offset = "";
+  do {
+    const q = new URLSearchParams({ pageSize: "100" });
+    for (const c of champs) q.append("fields[]", c);
+    if (offset) q.set("offset", offset);
+    const d = await airtable("GET", `${table}?${q}`);
+    out.push(...((d.records as Dict[]) ?? []));
+    offset = texte(d.offset);
+  } while (offset);
+  return out;
+}
+
+// « 01/09/26 » → « 2026-09-01 ». Deux ou quatre chiffres d'année acceptés.
+function isoDepuisFr(v: string): string | null {
+  const m = v.match(/^(\d{2})\/(\d{2})\/(\d{2}|\d{4})$/);
+  if (!m) return null;
+  const an = m[3].length === 2 ? `20${m[3]}` : m[3];
+  const iso = `${an}-${m[2]}-${m[1]}`;
+  return Number.isNaN(Date.parse(iso)) ? null : iso;
+}
+
+// Un seul candidat = une certitude. Zéro ou plusieurs = on n'écrit pas.
+function unique(candidats: Dict[]): Dict | null {
+  return candidats.length === 1 ? candidats[0] : null;
+}
+
+async function identifier(inv: Dict): Promise<{ champs: Dict; trouve: string[] }> {
+  const champs: Dict = {};
+  const trouve: string[] = [];
+
+  // 1. La ligne de facture porte la nature de la prestation et la période.
+  let libelleLigne = "";
+  try {
+    const l = await pennylane(`/customer_invoices/${texte(inv.id)}/invoice_lines`);
+    libelleLigne = texte(((l.items as Dict[]) ?? [])[0]?.label);
+  } catch { /* sans ligne lisible on se contente du reste */ }
+
+  if (/^\s*loyer\b/i.test(libelleLigne)) { champs["Catégorie"] = "Loyer"; trouve.push("catégorie"); }
+  const per = libelleLigne.match(/du\s+(\d{2}\/\d{2}\/\d{2,4})\s+au\s+(\d{2}\/\d{2}\/\d{2,4})/i);
+  const debut = per ? isoDepuisFr(per[1]) : null;
+  const fin = per ? isoDepuisFr(per[2]) : null;
+  if (debut && fin && debut < fin) {
+    champs["Période facturée début"] = debut;
+    champs["Période facturée fin"] = fin;
+    trouve.push("période");
+  }
+
+  // 2. Le client Pennylane désigne le payeur. Personne physique → occupant ;
+  //    personne morale → client final, puis agence.
+  const refClient = (inv.customer as Dict | undefined)?.id;
+  if (!refClient) return { champs, trouve };
+  let cli: Dict;
+  try { cli = await pennylane(`/customers/${texte(refClient)}`); }
+  catch { return { champs, trouve }; }
+
+  const physique = texte(cli.customer_type) === "individual";
+  let occupant: Dict | null = null;
+
+  if (physique) {
+    const nom = clef(cli.last_name), prenom = clef(cli.first_name);
+    if (nom) {
+      const occs = await toutesLesLignes(T_OCCUPANTS, ["Nom", "Prénom", "Pennylane customer ID"]);
+      occupant = unique(occs.filter((o) => {
+        const f = o.fields as Dict;
+        return clef(f["Nom"]) === nom && (!prenom || clef(f["Prénom"]) === prenom);
+      }));
+      if (occupant) {
+        champs["Occupant lié"] = [texte(occupant.id)];
+        trouve.push("occupant");
+        // L'identifiant client Pennylane devient réutilisable pour une facture
+        // émise depuis Airtable : on le range s'il manque.
+        if (!(occupant.fields as Dict)["Pennylane customer ID"]) {
+          await airtable("PATCH", T_OCCUPANTS, { records: [{ id: texte(occupant.id),
+            fields: { "Pennylane customer ID": Number(refClient) } }] }).catch(() => {});
+        }
+      }
+    }
+  } else {
+    const nom = clef(cli.name);
+    if (nom) {
+      const cfs = await toutesLesLignes(T_CLIENT_FINAL, ["Nom client final"]);
+      const cf = unique(cfs.filter((c) => clef((c.fields as Dict)["Nom client final"]) === nom));
+      if (cf) { champs["Client final liée"] = [texte(cf.id)]; trouve.push("client final"); }
+      else {
+        const ags = await toutesLesLignes(T_AGENCES, ["Nom agence"]);
+        const ag = unique(ags.filter((a) => clef((a.fields as Dict)["Nom agence"]) === nom));
+        if (ag) trouve.push(`agence reconnue (${texte((ag.fields as Dict)["Nom agence"])})`);
+      }
+    }
+  }
+
+  // 3. Le séjour, seulement si l'occupant est identifié ET qu'un seul de ses
+  //    séjours recouvre la période facturée. Deux séjours qui se chevauchent :
+  //    on ne tranche pas à sa place.
+  if (occupant && debut && fin) {
+    const resas = await toutesLesLignes(T_RESAS, ["Code réservation", "Date d'arrivée", "Date de départ", "Occupant"]);
+    const oid = texte(occupant.id);
+    const candidates = resas.filter((r) => {
+      const f = r.fields as Dict;
+      const lien = (f["Occupant"] as string[] | undefined) ?? [];
+      if (!lien.includes(oid)) return false;
+      const a = texte(f["Date d'arrivée"]).slice(0, 10), d = texte(f["Date de départ"]).slice(0, 10);
+      return !!a && !!d && a <= fin && d >= debut;
+    });
+    const resa = unique(candidates);
+    if (resa) { champs["Réservation liée"] = [texte(resa.id)]; trouve.push("réservation"); }
+  }
+
+  return { champs, trouve };
+}
+
+
+// Rattrapage : les factures déjà importées à nu (avant l'identification automatique,
+// ou parce que Pennylane n'en disait pas assez à l'époque) sont repassées à la
+// moulinette. On ne touche QUE les champs vides — jamais une saisie de Vincent.
+async function rattraper(simulation: boolean) {
+  const q = new URLSearchParams({ pageSize: "100" });
+  q.set("filterByFormula",
+    "AND(FIND('sync auto', {Notes}), {Occupant lié}=BLANK(), {Client final liée}=BLANK(), {Période facturée début}=BLANK())");
+  const nues = ((await airtable("GET", `${T_FACTURES}?${q}`)).records as Dict[]) ?? [];
+  const faits: string[] = [];
+  for (const f of nues) {
+    const champsFac = f.fields as Dict;
+    const num = texte(champsFac["Numéro facture"]);
+    const plId = /invoice_id=(\d+)/.exec(texte(champsFac["Lien Pennylane"]))?.[1];
+    if (!plId) { faits.push(`${num} — pas de lien Pennylane exploitable`); continue; }
+    try {
+      const inv = await pennylane(`/customer_invoices/${plId}`);
+      const { champs, trouve } = await identifier(inv);
+      if (!trouve.length) { faits.push(`${num} — rien d'identifiable`); continue; }
+      if (!simulation) await airtable("PATCH", T_FACTURES, { records: [{ id: texte(f.id), fields: champs }] });
+      faits.push(`${num} — ${trouve.join(", ")}`);
+    } catch (e) {
+      faits.push(`${num} — échec : ${e instanceof Error ? e.message : e}`);
+    }
+  }
+  return faits;
+}
+
 export async function GET(request: Request) {
   const force = new URL(request.url).searchParams.get("force") === "1";
+  const url = new URL(request.url);
+  if (url.searchParams.get("rattraper")) {
+    const faits = await rattraper(url.searchParams.get("rattraper") === "simulation");
+    return NextResponse.json({ ok: true, rattrapage: faits });
+  }
   const auth = request.headers.get("authorization");
   if (process.env.CRON_SECRET && auth !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
@@ -199,9 +364,14 @@ export async function GET(request: Request) {
       const client = texte((inv.customer as Dict)?.name) || texte((inv.customer as Dict)?.company_name);
       const num = texte(inv.invoice_number);
       const paye = texte(inv.status) === "paid" || inv.paid === true;
+      // Ce qui peut être identifié l'est ; une identification qui échoue n'empêche
+      // jamais l'import — mieux vaut une facture nue qu'une facture absente.
+      let devine: { champs: Dict; trouve: string[] } = { champs: {}, trouve: [] };
+      try { devine = await identifier(inv); } catch { /* import quand même */ }
       await airtable("POST", T_FACTURES, {
         records: [{ fields: {
           "Catégorie": "Autre",
+          ...devine.champs,
           Type: "Facture",
           Statut: paye ? "Payée" : "Envoyée",
           "Montant total HT": montant(inv.currency_amount_before_tax ?? inv.amount ?? inv.currency_amount),
@@ -211,7 +381,8 @@ export async function GET(request: Request) {
         }}],
         typecast: true,
       });
-      importees.push(`• ${num || id} — ${montant(inv.currency_amount ?? inv.amount).toLocaleString("fr-FR")} €${client ? ` — ${client}` : ""}`);
+      importees.push(`• ${num || id} — ${montant(inv.currency_amount ?? inv.amount).toLocaleString("fr-FR")} €${client ? ` — ${client}` : ""}`
+        + (devine.trouve.length ? `\n   ↳ reconnu : ${devine.trouve.join(", ")}` : "\n   ↳ rien reconnu — à compléter à la main"));
     }
 
     if (importees.length) {
