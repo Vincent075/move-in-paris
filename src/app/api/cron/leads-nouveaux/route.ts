@@ -28,7 +28,7 @@ const CHAMP_NOTIF = "Notifié Slack le";
 
 // Les leads antérieurs à la mise en service ne sont pas annoncés : ils sont déjà
 // connus, et déverser cinquante notifications d'un coup ferait fuir le canal.
-const PLANCHER = "2026-08-31T11:30:00.000Z";
+const PLANCHER = "2026-08-31T11:00:00.000Z";
 // Garde-fou : si une reprise en masse survenait malgré le plancher, on préfère
 // tronquer et le dire plutôt que d'inonder Slack.
 const MAX_PAR_PASSAGE = 15;
