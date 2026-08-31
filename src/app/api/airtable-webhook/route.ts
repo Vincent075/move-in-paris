@@ -157,7 +157,9 @@ export async function POST(request: Request) {
   // (ménages, check-ins) n'ont aucun effet sur la finance, les relancer serait du
   // travail pur perte et des écritures en cascade pour rien.
   const travaux = conf.table === TABLE_LEADS
-    ? [lance("/api/cron/leads-signes")]
+    // Un lead entre : il est annoncé dans #leads dans la seconde, qu'il vienne d'un
+    // formulaire du site ou d'une saisie à la main. Voir /api/cron/leads-nouveaux.
+    ? [lance("/api/cron/leads-signes"), lance("/api/cron/leads-nouveaux")]
     : TABLES_TERRAIN.has(conf.table)
       // Le signataire suit l'assignation dans la seconde : c'est lui qui permet à
       // chacun de ne voir que son planning, sans rien changer à la saisie.
