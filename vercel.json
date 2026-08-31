@@ -60,10 +60,6 @@
     {
       "path": "/api/cron/leads-nouveaux",
       "schedule": "35 * * * *"
-    },
-    {
-      "path": "/api/cron/facture-emettre",
-      "schedule": "45 * * * *"
     }
   ]
 }
