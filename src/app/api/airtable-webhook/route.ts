@@ -165,11 +165,13 @@ export async function POST(request: Request) {
       // Le signataire suit l'assignation dans la seconde : c'est lui qui permet à
       // chacun de ne voir que son planning, sans rien changer à la saisie.
       ? [lance("/api/cron/terrain-notifs"), lance("/api/cron/terrain-signataire")]
-      : conf.table === TABLE_FACTURES
-        // Une facture passée à « A envoyer » part chez Pennylane dans la seconde.
-        // Rien d'autre ne déclenche une émission — surtout pas une simple création.
-        ? [lance("/api/cron/finance-mensuelle"), lance("/api/cron/facture-emettre")]
-        : [lance("/api/cron/finance-mensuelle")];
+      : [lance("/api/cron/finance-mensuelle")];
+  // L'émission automatique d'une facture au passage à « A envoyer » est DÉBRANCHÉE
+  // (31/08/2026) : la page de création de facture doit être refaite, et on ne laisse
+  // pas un déclencheur qui émet de vraies factures sur un chantier à l'arrêt. La route
+  // /api/cron/facture-emettre reste en place et reste utilisable en essai à blanc
+  // (?ligne=recXXX). Pour la rebrancher : rétablir l'aiguillage sur TABLE_FACTURES.
+  void TABLE_FACTURES;
   if (TABLES_DISPO.has(conf.table)) {
     travaux.push(lance("/api/cron/dispo-appartements"));
     // Le planning ne se recalcule que si un champ qui le détermine a réellement
