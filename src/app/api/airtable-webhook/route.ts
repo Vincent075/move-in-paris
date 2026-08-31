@@ -48,6 +48,7 @@ const TABLES_TERRAIN = new Set(["tblVE8HEtnuTeCi8r", "tbl8SktZKbyopdQ7l"]);
 // Leads : un passage à « Signé » crée le propriétaire et l'appartement. Aucun
 // impact financier, donc pas de recalcul de finance sur cette table.
 const TABLE_LEADS = "tblUxEm8sB4eHyNG1";
+const TABLE_FACTURES = "tblC97ei6ZPWhWUwe";
 
 // Les SEULS champs dont le changement peut modifier le planning des ménages.
 // C'est une liste blanche, et c'est volontaire : le 29/08/2026, relancer la
@@ -164,7 +165,11 @@ export async function POST(request: Request) {
       // Le signataire suit l'assignation dans la seconde : c'est lui qui permet à
       // chacun de ne voir que son planning, sans rien changer à la saisie.
       ? [lance("/api/cron/terrain-notifs"), lance("/api/cron/terrain-signataire")]
-      : [lance("/api/cron/finance-mensuelle")];
+      : conf.table === TABLE_FACTURES
+        // Une facture passée à « A envoyer » part chez Pennylane dans la seconde.
+        // Rien d'autre ne déclenche une émission — surtout pas une simple création.
+        ? [lance("/api/cron/finance-mensuelle"), lance("/api/cron/facture-emettre")]
+        : [lance("/api/cron/finance-mensuelle")];
   if (TABLES_DISPO.has(conf.table)) {
     travaux.push(lance("/api/cron/dispo-appartements"));
     // Le planning ne se recalcule que si un champ qui le détermine a réellement
