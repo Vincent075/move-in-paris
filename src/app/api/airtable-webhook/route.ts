@@ -159,7 +159,9 @@ export async function POST(request: Request) {
   const travaux = conf.table === TABLE_LEADS
     ? [lance("/api/cron/leads-signes")]
     : TABLES_TERRAIN.has(conf.table)
-      ? [lance("/api/cron/terrain-notifs")]
+      // Le signataire suit l'assignation dans la seconde : c'est lui qui permet à
+      // chacun de ne voir que son planning, sans rien changer à la saisie.
+      ? [lance("/api/cron/terrain-notifs"), lance("/api/cron/terrain-signataire")]
       : [lance("/api/cron/finance-mensuelle")];
   if (TABLES_DISPO.has(conf.table)) {
     travaux.push(lance("/api/cron/dispo-appartements"));
