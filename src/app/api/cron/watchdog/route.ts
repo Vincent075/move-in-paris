@@ -362,8 +362,13 @@ const IMAP_WORKFLOWS = [
   { nom: "request@ (AUTO-00)", id: "FrnZPqeYoZzG67MJ" },
   { nom: "assistance@ (AUTO-11)", id: "gedYOrIn44VBTMUo" },
 ];
-// À l'écart des crons de 7h, 8h et 9h, pour ne pas croiser une exécution en cours.
-const HEURES_RECONNEXION_PARIS = [4, 10, 16, 22];
+// Toutes les heures depuis le 31/08/2026. Le rythme de six heures (4h/10h/16h/22h) n'a pas
+// suffi : entre le 26 et le 29/08, des demandes sont restées jusqu'à 44 h dans la boîte sans
+// que rien ne le signale. Une demande d'agence qui dort deux jours est une affaire perdue,
+// donc on ramène la fenêtre d'exposition à une heure. Le contrôle « exécution en cours »
+// juste en dessous évite de couper une reprise de demande à chaud, ce qui était la seule
+// raison d'espacer les passages.
+const HEURES_RECONNEXION_PARIS = Array.from({ length: 24 }, (_, h) => h);
 const N8N_WRITE_KEY = process.env.N8N_WATCHDOG_WRITE_KEY || "";
 
 async function n8nPost(path: string) {
