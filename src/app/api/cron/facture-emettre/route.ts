@@ -34,8 +34,16 @@ const T_RESERVATIONS = "tbl5uN32egP4YCvUi";
 
 // Une facture émise ne se rattrape pas : on n'en passe jamais beaucoup d'un coup.
 const MAX_PAR_PASSAGE = 5;
-const TVA = "FR_200";
 const ECHEANCE_JOURS = 30;
+// La location meublée d'habitation n'est pas soumise à TVA : AUTO-16 facture les
+// loyers en « exempt » depuis toujours. Appliquer 20 % sur un loyer produirait une
+// facture fausse et une TVA collectée à tort. Tout le reste (honoraires, dégâts,
+// prestations) est au taux normal.
+const TVA_LOYER = "exempt";
+const TVA_AUTRE = "FR_200";
+// Modèle Pennylane = IBAN imprimé sur le PDF. Mêmes identifiants que AUTO-16/04A.
+const TEMPLATE_IBAN: Record<string, number> = { "IBAN 1": 5040390144, "IBAN 2": 5039919104 };
+const TEMPLATE_DEFAUT = 5040390144;
 
 type Dict = Record<string, unknown>;
 type Rec = { id: string; fields: Dict };
@@ -149,12 +157,55 @@ async function clientPennylane(conf: typeof DESTINATAIRES[string], rec: Rec) {
   return { id, cree: true };
 }
 
-function libelle(fac: Rec) {
+const lookup = (v: unknown) => (Array.isArray(v) ? str(v[0]) : str(v));
+
+// Construit la ligne de facture Pennylane. Un loyer se facture en nuits, comme le
+// fait AUTO-16 : le PDF doit montrer « 22 jours × 130 € » et non un forfait, sinon
+// l'agence ne peut pas rapprocher la facture de son séjour. Le montant saisi dans
+// Airtable reste le TOTAL — c'est la convention de la table, vérifiée sur les
+// factures existantes — et c'est nous qui le ramenons au prix par nuit.
+function ligneFacture(fac: Rec, montantHT: number) {
   const cat = str(fac.fields["Catégorie"]);
+  const estLoyer = cat === "Loyer";
+  const debut = str(fac.fields["Période facturée début"]);
+  const fin = str(fac.fields["Période facturée fin"]);
+  const resa = lookup(fac.fields["Code réservation (récap)"]).split(" · ")[0];
+  const adresse = lookup(fac.fields["Adresse appartement (récap)"]);
   const notes = str(fac.fields["Notes"]);
-  const resa = Array.isArray(fac.fields["Code réservation (récap)"])
-    ? str((fac.fields["Code réservation (récap)"] as unknown[])[0]).split(" · ")[0] : "";
-  return [notes || cat || "Prestation", resa ? `Réservation ${resa}` : ""].filter(Boolean).join(" — ").slice(0, 250);
+
+  let nuits = 0;
+  if (debut && fin) {
+    nuits = Math.round((Date.parse(fin) - Date.parse(debut)) / 86400000);
+    if (!(nuits > 0)) nuits = 0;
+  }
+
+  const label = estLoyer
+    ? ["Loyer", resa ? `Résa ${resa}` : "", debut && fin ? `${debut} au ${fin}` : "", adresse]
+        .filter(Boolean).join(" — ")
+    : [notes || cat || "Prestation", resa ? `Résa ${resa}` : ""].filter(Boolean).join(" — ");
+
+  // Sans période exploitable on facture au forfait plutôt que de refuser : le montant
+  // total reste juste, seule la présentation change.
+  return nuits > 0
+    ? { label: label.slice(0, 250), quantity: nuits, unit: "day",
+        raw_currency_unit_price: (montantHT / nuits).toFixed(6),
+        vat_rate: estLoyer ? TVA_LOYER : TVA_AUTRE }
+    : { label: label.slice(0, 250), quantity: 1, unit: "piece",
+        raw_currency_unit_price: montantHT.toFixed(6),
+        vat_rate: estLoyer ? TVA_LOYER : TVA_AUTRE };
+}
+
+// L'IBAN imprimé sur le PDF est choisi sur la réservation. Sans réservation liée,
+// modèle par défaut — c'est ce que font déjà AUTO-16 et AUTO-04A.
+async function modeleIban(fac: Rec) {
+  const resaId = premierLien(fac.fields["Réservation liée"]);
+  if (!resaId) return TEMPLATE_DEFAUT;
+  try {
+    const resa = await airtable("GET", `${T_RESERVATIONS}/${resaId}`);
+    return TEMPLATE_IBAN[str(resa.fields["Modèle facture (IBAN)"])] || TEMPLATE_DEFAUT;
+  } catch {
+    return TEMPLATE_DEFAUT;
+  }
 }
 
 export async function GET(request: Request) {
@@ -188,8 +239,10 @@ export async function GET(request: Request) {
       if (!(montantHT > 0)) throw new Error("montant HT vide ou nul");
       const { choix, conf, rec } = await resoudreDestinataire(fac);
 
+      const ligneFac = ligneFacture(fac, montantHT);
       if (simulation) {
-        faits.push(`${num} → ${choix} « ${conf.nom(rec.fields)} » · ${montantHT} € HT · ${libelle(fac)}`);
+        faits.push(`${num} → ${choix} « ${conf.nom(rec.fields)} » · ${montantHT} € HT · `
+          + `${ligneFac.quantity} × ${ligneFac.raw_currency_unit_price} · TVA ${ligneFac.vat_rate} · ${ligneFac.label}`);
         continue;
       }
 
@@ -202,10 +255,8 @@ export async function GET(request: Request) {
         deadline: echeance,
         draft: str(fac.fields["Mode facturation"]) === "Proforma",
         currency: "EUR",
-        invoice_lines: [{
-          label: libelle(fac), quantity: 1, unit: "piece",
-          raw_currency_unit_price: montantHT.toFixed(6), vat_rate: TVA,
-        }],
+        customer_invoice_template_id: await modeleIban(fac),
+        invoice_lines: [ligneFac],
       });
       const plId = Number(facture?.id);
       if (!plId) throw new Error("Pennylane n'a pas renvoyé d'identifiant de facture");
