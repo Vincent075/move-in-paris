@@ -245,7 +245,10 @@ async function identifier(inv: Dict): Promise<{ champs: Dict; trouve: string[] }
       else {
         const ags = await toutesLesLignes(T_AGENCES, ["Nom agence"]);
         const ag = unique(ags.filter((a) => clef((a.fields as Dict)["Nom agence"]) === nom));
-        if (ag) trouve.push(`agence reconnue (${texte((ag.fields as Dict)["Nom agence"])})`);
+        if (ag) {
+          champs["Agence liée"] = [texte(ag.id)];
+          trouve.push(`agence (${texte((ag.fields as Dict)["Nom agence"])})`);
+        }
       }
     }
   }
@@ -277,7 +280,7 @@ async function identifier(inv: Dict): Promise<{ champs: Dict; trouve: string[] }
 async function rattraper(simulation: boolean) {
   const q = new URLSearchParams({ pageSize: "100" });
   q.set("filterByFormula",
-    "AND(FIND('sync auto', {Notes}), {Occupant lié}=BLANK(), {Client final liée}=BLANK(), {Période facturée début}=BLANK())");
+    "AND(FIND('sync auto', {Notes}), {Occupant lié}=BLANK(), {Client final liée}=BLANK(), {Agence liée}=BLANK())");
   const nues = ((await airtable("GET", `${T_FACTURES}?${q}`)).records as Dict[]) ?? [];
   const faits: string[] = [];
   for (const f of nues) {
