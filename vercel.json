@@ -56,6 +56,10 @@
     {
       "path": "/api/cron/terrain-signataire",
       "schedule": "50 * * * *"
+    },
+    {
+      "path": "/api/cron/leads-nouveaux",
+      "schedule": "35 * * * *"
     }
   ]
 }
