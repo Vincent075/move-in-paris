@@ -139,6 +139,7 @@ const heureParis = () =>
 const estInterne = (label: string) => /—\s*(Extension\s*—\s*)?Résa\s+RES-/i.test(label) || /\bRésa\s+RES-\d{4}/i.test(label);
 
 export async function GET(request: Request) {
+  const force = new URL(request.url).searchParams.get("force") === "1";
   const auth = request.headers.get("authorization");
   if (process.env.CRON_SECRET && auth !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
@@ -174,7 +175,11 @@ export async function GET(request: Request) {
       // tardivement reste une facture de 2025.
       if (texte(inv.date) < MISE_EN_SERVICE) { ignorees.anterieures++; continue; }
       const cree = Date.parse(texte(inv.created_at) || texte(inv.date));
-      if (Number.isFinite(cree) && Date.now() - cree < GRACE_MS) { ignorees.grace++; continue; }
+      // « force » : lever l'heure de grâce pour une facture créée À LA MAIN dans
+      // Pennylane, qui n'attend aucun lien Airtable et n'a donc aucune raison de
+      // patienter. À n'utiliser que manuellement — automatisé, il réintroduirait
+      // exactement les doublons que la grâce évite.
+      if (!force && Number.isFinite(cree) && Date.now() - cree < GRACE_MS) { ignorees.grace++; continue; }
       aImporter.push(inv);
     }
 
