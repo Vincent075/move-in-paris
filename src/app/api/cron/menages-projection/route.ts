@@ -17,6 +17,13 @@ import { NextResponse } from "next/server";
 // Et il y a un ménage de départ le jour de la sortie, qu'il y ait weekly cleaning ou
 // non : un appartement ne change jamais de locataire sans être nettoyé.
 //
+// DÉLAI APRÈS L'ARRIVÉE (31/08/2026, demande de Vincent) : pas de ménage régulier dans
+// les 72 h qui suivent l'entrée. L'appartement vient d'être livré propre ; envoyer
+// l'équipe le lendemain, voire le jour même, n'a aucun sens et se voyait dès que le
+// jour de ménage de l'appartement tombait juste après la date d'entrée. On saute donc
+// la première occurrence concernée et on démarre à la suivante — la série garde son
+// jour de semaine, elle commence simplement une semaine plus tard.
+//
 // LE PLANNING SUIT LA DONNÉE, il ne la précède pas. On projette du jour d'entrée au
 // jour de sortie, sans horizon arbitraire : la fin du séjour EST l'horizon. Un bail
 // sans date de sortie ne produit donc pas de régulier au-delà d'une fenêtre courte,
@@ -50,6 +57,8 @@ const ENGAGES = new Set(["En cours", "Contrat signé", "Booking validé", "Pré-
 // Un bail sans date de sortie : on ne projette que cette fenêtre, parce qu'un séjour
 // dont on ignore la fin ne justifie pas de remplir le calendrier sur des mois.
 const FENETRE_BAIL_OUVERT_J = 92;
+// Aucun ménage régulier dans les 72 h suivant l'entrée : J+0 à J+3 inclus sont écartés.
+const DELAI_APRES_ENTREE_J = 3;
 const JOURS: Record<string, number> = {
   Lundi: 1, Mardi: 2, Mercredi: 3, Jeudi: 4, Vendredi: 5, Samedi: 6, Dimanche: 0,
 };
@@ -192,6 +201,9 @@ export async function GET(request: Request) {
       const fin = sortie || iso(plus(new Date(), FENETRE_BAIL_OUVERT_J));
       let d = jour(entree > aujourdhui ? entree : aujourdhui);
       while (d.getUTCDay() !== JOURS[nomJour]) d = plus(d, 1);
+      // Le premier régulier ne peut pas tomber dans les 72 h de l'entrée : on décale
+      // d'une semaine, ce qui préserve le jour de ménage de l'appartement.
+      while (d < plus(jour(entree), DELAI_APRES_ENTREE_J + 1)) d = plus(d, 7);
       const borne = jour(fin);
       while (d < borne) {
         const p: Prevu = { appt: aid, date: iso(d), type: "Régulier", duree: "2h", resa: r.id };
