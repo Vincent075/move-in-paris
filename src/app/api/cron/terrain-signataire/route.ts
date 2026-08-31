@@ -23,6 +23,11 @@ import { NextResponse } from "next/server";
 // Ses ménages restent visibles de tous tant qu'elle n'est pas invitée à l'interface.
 // Le compte est signalé dans la réponse plutôt que de faire échouer la synchro.
 //
+// SUPERVISEUR : le filtre d'interface ne sait comparer qu'à « l'utilisateur en cours ».
+// Pour que le responsable voie tout le planning dans Équipe Terrain sans que l'équipe
+// voie celui des autres, chaque ligne porte aussi un superviseur — toujours le même —
+// et le filtre devient « signataire OU superviseur = utilisateur en cours ».
+//
 // ?simulation=1 calcule sans écrire.
 
 export const dynamic = "force-dynamic";
@@ -31,6 +36,16 @@ export const maxDuration = 120;
 const AT_BASE = process.env.AIRTABLE_BASE_ID || "";
 const AT_TOKEN = process.env.AIRTABLE_WATCHDOG_TOKEN || "";
 const T_UTILISATEURS = "tblCTaXoRZpJGSesQ";
+// Qui voit l'intégralité du planning dans Équipe Terrain. Un champ collaborateur ne
+// retient qu'UNE personne : il faut donc autant de champs « Superviseur N » que de
+// responsables, et autant de conditions dans le filtre de l'interface. L'ordre compte,
+// il détermine quel champ reçoit qui. Ajouter un quatrième responsable suppose de créer
+// « Superviseur 4 » et d'ajouter la condition correspondante.
+const SUPERVISEURS = [
+  "vincent@move-in-paris.com",
+  "Guillaume@move-in-paris.com",   // casse d'origine du compte Airtable, à respecter
+  "stephane@move-in-paris.com",
+];
 const T_MONITORING = "tblDEkjIyKoKJG5Yj";
 const LOT = 10;
 
@@ -103,6 +118,16 @@ export async function GET(request: Request) {
       else sansCompte.add(texte(u.fields["Code utilisateur"]));
     }
 
+    // Les superviseurs sont des utilisateurs comme les autres : on prend leur compte
+    // Airtable dans la table Utilisateurs, sans jamais coder d'identifiant en dur.
+    const parEmail = new Map<string, string>();
+    for (const u of utilisateurs) {
+      const c = u.fields["Collaborateur"] as { id?: string; email?: string } | undefined;
+      if (c?.id) parEmail.set(texte(c.email).toLowerCase(), c.id);
+    }
+    const superviseurs = SUPERVISEURS.map((e) => parEmail.get(e.toLowerCase()) ?? null);
+    const superviseursManquants = SUPERVISEURS.filter((e) => !parEmail.has(e.toLowerCase()));
+
     const detailParTable: Record<string, { corriges: number; sans_compte: number }> = {};
     let total = 0;
     const bloques: string[] = [];
@@ -115,6 +140,14 @@ export async function GET(request: Request) {
       for (const r of recs) {
         const assignes = liens(r.fields[t.champ]);
         const actuel = (r.fields["Collaborateur"] as { id?: string } | undefined)?.id ?? null;
+        // Les superviseurs ne dépendent pas de l'assignation : ils sont sur toutes les
+        // lignes, chacun dans son champ.
+        superviseurs.forEach((sid, i) => {
+          if (!sid) return;
+          const champ = `Superviseur ${i + 1}`;
+          const actuelSup = (r.fields[champ] as { id?: string } | undefined)?.id ?? null;
+          if (actuelSup !== sid) aEcrire.push({ id: r.id, fields: { [champ]: { id: sid } } });
+        });
 
         if (!assignes.length) {
           // Plus personne d'assigné : on retire aussi le signataire, sinon la ligne
@@ -132,12 +165,17 @@ export async function GET(request: Request) {
         if (actuel !== c.id) aEcrire.push({ id: r.id, fields: { Collaborateur: { id: c.id } } });
       }
 
-      detailParTable[t.nom] = { corriges: aEcrire.length, sans_compte: bloque };
-      total += aEcrire.length;
+      // Une ligne peut recevoir signataire ET superviseur : on fusionne, Airtable
+      // rejette un lot qui contient deux fois le même enregistrement.
+      const fusion = new Map<string, Dict>();
+      for (const e of aEcrire) fusion.set(e.id, { ...(fusion.get(e.id) ?? {}), ...e.fields });
+      const lots = [...fusion.entries()].map(([id, fields]) => ({ id, fields }));
+      detailParTable[t.nom] = { corriges: lots.length, sans_compte: bloque };
+      total += lots.length;
 
       if (!simulation) {
-        for (let i = 0; i < aEcrire.length; i += LOT) {
-          await airtable("PATCH", t.id, { records: aEcrire.slice(i, i + LOT), typecast: true });
+        for (let i = 0; i < lots.length; i += LOT) {
+          await airtable("PATCH", t.id, { records: lots.slice(i, i + LOT), typecast: true });
         }
       }
     }
@@ -152,6 +190,7 @@ export async function GET(request: Request) {
       alignes: total,
       par_table: detailParTable,
       salaries_sans_compte_airtable: [...sansCompte],
+      superviseurs_introuvables: superviseursManquants,
       exemples_non_synchronisables: bloques,
       duree_ms: Date.now() - debut,
     });
