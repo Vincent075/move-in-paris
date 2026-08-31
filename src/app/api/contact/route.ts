@@ -305,7 +305,15 @@ async function writeLeadToAirtable(
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          records: [{ fields: mapFormToLead(formType, fields) }],
+          records: [{
+            fields: {
+              ...mapFormToLead(formType, fields),
+              // Ce lead est annoncé dans #leads par notifyLeadSlack juste après.
+              // On horodate dès la création : /api/cron/leads-nouveaux, réveillé
+              // dans la seconde par le webhook, ne doit pas l'annoncer une 2e fois.
+              "Notifié Slack le": new Date().toISOString(),
+            },
+          }],
           typecast: true,
         }),
       }
