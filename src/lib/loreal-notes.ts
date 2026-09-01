@@ -39,16 +39,13 @@ function nomLisible(v: string): string {
     .map((m) => m.charAt(0).toUpperCase() + m.slice(1).toLowerCase()).join(" ");
 }
 
-// Un code entité est une racine (MCD501, PBI252) ; une business unit la décline
-// (MCD501KM, PBI252GR). Deux expéditeurs les ont inversés — on rétablit l'ordre
-// plutôt que de recopier une erreur qui partirait chez le client.
-function redresser(b: BlocLoreal) {
-  const code = b.entiteCode ?? "", bu = b.businessUnit ?? "";
-  const racine = (s: string) => /^[A-Z]{2,4}\d{3}$/.test(s.trim());
-  if (code && bu && !racine(code) && racine(bu) && code.startsWith(bu)) {
-    b.entiteCode = bu; b.businessUnit = code;
-  }
-}
+// PAS de « redressement » des codes. J'avais ajouté une correction automatique qui
+// permutait code entité et business unit quand la paire semblait inversée. C'était une
+// erreur : le 01/09/2026, Santa Fe a transmis pour M. LAPOIRIE un code entité MCD501C4
+// identique à sa business unit, et un cost center 501000167 sans le A que portent les
+// lignes voisines. Ce n'étaient pas des fautes de frappe, c'étaient ses références.
+// Une référence client ne se déduit pas d'un motif : on recopie ce que l'agence envoie,
+// et si quelque chose semble anormal on le signale, on ne le corrige pas.
 
 export function lireBlocLoreal(notes: string | null | undefined): BlocLoreal | null {
   if (!notes || !/mandatory information|invoicing report|gpz/i.test(notes)) return null;
@@ -77,7 +74,6 @@ export function lireBlocLoreal(notes: string | null | undefined): BlocLoreal | n
     out.champsLus.push(trouve);
   }
   if (!out.champsLus.length) return null;
-  redresser(out);
   return out;
 }
 
