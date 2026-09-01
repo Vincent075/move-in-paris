@@ -189,6 +189,12 @@ type Resultat = { nom: string; statut: string; detail: string };
 // confiance sans contrôle : ce filet rebalaye toutes les factures chaque heure
 // et crie tant qu'une nuit est portée par deux factures vivantes. Une facture
 // annulée par avoir (lien « From field: Avoir associé ») ne compte pas.
+// Réservations où un chevauchement de nuits est DÉLIBÉRÉ, donc à ne pas signaler.
+// RES-2026-0124 (LAPOIRIE) : l'occupant prend une partie du séjour à sa charge, ce qui
+// produit deux factures sur les mêmes nuits — une à L'Oréal, une à lui. Décision de
+// Vincent le 01/09/2026 : ce n'est pas un doublon, c'est le montage voulu.
+const NUITS_DOUBLES_ADMISES = new Set(["RES-2026-0124"]);
+
 async function controleNuitsDoubles(): Promise<Resultat> {
   const nom = "Nuits facturées plusieurs fois";
   const factures = await airtableAll(AT_FACTURES, [
@@ -226,6 +232,8 @@ async function controleNuitsDoubles(): Promise<Resultat> {
     }
     const doubles = [...parNuit.entries()].filter(([, nums]) => nums.size > 1);
     if (!doubles.length) continue;
+    const codeResa = (nomResa.get(rid) ?? "").split(" ")[0].split("·")[0].trim();
+    if ([...NUITS_DOUBLES_ADMISES].some((c) => (nomResa.get(rid) ?? "").includes(c) || codeResa === c)) continue;
     const facs = [...new Set(doubles.flatMap(([, nums]) => [...nums]))].sort().join(" / ");
     lignes.push(`• ${nomResa.get(rid) ?? rid} — ${doubles.length} nuit(s) en double : ${facs}`);
   }
