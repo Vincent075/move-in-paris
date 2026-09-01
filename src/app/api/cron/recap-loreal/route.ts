@@ -181,7 +181,7 @@ export async function GET(request: Request) {
   // Le contrôle porte sur TOUTES les factures, pas seulement celles qu'on envoie :
   // c'est ce qui permet de repérer une proforma qui dort depuis des semaines.
   const envoyeesIci = new Set(finales.map((l) => l.facture.id));
-  const alertes = controleCompletude(factures, resas, envoyeesIci);
+  const alertes = controleCompletude(factures, resas, envoyeesIci, M2.fin);
 
   const AGENCES = ["Santa Fe", "Dwellworks"] as const;
   const stamp = new Date().toISOString();
@@ -299,7 +299,14 @@ function intervalles(js: string[]): string[] {
   return out;
 }
 
-function controleCompletude(factures: Rec[], resas: Rec[], envoyees: Set<string>) {
+// Le contrôle n'a de sens que sur une fenêtre bornée. En dessous du plancher, les
+// loyers étaient facturés hors plateforme et Airtable n'en garde pas trace. Au-dessus
+// du plafond — la fin de M+2 — les nuits ne sont pas encore dues : elles partiront
+// dans un récap ultérieur, mois par mois. Sans ces bornes le contrôle crie sur tout
+// et ne sert plus à rien, ce qui est pire que pas de contrôle.
+const PLANCHER_CONTROLE = "2026-08-01";
+
+function controleCompletude(factures: Rec[], resas: Rec[], envoyees: Set<string>, plafond: string) {
   const alertes: { resa: string; occupant: string; type: string; detail: string; montant: number }[] = [];
   const parResa = new Map<string, Rec[]>();
   for (const f of factures) {
@@ -311,7 +318,7 @@ function controleCompletude(factures: Rec[], resas: Rec[], envoyees: Set<string>
     if (!sansAcc(txt(rf["Nom contact finale"])).includes("OREAL")) continue;
     const e = txt(rf["Date d'entrée"]).slice(0, 10), s = txt(rf["Date de sortie"]).slice(0, 10);
     if (!e || !s) continue;
-    const sejour = nuits(e, s);
+    const sejour = nuits(e, s).filter((j) => j >= PLANCHER_CONTROLE && j <= plafond);
     if (!sejour.length) continue;
     const fs = (parResa.get(r.id) ?? []).filter((f) => txt(f.fields["Catégorie"]) !== "Transfert");
     const couvertes = new Set<string>(), transmises = new Set<string>();
