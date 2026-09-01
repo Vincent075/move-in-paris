@@ -181,7 +181,10 @@ export async function GET(request: Request) {
   // Le contrôle porte sur TOUTES les factures, pas seulement celles qu'on envoie :
   // c'est ce qui permet de repérer une proforma qui dort depuis des semaines.
   const envoyeesIci = new Set(finales.map((l) => l.facture.id));
-  const alertes = controleCompletude(factures, resas, envoyeesIci, M2.fin);
+  // Plafond : la fin du mois déjà couvert par le récap précédent. Au-delà, les nuits
+  // ne sont pas encore dues — leurs factures naîtront mois par mois. On ne contrôle
+  // donc que ce qui AURAIT DÛ être facturé et transmis à ce jour.
+  const alertes = controleCompletude(factures, resas, envoyeesIci, M1.fin);
 
   const AGENCES = ["Santa Fe", "Dwellworks"] as const;
   const stamp = new Date().toISOString();
@@ -304,7 +307,10 @@ function intervalles(js: string[]): string[] {
 // du plafond — la fin de M+2 — les nuits ne sont pas encore dues : elles partiront
 // dans un récap ultérieur, mois par mois. Sans ces bornes le contrôle crie sur tout
 // et ne sert plus à rien, ce qui est pire que pas de contrôle.
-const PLANCHER_CONTROLE = "2026-08-01";
+// Plancher : septembre 2026. Avant, les loyers étaient facturés directement dans les
+// tableaux Excel sans proforma Airtable — la base n'en garde aucune trace, et contrôler
+// cette période ne produirait que du bruit.
+const PLANCHER_CONTROLE = "2026-09-01";
 
 function controleCompletude(factures: Rec[], resas: Rec[], envoyees: Set<string>, plafond: string) {
   const alertes: { resa: string; occupant: string; type: string; detail: string; montant: number }[] = [];
