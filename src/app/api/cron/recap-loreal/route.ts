@@ -178,6 +178,11 @@ export async function GET(request: Request) {
   // propres pièces jointes — et surtout son propre marquage : si l'envoi d'une
   // agence échoue, ses factures restent non reportées et repartiront, sans que
   // celles de l'autre agence soient rejouées pour autant.
+  // Le contrôle porte sur TOUTES les factures, pas seulement celles qu'on envoie :
+  // c'est ce qui permet de repérer une proforma qui dort depuis des semaines.
+  const envoyeesIci = new Set(finales.map((l) => l.facture.id));
+  const alertes = controleCompletude(factures, resas, envoyeesIci);
+
   const AGENCES = ["Santa Fe", "Dwellworks"] as const;
   const stamp = new Date().toISOString();
   const rapports: Dict[] = [];
@@ -209,6 +214,7 @@ export async function GET(request: Request) {
 
     if (simulation) { rapports.push({ ...resume, envoye: false, simulation: true }); continue; }
 
+    resume.alertes = alertes;
     const envoye = await envoyer(nomFichier, buf, resume, `${agence} — M+2 ${M2.libelle}`, pdfs);
     if (!envoye) {
       toutOk = false;
@@ -225,7 +231,7 @@ export async function GET(request: Request) {
   }
 
   return NextResponse.json({ ok: toutOk, simulation, mois: M2.libelle,
-    lignesTotal: finales.length, rapports }, { status: toutOk ? 200 : 500 });
+    lignesTotal: finales.length, controle: alertes, rapports }, { status: toutOk ? 200 : 500 });
 }
 
 // Les PDF des proforma, groupés dans une archive. Vincent les veut avec le tableau :
@@ -258,6 +264,81 @@ async function archivePdf(lignes: Ligne[], libelle: string) {
     ? Buffer.from(await zip.generateAsync({ type: "nodebuffer", compression: "DEFLATE" }))
     : null;
   return { contenu, nom: `Proformas ${libelle}.zip`, jointes: vus.size - absents.length, absents };
+}
+
+
+// ── Preuve de complétude ────────────────────────────────────────────────────
+// Vincent doit pouvoir se fier à cet email sans le revérifier. Le récap ne se
+// contente donc pas de lister ce qu'il envoie : il vérifie, séjour par séjour et
+// NUIT PAR NUIT, que rien ne manque. Deux anomalies sont possibles et toutes deux
+// coûtent de l'argent réel :
+//   1. une nuit occupée qu'AUCUNE facture ne couvre — la facture n'existe pas ;
+//   2. une nuit couverte par une facture qui n'a jamais été transmise à L'Oréal
+//      et qui ne part pas non plus dans ce récap — la facture existe mais dort.
+// Le 01/09/2026, la seconde a bien failli coûter 17 060 € : six proforma avaient été
+// marquées « déjà envoyées » sur une supposition. Ce contrôle-ci ne suppose rien,
+// il recalcule.
+function nuits(d1: string, d2: string): string[] {
+  const out: string[] = [];
+  if (!d1 || !d2) return out;
+  const a = new Date(d1 + "T00:00:00Z"), b = new Date(d2 + "T00:00:00Z");
+  for (let t = a.getTime(); t < b.getTime(); t += 86400000) out.push(new Date(t).toISOString().slice(0, 10));
+  return out;
+}
+// Regroupe des nuits éparses en intervalles lisibles : « 27/09 → 30/09 (3 nuits) ».
+function intervalles(js: string[]): string[] {
+  const t = [...new Set(js)].sort();
+  const out: string[] = [];
+  let deb = t[0], prev = t[0];
+  for (const x of t.slice(1)) {
+    const suivant = new Date(new Date(prev + "T00:00:00Z").getTime() + 86400000).toISOString().slice(0, 10);
+    if (x === suivant) { prev = x; continue; }
+    out.push(`${deb} → ${prev}`); deb = x; prev = x;
+  }
+  if (t.length) out.push(`${deb} → ${prev}`);
+  return out;
+}
+
+function controleCompletude(factures: Rec[], resas: Rec[], envoyees: Set<string>) {
+  const alertes: { resa: string; occupant: string; type: string; detail: string; montant: number }[] = [];
+  const parResa = new Map<string, Rec[]>();
+  for (const f of factures) {
+    const id = lien1(f.fields["Réservation liée"]);
+    if (id) (parResa.get(id) ?? parResa.set(id, []).get(id)!).push(f);
+  }
+  for (const r of resas) {
+    const rf = r.fields;
+    if (!sansAcc(txt(rf["Nom contact finale"])).includes("OREAL")) continue;
+    const e = txt(rf["Date d'entrée"]).slice(0, 10), s = txt(rf["Date de sortie"]).slice(0, 10);
+    if (!e || !s) continue;
+    const sejour = nuits(e, s);
+    if (!sejour.length) continue;
+    const fs = (parResa.get(r.id) ?? []).filter((f) => txt(f.fields["Catégorie"]) !== "Transfert");
+    const couvertes = new Set<string>(), transmises = new Set<string>();
+    let dormantes = 0;
+    for (const f of fs) {
+      const js = nuits(txt(f.fields["Période facturée début"]).slice(0, 10), txt(f.fields["Période facturée fin"]).slice(0, 10));
+      js.forEach((j) => couvertes.add(j));
+      const partie = !!f.fields[CHAMP_REPORTE] || envoyees.has(f.id);
+      if (partie) js.forEach((j) => transmises.add(j));
+      else if (js.length) dormantes += Number(f.fields["Montant total HT"] ?? 0);
+    }
+    const code = txt(rf["Code réservation"]), occ = txt(rf["Nom occupant"]);
+    const sansFacture = sejour.filter((j) => !couvertes.has(j));
+    if (sansFacture.length) {
+      const pu = Number(rf["Prix nuitée HT"] ?? 0);
+      alertes.push({ resa: code, occupant: occ, type: "Aucune facture",
+        detail: intervalles(sansFacture).join(", ") + ` (${sansFacture.length} nuit(s))`,
+        montant: Math.round(sansFacture.length * pu) });
+    }
+    const nonTransmises = sejour.filter((j) => couvertes.has(j) && !transmises.has(j));
+    if (nonTransmises.length) {
+      alertes.push({ resa: code, occupant: occ, type: "Facture jamais transmise",
+        detail: intervalles(nonTransmises).join(", ") + ` (${nonTransmises.length} nuit(s))`,
+        montant: Math.round(dormantes) });
+    }
+  }
+  return alertes;
 }
 
 // ── Mise en forme, reprise à l'identique du tableau validé avec Vincent ──────
@@ -332,6 +413,7 @@ async function envoyer(nom: string, buf: Buffer, resume: Dict, libelle: string,
   if (!RESEND) return false;
   const manque = (resume.aCompleter as string[]) ?? [];
   const rattr = (resume.rattrapages as { nom: string; periode: string; nuits: number | string; montant: number }[]) ?? [];
+  const alertes = (resume.alertes as { resa: string; occupant: string; type: string; detail: string; montant: number }[]) ?? [];
   const blocs = resume.blocs as Record<string, number>;
   const html = `
     <p>Bonjour Vincent,</p>
