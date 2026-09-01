@@ -629,9 +629,29 @@ export async function GET(request: Request) {
       const fac = factureRapprochee(i);
       return !fac || texte(fac.fields["Statut"]) === "Envoyée";
     });
-    // Une intervention ne doit être retenue qu'UNE fois : on la réserve au premier mois
-    // non encore payé de son appartement, dans l'ordre chronologique.
+    // Une intervention ne doit être retenue qu'UNE fois. Où, c'est décidé plus bas, une
+    // fois les lignes de loyer connues : voir « retenueSur ».
     const dejaAffectee = new Set<string>();
+
+    // Une intervention à la charge du propriétaire encore ouverte, ou close mais pas encore
+    // chiffrée, ne PEUT pas être retenue — on ne déduit pas un montant qu'on ne connaît pas.
+    // Elle doit malgré tout se voir sur le loyer en cours : sans cela Vincent vire le loyer
+    // plein sans savoir qu'il y a quelque chose à récupérer. Au 02/09/2026, onze interventions
+    // étaient dans ce cas, sur onze appartements différents.
+    const enAttenteChiffrage = interventions.filter((i) => {
+      if (texte(i.fields["Facturable à"]) !== "Propriétaire") return false;
+      if (i.fields["Déduite du loyer"] === true) return false;
+      const close = STATUTS_INTERVENTION_CLOSE.includes(texte(i.fields["Statut"]));
+      const chiffree = nombre(i.fields["Montant facturé intervention (€)"]) > 0;
+      if (close && chiffree) return false; // celle-ci est déjà déductible, elle passe par aDeduire
+      const fac = factureRapprochee(i);
+      return !fac || texte(fac.fields["Statut"]) === "Envoyée";
+    });
+    const enAttenteParAppartement = new Map<string, Rec[]>();
+    for (const i of enAttenteChiffrage) {
+      const a = liens(i.fields["Appartement"])[0];
+      if (a) enAttenteParAppartement.set(a, [...(enAttenteParAppartement.get(a) ?? []), i]);
+    }
 
     // AUTO-33 émet bien une facture quand l'intervention est à la charge du propriétaire, mais
     // il n'écrit pas de lien vers l'intervention : la facture ne porte que « Réservation liée ».
@@ -733,6 +753,40 @@ export async function GET(request: Request) {
       suivi.set(k, e);
     };
 
+    // ── Sur quelle ligne se retient une intervention ──────────────────────────────
+    // Règle de Vincent, 02/09/2026 : une intervention à la charge du propriétaire figure sur
+    // le loyer qu'il est en train de payer, et y reste jusqu'à ce qu'elle soit soldée — par
+    // le virement du propriétaire, ou par la retenue. Elle était jusqu'ici affectée au plus
+    // ancien mois non payé : sur 3P Bernoulli (Tom Denoun), les 130 € de INT-2026-0069
+    // dormaient sur juillet pendant que Vincent réglait septembre. Invisible là où il regarde.
+    // On vise donc le mois en cours, et à défaut le mois ouvert le plus récent.
+    const moisCourantCle = cle(moisCourant.a, moisCourant.m);
+    const moisOuvertsParAppartement = new Map<string, { k: string; fin: Date }[]>();
+    for (const l of lignes) {
+      if (l.k < MISE_EN_SERVICE || l.k > moisCourantCle) continue;
+      for (const d of l.loyersDetail) {
+        if (d.montant <= 0 && d.charges <= 0) continue;
+        const ex = loyersParCle.get(cleLoyer(l.k, d.apptId));
+        // Un mois déjà payé est clos, et un mois où Vincent a coché « Sans déduction » vire
+        // le loyer plein : ni l'un ni l'autre ne peut porter la retenue.
+        if (texte(ex?.fields["Statut"] ?? "") === "Payé" || ex?.fields["Sans déduction"] === true) continue;
+        const liste = moisOuvertsParAppartement.get(d.apptId) ?? [];
+        liste.push({ k: l.k, fin: debutMois(l.a, l.m + 1) });
+        moisOuvertsParAppartement.set(d.apptId, liste);
+      }
+    }
+    const retenueSur = new Map<string, string>();
+    for (const i of aDeduire) {
+      const apptId = liens(i.fields["Appartement"])[0];
+      if (!apptId) continue;
+      // Une intervention ne se retient pas sur un mois clos avant sa résolution.
+      const res = texte(i.fields["Date résolution"]);
+      const ouverts = (moisOuvertsParAppartement.get(apptId) ?? []).filter((m) => !res || jour(res) < m.fin);
+      if (!ouverts.length) continue;
+      const courant = ouverts.find((m) => m.k === moisCourantCle);
+      retenueSur.set(i.id, cleLoyer((courant ?? ouverts[ouverts.length - 1]).k, apptId));
+    }
+
     for (const l of lignes) {
       // Avant la mise en service, seuls quelques baux longs étaient saisis et Vincent a réglé
       // ces mois-là hors Airtable. Générer des lignes « à payer » pour eux ferait apparaître
@@ -775,12 +829,7 @@ export async function GET(request: Request) {
         const finDuMois = debutMois(l.a, l.m + 1);
         const retenues = dejaPaye || sansDeduction
           ? []
-          : aDeduire.filter((i) => {
-              if (dejaAffectee.has(i.id)) return false;
-              if (liens(i.fields["Appartement"])[0] !== d.apptId) return false;
-              const res = texte(i.fields["Date résolution"]);
-              return !res || jour(res) < finDuMois;
-            });
+          : aDeduire.filter((i) => !dejaAffectee.has(i.id) && retenueSur.get(i.id) === cleL);
         for (const i of retenues) dejaAffectee.add(i.id);
 
         if (dejaPaye && existant) {
@@ -829,18 +878,35 @@ export async function GET(request: Request) {
           fields["Factures à régler"] = facturesLiees.map((f) => f.id);
           fields["Montant à déduire"] = deduction;
           fields["Net à virer"] = arrondi(total - deduction);
-          fields["Détail des déductions"] = retenues.length
-            ? retenues
-                .map(
-                  (i) =>
-                    `${texte(i.fields["Code intervention"])} — ${texte(i.fields["Type d'intervention"])} — ${nombre(
-                      i.fields["Montant facturé intervention (€)"]
-                    ).toLocaleString("fr-FR")} € TTC${
-                      factureDeLIntervention(i) ? ` (${texte(factureDeLIntervention(i)!.fields["Numéro facture"])})` : ""
-                    }`
-                )
-                .join("\n")
-            : "";
+          const ligneRetenue = (i: Rec) =>
+            `${texte(i.fields["Code intervention"])} — ${texte(i.fields["Type d'intervention"])} — ${nombre(
+              i.fields["Montant facturé intervention (€)"]
+            ).toLocaleString("fr-FR")} € TTC${
+              factureDeLIntervention(i) ? ` (${texte(factureDeLIntervention(i)!.fields["Numéro facture"])})` : ""
+            }`;
+          // Les interventions du propriétaire encore ouvertes ou non chiffrées ne se déduisent
+          // pas — mais elles s'affichent sur le loyer en cours, pour que Vincent sache qu'il
+          // reste quelque chose à récupérer avant de virer le loyer plein. Elles ne touchent
+          // NI « Montant à déduire » NI « Net à virer » : on ne retient jamais un montant
+          // qu'on ne connaît pas.
+          const attente = l.k === moisCourantCle ? (enAttenteParAppartement.get(d.apptId) ?? []) : [];
+          const ligneAttente = (i: Rec) => {
+            const sig = texte(i.fields["Date de signalement"]).slice(0, 10);
+            const montant = nombre(i.fields["Montant facturé intervention (€)"]);
+            return `${texte(i.fields["Code intervention"])} — ${texte(i.fields["Type d'intervention"])} — ${
+              montant > 0 ? `${montant.toLocaleString("fr-FR")} € TTC, ` : "à chiffrer, "
+            }${texte(i.fields["Statut"]).toLowerCase() || "en cours"}${
+              sig ? ` (signalée le ${sig.slice(8, 10)}/${sig.slice(5, 7)}/${sig.slice(0, 4)})` : ""
+            }`;
+          };
+          fields["Détail des déductions"] = [
+            retenues.length ? retenues.map(ligneRetenue).join("\n") : "",
+            attente.length
+              ? `À la charge du propriétaire, pas encore déductible :\n${attente.map(ligneAttente).join("\n")}`
+              : "",
+          ]
+            .filter(Boolean)
+            .join("\n\n");
         }
 
         if (existant) {
