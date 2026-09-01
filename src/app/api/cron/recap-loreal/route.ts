@@ -77,6 +77,19 @@ function moisParis(d: Date, decalage: number) {
 }
 const chevauche = (d1: string, f1: string, d2: string, f2: string) => !!d1 && !!f1 && d1 <= f2 && f1 >= d2;
 
+
+// Airtable écrit l'occupant « Prénom NOM », le nom de famille en capitales et parfois
+// en plusieurs mots : « Léandro DOMINGOS COUTO », « Bruno, Domingo ZEVALLOS RAMOS ».
+// Prendre le dernier mot donnerait COUTO et RAMOS — des noms faux sur une facture
+// client. On isole donc la suite finale de mots entièrement capitalisés.
+function couperNom(complet: string) {
+  const mots = complet.replace(/,/g, " ").split(/\s+/).filter(Boolean);
+  let i = mots.length;
+  while (i > 1 && mots[i - 1] === mots[i - 1].toUpperCase() && /[A-ZÀ-Ý]/.test(mots[i - 1])) i--;
+  if (i === mots.length) i = Math.max(1, mots.length - 1);
+  return { prenom: mots.slice(0, i).join(" "), nom: mots.slice(i).join(" ") || complet };
+}
+
 type Ligne = {
   facture: Rec; type: "Loyer" | "Transfert"; bloc: string;
   nom: string; prenom: string; agence: string; consultant: string;
@@ -123,13 +136,12 @@ export async function GET(request: Request) {
     const resa = parResa.get(lien1(ff["Réservation liée"]));
     const rf = resa?.fields ?? {};
     const b = lireBlocLoreal(txt(rf["Notes internes"]));
-    const occ = txt(ff["Occupants"]).trim();
-    const mots = occ.split(/\s+/);
+    const { prenom, nom } = couperNom(txt(ff["Occupants"]).trim());
     const montant = Number(ff["Montant total HT"] ?? 0);
     const nuits = d && fi ? Math.round((Date.parse(fi) - Date.parse(d)) / 86400000) : 0;
     lignes.push({
       facture: f, type: cat === "Transfert" ? "Transfert" : "Loyer", bloc,
-      nom: mots.length > 1 ? mots.slice(-1)[0] : occ, prenom: mots.slice(0, -1).join(" "),
+      nom, prenom,
       agence: txt(rf["Nom agence"]).includes("Dwell") ? "Dwellworks" : "Santa Fe",
       consultant: b?.consultant || txt(rf["Contact  agence"]) || txt(rf["Contact agence"]),
       adresse: txt(ff["Adresse appartement (récap)"]),
