@@ -670,14 +670,59 @@ export async function GET(request: Request) {
       );
 
     // ------------------------------------------------------------ écriture « Loyers à verser »
-    // Clé = « AAAA-MM · APT-xxx ». Statut et Date de paiement ne sont JAMAIS touchés.
-    const loyersParRef = new Map(loyersExistants.map((r) => [texte(r.fields["Référence"]), r]));
+    // L'identité d'une ligne de loyer, c'est le couple (mois, appartement) : deux données
+    // qui ne bougent jamais. Elle reposait jusqu'ici sur le libellé « Référence », donc sur
+    // « Code appartement » — une FORMULE Airtable. Le 29/08/2026 cette formule a gagné le nom
+    // de l'appartement pour rendre les barres de recherche utiles, et « APT-093 » est devenu
+    // « APT-093 · 2P Etoile 3eme ». Du jour au lendemain plus une seule ligne existante ne se
+    // reconnaissait : le calcul en a recréé une par appartement et par mois à côté des
+    // anciennes, sans jamais pouvoir les rapprocher. Un libellé sert à lire, jamais à
+    // identifier. « Référence » reste écrite à chaque passage, comme simple étiquette.
+    // Statut, Date de paiement et Sans déduction ne sont JAMAIS touchés.
+    const cleLoyer = (mois: string, apptId: string) => `${mois} · ${apptId}`;
+    const cleDeLaLigne = (r: Rec) => cleLoyer(texte(r.fields["Mois"]), liens(r.fields["Appartement"])[0] ?? "");
+
+    // Plusieurs lignes peuvent porter la même clé, pour deux raisons vécues : le changement
+    // de libellé ci-dessus, et la rafale du 30/08/2026 où dix calculs lancés en parallèle par
+    // le webhook Airtable ont créé 4 760 lignes en une heure — la page annonçait 6,7 M€ à
+    // virer au lieu de 442 k€. Le verrou empêche désormais la rafale ; ce bloc-ci répare ce
+    // qu'elle a laissé et rendra inoffensif tout accident du même genre : à chaque passage,
+    // une seule ligne survit par clé, les autres partent.
+    const groupes = new Map<string, Rec[]>();
+    for (const r of loyersExistants) {
+      const k = cleDeLaLigne(r);
+      groupes.set(k, [...(groupes.get(k) ?? []), r]);
+    }
+    // Ce que Vincent a saisi l'emporte toujours : une ligne passée « Payé » ou portant une
+    // date de virement dit quelque chose que le calcul ne sait pas reproduire. À défaut, on
+    // garde le calcul le plus récent, puis, à égalité, la plus ancienne — l'originale.
+    const humain = (r: Rec) =>
+      texte(r.fields["Statut"]) === "Payé" || texte(r.fields["Date de paiement"]) !== "" ? 1 : 0;
+    const doublonsASupprimer: string[] = [];
+    const loyersParCle = new Map<string, Rec>();
+    const survivants: Rec[] = [];
+    for (const [k, v] of groupes) {
+      const classe = [...v].sort((a, b) => {
+        if (humain(a) !== humain(b)) return humain(b) - humain(a);
+        const c = texte(b.fields["Dernier calcul"]).localeCompare(texte(a.fields["Dernier calcul"]));
+        return c !== 0 ? c : a.id.localeCompare(b.id);
+      });
+      loyersParCle.set(k, classe[0]);
+      survivants.push(classe[0]);
+      for (const r of classe.slice(1)) doublonsASupprimer.push(r.id);
+    }
+    // Purge plafonnée : un accident à cinquante mille lignes ne doit pas faire expirer la
+    // fonction et bloquer le nettoyage pour toujours. On en enlève un paquet par passage,
+    // le cron horaire finit le travail.
+    const PLAFOND_PURGE = 2000;
+    const purges = doublonsASupprimer.slice(0, PLAFOND_PURGE);
+    if (purges.length) await supprimer(T_LOYERS, purges);
     const creerLoyers: { ref: string; mois: string; fields: Record<string, unknown> }[] = [];
     const majLoyers: { id: string; ref: string; mois: string; fields: Record<string, unknown> }[] = [];
     // Lignes qui viennent de devenir exigibles ce passage-ci : c'est ce qui déclenche
     // la notification Slack, une seule fois, le jour où le mois bascule.
     const basculees: string[] = [];
-    const refsAttendues = new Set<string>();
+    const clesLoyersAttendues = new Set<string>();
     // Totaux par mois, pour alimenter « Finance mensuelle » juste après.
     const suivi = new Map<string, { verses: number; reste: number; nbReste: number }>();
     const cumule = (k: string, verses: number, reste: number) => {
@@ -696,7 +741,8 @@ export async function GET(request: Request) {
       for (const d of l.loyersDetail) {
         if (d.montant <= 0 && d.charges <= 0) continue;
         const ref = `${l.k} · ${d.code}`;
-        refsAttendues.add(ref);
+        const cleL = cleLoyer(l.k, d.apptId);
+        clesLoyersAttendues.add(cleL);
         const futur = l.a > moisCourant.a || (l.a === moisCourant.a && l.m > moisCourant.m);
 
         const fields: Record<string, unknown> = {
@@ -719,7 +765,7 @@ export async function GET(request: Request) {
           "Dernier calcul": horodatage,
         };
         const total = d.montant;
-        const existant = loyersParRef.get(ref);
+        const existant = loyersParCle.get(cleL);
         const dejaPaye = texte(existant?.fields["Statut"] ?? "") === "Payé";
 
         // Sur un mois déjà payé on ne touche plus aux déductions : elles sont figées.
@@ -879,8 +925,10 @@ export async function GET(request: Request) {
 
     // Une ligne dont la réservation a disparu ne doit plus réclamer un virement.
     // On la neutralise sans la supprimer, sauf si elle est déjà payée : dans ce cas on alerte.
-    const orphelines = loyersExistants.filter(
-      (r) => !refsAttendues.has(texte(r.fields["Référence"])) && nombre(r.fields["Total à virer"]) > 0
+    // Sur les survivantes uniquement : neutraliser une ligne qu'on vient de supprimer
+    // serait au mieux inutile, au pire une écriture sur un enregistrement disparu.
+    const orphelines = survivants.filter(
+      (r) => !clesLoyersAttendues.has(cleDeLaLigne(r)) && nombre(r.fields["Total à virer"]) > 0
     );
     const orphelinesPayees = orphelines.filter((r) => texte(r.fields["Statut"]) === "Payé");
     const orphelinesAnnulables = orphelines.filter((r) => texte(r.fields["Statut"]) !== "Payé");
@@ -1251,6 +1299,8 @@ export async function GET(request: Request) {
         crees: creerLoyers.length,
         mis_a_jour: majLoyers.length,
         neutralises: aNeutraliser.length,
+        doublons_supprimes: purges.length,
+        doublons_restants: doublonsASupprimer.length - purges.length,
         supprimes_hors_fenetre: horsFenetre.length,
       },
       rattrapages: creerLoyers.filter((x) => x.fields["Rattrapage"] === true).length,
