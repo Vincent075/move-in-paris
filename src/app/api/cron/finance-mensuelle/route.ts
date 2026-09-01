@@ -207,10 +207,20 @@ async function ecrire(tableId: string, method: "POST" | "PATCH", records: unknow
 const VERROU = "lock:finance-mensuelle";
 const VERROU_S = 240;
 
+// Deux passages simultanés qui ne trouvent pas encore la ligne la CRÉENT tous les deux,
+// et le verrou ne vaut plus rien : chacun lit la sienne. On tranche donc toujours sur la
+// même ligne, celle dont l'identifiant est le plus petit — un critère stable, sur lequel
+// tous les passages tombent d'accord sans se parler. Les doublons éventuels sont inertes.
+async function ligneVerrou(): Promise<Rec | undefined> {
+  const rows = (await lireTable(T_MONITORING))
+    .filter((r) => texte(r.fields["Contrôle"]) === VERROU)
+    .sort((a, b) => a.id.localeCompare(b.id));
+  return rows[0];
+}
+
 async function prendreVerrou(): Promise<boolean> {
   try {
-    const rows = await lireTable(T_MONITORING);
-    const row = rows.find((r) => texte(r.fields["Contrôle"]) === VERROU);
+    const row = await ligneVerrou();
     const pose = Date.parse(texte(row?.fields["Détail"]).split("#")[0]);
     if (Number.isFinite(pose) && Date.now() - pose < VERROU_S * 1000) return false;
     // Chaque passage signe sa pose. Deux calculs partis dans la même fraction de seconde
@@ -226,8 +236,7 @@ async function prendreVerrou(): Promise<boolean> {
     };
     if (row) await ecrire(T_MONITORING, "PATCH", [{ id: row.id, fields }]);
     else await ecrire(T_MONITORING, "POST", [{ fields }]);
-    const apres = await lireTable(T_MONITORING);
-    const ligne = apres.find((r) => texte(r.fields["Contrôle"]) === VERROU);
+    const ligne = await ligneVerrou();
     return texte(ligne?.fields["Détail"]) === marque;
   } catch {
     return true; // un tableau de bord en panne ne doit pas geler la finance
@@ -236,8 +245,7 @@ async function prendreVerrou(): Promise<boolean> {
 
 async function libererVerrou() {
   try {
-    const rows = await lireTable(T_MONITORING);
-    const row = rows.find((r) => texte(r.fields["Contrôle"]) === VERROU);
+    const row = await ligneVerrou();
     if (row) await ecrire(T_MONITORING, "PATCH", [{ id: row.id, fields: { "Détail": "" } }]);
   } catch { /* il expirera tout seul */ }
 }
