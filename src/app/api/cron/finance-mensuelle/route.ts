@@ -211,17 +211,24 @@ async function prendreVerrou(): Promise<boolean> {
   try {
     const rows = await lireTable(T_MONITORING);
     const row = rows.find((r) => texte(r.fields["Contrôle"]) === VERROU);
-    const pose = row ? Date.parse(texte(row.fields["Détail"])) : NaN;
+    const pose = Date.parse(texte(row?.fields["Détail"]).split("#")[0]);
     if (Number.isFinite(pose) && Date.now() - pose < VERROU_S * 1000) return false;
+    // Chaque passage signe sa pose. Deux calculs partis dans la même fraction de seconde
+    // ont tous deux vu le verrou libre : on écrit, puis on RELIT. Celui dont la signature
+    // a survécu garde la main, l'autre renonce. Un simple « lire puis écrire » les
+    // laissait passer tous les deux.
+    const marque = `${new Date().toISOString()}#${Math.random().toString(36).slice(2, 10)}`;
     const fields = {
       "Contrôle": VERROU,
       Statut: "OK",
-      "Détail": new Date().toISOString(),
+      "Détail": marque,
       "Dernière vérification": new Date().toISOString(),
     };
     if (row) await ecrire(T_MONITORING, "PATCH", [{ id: row.id, fields }]);
     else await ecrire(T_MONITORING, "POST", [{ fields }]);
-    return true;
+    const apres = await lireTable(T_MONITORING);
+    const ligne = apres.find((r) => texte(r.fields["Contrôle"]) === VERROU);
+    return texte(ligne?.fields["Détail"]) === marque;
   } catch {
     return true; // un tableau de bord en panne ne doit pas geler la finance
   }
@@ -239,6 +246,32 @@ async function libererVerrou() {
 // mémoire de ce qui a DÉJÀ été annoncé doit survivre au-delà d'un passage : c'est Slack
 // qui la porte, on relit le canal avant de poster. En cas de doute (lecture impossible)
 // on poste : un récap manquant coûte un virement oublié, un récap en double coûte un clic.
+// Dernier filet, celui qui rend la garantie réelle : après publication on relit, et si
+// deux calculs partis à la même milliseconde ont posté le même récap, chacun supprime
+// tout sauf le plus ancien. Tous convergent sur le même survivant, Vincent en voit un.
+async function dedoublonner(titre: string) {
+  if (!SLACK_TOKEN) return;
+  try {
+    const r = await fetch(
+      `https://slack.com/api/conversations.history?channel=${SLACK_LOYERS}&limit=30`,
+      { headers: { Authorization: `Bearer ${SLACK_TOKEN}` }, cache: "no-store" }
+    );
+    const j = (await r.json()) as { ok?: boolean; messages?: { ts?: string; text?: string }[] };
+    if (!j.ok) return;
+    const memes = (j.messages ?? [])
+      .filter((m) => (m.text ?? "").startsWith(titre) && m.ts)
+      .map((m) => m.ts as string)
+      .sort(); // ts croissant : le premier est le plus ancien, c'est lui qu'on garde
+    for (const ts of memes.slice(1)) {
+      await fetch("https://slack.com/api/chat.delete", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${SLACK_TOKEN}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ channel: SLACK_LOYERS, ts }),
+      });
+    }
+  } catch { /* un doublon visible vaut mieux qu'un calcul qui tombe */ }
+}
+
 async function dejaAnnonce(titre: string): Promise<boolean> {
   if (!SLACK_TOKEN) return false;
   try {
@@ -1105,6 +1138,7 @@ export async function GET(request: Request) {
           .join("\n"),
         SLACK_LOYERS
       );
+      await dedoublonner(titre);
     }
 
     // ------------------------------------------------------------ « Finance annuelle »
