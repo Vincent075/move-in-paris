@@ -168,46 +168,63 @@ export async function GET(request: Request) {
   }
   const finales = fusion.filter((l) => l.refLoyer || l.refService);
 
-  const nomFichier = `Move In Paris Billing Report (${M2.libelle}).xlsx`;
-  const classeur = await construire(finales, M2.libelle);
-  const buf = Buffer.from(await classeur.xlsx.writeBuffer());
-
-  const incompletes = finales.filter((l) => l.incomplets.length);
-  const resume = {
-    ok: true, simulation, fichier: nomFichier, lignes: finales.length,
-    blocs: Object.fromEntries(["1 · Loyers " + M2.libelle, "2 · Transferts", "3 · Rattrapage"]
-      .map((b) => [b, finales.filter((l) => l.bloc === b).length])),
-    totalHT: Math.round(finales.reduce((s, l) => s + (Number(l.loyer) || 0) + (Number(l.service) || 0), 0) * 100) / 100,
-    aCompleter: incompletes.map((l) => `${l.nom} — ${l.incomplets.join(", ")}`),
-  };
-  if (simulation) {
-    const p = await archivePdf(finales, M2.libelle);
-    return NextResponse.json({ ...resume, pdfJoints: p.jointes, pdfIntrouvables: p.absents,
-      pdfTailleKo: p.contenu ? Math.round(p.contenu.length / 1024) : 0 });
-  }
-
-  const pdfs = await archivePdf(finales, M2.libelle);
-  const envoye = await envoyer(nomFichier, buf, resume, M2.libelle, pdfs);
-  if (!envoye) return NextResponse.json({ ...resume, ok: false, erreur: "envoi email échoué — rien n'a été marqué comme reporté" }, { status: 500 });
-
-  // Marquage APRÈS envoi réussi, par lots de 10 (limite Airtable).
-  const ids = [...new Set(finales.map((l) => l.facture.id))];
+  // Un récap par agence : Santa Fe et Dwellworks ont chacune leur circuit de
+  // validation chez L'Oréal, et mélanger leurs dossiers dans un même fichier oblige
+  // le destinataire à trier. Chaque groupe part dans son propre email, avec ses
+  // propres pièces jointes — et surtout son propre marquage : si l'envoi d'une
+  // agence échoue, ses factures restent non reportées et repartiront, sans que
+  // celles de l'autre agence soient rejouées pour autant.
+  const AGENCES = ["Santa Fe", "Dwellworks"] as const;
   const stamp = new Date().toISOString();
-  for (let i = 0; i < ids.length; i += 10) {
-    await airtable("PATCH", T_FACTURES, {
-      records: ids.slice(i, i + 10).map((id) => ({ id, fields: { [CHAMP_REPORTE]: stamp, [CHAMP_RECAP]: nomFichier } })),
-    });
-  }
-  return NextResponse.json({ ...resume, envoye: true, marquees: ids.length,
-    pdfJoints: pdfs.jointes, pdfIntrouvables: pdfs.absents });
-}
+  const rapports: Dict[] = [];
+  let toutOk = true;
 
+  for (const agence of AGENCES) {
+    const groupe = finales.filter((l) => l.agence === agence);
+    if (!groupe.length) { rapports.push({ agence, lignes: 0, envoye: false, raison: "aucune facture" }); continue; }
+
+    const nomFichier = `Move In Paris Billing Report ${agence} (${M2.libelle}).xlsx`;
+    const classeur = await construire(groupe, M2.libelle);
+    const buf = Buffer.from(await classeur.xlsx.writeBuffer());
+    const incompletes = groupe.filter((l) => l.incomplets.length);
+    const resume: Dict = {
+      agence, fichier: nomFichier, lignes: groupe.length,
+      blocs: Object.fromEntries(["1 · Loyers " + M2.libelle, "2 · Transferts", "3 · Rattrapage"]
+        .map((b) => [b, groupe.filter((l) => l.bloc === b).length])),
+      totalHT: Math.round(groupe.reduce((s, l) => s + (Number(l.loyer) || 0) + (Number(l.service) || 0), 0) * 100) / 100,
+      aCompleter: incompletes.map((l) => `${l.nom} — ${l.incomplets.join(", ")}`),
+    };
+    const pdfs = await archivePdf(groupe, `${agence} ${M2.libelle}`);
+    resume.pdfJoints = pdfs.jointes;
+    resume.pdfIntrouvables = pdfs.absents;
+    resume.pdfTailleKo = pdfs.contenu ? Math.round(pdfs.contenu.length / 1024) : 0;
+
+    if (simulation) { rapports.push({ ...resume, envoye: false, simulation: true }); continue; }
+
+    const envoye = await envoyer(nomFichier, buf, resume, `${agence} — ${M2.libelle}`, pdfs);
+    if (!envoye) {
+      toutOk = false;
+      rapports.push({ ...resume, envoye: false, erreur: "envoi échoué — rien marqué, repartira au prochain passage" });
+      continue;
+    }
+    const ids = [...new Set(groupe.map((l) => l.facture.id))];
+    for (let i = 0; i < ids.length; i += 10) {
+      await airtable("PATCH", T_FACTURES, {
+        records: ids.slice(i, i + 10).map((id) => ({ id, fields: { [CHAMP_REPORTE]: stamp, [CHAMP_RECAP]: nomFichier } })),
+      });
+    }
+    rapports.push({ ...resume, envoye: true, marquees: ids.length });
+  }
+
+  return NextResponse.json({ ok: toutOk, simulation, mois: M2.libelle,
+    lignesTotal: finales.length, rapports }, { status: toutOk ? 200 : 500 });
+}
 
 // Les PDF des proforma, groupés dans une archive. Vincent les veut avec le tableau :
 // L'Oréal ne délivre la DED que sur pièces, et une proforma sans son PDF oblige à
-// retourner la chercher une par une. On prend d'abord notre copie S3 — c'est celle
-// qui a réellement été envoyée — et on se rabat sur le lien public Pennylane sinon.
-// Un PDF introuvable ne bloque jamais l'envoi : il est signalé dans l'email.
+// retourner la chercher une par une. On prend notre copie S3 — c'est celle qui a
+// réellement été envoyée. Un PDF introuvable ne bloque jamais l'envoi : il est
+// nommément signalé dans l'email.
 async function archivePdf(lignes: Ligne[], libelle: string) {
   const zip = new JSZip();
   const absents: string[] = [];
@@ -218,18 +235,14 @@ async function archivePdf(lignes: Ligne[], libelle: string) {
     vus.add(num);
     const s3 = txt(f.fields["Lien S3"]);
     let ok = false;
-    for (const u of [s3].filter(Boolean)) {
+    if (s3) {
       try {
-        const r = await fetch(u, { cache: "no-store" });
+        const r = await fetch(s3, { cache: "no-store" });
         if (r.ok) {
           const b = Buffer.from(await r.arrayBuffer());
-          if (b.length > 1000) {
-            zip.file(`${num} - ${l.nom}.pdf`, b);
-            ok = true;
-          }
+          if (b.length > 1000) { zip.file(`${num} - ${l.nom}.pdf`, b); ok = true; }
         }
-      } catch { /* on tentera la source suivante */ }
-      if (ok) break;
+      } catch { /* signalé plus bas */ }
     }
     if (!ok) absents.push(`${num} — ${l.nom}`);
   }
@@ -313,7 +326,7 @@ async function envoyer(nom: string, buf: Buffer, resume: Dict, libelle: string,
   const blocs = resume.blocs as Record<string, number>;
   const html = `
     <p>Bonjour Vincent,</p>
-    <p>Voici le récap de facturation L'Oréal pour <strong>${libelle}</strong>.</p>
+    <p>Voici le récap de facturation L'Oréal — <strong>${libelle}</strong>.</p>
     <table cellpadding="6" style="border-collapse:collapse;font-family:system-ui,sans-serif;font-size:14px">
       ${Object.entries(blocs).map(([b, n]) => `<tr><td style="border-bottom:1px solid #eee">${b}</td><td style="border-bottom:1px solid #eee;text-align:right"><strong>${n}</strong></td></tr>`).join("")}
       <tr><td><strong>Total HT</strong></td><td style="text-align:right"><strong>${Number(resume.totalHT).toLocaleString("fr-FR")} €</strong></td></tr>
@@ -327,7 +340,7 @@ async function envoyer(nom: string, buf: Buffer, resume: Dict, libelle: string,
       method: "POST",
       headers: { Authorization: `Bearer ${RESEND}`, "Content-Type": "application/json" },
       body: JSON.stringify({ from: EXPEDITEUR, to: [DESTINATAIRE],
-        subject: `Récap facturation L'Oréal — ${libelle}`, html,
+        subject: `Récap facturation L'Oréal ${libelle}`, html,
         attachments: [{ filename: nom, content: buf.toString("base64") },
           ...(pdfs.contenu ? [{ filename: pdfs.nom, content: pdfs.contenu.toString("base64") }] : [])] }),
     });
