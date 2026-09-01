@@ -570,6 +570,47 @@ export async function GET(request: Request) {
         });
       }
 
+      // ── Loyers garantis ─────────────────────────────────────────────────────
+      // Certains propriétaires touchent le loyer PLEIN, que l'appartement soit loué ou
+      // vide : c'est leur contrat, et MIP porte seul le risque de vacance. Au 02/09/2026 :
+      // Nakache (Cardinet), Piaton (rue Marbeuf), Madinier (Batignolles). Le prorata sur
+      // les nuitées les sous-payait de 4 958,71 € sur les seuls mois ouverts, et un mois
+      // sans réservation ne produisait aucune ligne du tout — le loyer partait en banque
+      // sans exister nulle part dans le suivi. La case « Loyer garanti » sur la fiche
+      // appartement bascule ce calcul. Les nuitées restent les vraies : ce sont elles qui
+      // mesurent l'occupation, on ne truque pas la statistique pour arranger le montant.
+      for (const [apptId, appt] of parAppartement) {
+        if (appt.fields["Loyer garanti"] !== true) continue;
+        const debutBail = texte(appt.fields["Date début contrat"]);
+        if (debutBail && jour(debutBail) >= d2) continue; // le bail n'avait pas commencé
+        const loyerPlein = nombre(appt.fields["Loyer propriétaire / mois"]);
+        if (loyerPlein <= 0) continue;
+        const chargesPleines = CHAMPS_CHARGES.reduce((s, c) => s + nombre(appt.fields[c]), 0);
+        const existante = loyersDetail.find((d) => d.apptId === apptId);
+        if (existante) {
+          loyers += loyerPlein - existante.montant;
+          charges += chargesPleines - existante.charges;
+          existante.montant = loyerPlein;
+          existante.charges = chargesPleines;
+          existante.periode = `${existante.periode} — loyer garanti, mois plein dû`;
+        } else {
+          loyers += loyerPlein;
+          charges += chargesPleines;
+          loyersDetail.push({
+            apptId,
+            code: texte(appt.fields["Code appartement"]) || apptId,
+            nuits: 0,
+            joursMois,
+            loyerPlein,
+            montant: loyerPlein,
+            charges: chargesPleines,
+            resas: [],
+            proprio: liens(appt.fields["Propriétaire"]),
+            periode: "loyer garanti, mois plein dû (aucune location ce mois-ci)",
+          });
+        }
+      }
+
       // Taille du parc au 1er du mois : appartements engagés dont le contrat a commencé.
       const parc = appartements.filter((ap) => {
         if (!STATUTS_PARC.includes(texte(ap.fields["Statut pipeline"]))) return false;
