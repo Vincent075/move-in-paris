@@ -52,6 +52,7 @@ const T_LOYERS = "tblLnbrAH1AfVvTb7";
 const T_CHARGES = "tble8Op6dPxj0N94t";
 const T_ANNEE = "tblTOg5qWyjdlRvy9";
 const T_INTERVENTIONS = "tblUjK6taP6ti0kGa";
+const T_MONITORING = "tblDEkjIyKoKJG5Yj";
 
 // Réservations qui engagent un loyer propriétaire et génèrent du CA.
 const STATUTS_RESA = ["Contrat signé", "En cours", "Check-out", "Clôturée"];
@@ -194,6 +195,65 @@ async function ecrire(tableId: string, method: "POST" | "PATCH", records: unknow
   }
 }
 
+// ---------------------------------------------------------------- verrou
+// Le webhook Airtable réveille ce calcul à CHAQUE modification d'une table finance
+// (voir /api/airtable-webhook). Le 01/09/2026, six modifications en cent secondes ont
+// lancé six calculs concurrents : chacun a lu les loyers encore « En attente », les a
+// basculés à « À payer » et a posté le récap mensuel. Vincent a reçu six fois le même
+// message dans #propriétaires. Même remède que la projection des ménages : un seul
+// passage à la fois. Ce n'est pas un mutex parfait — Airtable n'a pas d'opération
+// atomique — mais les rafales de webhooks sont espacées de centaines de millisecondes.
+// Le verrou expire seul : une fonction tuée en vol ne gèle pas la finance.
+const VERROU = "lock:finance-mensuelle";
+const VERROU_S = 240;
+
+async function prendreVerrou(): Promise<boolean> {
+  try {
+    const rows = await lireTable(T_MONITORING);
+    const row = rows.find((r) => texte(r.fields["Contrôle"]) === VERROU);
+    const pose = row ? Date.parse(texte(row.fields["Détail"])) : NaN;
+    if (Number.isFinite(pose) && Date.now() - pose < VERROU_S * 1000) return false;
+    const fields = {
+      "Contrôle": VERROU,
+      Statut: "OK",
+      "Détail": new Date().toISOString(),
+      "Dernière vérification": new Date().toISOString(),
+    };
+    if (row) await ecrire(T_MONITORING, "PATCH", [{ id: row.id, fields }]);
+    else await ecrire(T_MONITORING, "POST", [{ fields }]);
+    return true;
+  } catch {
+    return true; // un tableau de bord en panne ne doit pas geler la finance
+  }
+}
+
+async function libererVerrou() {
+  try {
+    const rows = await lireTable(T_MONITORING);
+    const row = rows.find((r) => texte(r.fields["Contrôle"]) === VERROU);
+    if (row) await ecrire(T_MONITORING, "PATCH", [{ id: row.id, fields: { "Détail": "" } }]);
+  } catch { /* il expirera tout seul */ }
+}
+
+// Le récap des loyers est un message MENSUEL. Le verrou empêche les rafales, mais la
+// mémoire de ce qui a DÉJÀ été annoncé doit survivre au-delà d'un passage : c'est Slack
+// qui la porte, on relit le canal avant de poster. En cas de doute (lecture impossible)
+// on poste : un récap manquant coûte un virement oublié, un récap en double coûte un clic.
+async function dejaAnnonce(titre: string): Promise<boolean> {
+  if (!SLACK_TOKEN) return false;
+  try {
+    const r = await fetch(
+      `https://slack.com/api/conversations.history?channel=${SLACK_LOYERS}&limit=60`,
+      { headers: { Authorization: `Bearer ${SLACK_TOKEN}` }, cache: "no-store" }
+    );
+    const j = (await r.json()) as { ok?: boolean; messages?: { text?: string }[] };
+    if (!j.ok) return false;
+    return (j.messages ?? []).some((m) => (m.text ?? "").startsWith(titre));
+  } catch {
+    return false;
+  }
+}
+
 async function supprimer(tableId: string, ids: string[]) {
   for (let i = 0; i < ids.length; i += 10) {
     const url = new URL(`https://api.airtable.com/v0/${AT_BASE}/${tableId}`);
@@ -219,6 +279,12 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
   const debut = Date.now();
+
+  // Un seul calcul à la fois : voir VERROU plus haut. Le passage refusé ne perd rien,
+  // le filet horaire et le prochain webhook repasseront.
+  if (!(await prendreVerrou())) {
+    return NextResponse.json({ ok: true, ignore: "un calcul est déjà en cours" });
+  }
 
   try {
     const [appartements, reservations, factures, financeExistant, loyersExistants, chargesFixes] =
@@ -1017,9 +1083,10 @@ export async function GET(request: Request) {
       const eur = (n: number) => `${n.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
       const top = [...duMois].sort((a, b) => b.montant - a.montant).slice(0, 5);
 
-      await slack(
+      const titre = `:key: *Loyers propriétaires — ${NOMS_MOIS[moisCourant.m]} ${moisCourant.a}*`;
+      if (!(await dejaAnnonce(titre))) await slack(
         [
-          `:key: *Loyers propriétaires — ${NOMS_MOIS[moisCourant.m]} ${moisCourant.a}*`,
+          titre,
           "",
           `${duMois.length} loyer(s) viennent de passer à payer : *${eur(totalMois)}*`,
           arriere > 0.01
@@ -1163,5 +1230,7 @@ export async function GET(request: Request) {
     const message = e instanceof Error ? e.message : String(e);
     await slack(`:x: *Finance mensuelle — le calcul a échoué*\n\`${message}\`\n\n_Les tables gardent les valeurs du dernier passage réussi._`);
     return NextResponse.json({ ok: false, error: message }, { status: 500 });
+  } finally {
+    await libererVerrou();
   }
 }
