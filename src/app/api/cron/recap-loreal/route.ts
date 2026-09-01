@@ -127,10 +127,14 @@ export async function GET(request: Request) {
     const d = txt(ff["Période facturée début"]).slice(0, 10);
     const fi = txt(ff["Période facturée fin"]).slice(0, 10);
 
+    // Ce qui distingue un rattrapage d'un loyer normal, c'est la PÉRIODE, pas la
+    // nouveauté du locataire. Le tableau couvre M+2 : une ligne qui s'arrête avant
+    // le 1er de ce mois porte un mois antérieur, jamais facturé faute de réservation
+    // à l'envoi précédent. Un locataire qui arrive en M+2 est simplement nouveau.
     let bloc = "";
     if (cat === "Transfert") bloc = "2 · Transferts";
+    else if (fi && fi <= M2.debut && chevauche(d, fi, M.debut, M1.fin)) bloc = "3 · Rattrapage";
     else if (chevauche(d, fi, M2.debut, M2.fin)) bloc = `1 · Loyers ${M2.libelle}`;
-    else if (chevauche(d, fi, M1.debut, M1.fin) || chevauche(d, fi, M.debut, M.fin)) bloc = "3 · Rattrapage";
     else continue;
 
     const resa = parResa.get(lien1(ff["Réservation liée"]));
@@ -193,6 +197,10 @@ export async function GET(request: Request) {
         .map((b) => [b, groupe.filter((l) => l.bloc === b).length])),
       totalHT: Math.round(groupe.reduce((s, l) => s + (Number(l.loyer) || 0) + (Number(l.service) || 0), 0) * 100) / 100,
       aCompleter: incompletes.map((l) => `${l.nom} — ${l.incomplets.join(", ")}`),
+      rattrapages: groupe.filter((l) => l.bloc === "3 · Rattrapage").map((l) => ({
+        nom: `${l.nom} ${l.prenom}`.trim(), periode: l.periode,
+        nuits: l.nuits, montant: Number(l.loyer) || 0,
+      })),
     };
     const pdfs = await archivePdf(groupe, `${agence} ${M2.libelle}`);
     resume.pdfJoints = pdfs.jointes;
@@ -201,7 +209,7 @@ export async function GET(request: Request) {
 
     if (simulation) { rapports.push({ ...resume, envoye: false, simulation: true }); continue; }
 
-    const envoye = await envoyer(nomFichier, buf, resume, `${agence} — ${M2.libelle}`, pdfs);
+    const envoye = await envoyer(nomFichier, buf, resume, `${agence} — M+2 ${M2.libelle}`, pdfs);
     if (!envoye) {
       toutOk = false;
       rapports.push({ ...resume, envoye: false, erreur: "envoi échoué — rien marqué, repartira au prochain passage" });
@@ -323,16 +331,23 @@ async function envoyer(nom: string, buf: Buffer, resume: Dict, libelle: string,
                        pdfs: { contenu: Buffer | null; nom: string; jointes: number; absents: string[] }) {
   if (!RESEND) return false;
   const manque = (resume.aCompleter as string[]) ?? [];
+  const rattr = (resume.rattrapages as { nom: string; periode: string; nuits: number | string; montant: number }[]) ?? [];
   const blocs = resume.blocs as Record<string, number>;
   const html = `
     <p>Bonjour Vincent,</p>
-    <p>Voici le récap de facturation L'Oréal — <strong>${libelle}</strong>.</p>
+    <p style="font-size:16px"><strong>${libelle} &nbsp;+&nbsp; transferts &nbsp;+&nbsp; rattrapage</strong></p>
     <table cellpadding="6" style="border-collapse:collapse;font-family:system-ui,sans-serif;font-size:14px">
       ${Object.entries(blocs).map(([b, n]) => `<tr><td style="border-bottom:1px solid #eee">${b}</td><td style="border-bottom:1px solid #eee;text-align:right"><strong>${n}</strong></td></tr>`).join("")}
       <tr><td><strong>Total HT</strong></td><td style="text-align:right"><strong>${Number(resume.totalHT).toLocaleString("fr-FR")} €</strong></td></tr>
     </table>
     <p>${resume.lignes} ligne(s). Ces factures sont désormais marquées comme reportées : elles ne repartiront pas au prochain récap.</p>
     ${pdfs.jointes ? `<p>Les <strong>${pdfs.jointes} proforma</strong> sont jointes en archive.${pdfs.absents.length ? ` ${pdfs.absents.length} PDF introuvable(s) : ${pdfs.absents.join(", ")}.` : ""}</p>` : ""}
+    ${rattr.length
+      ? `<p style="margin-top:18px"><strong>Rattrapages</strong> — périodes antérieures au mois du tableau, jamais facturées parce que la réservation n'existait pas à l'envoi précédent :</p>
+         <table cellpadding="0" style="border-collapse:collapse;font-family:system-ui,sans-serif;font-size:13px">
+         ${rattr.map((x) => `<tr><td style="border-bottom:1px solid #eee;padding:4px 10px">${x.nom}</td><td style="border-bottom:1px solid #eee;padding:4px 10px">${x.periode}</td><td style="border-bottom:1px solid #eee;padding:4px 10px;text-align:right">${x.nuits} nuits</td><td style="border-bottom:1px solid #eee;padding:4px 10px;text-align:right">${x.montant.toLocaleString("fr-FR")} €</td></tr>`).join("")}
+         <tr><td colspan="3" style="padding:6px 10px"><strong>Total rattrapage</strong></td><td style="padding:6px 10px;text-align:right"><strong>${rattr.reduce((s2, x) => s2 + x.montant, 0).toLocaleString("fr-FR")} €</strong></td></tr></table>`
+      : `<p style="margin-top:18px"><strong>Aucun rattrapage</strong> — toutes les périodes du tableau concernent le mois annoncé.</p>`}
     ${manque.length ? `<p><strong>À compléter avant envoi à L'Oréal</strong> — le bloc de facturation manque ou est incomplet dans les notes internes de la réservation :</p><ul>${manque.map((m) => `<li>${m}</li>`).join("")}</ul>` : `<p>Toutes les lignes sont complètes.</p>`}
     <p style="color:#888;font-size:12px">Envoyé automatiquement le dernier jour du mois.</p>`;
   try {
