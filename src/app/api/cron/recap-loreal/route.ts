@@ -453,6 +453,14 @@ async function envoyer(nom: string, buf: Buffer, resume: Dict, libelle: string,
          <tr><td colspan="3" style="padding:6px 10px"><strong>Total rattrapage</strong></td><td style="padding:6px 10px;text-align:right"><strong>${rattr.reduce((s2, x) => s2 + x.montant, 0).toLocaleString("fr-FR")} €</strong></td></tr></table>`
       : `<p style="margin-top:18px"><strong>Aucun rattrapage</strong> — toutes les périodes du tableau concernent le mois annoncé.</p>`}
     ${manque.length ? `<p><strong>À compléter avant envoi à L'Oréal</strong> — le bloc de facturation manque ou est incomplet dans les notes internes de la réservation :</p><ul>${manque.map((m) => `<li>${m}</li>`).join("")}</ul>` : `<p>Toutes les lignes sont complètes.</p>`}
+    ${alertes.length
+      ? `<p style="margin-top:18px;color:#B02A00"><strong>Contrôle de complétude — ${alertes.length} anomalie(s)</strong><br>
+         <span style="font-size:13px">Vérification nuit par nuit de chaque séjour L'Oréal. Ces lignes demandent une décision.</span></p>
+         <table cellpadding="0" style="border-collapse:collapse;font-family:system-ui,sans-serif;font-size:13px">
+         ${alertes.map((a) => `<tr><td style="border-bottom:1px solid #eee;padding:4px 10px">${a.occupant}</td><td style="border-bottom:1px solid #eee;padding:4px 10px">${a.type}</td><td style="border-bottom:1px solid #eee;padding:4px 10px">${a.detail}</td><td style="border-bottom:1px solid #eee;padding:4px 10px;text-align:right">${a.montant.toLocaleString("fr-FR")} €</td></tr>`).join("")}
+         </table>`
+      : `<p style="margin-top:18px;color:#1E7A3C"><strong>Contrôle de complétude — aucune anomalie.</strong><br>
+         <span style="font-size:13px">Chaque nuit occupée de chaque séjour L'Oréal est couverte par une facture, et chaque facture est soit déjà transmise, soit dans ce récap. Rien à revérifier.</span></p>`}
     <p style="color:#888;font-size:12px">Envoyé automatiquement le dernier jour du mois.</p>`;
   try {
     const r = await fetch("https://api.resend.com/emails", {
