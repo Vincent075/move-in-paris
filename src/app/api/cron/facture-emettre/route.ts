@@ -27,7 +27,10 @@ const AT_BASE = process.env.AIRTABLE_BASE_ID || "";
 const AT_TOKEN = process.env.AIRTABLE_WATCHDOG_TOKEN || "";
 const PL_KEY = process.env.PENNYLANE_API_KEY || "";
 const SLACK_TOKEN = process.env.SLACK_BOT_TOKEN_MIP || "";
-const SLACK_CANAL = "C0BCH7FRDC2"; // #facturation
+// C0BCH7FRDC2 est #ménages, pas #facturation : le commentaire disait juste, la
+// constante non. Les avis d'émission de facture atterrissaient donc au milieu des
+// ménages terminés (constaté par Vincent le 01/09/2026, FAC-2026-1233 à 1237).
+const SLACK_CANAL = "C0BCH7N4W90"; // #facturation
 
 const T_FACTURES = "tblC97ei6ZPWhWUwe";
 const T_RESERVATIONS = "tbl5uN32egP4YCvUi";
