@@ -39,7 +39,7 @@ const CHAMP_RECAP = "Récap L'Oréal";
 const TVA_SERVICE = 0.20;
 
 type Dict = Record<string, unknown>;
-type Rec = { id: string; fields: Dict };
+type Rec = { id: string; createdTime?: string; fields: Dict };
 
 const txt = (v: unknown) => (Array.isArray(v) ? String(v[0] ?? "") : v == null ? "" : String(v)).trim();
 const lien1 = (v: unknown) => (Array.isArray(v) && v.length ? String(v[0]) : "");
@@ -314,6 +314,10 @@ function intervalles(js: string[]): string[] {
 // les loyers passaient aussi par des tableaux Excel sans proforma Airtable, donc le
 // contrôle n'aurait produit que du bruit.
 const PLANCHER_CONTROLE = "2026-11-01";
+// Exception au plancher : une réservation créée à partir de cette date n'a jamais pu
+// figurer dans un tableau précédent. Toutes ses nuits sont donc à contrôler, y compris
+// celles d'octobre ou d'avant — c'est exactement le mécanisme de rattrapage.
+const DEPUIS_NOUVELLES = "2026-09-01";
 
 function controleCompletude(factures: Rec[], resas: Rec[], envoyees: Set<string>, plafond: string) {
   const alertes: { resa: string; occupant: string; type: string; detail: string; montant: number }[] = [];
@@ -327,7 +331,9 @@ function controleCompletude(factures: Rec[], resas: Rec[], envoyees: Set<string>
     if (!sansAcc(txt(rf["Nom contact finale"])).includes("OREAL")) continue;
     const e = txt(rf["Date d'entrée"]).slice(0, 10), s = txt(rf["Date de sortie"]).slice(0, 10);
     if (!e || !s) continue;
-    const sejour = nuits(e, s).filter((j) => j >= PLANCHER_CONTROLE && j <= plafond);
+    const recente = (r.createdTime ?? "").slice(0, 10) >= DEPUIS_NOUVELLES;
+    const bas = recente ? DEPUIS_NOUVELLES : PLANCHER_CONTROLE;
+    const sejour = nuits(e, s).filter((j) => j >= bas && j <= plafond);
     if (!sejour.length) continue;
     const fs = (parResa.get(r.id) ?? []).filter((f) => txt(f.fields["Catégorie"]) !== "Transfert");
     const couvertes = new Set<string>(), transmises = new Set<string>();
