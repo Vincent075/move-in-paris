@@ -49,6 +49,7 @@ const TABLES_TERRAIN = new Set(["tblVE8HEtnuTeCi8r", "tbl8SktZKbyopdQ7l"]);
 // impact financier, donc pas de recalcul de finance sur cette table.
 const TABLE_LEADS = "tblUxEm8sB4eHyNG1";
 const TABLE_FACTURES = "tblC97ei6ZPWhWUwe";
+const TABLE_INTERVENTIONS = "tblUjK6taP6ti0kGa";
 
 // Les SEULS champs dont le changement peut modifier le planning des ménages.
 // C'est une liste blanche, et c'est volontaire : le 29/08/2026, relancer la
@@ -166,6 +167,10 @@ export async function POST(request: Request) {
       // chacun de ne voir que son planning, sans rien changer à la saisie.
       ? [lance("/api/cron/terrain-notifs"), lance("/api/cron/terrain-signataire")]
       : [lance("/api/cron/finance-mensuelle")];
+  // Le bouton « Envoyer l'ordre de mission » de la fiche Intervention coche une case ;
+  // faute de place pour une automatisation Airtable de plus, c'est ce réveil-ci qui
+  // déclenche l'envoi à l'entrepreneur, en quelques secondes. Voir /api/cron/ordre-mission.
+  if (conf.table === TABLE_INTERVENTIONS) travaux.push(lance("/api/cron/ordre-mission"));
   // L'émission automatique d'une facture au passage à « A envoyer » est DÉBRANCHÉE
   // (31/08/2026) : la page de création de facture doit être refaite, et on ne laisse
   // pas un déclencheur qui émet de vraies factures sur un chantier à l'arrêt. La route
