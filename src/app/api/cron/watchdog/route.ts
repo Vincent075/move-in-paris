@@ -45,10 +45,11 @@ type Check = {
 
 const CHECKS: Check[] = [
   // request@ : canal d'entrée de TOUTES les demandes clients. Le 24/08/2026 le trigger IMAP est
-  // resté figé 69 h sans que personne ne le sache, seuil 72 h. Ramené à 24 h : le week-end sans
-  // trafic peut produire une fausse alerte, c'est assumé — savoir en 24 h que le canal est mort
-  // vaut mieux que trois jours de demandes perdues.
-  { nom: "Demandes entrantes · request@ (AUTO-00)", workflowId: "FrnZPqeYoZzG67MJ", silenceHours: 24 },
+  // resté figé 69 h sans que personne ne le sache, seuil 72 h, puis 24 h. Ramené à 12 h le
+  // 02/09/2026 : une demande L'Oréal transférée à 00h34 n'est ressortie qu'à 8h46, après 41 h
+  // de gel, alors que le watchdog avait crié trois fois. Une fausse alerte de week-end coûte
+  // un coup d'œil ; une demande d'agence qui dort coûte l'affaire.
+  { nom: "Demandes entrantes · request@ (AUTO-00)", workflowId: "FrnZPqeYoZzG67MJ", silenceHours: 12 },
   // assistance@ : les locataires signalent quand ils ont un souci. Une semaine sans rien est plausible.
   { nom: "Interventions · assistance@ (AUTO-11)", workflowId: "gedYOrIn44VBTMUo", silenceHours: 168 },
   { nom: "Facturation quotidienne (AUTO-16)", workflowId: "wIprQ1tdkkXrMFNx", dailyByHourParis: 9 },
@@ -362,10 +363,12 @@ async function controleWebhooksTempsReel(): Promise<Resultat> {
 // Surveiller ne suffit pas, parce que le silence d'une boîte est ambigu : sur
 // AUTO-00 l'écart médian entre deux réceptions est de 3 h et le maximum observé
 // de 45 h, donc aucun seuil ne sépare « personne n'écrit » de « la connexion est
-// morte » sans crier à tort. On renonce donc à détecter le gel et on le rend
-// improbable : la connexion est refaite toutes les six heures. Un email arrivé
-// pendant la reconnexion reste non lu et sera pris au passage suivant, rien ne
-// se perd.
+// morte » sans crier à tort. On refait donc la connexion toutes les heures.
+// ATTENTION, constaté le 02/09/2026 : cette reconnexion NE SUFFIT PAS. Le trigger est
+// resté figé 41 h en enchaînant les reconnexions horaires, dont une à 8h01 ce matin-là ;
+// c'est le redémarrage manuel du workspace à 8h46 qui l'a débloqué. On garde la
+// reconnexion — elle a servi le 24/08 et elle ne coûte rien — mais elle n'est pas le
+// remède, et le contrôle de silence ci-dessus dit maintenant explicitement de redémarrer.
 const IMAP_WORKFLOWS = [
   { nom: "request@ (AUTO-00)", id: "FrnZPqeYoZzG67MJ" },
   { nom: "assistance@ (AUTO-11)", id: "gedYOrIn44VBTMUo" },
@@ -723,8 +726,14 @@ export async function GET(request: Request) {
               detail = `Workflow actif, aucune erreur. Dernière réception il y a ${ageH.toFixed(0)} h.`;
               if (ageH > check.silenceHours) {
                 statut = "ALERTE";
+                // Le message dit quoi FAIRE. L'ancienne formulation — « c'est peut-être normal,
+                // mais à vérifier » — a été criée trois fois les 01 et 02/09/2026 sans que
+                // personne ne bouge : une alerte qui doute d'elle-même se lit comme du bruit.
                 detail = `Aucune réception depuis ${ageH.toFixed(0)} h (seuil ${check.silenceHours} h). ` +
-                  "Le workflow est actif et sans erreur : c'est peut-être normal (personne n'a écrit), mais à vérifier.";
+                  "Boîte vide ou trigger IMAP figé : de l'extérieur, rien ne permet de trancher. " +
+                  "Ce qu'on sait depuis le 02/09/2026 : la reconnexion automatique par l'API " +
+                  "(désactivation puis réactivation) NE débloque PAS ce gel — seul un REDÉMARRAGE " +
+                  "DU WORKSPACE n8n le débloque. Au moindre doute, redémarre : " + N8N_URL;
               }
             }
           }
