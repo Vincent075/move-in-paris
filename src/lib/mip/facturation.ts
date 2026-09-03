@@ -345,15 +345,17 @@ function construireLigne(ctx: Contexte, montantHT: number, nuits: number, tva: "
   const cat = texte(ctx.v["Catégorie"]);
   const debut = texte(ctx.v["Période facturée début"]).slice(0, 10), fin = texte(ctx.v["Période facturée fin"]).slice(0, 10);
   const libelle = texte(ctx.v["Libellé"]).trim();
+  // Détail imprimé sous le libellé (dommages, ménages, honoraires) : plusieurs lignes possibles.
+  const description = texte(ctx.v["Description (imprimée)"]).trim().slice(0, 2000) || undefined;
   const code = codeResa(ctx);
   if (cat === "Loyer" && nuits > 0) {
     const titre = texte(ctx.v["Mode facturation"]) === "Proforma" ? "Proforma" : "Loyer";
     const label = libelle || [titre, code ? `Résa ${code}` : "", `${debut} au ${fin}`, adresseAppartement(ctx)].filter(Boolean).join(" — ");
     const prixNuit = (montantHT / nuits).toFixed(6);
-    return { prixNuit, ligne: { label: label.slice(0, 250), quantity: nuits, unit: "day", raw_currency_unit_price: prixNuit, vat_rate: tva } };
+    return { prixNuit, ligne: { label: label.slice(0, 250), quantity: nuits, unit: "day", raw_currency_unit_price: prixNuit, vat_rate: tva, ...(description ? { description } : {}) } };
   }
   const label = [libelle || cat || "Prestation", code ? `Résa ${code}` : ""].filter(Boolean).join(" — ");
-  return { prixNuit: montantHT.toFixed(6), ligne: { label: label.slice(0, 250), quantity: 1, unit: "piece", raw_currency_unit_price: montantHT.toFixed(6), vat_rate: tva } };
+  return { prixNuit: montantHT.toFixed(6), ligne: { label: label.slice(0, 250), quantity: 1, unit: "piece", raw_currency_unit_price: montantHT.toFixed(6), vat_rate: tva, ...(description ? { description } : {}) } };
 }
 
 export async function verifier(ctx: Contexte, pourEmission = false): Promise<Verification> {
@@ -446,6 +448,7 @@ export async function verifier(ctx: Contexte, pourEmission = false): Promise<Ver
         ? [`Email et PDF produits par la chaîne AUTO-16 : email anglais générique de la chaîne à ${emailTo}${emailCc ? ` (CC ${emailCc})` : ""}, PDF dans la langue par défaut de l'entreprise Pennylane`]
         : [`Email à : ${emailTo}${emailCc ? ` · CC : ${emailCc}` : ""} · langue ${langue === "fr_FR" ? "français" : "anglais"}`]),
       `Ligne : ${ligne.label}`,
+      ...(ligne.description ? [`        Description imprimée : ${ligne.description.replace(/\s*\n\s*/g, " / ").slice(0, 300)}`] : []),
       `        ${ligne.quantity} × ${ligne.raw_currency_unit_price} € HT · ${tva === "exempt" ? "sans TVA" : "TVA 20 %"} · Total ${eur(montantHT)} HT / ${eur(montantTTC)} TTC`,
       `${texte(v["Modèle IBAN"]) || "IBAN 1"} · Mention : ${mention || "aucune"} · Mode : ${mode === "Proforma" ? "Proforma (brouillon Pennylane, sans numéro)" : "Classique (facture numérotée)"} · Email : ${envoyerEmail ? "à l'émission" : "non (case « Envoyer par email » décochée)"}`,
       ...(cat === "Loyer" ? [`Nuits déjà facturées sur la réservation : aucune sur cette période`] : []),
