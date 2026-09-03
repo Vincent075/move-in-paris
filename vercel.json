@@ -72,6 +72,10 @@
     {
       "path": "/api/cron/marquer-lus",
       "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/cron/checkin-finalisation",
+      "schedule": "10 * * * *"
     }
   ]
 }
