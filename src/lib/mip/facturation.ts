@@ -462,8 +462,8 @@ export async function verifier(ctx: Contexte, pourEmission = false): Promise<Ver
       }
     }
     if (tva === "FR_200") avertissements.push("loyer avec TVA 20 % (choix explicite ; la location meublée est normalement exonérée)");
-  } else if (!texte(v["Libellé"]).trim()) {
-    blocages.push("« Libellé » est vide : c'est la ligne imprimée sur la facture");
+  } else if (!ctx.lignes.length && !texte(v["Libellé"]).trim()) {
+    blocages.push("aucun détail : ajoutez au moins une ligne (bouton « Ajouter une ligne » sur la fiche) — ou renseignez « Libellé » et « Montant total HT » pour une facture d'une seule ligne");
   }
 
   const client = await resoudreClientPennylane(ctx, blocages);
