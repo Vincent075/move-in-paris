@@ -123,6 +123,14 @@ export async function GET(request: Request) {
     if (txt(ff["Mode facturation"]) !== "Proforma") continue;
     if (!sansAcc(txt(ff["Client final"])).includes("OREAL")) continue;
     if (ff[CHAMP_REPORTE]) continue;                       // déjà parti : on ne renvoie jamais
+    // Une facture annulée ne part jamais dans le tableau DED, et l'annulation se lit sur
+    // les mêmes trois marqueurs que finance-mensuelle et le watchdog : Type « Avoir »
+    // (la ligne d'avoir elle-même), Statut « Avoir » (facture neutralisée, brouillon
+    // supprimé) et « From field: Avoir associé » (facture créditée). Sans ce filtre, une
+    // proforma L'Oréal annulée mais jamais reportée partait quand même chez L'Oréal.
+    if (txt(ff["Type"]) === "Avoir") continue;
+    if (txt(ff["Statut"]) === "Avoir") continue;
+    if (lien1(ff["From field: Avoir associé"])) continue;
     const cat = txt(ff["Catégorie"]);
     const d = txt(ff["Période facturée début"]).slice(0, 10);
     const fi = txt(ff["Période facturée fin"]).slice(0, 10);

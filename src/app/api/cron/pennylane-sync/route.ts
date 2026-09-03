@@ -137,6 +137,11 @@ const heureParis = () =>
 
 // Une facture née de NOS workflows porte toujours la réservation dans son libellé.
 const estInterne = (label: string) => /—\s*(Extension\s*—\s*)?Résa\s+RES-/i.test(label) || /\bRésa\s+RES-\d{4}/i.test(label);
+// Une facture ou un avoir émis par la route facture-emettre (03/09/2026) porte son
+// numéro Airtable en external_reference (« FAC-2026-0198 », « AVOIR-FAC-2026-0177 »).
+// Un honoraire ou un dommage sans « Résa RES- » dans le libellé serait sinon réimporté
+// en « Autre » si l'écriture du lien avait échoué au-delà de l'heure de grâce.
+const estEmiseParLaRoute = (inv: Dict) => /^(FAC|AVOIR)-/.test(texte(inv.external_reference));
 
 
 // ── Identification automatique ───────────────────────────────────────────────
@@ -312,15 +317,17 @@ async function rattraper(simulation: boolean) {
 }
 
 export async function GET(request: Request) {
-  const force = new URL(request.url).searchParams.get("force") === "1";
   const url = new URL(request.url);
-  if (url.searchParams.get("rattraper")) {
-    const faits = await rattraper(url.searchParams.get("rattraper") === "simulation");
-    return NextResponse.json({ ok: true, rattrapage: faits });
-  }
+  const force = url.searchParams.get("force") === "1";
+  // Le contrôle du jeton vient AVANT tout mode : « ?rattraper=1 » lit Pennylane avec la
+  // clé de Vercel et écrit dans Airtable, il ne doit jamais être joignable sans CRON_SECRET.
   const auth = request.headers.get("authorization");
   if (process.env.CRON_SECRET && auth !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+  if (url.searchParams.get("rattraper")) {
+    const faits = await rattraper(url.searchParams.get("rattraper") === "simulation");
+    return NextResponse.json({ ok: true, rattrapage: faits });
   }
   if (!PL_KEY) {
     await monitoring("ALERTE", "PENNYLANE_API_KEY absente : la sync ne tourne pas.");
@@ -342,7 +349,7 @@ export async function GET(request: Request) {
       // Sondé le 28/08 sur l'API réelle : un avoir se signale par status="credit_note",
       // et son montant peut être POSITIF — le seul test du signe le laissait passer.
       if (texte(inv.status) === "credit_note" || texte(inv.invoice_type) === "credit_note" || montant(inv.currency_amount ?? inv.amount) < 0) { ignorees.avoirs++; continue; }
-      if (estInterne(label)) { ignorees.internes++; continue; }
+      if (estInterne(label) || estEmiseParLaRoute(inv)) { ignorees.internes++; continue; }
       // ANTÉRIEURES À LA MISE EN SERVICE : jamais. Le paramètre created_after étant
       // ignoré par l'API v2, ce cron balaie en réalité TOUT l'historique Pennylane à
       // chaque passage. Le 28/08 il a donc importé 531 factures de 2025 — un exercice
@@ -414,6 +421,7 @@ export async function GET(request: Request) {
         if (!id || connus.has(id)) return false;
         if (texte(inv.status) === "draft" || inv.draft === true) return false;
         if (texte(inv.status) === "credit_note" || texte(inv.invoice_type) === "credit_note" || montant(inv.currency_amount ?? inv.amount) < 0) return false;
+        if (estEmiseParLaRoute(inv)) return false;
         return texte(inv.date) >= MISE_EN_SERVICE;
       });
       backlog = manquantes.length;

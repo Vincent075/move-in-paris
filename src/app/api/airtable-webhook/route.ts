@@ -175,12 +175,13 @@ export async function POST(request: Request) {
   // Check-in terminé + compteurs saisis + photos : le rapport part au locataire dans la
   // minute (03/09/2026). Le cron horaire rattrape ce que ce réveil aurait manqué.
   if (conf.table === TABLE_CHECKIN) travaux.push(lance("/api/cron/checkin-finalisation"));
-  // L'émission automatique d'une facture au passage à « A envoyer » est DÉBRANCHÉE
-  // (31/08/2026) : la page de création de facture doit être refaite, et on ne laisse
-  // pas un déclencheur qui émet de vraies factures sur un chantier à l'arrêt. La route
-  // /api/cron/facture-emettre reste en place et reste utilisable en essai à blanc
-  // (?ligne=recXXX). Pour la rebrancher : rétablir l'aiguillage sur TABLE_FACTURES.
-  void TABLE_FACTURES;
+  // Facturation depuis Airtable (rebranchée le 03/09/2026, GO de Vincent) : les boutons
+  // « Vérifier », « Émettre la facture », « Renvoyer l'email » et « Créer un avoir » de la
+  // fiche facture ne font que cocher une case ou changer le Statut ; c'est ce réveil-ci
+  // qui déclenche la route dans la seconde. Cron */10 en filet (vercel.json). La route
+  // ne touche qu'aux quatre états que ces boutons écrivent, jamais aux lignes des
+  // workflows Tech Tribe. Voir /api/cron/facture-emettre.
+  if (conf.table === TABLE_FACTURES) travaux.push(lance("/api/cron/facture-emettre"));
   if (TABLES_DISPO.has(conf.table)) {
     travaux.push(lance("/api/cron/dispo-appartements"));
     // Le planning ne se recalcule que si un champ qui le détermine a réellement

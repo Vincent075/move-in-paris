@@ -484,6 +484,10 @@ async function controleFacturesSansPennylane(now: Date): Promise<Resultat> {
   ]);
   const orphelines = factures.filter((r) => {
     if (idPennylane(String(r.fields["Lien Pennylane"] ?? ""))) return false;
+    // Depuis le 03/09/2026, une ligne « À préparer » est un brouillon Airtable légitime
+    // (formulaire « Ajout facture », vérifiée avant émission) : elle n'a pas encore à
+    // exister chez Pennylane. Seules « A envoyer » et « Envoyée » sans lien sont anormales.
+    if (String(r.fields["Statut"] ?? "") === "À préparer") return false;
     const cree = r.createdTime ? new Date(r.createdTime).getTime() : 0;
     return cree > 0 && (now.getTime() - cree) / 3.6e6 >= GRACE_FACTURE_H;
   });
@@ -595,6 +599,73 @@ async function controleAvoirsNonFinalises(now: Date): Promise<Resultat> {
   };
 }
 
+
+// ── Facturation depuis Airtable (route facture-emettre, 03/09/2026) ─────────
+// Deux états intermédiaires ne doivent jamais durer : une facture ÉMISE (lien Pennylane
+// posé) dont l'email n'est pas parti alors qu'il était demandé, et une ligne passée
+// « A envoyer » que la route n'a jamais menée au bout. Dans les deux cas le cron */10
+// rattrape normalement en quelques minutes ; passé 2 h, c'est que quelque chose bloque
+// (relais email en panne, webhook mort, verrou abandonné) et il faut le dire.
+const GRACE_EMISSION_H = 2;
+const ageHeures = (now: Date, v: unknown) => {
+  const t = Date.parse(String(v ?? ""));
+  return Number.isFinite(t) ? (now.getTime() - t) / 3.6e6 : Number.POSITIVE_INFINITY;
+};
+
+async function controleEmisesSansEmail(now: Date): Promise<Resultat> {
+  const nom = "Factures émises sans email depuis plus de 2 h";
+  const factures = await airtableAll(AT_FACTURES, [
+    "Numéro facture", "Statut", "Type", "Lien Pennylane", "Envoyer par email", "Email envoyé le",
+    "Émission en cours depuis", "Date d'envoi", "Code réservation (récap)",
+  ]);
+  const enSouffrance = factures.filter((r) => {
+    const f = r.fields;
+    if (f["Envoyer par email"] !== true || f["Email envoyé le"]) return false;
+    if (!idPennylane(String(f["Lien Pennylane"] ?? ""))) return false;
+    const type = String(f["Type"] ?? ""), statut = String(f["Statut"] ?? "");
+    const concernee = (type === "Facture" && ["Envoyée", "Payée"].includes(statut)) || (type === "Avoir" && statut === "Avoir");
+    if (!concernee) return false;
+    // La date d'émission n'est connue qu'au jour près (« Date d'envoi ») : on ne crie
+    // qu'à partir du lendemain, ou après 2 h si une émission est restée « en cours ».
+    const dateEnvoi = String(f["Date d'envoi"] ?? "").slice(0, 10);
+    const enCours = ageHeures(now, f["Émission en cours depuis"]);
+    return (dateEnvoi !== "" && dateEnvoi < parisParts(now).date) || enCours >= GRACE_EMISSION_H;
+  });
+  if (!enSouffrance.length) return { nom, statut: "OK", detail: "Toutes les factures émises avec envoi demandé ont bien leur email parti." };
+  const lignes = enSouffrance.slice(0, MAX_FACTURES_LISTEES).map((r) =>
+    `• *${r.fields["Numéro facture"] ?? r.id}* — ${liste(r.fields["Code réservation (récap)"]) || "sans réservation"} · émise le ${jour(r.fields["Date d'envoi"]) || "?"}`);
+  return {
+    nom, statut: "ALERTE",
+    detail: `${enSouffrance.length} facture(s) émise(s) chez Pennylane dont l'email n'est jamais parti :\n${lignes.join("\n")}` +
+      "\nLe cron facture-emettre réessaie toutes les 10 min (« Email envoyé le » vide + « Envoyer par email »). " +
+      "Lire le champ « Journal » de la facture : relais email (AUTO-41) en panne, PDF indisponible ou contact sans email.",
+  };
+}
+
+async function controleAEnvoyerSansLien(now: Date): Promise<Resultat> {
+  const nom = "Factures « A envoyer » sans lien Pennylane depuis plus de 2 h";
+  const factures = await airtableAll(AT_FACTURES, [
+    "Numéro facture", "Statut", "Lien Pennylane", "Émission en cours depuis", "Code réservation (récap)", "Journal",
+  ]);
+  const bloquees = factures.filter((r) => {
+    const f = r.fields;
+    if (String(f["Statut"] ?? "") !== "A envoyer" || idPennylane(String(f["Lien Pennylane"] ?? ""))) return false;
+    // Un verrou de ligne posé est daté ; sans verrou, la route n'est jamais passée et
+    // seule la création de la ligne date l'attente.
+    const depuis = f["Émission en cours depuis"] ? ageHeures(now, f["Émission en cours depuis"]) : ageHeures(now, r.createdTime);
+    return depuis >= GRACE_EMISSION_H;
+  });
+  if (!bloquees.length) return { nom, statut: "OK", detail: "Aucune facture n'attend son émission." };
+  const lignes = bloquees.slice(0, MAX_FACTURES_LISTEES).map((r) =>
+    `• *${r.fields["Numéro facture"] ?? r.id}* — ${liste(r.fields["Code réservation (récap)"]) || "sans réservation"}` +
+    `${r.fields["Émission en cours depuis"] ? ` · émission en cours depuis ${jour(r.fields["Émission en cours depuis"])}` : " · jamais prise par la route"}`);
+  return {
+    nom, statut: "ALERTE",
+    detail: `${bloquees.length} facture(s) en « A envoyer » sans facture Pennylane depuis plus de ${GRACE_EMISSION_H} h :\n${lignes.join("\n")}` +
+      "\nLa route facture-emettre (webhook Factures + cron */10) devrait les avoir émises ou rendues « À préparer » avec un motif dans « Journal ». " +
+      "Vérifier le cron Vercel, le webhook temps réel (contrôle ci-dessus) et, avant tout renvoi, qu'aucune facture n'existe déjà dans Pennylane.",
+  };
+}
 
 // Renvoie les deux contrôles « le locataire a-t-il reçu son email ? ».
 // Aucune lecture n8n ici : uniquement l'état réel des données.
@@ -826,6 +897,10 @@ export async function GET(request: Request) {
     await rapporter(wh.nom, wh.statut, wh.detail);
     const av = await controleAvoirsNonFinalises(now);
     await rapporter(av.nom, av.statut, av.detail);
+    const sansEmail = await controleEmisesSansEmail(now);
+    await rapporter(sansEmail.nom, sansEmail.statut, sansEmail.detail);
+    const sansLien = await controleAEnvoyerSansLien(now);
+    await rapporter(sansLien.nom, sansLien.statut, sansLien.detail);
   } catch (e) {
     await rapporter("Contrôles par le résultat", "ALERTE",
       `Impossible de lire Airtable : ${e instanceof Error ? e.message : e}`);

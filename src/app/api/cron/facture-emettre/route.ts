@@ -1,214 +1,74 @@
 import { NextResponse } from "next/server";
+import { lireEnregistrement, lireTable, slack, texte, type Rec } from "@/lib/mip/courrier";
+import { getFacture, idDepuisLien, PennylaneError } from "@/lib/mip/pennylane";
+import {
+  chargerContexte, creerAvoir, deverrouillerFiche, ecrireFacture, emettre, horodatageParis, Journal, journaliserMonitoring,
+  preparerAvoir, renvoyerEmail, SLACK_FACTURATION, T_FACTURES, verifier, verrouillerFiche, type Chemin,
+} from "@/lib/mip/facturation";
 
-// Émission d'une facture créée à la main dans Airtable.
+// Émission des factures et des avoirs depuis Airtable (réécriture du 03/09/2026, GO de Vincent).
 //
-// Pourquoi (31/08/2026) : la table Factures ne savait rien émettre. Les factures y
-// naissaient uniquement par les workflows (post-signature, batch mensuel, transfert,
-// intervention), et le destinataire était toujours celui de la RÉSERVATION. Impossible
-// donc de facturer ponctuellement un occupant qui paie une partie de son séjour de sa
-// poche — le cas de M. LAPOIRIE — ni un dégât, ni des honoraires sans séjour.
+// La version du 31/08 savait créer la facture Pennylane et rien d'autre : ni PDF, ni
+// archive S3, ni email, ni avoir, ni verrou — et elle marquait quand même « Envoyée ».
+// Celle-ci ne décide de rien : toute la logique est dans src/lib/mip/facturation.ts.
+// Elle choisit les lignes, pose les verrous, appelle le bon mode et rend compte.
 //
-// Le destinataire est désormais porté par la FACTURE elle-même, via « Facturer à ».
-// La réservation reste facultative : elle ne sert plus qu'au suivi.
+// QUATRE ÉTATS RÉVEILLENT LA ROUTE, et aucun workflow Tech Tribe ne les écrit :
+//   A. « Vérification demandée » cochée      → aperçu dans « Journal », case décochée ;
+//   B. Statut « A envoyer » sans lien         → émission (chaîne AUTO-16 ou directe) ;
+//   C. « Créer un avoir » cochée              → avoir total / partiel, ou suppression du brouillon ;
+//   D. « Email envoyé le » vide + « Envoyer par email » + lien → (re)envoi de l'email.
+// Réveil : le webhook Airtable de la table Factures (dans la seconde) ; cron */10 en filet.
 //
-// DÉCLENCHEMENT : Vincent passe le Statut à « A envoyer ». C'est un geste délibéré,
-// et c'est la seule chose qui déclenche une émission — jamais la simple création
-// d'une ligne. Le webhook temps réel déjà posé sur la table réveille cette route dans
-// la seconde ; un passage horaire rattrape ce qui aurait été manqué.
+// IDEMPOTENCE : verrou par fiche dans Monitoring (protocole de checkin-finalisation) +
+// « Émission en cours depuis » posé sur la ligne + GET Pennylane par external_reference
+// avant tout POST, avec adoption. Une ligne « A envoyer » dont le verrou a plus de
+// 10 min sans lien n'est JAMAIS relancée : elle repasse « À préparer » avec un message.
 //
-// LE CLIENT PENNYLANE EST CRÉÉ À LA VOLÉE, jamais à l'avance : un occupant n'obtient
-// un identifiant Pennylane que le jour où on lui facture quelque chose, et cet
-// identifiant est rangé dans sa fiche pour la facture suivante.
+// MODES DE TEST :
+//   ?ligne=recX&simulation=1  → tout calcule et écrit le Journal, n'émet rien
+//                               (&mode=avoir : prépare l'avoir sans cocher la case) ;
+//   ?ligne=recX               → traite cette ligne selon son état (A, B, C ou D) ;
+//   ?simulation=1             → passage à blanc sur toutes les candidates ;
+//   ?sonde=1&facture=<id>     → renvoie l'objet Pennylane brut (lecture seule, recette).
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
-const AT_BASE = process.env.AIRTABLE_BASE_ID || "";
-const AT_TOKEN = process.env.AIRTABLE_WATCHDOG_TOKEN || "";
-const PL_KEY = process.env.PENNYLANE_API_KEY || "";
-const SLACK_TOKEN = process.env.SLACK_BOT_TOKEN_MIP || "";
-// C0BCH7FRDC2 est #ménages, pas #facturation : le commentaire disait juste, la
-// constante non. Les avis d'émission de facture atterrissaient donc au milieu des
-// ménages terminés (constaté par Vincent le 01/09/2026, FAC-2026-1233 à 1237).
-const SLACK_CANAL = "C0BCH7N4W90"; // #facturation
-
-const T_FACTURES = "tblC97ei6ZPWhWUwe";
-const T_RESERVATIONS = "tbl5uN32egP4YCvUi";
-
-// Une facture émise ne se rattrape pas : on n'en passe jamais beaucoup d'un coup.
+// Une facture émise ne se rattrape pas : jamais beaucoup d'un coup.
 const MAX_PAR_PASSAGE = 5;
-const ECHEANCE_JOURS = 30;
-// La location meublée d'habitation n'est pas soumise à TVA : AUTO-16 facture les
-// loyers en « exempt » depuis toujours. Appliquer 20 % sur un loyer produirait une
-// facture fausse et une TVA collectée à tort. Tout le reste (honoraires, dégâts,
-// prestations) est au taux normal.
-const TVA_LOYER = "exempt";
-const TVA_AUTRE = "FR_200";
-// Modèle Pennylane = IBAN imprimé sur le PDF. Mêmes identifiants que AUTO-16/04A.
-const TEMPLATE_IBAN: Record<string, number> = { "IBAN 1": 5040390144, "IBAN 2": 5039919104 };
-const TEMPLATE_DEFAUT = 5040390144;
-
-type Dict = Record<string, unknown>;
-type Rec = { id: string; fields: Dict };
-
-// Qui reçoit la facture, selon « Facturer à ». « personne » décide de l'endpoint
-// Pennylane : une personne physique n'a pas de raison sociale, une société n'a pas
-// de prénom, et Pennylane refuse le mauvais gabarit.
-const DESTINATAIRES: Record<string, {
-  champLien: string; table: string; personne: boolean;
-  nom: (f: Dict) => string; prenom?: (f: Dict) => string;
-  email: (f: Dict) => string; adresse: (f: Dict) => string;
-}> = {
-  Occupant: {
-    champLien: "Occupant lié", table: "tblgcFnDwxjqVJy8L", personne: true,
-    nom: (f) => str(f["Nom"]), prenom: (f) => str(f["Prénom"]),
-    email: (f) => str(f["Email"]), adresse: () => "",
-  },
-  "Client final": {
-    champLien: "Client final liée", table: "tblIzSOniHXHCLWQJ", personne: false,
-    nom: (f) => str(f["Nom client final"]),
-    email: (f) => str(f["Email copie auto"]), adresse: (f) => str(f["Adresse"]),
-  },
-  "Propriétaire": {
-    champLien: "Propriétaire lié", table: "tblnUwaeTFk79O0dS", personne: true,
-    nom: (f) => str(f["Nom"]), prenom: (f) => str(f["Prénom"]),
-    email: (f) => str(f["Email"]), adresse: (f) => str(f["Adresse fiscale"]),
-  },
-  Agence: {
-    // La facture ne porte pas de lien direct vers l'agence : on la retrouve par la
-    // réservation, seul endroit où l'entité agence est rattachée.
-    champLien: "", table: "tblINIOlKNzndfDRX", personne: false,
-    nom: (f) => str(f["Nom agence"]),
-    email: (f) => str(f["Email principal"]), adresse: (f) => str(f["Adresse"]),
-  },
-};
-
-const str = (v: unknown) => (v == null ? "" : String(v)).trim();
-const premierLien = (v: unknown) => (Array.isArray(v) ? str(v[0]) : str(v)) || null;
-
-async function airtable(method: string, path: string, body?: unknown) {
-  const r = await fetch(`https://api.airtable.com/v0/${AT_BASE}/${path}`, {
-    method,
-    headers: { Authorization: `Bearer ${AT_TOKEN}`, "Content-Type": "application/json" },
-    body: body ? JSON.stringify(body) : undefined,
-    cache: "no-store",
-  });
-  if (!r.ok) throw new Error(`Airtable ${method} ${path} -> ${r.status} ${await r.text()}`);
-  return r.json();
-}
-
-async function pennylane(method: string, chemin: string, body?: unknown) {
-  const r = await fetch(`https://app.pennylane.com/api/external/v2${chemin}`, {
-    method,
-    headers: { Authorization: `Bearer ${PL_KEY}`, "Content-Type": "application/json", accept: "application/json" },
-    body: body ? JSON.stringify(body) : undefined,
-    cache: "no-store",
-  });
-  const t = await r.text();
-  if (!r.ok) throw new Error(`Pennylane ${method} ${chemin} -> ${r.status} ${t.slice(0, 300)}`);
-  return t ? JSON.parse(t) : {};
-}
-
-async function slack(texte: string) {
-  if (!SLACK_TOKEN) return;
-  await fetch("https://slack.com/api/chat.postMessage", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${SLACK_TOKEN}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ channel: SLACK_CANAL, text: texte }),
-  }).catch(() => {});
-}
-
-// Retrouve l'entité facturée et sa fiche Airtable, ou explique pourquoi c'est impossible.
-async function resoudreDestinataire(fac: Rec) {
-  const choix = str(fac.fields["Facturer à"]);
-  if (!choix) throw new Error("« Facturer à » n'est pas renseigné");
-  const conf = DESTINATAIRES[choix];
-  if (!conf) throw new Error(`« Facturer à » = ${choix} : valeur inconnue`);
-
-  let recId: string | null;
-  if (choix === "Agence") {
-    const resaId = premierLien(fac.fields["Réservation liée"]);
-    if (!resaId) throw new Error("facturer une agence exige une réservation liée (c'est elle qui porte l'agence)");
-    const resa = await airtable("GET", `${T_RESERVATIONS}/${resaId}`);
-    recId = premierLien(resa.fields["Agence de relocation (entité)"]);
-    if (!recId) throw new Error("la réservation n'a pas d'agence de relocation rattachée");
-  } else {
-    recId = premierLien(fac.fields[conf.champLien]);
-    if (!recId) throw new Error(`« ${conf.champLien} » est vide alors que la facture vise ${choix.toLowerCase()}`);
+const VERROU_LIGNE_MS = 10 * 60 * 1000;
+// Erreurs successives (5xx, réseau, Airtable) tolérées sur une même ligne avant de la
+// sortir de la file : sans plafond, une erreur qui se reproduit à l'identique serait
+// rejouée 144 fois par jour avec un Slack et une ligne Monitoring à chaque passage.
+const MAX_TENTATIVES = 3;
+// Nombre de tentatives déjà notées dans le Journal pour ce mode (marqueur « ERREUR (mode n/3) »),
+// depuis le dernier abandon : une relance à la main après correction repart de zéro.
+const MARQUE_ABANDON = "relancer à la main";
+function tentativesJournal(journal: string, mode: Mode): number {
+  const lignes = journal.split("\n");
+  const dernierAbandon = lignes.map((l, i) => (l.includes(MARQUE_ABANDON) ? i : -1)).filter((i) => i >= 0).pop() ?? -1;
+  let max = 0;
+  for (const l of lignes.slice(dernierAbandon + 1)) {
+    const m = new RegExp(`ERREUR \\(${mode} (\\d+)/${MAX_TENTATIVES}`).exec(l);
+    if (m) max = Math.max(max, Number(m[1]));
   }
-  const rec = await airtable("GET", `${conf.table}/${recId}`);
-  return { choix, conf, rec: rec as Rec };
+  return max;
 }
 
-// L'identifiant Pennylane n'est créé que lorsqu'on facture réellement, et il est
-// aussitôt rangé dans la fiche : la facture suivante réutilisera le même client.
-async function clientPennylane(conf: typeof DESTINATAIRES[string], rec: Rec) {
-  const existant = rec.fields["Pennylane customer ID"];
-  if (typeof existant === "number" && existant > 0) return { id: existant, cree: false };
+type Mode = "verification" | "emission" | "avoir" | "renvoi" | "rien";
+const ageMs = (v: unknown) => { const t = Date.parse(texte(v)); return Number.isFinite(t) ? Date.now() - t : Number.POSITIVE_INFINITY; };
 
-  const email = conf.email(rec.fields);
-  if (!email) throw new Error("aucun email sur la fiche du destinataire : Pennylane en exige un");
-  const billing_address = { address: conf.adresse(rec.fields), postal_code: "", city: "", country_alpha2: "FR" };
-  const payload = conf.personne
-    ? { emails: [email], first_name: conf.prenom?.(rec.fields) || "", last_name: conf.nom(rec.fields) || email, billing_address }
-    : { emails: [email], name: conf.nom(rec.fields) || email, billing_address };
-  const endpoint = conf.personne ? "individual_customers" : "company_customers";
-  const cree = await pennylane("POST", `/${endpoint}?use_2026_api_changes=true`, payload);
-  const id = Number(cree?.id);
-  if (!id) throw new Error("Pennylane n'a pas renvoyé d'identifiant client");
-  await airtable("PATCH", conf.table, { records: [{ id: rec.id, fields: { "Pennylane customer ID": id } }] });
-  return { id, cree: true };
-}
-
-const lookup = (v: unknown) => (Array.isArray(v) ? str(v[0]) : str(v));
-
-// Construit la ligne de facture Pennylane. Un loyer se facture en nuits, comme le
-// fait AUTO-16 : le PDF doit montrer « 22 jours × 130 € » et non un forfait, sinon
-// l'agence ne peut pas rapprocher la facture de son séjour. Le montant saisi dans
-// Airtable reste le TOTAL — c'est la convention de la table, vérifiée sur les
-// factures existantes — et c'est nous qui le ramenons au prix par nuit.
-function ligneFacture(fac: Rec, montantHT: number) {
-  const cat = str(fac.fields["Catégorie"]);
-  const estLoyer = cat === "Loyer";
-  const debut = str(fac.fields["Période facturée début"]);
-  const fin = str(fac.fields["Période facturée fin"]);
-  const resa = lookup(fac.fields["Code réservation (récap)"]).split(" · ")[0];
-  const adresse = lookup(fac.fields["Adresse appartement (récap)"]);
-  const notes = str(fac.fields["Notes"]);
-
-  let nuits = 0;
-  if (debut && fin) {
-    nuits = Math.round((Date.parse(fin) - Date.parse(debut)) / 86400000);
-    if (!(nuits > 0)) nuits = 0;
-  }
-
-  const label = estLoyer
-    ? ["Loyer", resa ? `Résa ${resa}` : "", debut && fin ? `${debut} au ${fin}` : "", adresse]
-        .filter(Boolean).join(" — ")
-    : [notes || cat || "Prestation", resa ? `Résa ${resa}` : ""].filter(Boolean).join(" — ");
-
-  // Sans période exploitable on facture au forfait plutôt que de refuser : le montant
-  // total reste juste, seule la présentation change.
-  return nuits > 0
-    ? { label: label.slice(0, 250), quantity: nuits, unit: "day",
-        raw_currency_unit_price: (montantHT / nuits).toFixed(6),
-        vat_rate: estLoyer ? TVA_LOYER : TVA_AUTRE }
-    : { label: label.slice(0, 250), quantity: 1, unit: "piece",
-        raw_currency_unit_price: montantHT.toFixed(6),
-        vat_rate: estLoyer ? TVA_LOYER : TVA_AUTRE };
-}
-
-// L'IBAN imprimé sur le PDF est choisi sur la réservation. Sans réservation liée,
-// modèle par défaut — c'est ce que font déjà AUTO-16 et AUTO-04A.
-async function modeleIban(fac: Rec) {
-  const resaId = premierLien(fac.fields["Réservation liée"]);
-  if (!resaId) return TEMPLATE_DEFAUT;
-  try {
-    const resa = await airtable("GET", `${T_RESERVATIONS}/${resaId}`);
-    return TEMPLATE_IBAN[str(resa.fields["Modèle facture (IBAN)"])] || TEMPLATE_DEFAUT;
-  } catch {
-    return TEMPLATE_DEFAUT;
-  }
+// L'état de la ligne décide du mode. Ordre volontaire : un avoir demandé prime sur un
+// renvoi d'email ; une vérification ne se fait que si rien d'autre n'est demandé.
+function modeDe(f: Rec["fields"]): Mode {
+  const lien = !!idDepuisLien(f["Lien Pennylane"]);
+  if (f["Créer un avoir"] === true && texte(f["Type"]) === "Facture" && lien) return "avoir";
+  if (texte(f["Statut"]) === "A envoyer" && !lien && texte(f["Type"]) !== "Avoir") return "emission";
+  if (f["Envoyer par email"] === true && lien && !texte(f["Email envoyé le"])
+    && ((texte(f["Type"]) === "Facture" && ["Envoyée", "Payée"].includes(texte(f["Statut"]))) || (texte(f["Type"]) === "Avoir" && texte(f["Statut"]) === "Avoir"))) return "renvoi";
+  if (f["Vérification demandée"] === true) return "verification";
+  return "rien";
 }
 
 export async function GET(request: Request) {
@@ -216,74 +76,175 @@ export async function GET(request: Request) {
   if (process.env.CRON_SECRET && auth !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
-  const simulation = new URL(request.url).searchParams.get("simulation") === "1"
-    || !!new URL(request.url).searchParams.get("ligne");
-  if (!PL_KEY) return NextResponse.json({ ok: false, erreur: "PENNYLANE_API_KEY absente" }, { status: 500 });
+  const url = new URL(request.url);
+  const ligne = url.searchParams.get("ligne") || "";
+  const simulation = url.searchParams.get("simulation") === "1";
+  if (!process.env.PENNYLANE_API_KEY_FACTURATION && !process.env.PENNYLANE_API_KEY) return NextResponse.json({ ok: false, erreur: "PENNYLANE_API_KEY absente" }, { status: 500 });
 
-  // Essai à blanc sur une ligne précise, quel que soit son statut : permet de vérifier
-  // le destinataire et le libellé AVANT de passer la facture à « A envoyer ». N'émet
-  // jamais rien — il impose la simulation.
-  const ligne = new URL(request.url).searchParams.get("ligne");
-  let aEmettre: Rec[];
-  if (ligne) {
-    aEmettre = [(await airtable("GET", `${T_FACTURES}/${ligne}`)) as Rec];
-  } else {
-    const q = new URLSearchParams({ pageSize: "100" });
-    q.set("filterByFormula", "AND({Statut}='A envoyer', {Lien Pennylane}=BLANK())");
-    aEmettre = (await airtable("GET", `${T_FACTURES}?${q}`)).records ?? [];
+  // Sonde de recette : l'objet Pennylane brut, sans rien écrire nulle part.
+  if (url.searchParams.get("sonde") === "1") {
+    const id = url.searchParams.get("facture") || "";
+    if (!/^\d+$/.test(id)) return NextResponse.json({ ok: false, erreur: "paramètre facture=<id Pennylane numérique> attendu" }, { status: 400 });
+    try { return NextResponse.json({ ok: true, facture: await getFacture(id) }); }
+    catch (e) { return NextResponse.json({ ok: false, erreur: e instanceof Error ? e.message : String(e) }, { status: 502 }); }
   }
 
   const faits: string[] = [];
   const refus: string[] = [];
-  for (const fac of aEmettre.slice(0, MAX_PAR_PASSAGE)) {
-    const num = str(fac.fields["Numéro facture"]) || fac.id;
-    try {
-      const montantHT = Number(fac.fields["Montant total HT"] ?? 0);
-      if (!(montantHT > 0)) throw new Error("montant HT vide ou nul");
-      const { choix, conf, rec } = await resoudreDestinataire(fac);
-
-      const ligneFac = ligneFacture(fac, montantHT);
-      if (simulation) {
-        faits.push(`${num} → ${choix} « ${conf.nom(rec.fields)} » · ${montantHT} € HT · `
-          + `${ligneFac.quantity} × ${ligneFac.raw_currency_unit_price} · TVA ${ligneFac.vat_rate} · ${ligneFac.label}`);
-        continue;
-      }
-
-      const client = await clientPennylane(conf, rec);
-      const aujourdhui = new Date().toISOString().slice(0, 10);
-      const echeance = new Date(Date.now() + ECHEANCE_JOURS * 86400000).toISOString().slice(0, 10);
-      const facture = await pennylane("POST", "/customer_invoices?use_2026_api_changes=true", {
-        customer_id: client.id,
-        date: aujourdhui,
-        deadline: echeance,
-        draft: str(fac.fields["Mode facturation"]) === "Proforma",
-        currency: "EUR",
-        customer_invoice_template_id: await modeleIban(fac),
-        invoice_lines: [ligneFac],
-      });
-      const plId = Number(facture?.id);
-      if (!plId) throw new Error("Pennylane n'a pas renvoyé d'identifiant de facture");
-
-      await airtable("PATCH", T_FACTURES, { records: [{ id: fac.id, fields: {
-        "Lien Pennylane": `https://app.pennylane.com/companies/22414705/clients/customer_invoices?invoice_id=${plId}&subtab=all`,
-        "Date d'envoi": aujourdhui,
-        Statut: "Envoyée",
-      }}]});
-      faits.push(`• ${num} → ${choix} « ${conf.nom(rec.fields)} » — ${montantHT.toLocaleString("fr-FR")} € HT${client.cree ? " _(client Pennylane créé)_" : ""}`);
-    } catch (e) {
-      refus.push(`• ${num} — ${e instanceof Error ? e.message : e}`);
+  const ignorees: string[] = [];
+  const compte = { verifications: 0, emissions: 0, avoirs: 0, renvois: 0 };
+  let candidats: Array<{ rec: Rec; mode: Mode }> = [];
+  try {
+    if (ligne) {
+      const rec = await lireEnregistrement(T_FACTURES, ligne);
+      if (!rec) return NextResponse.json({ ok: false, erreur: `ligne ${ligne} introuvable` }, { status: 404 });
+      // Une ligne visée à la main : son état décide. En simulation on vérifie, ou on
+      // prépare un avoir si « &mode=avoir » est passé (cocher la case déclencherait le
+      // webhook, donc l'avoir réel : la simulation d'avoir ne peut pas passer par elle).
+      const m = modeDe(rec.fields);
+      const modeSimu: Mode = url.searchParams.get("mode") === "avoir" || m === "avoir" ? "avoir" : "verification";
+      candidats = [{ rec, mode: simulation ? modeSimu : (m === "rien" ? "verification" : m) }];
+    } else {
+      const [verifs, emissions, avoirs, renvois] = await Promise.all([
+        lireTable(T_FACTURES, "{Vérification demandée}=1"),
+        lireTable(T_FACTURES, "AND({Statut}='A envoyer', {Lien Pennylane}=BLANK(), {Type}!='Avoir')"),
+        lireTable(T_FACTURES, "AND({Créer un avoir}=1, {Type}='Facture', {Lien Pennylane}!='')"),
+        lireTable(T_FACTURES, "AND({Email envoyé le}=BLANK(), {Envoyer par email}=1, {Lien Pennylane}!='', "
+          + "OR(AND({Type}='Facture', OR({Statut}='Envoyée', {Statut}='Payée')), AND({Type}='Avoir', {Statut}='Avoir')))"),
+      ]);
+      const vus = new Set<string>();
+      const pousser = (liste: Rec[], mode: Mode) => { for (const r of liste) if (!vus.has(r.id)) { vus.add(r.id); candidats.push({ rec: r, mode }); } };
+      pousser(avoirs, "avoir"); pousser(emissions, "emission"); pousser(renvois, "renvoi"); pousser(verifs, "verification");
     }
-  }
 
-  if (!simulation && (faits.length || refus.length)) {
-    await slack([
-      faits.length ? `:receipt: *Facture(s) émise(s) depuis Airtable*\n${faits.join("\n")}` : "",
-      refus.length ? `:warning: *Facture(s) non émises — à corriger*\n${refus.join("\n")}` : "",
-    ].filter(Boolean).join("\n\n"));
-  }
+    let ecritures = 0;
+    for (const { rec, mode } of candidats) {
+      if (mode !== "verification" && ecritures >= MAX_PAR_PASSAGE) { ignorees.push(`${texte(rec.fields["Numéro facture"]) || rec.id} — reporté au passage suivant (quota ${MAX_PAR_PASSAGE})`); continue; }
+      const num = texte(rec.fields["Numéro facture"]) || rec.id;
+      let verrou: string | null = null;
+      let chemin: Chemin | null = null; // connu après la vérification, lu dans le catch
+      try {
+        // ── Simulation : tout calcule, écrit le Journal, n'émet rien ─────────────
+        if (simulation) {
+          const ctx = await chargerContexte(rec);
+          // Le Journal s'AJOUTE toujours : sur une facture déjà émise, le remplacer
+          // effacerait la seule trace de l'émission (client créé, id Pennylane, email).
+          if (mode === "avoir") {
+            const plan = await preparerAvoir(ctx);
+            const journal = new Journal(ctx.f["Journal"]).ajouter(`SIMULATION — ${plan.journal}`);
+            await ecrireFacture(rec.id, { Journal: journal.texte() });
+            (plan.ok ? faits : refus).push(`• ${num} — ${plan.journal.split("\n")[0]}`);
+          } else {
+            const v = await verifier(ctx, false);
+            const journal = new Journal(ctx.f["Journal"]).ajouter(`SIMULATION — ${v.journal}`);
+            await ecrireFacture(rec.id, { Journal: journal.texte(), ...ctx.deductions });
+            (v.ok ? faits : refus).push(`• ${num} — ${v.ok ? `prête (${v.chemin})` : v.blocages.join(" · ")}`);
+          }
+          compte.verifications++;
+          continue;
+        }
 
-  return NextResponse.json({
-    ok: true, simulation, candidates: aEmettre.length, emises: faits, refusees: refus,
-    restantes: Math.max(0, aEmettre.length - MAX_PAR_PASSAGE),
-  });
+        // ── Verrou par fiche, puis relecture sous verrou ─────────────────────────
+        verrou = await verrouillerFiche(rec.id);
+        if (!verrou) { ignorees.push(`${num} — un autre passage la traite`); continue; }
+        const relu = await lireEnregistrement(T_FACTURES, rec.id);
+        if (!relu) throw new Error("relecture impossible, reporté au prochain passage");
+        const modeRelu = ligne ? mode : modeDe(relu.fields);
+        if (modeRelu !== mode && !ligne) { ignorees.push(`${num} — état changé entre-temps (${modeRelu})`); continue; }
+        const verrouLigne = relu.fields["Émission en cours depuis"];
+        // Un verrou de ligne récent = une autre exécution est dessus (email en cours
+        // d'envoi, par exemple) : on passe. Périmé : un avoir ou un renvoi reprend sans
+        // risque (référence Pennylane adoptée, « Email envoyé le » relu) ; une émission,
+        // JAMAIS — voir ci-dessous.
+        if (mode !== "verification" && verrouLigne && ageMs(verrouLigne) < VERROU_LIGNE_MS) { ignorees.push(`${num} — traitement en cours depuis moins de 10 min`); continue; }
+        if (mode === "emission" && verrouLigne) {
+          // Verrou périmé sans lien : on ne relance JAMAIS (la chaîne AUTO-16 n'a pas
+          // d'external_reference, un second appel pourrait créer un second document).
+          const journal = new Journal(relu.fields["Journal"]).ajouter(`${horodatageParis()} — Émission interrompue il y a plus de 10 min sans lien Pennylane : remise « À préparer ». Vérifier dans Pennylane qu'aucune facture n'existe avant de renvoyer.`);
+          await ecrireFacture(rec.id, { Statut: "À préparer", "Émission en cours depuis": null, Journal: journal.texte() });
+          refus.push(`• ${num} — émission interrompue (verrou > 10 min) : vérifier dans Pennylane avant de renvoyer`);
+          ecritures++;
+          continue;
+        }
+        if (mode !== "verification") await ecrireFacture(rec.id, { "Émission en cours depuis": new Date().toISOString() });
+        const ctx = await chargerContexte(relu);
+
+        if (mode === "verification") {
+          const v = await verifier(ctx, false);
+          await ecrireFacture(rec.id, { Journal: new Journal(ctx.f["Journal"]).ajouter(v.journal).texte(), "Vérification demandée": false, ...ctx.deductions });
+          compte.verifications++;
+          (v.ok ? faits : refus).push(`• ${num} — vérification : ${v.ok ? `prête à émettre (${v.chemin === "auto16" ? "chaîne AUTO-16" : "émission directe"})` : v.blocages.join(" · ")}`);
+        } else if (mode === "emission") {
+          const v = await verifier(ctx, true);
+          chemin = v.chemin;
+          const r = await emettre(ctx, v);
+          ecritures++; compte.emissions++;
+          if (r.ok) faits.push(`• ${r.resume}${r.accrocs.length ? ` — :warning: ${r.accrocs.join(" · ")}` : ""}`);
+          else { refus.push(`• ${num} — ${r.resume}`); await journaliserMonitoring("refus", "ALERTE", `${num} — ${r.resume}`); }
+        } else if (mode === "avoir") {
+          const plan = await preparerAvoir(ctx);
+          const r = await creerAvoir(ctx, plan);
+          ecritures++; compte.avoirs++;
+          (r.ok ? faits : refus).push(`• ${r.resume}${r.accrocs.length ? ` — :warning: ${r.accrocs.join(" · ")}` : ""}`);
+        } else if (mode === "renvoi") {
+          const r = await renvoyerEmail(ctx);
+          ecritures++; compte.renvois++;
+          (r.ok ? faits : refus).push(`• ${r.resume}`);
+        }
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        // Deux familles d'erreurs. Un 4xx Pennylane (hors 429 : 422 champ refusé, 404…)
+        // se reproduira à l'identique au passage suivant : la ligne sort de la file tout
+        // de suite (« À préparer » / case décochée) avec le motif. Un 5xx, une coupure
+        // réseau ou une erreur Airtable méritent une reprise (le GET par external_reference
+        // adopte une facture déjà créée), mais pas plus de MAX_TENTATIVES fois.
+        const definitive = e instanceof PennylaneError && e.status >= 400 && e.status < 500 && e.status !== 429;
+        // Chaîne AUTO-16 appelée sans lien posé : on ne sait pas si un document existe.
+        // Le verrou reste : la règle des 10 min rendra la ligne « À préparer » avec la
+        // consigne de vérifier dans Pennylane, sans jamais la relancer.
+        const chaineIndeterminee = mode === "emission" && chemin === "auto16";
+        let sortie = "";
+        try {
+          const relu = await lireEnregistrement(T_FACTURES, rec.id);
+          const journalTexte = texte(relu?.fields["Journal"]);
+          const n = tentativesJournal(journalTexte, mode) + 1;
+          const abandon = (definitive || n >= MAX_TENTATIVES) && !chaineIndeterminee;
+          const champs: Rec["fields"] = {};
+          if (abandon) {
+            if (mode === "emission") { champs.Statut = "À préparer"; sortie = "remise « À préparer »"; }
+            else if (mode === "avoir") { champs["Créer un avoir"] = false; sortie = "case « Créer un avoir » décochée"; }
+            else if (mode === "renvoi") { champs["Envoyer par email"] = false; sortie = "case « Envoyer par email » décochée"; }
+          }
+          const consigne = abandon
+            ? `${definitive ? "erreur définitive (Pennylane refuse la demande)" : `${n} tentatives`} : ${sortie || "abandon"} — corriger la cause puis relancer à la main`
+            : chaineIndeterminee ? "verrou conservé, VÉRIFIER DANS PENNYLANE avant tout renvoi" : "nouvel essai au passage suivant";
+          const journal = new Journal(journalTexte).ajouter(`${horodatageParis()} — ERREUR (${mode} ${n}/${MAX_TENTATIVES}) : ${msg.slice(0, 400)} — ${consigne}`);
+          await ecrireFacture(rec.id, {
+            ...champs, Journal: journal.texte(),
+            ...(chaineIndeterminee ? {} : { "Émission en cours depuis": null }),
+            ...(mode === "verification" ? { "Vérification demandée": false } : {}),
+          });
+        } catch { /* le Journal attendra */ }
+        refus.push(`• ${num} — ${msg}${sortie ? ` — ${sortie}` : ""}`);
+        await journaliserMonitoring("refus", "ALERTE", `${num} — ${mode} : ${msg.slice(0, 400)}${sortie ? ` — ${sortie}` : ""}`);
+      } finally {
+        if (verrou) await deverrouillerFiche(verrou);
+      }
+    }
+
+    if (!simulation && (faits.length || refus.length)) {
+      await slack(SLACK_FACTURATION, [
+        faits.length ? `:receipt: *Facturation depuis Airtable*\n${faits.join("\n")}` : "",
+        refus.length ? `:warning: *Facture(s) non traitée(s) — à corriger*\n${refus.join("\n")}` : "",
+      ].filter(Boolean).join("\n\n"));
+    }
+    return NextResponse.json({
+      ok: true, simulation, ligne: ligne || null, candidats: candidats.length, compte,
+      faits, refus, ignorees, restantes: ignorees.filter((x) => x.includes("quota")).length,
+    });
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    if (!simulation) await slack(SLACK_FACTURATION, `:rotating_light: *Route facture-emettre en échec* : ${msg}`);
+    return NextResponse.json({ ok: false, erreur: msg }, { status: 500 });
+  }
 }
