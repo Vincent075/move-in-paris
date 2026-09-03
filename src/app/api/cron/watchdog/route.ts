@@ -507,7 +507,7 @@ async function controleFacturesSansPennylane(now: Date): Promise<Resultat> {
   const nom = "Factures Airtable sans facture Pennylane";
   const factures = await airtableAll(AT_FACTURES, [
     "Numéro facture", "Statut", "Montant total HT", "Lien Pennylane",
-    "Code réservation (récap)", "Occupants",
+    "Code réservation (récap)", "Occupants", "Mode facturation",
   ]);
   const orphelines = factures.filter((r) => {
     if (idPennylane(String(r.fields["Lien Pennylane"] ?? ""))) return false;
@@ -522,8 +522,12 @@ async function controleFacturesSansPennylane(now: Date): Promise<Resultat> {
   // Symétrique : une ligne « A envoyer » qui a DÉJÀ son lien Pennylane est un état mort.
   // La route ne traite en émission que « À préparer » et « A envoyer » SANS lien : celle-ci
   // n'est reprise par rien et personne ne le voit.
+  // Les PROFORMA sont exclues : le circuit L'Oréal / Santa Fe les garde volontairement en
+  // brouillon chez Pennylane après les avoir reportées (FAC-2026-0144 et FAC-2026-0196,
+  // reportées le 01/09/2026). Elles ne sont pas bloquées, elles attendent leur tour.
   const bloquees = factures.filter((r) =>
     String(r.fields["Statut"] ?? "") === "A envoyer"
+    && String(r.fields["Mode facturation"] ?? "") !== "Proforma"
     && !!idPennylane(String(r.fields["Lien Pennylane"] ?? ""))
     && r.createdTime && (now.getTime() - new Date(r.createdTime).getTime()) / 3.6e6 >= GRACE_FACTURE_H);
 
