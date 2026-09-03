@@ -41,6 +41,7 @@ export const T_RESERVATIONS = "tbl5uN32egP4YCvUi";
 export const T_CONTACTS = "tblCvwLYdXYiZg6pY";
 export const T_APPARTEMENTS = "tbltFlpzQWXjoWg88";
 export const T_MONITORING = "tblDEkjIyKoKJG5Yj";
+export const T_LIGNES = "tblVLB8lVKIZa2p8M"; // Lignes de facture (détail imprimé, plusieurs par facture)
 export const SLACK_FACTURATION = "C0BCH7N4W90"; // #facturation (C0BCH7FRDC2 est #ménages)
 export const WEBHOOK_AUTO16 = "https://vincent75.app.n8n.cloud/webhook/auto-16-facture-envoyee";
 const ECHEANCE_JOURS = 30;
@@ -214,6 +215,7 @@ export type Contexte = {
   resa: Rec | null; appartement: Rec | null;
   factureA: string; conf: ConfDest | null; fiche: Rec | null;
   contact: Rec | null; copies: Rec[];
+  lignes: Rec[];        // lignes de détail (table Lignes de facture), triées ; vide = facture simple
   sgn: Signataire;
 };
 
@@ -227,6 +229,14 @@ export function deduireDepuisReservation(f: Dict, resa: Rec | null): Dict {
   if (vide(f["TVA"])) d["TVA"] = cat === "Loyer" ? "Pas de TVA" : "20 %";
   if (vide(f["Mode facturation"])) d["Mode facturation"] = texte(rf["Mode facturation"]) || "Classique";
   if (vide(f["Modèle IBAN"])) d["Modèle IBAN"] = TEMPLATE_IBAN[texte(rf["Modèle facture (IBAN)"])] ? texte(rf["Modèle facture (IBAN)"]) : "IBAN 1";
+  // Détail saisi (prix unitaire × quantité) : le total en découle et est écrit dans la fiche.
+  // Un loyer garde sa règle à lui (total de la période ÷ nuits) : le prix unitaire est ignoré.
+  const pu = nombre(f["Prix unitaire HT"]);
+  if (cat !== "Loyer" && pu > 0) {
+    const q = Math.max(1, Math.round(nombre(f["Quantité"]) || 1));
+    const total = Math.round(pu * q * 100) / 100;
+    if (Math.abs(nombre(f["Montant total HT"]) - total) > 0.004) d["Montant total HT"] = total;
+  }
   if (!resa) return d;
   const factureA = texte(f["Facturer à"]) || FACTURATION_RESA[texte(rf["Facturation à"])] || "";
   if (vide(f["Facturer à"]) && factureA) d["Facturer à"] = factureA;
@@ -266,7 +276,16 @@ export async function chargerContexte(fac: Rec): Promise<Contexte> {
   for (const id of liens(v["Copies (CC)"])) { const c = await lireEnregistrement(T_CONTACTS, id); if (c) copies.push(c); }
   const appartement = await lireEnregistrement(T_APPARTEMENTS, premier(resa?.fields["Appartement"]) || premier(v["Appartements"]));
   const sgn = await signataire(resa?.fields["Collaborateur"]);
-  return { fac, numero, f, v, deductions, resa, appartement, factureA, conf, fiche, contact, copies, sgn };
+  // Lignes de détail. Elles font foi quand il y en a : le total de la facture en découle
+  // (une facture sans ligne garde son détail simple : Libellé / Quantité / Prix unitaire).
+  const lignes: Rec[] = [];
+  for (const id of liens(v["Lignes de facture"])) { const l = await lireEnregistrement(T_LIGNES, id); if (l) lignes.push(l); }
+  lignes.sort((a, b) => (nombre(a.fields["Ordre"]) || 9999) - (nombre(b.fields["Ordre"]) || 9999));
+  if (lignes.length) {
+    const total = Math.round(lignes.reduce((t, l) => t + totalLigne(l), 0) * 100) / 100;
+    if (total > 0 && Math.abs(nombre(v["Montant total HT"]) - total) > 0.004) { deductions["Montant total HT"] = total; v["Montant total HT"] = total; }
+  }
+  return { fac, numero, f, v, deductions, resa, appartement, factureA, conf, fiche, contact, copies, lignes, sgn };
 }
 
 const emailContact = (c: Rec | null) => texte(c?.fields["Email"]).trim().toLowerCase();
@@ -295,7 +314,7 @@ export const langueDe = (ctx: Contexte): Langue => {
 export type ClientPl = { id: number | null; aCreer: boolean; adresse?: PlAdresse; detail: string };
 export type Verification = {
   ok: boolean; blocages: string[]; avertissements: string[]; journal: string;
-  chemin: Chemin; ligne: PlLigneEntree; nuits: number; prixNuit: string;
+  chemin: Chemin; ligne: PlLigneEntree; lignes: PlLigneEntree[]; nuits: number; prixNuit: string;
   langue: Langue; template: number; mention: string; mode: "Classique" | "Proforma"; envoyerEmail: boolean;
   client: ClientPl; emailTo: string; emailCc: string; montantHT: number; montantTTC: number; tva: "exempt" | "FR_200";
 };
@@ -357,6 +376,27 @@ async function resoudreClientPennylane(ctx: Contexte, blocages: string[]): Promi
   return { id: null, aCreer: true, adresse: adr.adresse, detail: `client Pennylane à créer (${ctx.conf.personne ? "particulier" : "société"}, ${adr.adresse.address}, ${adr.adresse.postal_code} ${adr.adresse.city}, ${email})` };
 }
 
+// ── Lignes de détail (table « Lignes de facture ») ──────────────────────────
+export const quantiteLigne = (l: Rec) => { const q = nombre(l.fields["Quantité"]); return q > 0 ? q : 1; };
+export const puLigne = (l: Rec) => Math.round(nombre(l.fields["Prix unitaire HT"]) * 100) / 100;
+export const totalLigne = (l: Rec) => Math.round(quantiteLigne(l) * puLigne(l) * 100) / 100;
+const tvaCode = (choix: string, defaut: "exempt" | "FR_200"): "exempt" | "FR_200" | null =>
+  !choix ? defaut : choix === "20 %" ? "FR_200" : choix === "Pas de TVA" ? "exempt" : null;
+
+// Les lignes de détail telles qu'elles partent chez Pennylane (une invoice_line chacune).
+function lignesDetail(ctx: Contexte, tvaDefaut: "exempt" | "FR_200"): PlLigneEntree[] {
+  return ctx.lignes.map((l) => {
+    const d = texte(l.fields["Description (imprimée)"]).trim().slice(0, 2000);
+    return {
+      label: (texte(l.fields["Libellé"]).trim() || "Prestation").slice(0, 250),
+      quantity: quantiteLigne(l), unit: "piece",
+      raw_currency_unit_price: puLigne(l).toFixed(6),
+      vat_rate: tvaCode(texte(l.fields["TVA"]), tvaDefaut) ?? tvaDefaut,
+      ...(d ? { description: d } : {}),
+    };
+  });
+}
+
 // Ligne Pennylane. Un loyer se facture en nuits (« 31 day × 130,000000 »), le reste au forfait.
 // Le montant Airtable est le TOTAL HT (convention de la table) : le prix par nuit en découle.
 function construireLigne(ctx: Contexte, montantHT: number, nuits: number, tva: "exempt" | "FR_200"): { ligne: PlLigneEntree; prixNuit: string } {
@@ -375,7 +415,8 @@ function construireLigne(ctx: Contexte, montantHT: number, nuits: number, tva: "
   const label = [libelle || cat || "Prestation", code ? `Résa ${code}` : ""].filter(Boolean).join(" — ");
   // « Quantité » (ex. 3 ménages) : le Montant total HT reste le TOTAL, le prix unitaire en découle.
   const quantite = Math.max(1, Math.round(nombre(ctx.v["Quantité"]) || 1));
-  const prixUnitaire = (montantHT / quantite).toFixed(6);
+  const puSaisi = nombre(ctx.v["Prix unitaire HT"]);
+  const prixUnitaire = (puSaisi > 0 ? puSaisi : montantHT / quantite).toFixed(6);
   return { prixNuit: prixUnitaire, ligne: { label: label.slice(0, 250), quantity: quantite, unit: "piece", raw_currency_unit_price: prixUnitaire, vat_rate: tva, ...(description ? { description } : {}) } };
 }
 
@@ -401,7 +442,7 @@ export async function verifier(ctx: Contexte, pourEmission = false): Promise<Ver
   else if (!ctx.fiche) blocages.push(`« Facturer à » = ${ctx.factureA} mais « ${ctx.conf.champLien} » est vide`);
   if (!ctx.contact) blocages.push("« Destinataire email » est vide : choisir (ou créer) le contact qui recevra l'email, c'est obligatoire pour émettre");
   else if (!emailContact(ctx.contact)) blocages.push(`le contact « ${texte(ctx.contact.fields["Nom complet"]) || ctx.contact.id} » n'a pas d'email`);
-  if (!(montantHT > 0)) blocages.push("« Montant total HT » doit être supérieur à 0");
+  if (!(montantHT > 0)) blocages.push("montant manquant : renseignez « Montant total HT », ou « Prix unitaire HT » et « Quantité » (le total est alors calculé)");
   if (tvaChoix && tvaChoix !== "20 %" && tvaChoix !== "Pas de TVA") blocages.push(`« TVA » = ${tvaChoix} : valeur inconnue (Pas de TVA ou 20 %)`);
   if (mode === "Proforma" && !texte(v["Mode facturation"])) avertissements.push("mode déduit : Proforma");
 
@@ -427,7 +468,18 @@ export async function verifier(ctx: Contexte, pourEmission = false): Promise<Ver
 
   const client = await resoudreClientPennylane(ctx, blocages);
   const { ligne, prixNuit } = construireLigne(ctx, montantHT, nuits, tva);
-  const montantTTC = Math.round(montantHT * (tva === "FR_200" ? 1.2 : 1) * 100) / 100;
+  // Lignes de détail : elles remplacent la ligne unique et portent chacune leur TVA.
+  const detail = ctx.lignes.length ? lignesDetail(ctx, tva) : [];
+  ctx.lignes.forEach((l, i) => {
+    const n = `ligne ${i + 1}`;
+    if (!texte(l.fields["Libellé"]).trim()) blocages.push(`${n} de détail : « Libellé » est vide`);
+    if (!(puLigne(l) > 0)) blocages.push(`${n} de détail « ${texte(l.fields["Libellé"]) || l.id} » : « Prix unitaire HT » doit être supérieur à 0`);
+    const t = texte(l.fields["TVA"]);
+    if (t && tvaCode(t, tva) === null) blocages.push(`${n} de détail : TVA « ${t} » inconnue (Pas de TVA ou 20 %)`);
+  });
+  if (ctx.lignes.length && cat === "Loyer") blocages.push("un loyer se facture en nuits : retirez les lignes de détail ou changez la catégorie");
+  const lignes = detail.length ? detail : [ligne];
+  const montantTTC = Math.round(lignes.reduce((t, l) => t + Number(l.raw_currency_unit_price) * l.quantity * (l.vat_rate === "FR_200" ? 1.2 : 1), 0) * 100) / 100;
   const emailTo = emailContact(ctx.contact);
   const emailCc = ctx.copies.map(emailContact).filter((x, i, a) => x && x !== emailTo && a.indexOf(x) === i).join(",");
 
@@ -468,16 +520,24 @@ export async function verifier(ctx: Contexte, pourEmission = false): Promise<Ver
       ...(chemin === "auto16"
         ? [`Email et PDF produits par la chaîne AUTO-16 : email anglais générique de la chaîne à ${emailTo}${emailCc ? ` (CC ${emailCc})` : ""}, PDF dans la langue par défaut de l'entreprise Pennylane`]
         : [`Email à : ${emailTo}${emailCc ? ` · CC : ${emailCc}` : ""} · langue ${langue === "fr_FR" ? "français" : "anglais"}`]),
-      `Ligne : ${ligne.label}`,
-      ...(ligne.description ? [`        Description imprimée : ${ligne.description.replace(/\s*\n\s*/g, " / ").slice(0, 300)}`] : []),
-      `        ${ligne.quantity} × ${ligne.raw_currency_unit_price} € HT · ${tva === "exempt" ? "sans TVA" : "TVA 20 %"} · Total ${eur(montantHT)} HT / ${eur(montantTTC)} TTC`,
+      ...(detail.length ? [`${detail.length} ligne(s) de détail :`] : [`Ligne : ${ligne.label}`]),
+      ...(detail.length
+        ? detail.flatMap((l, i) => [
+          `  ${i + 1}. ${l.label} — ${l.quantity} × ${eur(Number(l.raw_currency_unit_price))} HT = ${eur(Math.round(Number(l.raw_currency_unit_price) * l.quantity * 100) / 100)} · ${l.vat_rate === "exempt" ? "sans TVA" : "TVA 20 %"}`,
+          ...(l.description ? [`     ${l.description.replace(/\s*\n\s*/g, " / ").slice(0, 300)}`] : []),
+        ])
+        : [
+          ...(ligne.description ? [`        Description imprimée : ${ligne.description.replace(/\s*\n\s*/g, " / ").slice(0, 300)}`] : []),
+          `        ${ligne.quantity} ${cat === "Loyer" ? "nuits" : "×"} ${cat === "Loyer" ? "× " : ""}${eur(Number(ligne.raw_currency_unit_price))} HT · ${tva === "exempt" ? "sans TVA" : "TVA 20 %"}`,
+        ]),
+      `Total ${eur(montantHT)} HT / ${eur(montantTTC)} TTC`,
       `${texte(v["Modèle IBAN"]) || "IBAN 1"} · Mention : ${mention || "aucune"} · Mode : ${mode === "Proforma" ? "Proforma (brouillon Pennylane, sans numéro)" : "Classique (facture numérotée)"} · Email : ${envoyerEmail ? "à l'émission" : "non (case « Envoyer par email » décochée)"}`,
       ...(cat === "Loyer" ? [`Nuits déjà facturées sur la réservation : aucune sur cette période`] : []),
       ...(Object.keys(ctx.deductions).length ? [`Déduit de la réservation : ${Object.keys(ctx.deductions).join(", ")}`] : []),
       ...avertissements.map((a) => `Attention : ${a}`),
     ];
   return {
-    ok: !blocages.length, blocages, avertissements, journal: lignesJournal.join("\n"), chemin, ligne, nuits, prixNuit,
+    ok: !blocages.length, blocages, avertissements, journal: lignesJournal.join("\n"), chemin, ligne, lignes, nuits, prixNuit,
     langue, template, mention, mode, envoyerEmail, client, emailTo, emailCc, montantHT, montantTTC, tva,
   };
 }
@@ -832,7 +892,7 @@ async function emettreDirect(ctx: Contexte, verif: Verification, journal: Journa
       customer_id: client.id, date: aujourdhui(), deadline: echeance(), draft: verif.mode === "Proforma", currency: "EUR",
       customer_invoice_template_id: verif.template, ...(verif.mention ? { special_mention: verif.mention } : {}),
       external_reference: ctx.numero, pdf_invoice_subject: verif.mode === "Proforma" ? `Pro forma — ${sujet}` : sujet, language: langue,
-      invoice_lines: [verif.ligne],
+      invoice_lines: verif.lignes,
     });
     adoptee = false;
   }
