@@ -364,18 +364,22 @@ async function nuitsDejaFacturees(ctx: Contexte, debut: string, fin: string): Pr
 // entité, et rangeait son identifiant dans la fiche pour toujours. On compare donc le
 // type (société / particulier) et le nom avant d'adopter.
 const sansAccents = (v: string) => v.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-export function ecartClientPennylane(c: PlClient, conf: ConfDest, cf: Dict): string {
+// Le type (société / particulier) est sans ambiguïté : une facture émise à une société
+// alors que le payeur est une personne part à la mauvaise entité juridique → blocage.
+// Le nom, lui, s'écrit rarement pareil des deux côtés (raison sociale complète chez
+// Pennylane, nom d'usage dans Airtable) : simple avertissement, pas de blocage.
+export function ecartClientPennylane(c: PlClient, conf: ConfDest, cf: Dict): { bloquant: string; note: string } {
   const societe = String(c.customer_type ?? "").toLowerCase() === "company" || (!c.first_name && !c.last_name);
   if (societe === !!conf.personne)
-    return `le client Pennylane ${c.id} « ${c.name} » est ${societe ? "une société" : "un particulier"}, or la fiche ${conf.cle} « ${conf.nom(cf)} » est ${conf.personne ? "une personne" : "une société"}`;
+    return { bloquant: `le client Pennylane ${c.id} « ${c.name} » est ${societe ? "une société" : "un particulier"}, or la fiche ${conf.cle} « ${conf.nom(cf)} » est ${conf.personne ? "une personne" : "une société"}`, note: "" };
   const attendu = sansAccents(conf.nom(cf));
   const chezPl = sansAccents([c.name, c.last_name, c.first_name].filter(Boolean).join(" "));
   if (attendu && chezPl && !chezPl.includes(attendu) && !attendu.includes(sansAccents(c.name || "")))
-    return `le client Pennylane ${c.id} porte le nom « ${c.name} », or la fiche ${conf.cle} est « ${conf.nom(cf)} »`;
-  return "";
+    return { bloquant: "", note: `le client Pennylane ${c.id} retrouvé par email porte le nom « ${c.name} », la fiche ${conf.cle} « ${conf.nom(cf)} » : vérifiez que c'est bien le même payeur (sinon, renseignez « Pennylane customer ID » à la main)` };
+  return { bloquant: "", note: "" };
 }
 
-async function resoudreClientPennylane(ctx: Contexte, blocages: string[]): Promise<ClientPl> {
+async function resoudreClientPennylane(ctx: Contexte, blocages: string[], avertissements: string[] = []): Promise<ClientPl> {
   if (!ctx.conf || !ctx.fiche) return { id: null, aCreer: false, detail: "" };
   const cf = ctx.fiche.fields;
   const existant = Number(cf["Pennylane customer ID"] ?? 0);
@@ -386,7 +390,8 @@ async function resoudreClientPennylane(ctx: Contexte, blocages: string[]): Promi
   try { candidat = await chercherClientParEmail(email); } catch (e) { blocages.push(`recherche du client Pennylane impossible : ${e instanceof Error ? e.message : e}`); }
   if (candidat) {
     const ecart = ecartClientPennylane(candidat, ctx.conf, cf);
-    if (ecart) { blocages.push(`${ecart}. Vérifiez le destinataire, ou renseignez « Pennylane customer ID » à la main sur la fiche.`); return { id: null, aCreer: false, detail: "" }; }
+    if (ecart.bloquant) { blocages.push(`${ecart.bloquant}. Vérifiez le destinataire, ou renseignez « Pennylane customer ID » à la main sur la fiche.`); return { id: null, aCreer: false, detail: "" }; }
+    if (ecart.note) avertissements.push(ecart.note);
     return { id: candidat.id, aCreer: false, detail: `client Pennylane ${candidat.id} « ${candidat.name} » retrouvé par email (${email}), sera rangé dans la fiche` };
   }
   let brut = ctx.conf.adresse(cf);
@@ -499,7 +504,7 @@ export async function verifier(ctx: Contexte, pourEmission = false): Promise<Ver
     blocages.push("aucun détail : ajoutez au moins une ligne (bouton « Ajouter une ligne » sur la fiche) — ou renseignez « Libellé » et « Montant total HT » pour une facture d'une seule ligne");
   }
 
-  const client = await resoudreClientPennylane(ctx, blocages);
+  const client = await resoudreClientPennylane(ctx, blocages, avertissements);
   const { ligne, prixNuit } = construireLigne(ctx, montantHT, nuits, tva);
   // Lignes de détail : elles remplacent la ligne unique et portent chacune leur TVA.
   const detail = ctx.lignes.length ? lignesDetail(ctx, tva) : [];
@@ -765,7 +770,7 @@ async function assurerClientPennylane(ctx: Contexte, verif: Verification): Promi
     const trouve = await chercherClientParEmail(email);
     if (trouve) {
       const ecart = ecartClientPennylane(trouve, ctx.conf, cf);
-      if (ecart) throw new Error(`${ecart} : refus d'adopter ce client Pennylane`);
+      if (ecart.bloquant) throw new Error(`${ecart.bloquant} : refus d'adopter ce client Pennylane`);
       id = trouve.id;
     }
   }
