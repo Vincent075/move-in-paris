@@ -476,6 +476,33 @@ const idPennylane = (lien: string) =>
 const liste = (v: unknown) =>
   (Array.isArray(v) ? v : v == null ? [] : [v]).map(String).filter(Boolean).join(", ");
 
+// ── Contrôle : deux lignes Airtable pour une seule facture Pennylane ────────
+// AUTO-17 importe les avoirs vus chez Pennylane et se garde des doublons en cherchant
+// une ligne dont le « Lien Pennylane » porte l'identifiant de l'avoir — mais sa recherche
+// ne ramène qu'UN enregistrement, et sa formule accepte aussi la facture d'origine :
+// quand c'est l'origine qui sort, l'avoir déjà créé par la route est réimporté en double.
+// Le doublon ampute le CA deux fois dans Finance mensuelle. Ce contrôle le voit dans
+// l'heure, quelle qu'en soit la cause.
+async function controleFacturesEnDouble(): Promise<Resultat> {
+  const nom = "Factures Airtable en double sur un même document Pennylane";
+  const factures = await airtableAll(AT_FACTURES, ["Numéro facture", "Type", "Statut", "Montant total HT", "Lien Pennylane"]);
+  const parId = new Map<string, typeof factures>();
+  for (const r of factures) {
+    const id = idPennylane(String(r.fields["Lien Pennylane"] ?? ""));
+    if (!id) continue;
+    parId.set(id, [...(parId.get(id) ?? []), r]);
+  }
+  const doublons = [...parId.entries()].filter(([, rs]) => rs.length > 1);
+  if (!doublons.length) return { nom, statut: "OK", detail: "Chaque document Pennylane n'a qu'une seule ligne dans Factures." };
+  return {
+    nom, statut: "ALERTE",
+    detail: `${doublons.length} document(s) Pennylane portés par plusieurs lignes Airtable :\n`
+      + doublons.slice(0, MAX_FACTURES_LISTEES).map(([id, rs]) =>
+        `• Pennylane ${id} → ${rs.map((r) => `${r.fields["Numéro facture"] ?? r.id} (${r.fields["Type"] ?? "?"}, ${r.fields["Montant total HT"] ?? "?"} € HT)`).join(" + ")}`).join("\n")
+      + "\nSupprimer la ligne en trop : sans quoi Finance mensuelle compte deux fois le même montant.",
+  };
+}
+
 async function controleFacturesSansPennylane(now: Date): Promise<Resultat> {
   const nom = "Factures Airtable sans facture Pennylane";
   const factures = await airtableAll(AT_FACTURES, [
@@ -908,6 +935,8 @@ export async function GET(request: Request) {
     for (const r of await controlesResultat(paris)) await rapporter(r.nom, r.statut, r.detail);
     const fac = await controleFacturesSansPennylane(now);
     await rapporter(fac.nom, fac.statut, fac.detail);
+    const enDouble = await controleFacturesEnDouble();
+    await rapporter(enDouble.nom, enDouble.statut, enDouble.detail);
     for (const r of await controlesMenageHebdo(paris)) await rapporter(r.nom, r.statut, r.detail);
     const dbl = await controleNuitsDoubles();
     await rapporter(dbl.nom, dbl.statut, dbl.detail);
