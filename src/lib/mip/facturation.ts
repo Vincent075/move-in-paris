@@ -355,7 +355,10 @@ function construireLigne(ctx: Contexte, montantHT: number, nuits: number, tva: "
     return { prixNuit, ligne: { label: label.slice(0, 250), quantity: nuits, unit: "day", raw_currency_unit_price: prixNuit, vat_rate: tva, ...(description ? { description } : {}) } };
   }
   const label = [libelle || cat || "Prestation", code ? `Résa ${code}` : ""].filter(Boolean).join(" — ");
-  return { prixNuit: montantHT.toFixed(6), ligne: { label: label.slice(0, 250), quantity: 1, unit: "piece", raw_currency_unit_price: montantHT.toFixed(6), vat_rate: tva, ...(description ? { description } : {}) } };
+  // « Quantité » (ex. 3 ménages) : le Montant total HT reste le TOTAL, le prix unitaire en découle.
+  const quantite = Math.max(1, Math.round(nombre(ctx.v["Quantité"]) || 1));
+  const prixUnitaire = (montantHT / quantite).toFixed(6);
+  return { prixNuit: prixUnitaire, ligne: { label: label.slice(0, 250), quantity: quantite, unit: "piece", raw_currency_unit_price: prixUnitaire, vat_rate: tva, ...(description ? { description } : {}) } };
 }
 
 export async function verifier(ctx: Contexte, pourEmission = false): Promise<Verification> {
@@ -1030,12 +1033,14 @@ export async function creerAvoir(ctx: Contexte, plan: PlanAvoir): Promise<Result
   // 2. Ligne Airtable Type « Avoir », AUSSITÔT après le POST et AVANT le lien : si le
   //    lien ou la finalisation échoue, le watchdog voit « avoir encore brouillon » et le
   //    cron reprend ; si le POST avait échoué, rien n'aurait été neutralisé.
+  // Email de l'avoir au choix de Vincent (défaut : non, il l'envoie à la main).
+  const notifierClient = ctx.f["Notifier le client de l'avoir"] === true;
   let ligneAvoir = (await lireTable(T_FACTURES, `FIND('invoice_id=${avoirId}&', {Lien Pennylane})`))[0] ?? null;
   if (!ligneAvoir) {
     const champs: Dict = {
       Type: "Avoir", Statut: "Avoir", "Catégorie": texte(ctx.f["Catégorie"]) || "Autre",
       "Montant total HT": -plan.montantAvoirHT, "Date d'envoi": aujourdhui(),
-      "Lien Pennylane": lienPennylane(avoirId), Notes: `Avoir — ${motif}`, "Envoyer par email": true,
+      "Lien Pennylane": lienPennylane(avoirId), Notes: `Avoir — ${motif}`, "Envoyer par email": notifierClient,
       // Verrou posé DÈS la création : la ligne (lien + « Envoyer par email » + « Email
       // envoyé le » vide) est une candidate « renvoi » que le webhook réveille dans la
       // seconde, alors que l'avoir n'est pas encore lié ni finalisé. Sans verrou, l'email
@@ -1093,7 +1098,7 @@ export async function creerAvoir(ctx: Contexte, plan: PlanAvoir): Promise<Result
     journal.ajouter(`${horodatageParis()} — Avoir partiel ${numeroAvoir} (${avoir.invoice_number}) posé · origine « ${apres.status} », reste dû ${resteDu != null ? eur(resteDu) : "?"} TTC · Statut inchangé`);
     journal.ajouter(`${horodatageParis()} — ATTENTION : avoir partiel ${alerteFinance}`);
     accrocs.push(`avoir partiel ${alerteFinance}`);
-    await ecrireFacture(rec.id, { "Créer un avoir": false, "Motif avoir": "", "Montant avoir HT": null, "Émission en cours depuis": null, Journal: journal.texte() });
+    await ecrireFacture(rec.id, { "Créer un avoir": false, "Motif avoir": "", "Montant avoir HT": null, "Notifier le client de l'avoir": false, "Émission en cours depuis": null, Journal: journal.texte() });
   } else {
     journal.ajouter(`${horodatageParis()} — Annulée par l'avoir ${numeroAvoir} (${avoir.invoice_number}) · origine « ${apres.status} », reste dû ${resteDu != null ? eur(resteDu) : "?"}`);
     await ecrireFacture(rec.id, { Statut: "Avoir", "Créer un avoir": false, "Émission en cours depuis": null, Journal: journal.texte() });
@@ -1109,7 +1114,11 @@ export async function creerAvoir(ctx: Contexte, plan: PlanAvoir): Promise<Result
     echeance: texte(avoir.deadline) || echeance(), pdfNom: `Avoir-${numeroAvoir}.pdf`,
     origine: { numero: ctx.numero, numeroPennylane: numOrig, montantHT: nombre(origine.currency_amount_before_tax), resteDu, partiel: plan.partiel, motif },
   };
-  const suite = await archiverEtEnvoyer(ctxAvoir, ctxAvoir.fac, avoirId, avoir, doc, true, journalAvoir, plan.langue);
+  const suite = await archiverEtEnvoyer(ctxAvoir, ctxAvoir.fac, avoirId, avoir, doc, notifierClient, journalAvoir, plan.langue);
+  if (!notifierClient) {
+    const consigne = `${horodatageParis()} — Email NON envoyé au client (case « Notifier le client de l'avoir » décochée) : PDF archivé ; pour l'envoyer plus tard, bouton « Renvoyer l'email » sur la ligne de l'avoir`;
+    journalAvoir.ajouter(consigne); journal.ajouter(consigne);
+  }
   accrocs.push(...suite.accrocs);
   if (plan.partiel) journalAvoir.ajouter(`${horodatageParis()} — ATTENTION : avoir partiel ${alerteFinance}`);
   // Verrou de la ligne d'avoir levé : si l'email n'est pas parti, elle redevient une
