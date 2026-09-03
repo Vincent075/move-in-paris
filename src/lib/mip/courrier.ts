@@ -19,15 +19,24 @@ export const texte = (v: unknown) => (typeof v === "string" ? v : v == null ? ""
 export const premier = (v: unknown) => (Array.isArray(v) ? texte(v[0]) : texte(v));
 
 // ── Airtable ────────────────────────────────────────────────────────────────
+// Trois tentatives sur 429 (5 requêtes/s par base : un ping webhook réveille plusieurs
+// crons en parallèle) et sur 5xx, avec une pause croissante. Les 4xx « métier »
+// (422 champ inconnu, 404…) restent immédiats : réessayer n'y changerait rien.
 export async function airtable(method: string, path: string, body?: unknown): Promise<Dict> {
-  const r = await fetch(`https://api.airtable.com/v0/${AT_BASE}/${path}`, {
-    method,
-    headers: { Authorization: `Bearer ${AT_TOKEN}`, "Content-Type": "application/json" },
-    body: body ? JSON.stringify(body) : undefined,
-    cache: "no-store",
-  });
-  if (!r.ok) throw new Error(`Airtable ${method} ${path} -> ${r.status} ${(await r.text()).slice(0, 300)}`);
-  return (await r.json()) as Dict;
+  let derniere = "";
+  for (let tentative = 1; tentative <= 3; tentative++) {
+    const r = await fetch(`https://api.airtable.com/v0/${AT_BASE}/${path}`, {
+      method,
+      headers: { Authorization: `Bearer ${AT_TOKEN}`, "Content-Type": "application/json" },
+      body: body ? JSON.stringify(body) : undefined,
+      cache: "no-store",
+    });
+    if (r.ok) return (await r.json()) as Dict;
+    derniere = `Airtable ${method} ${path} -> ${r.status} ${(await r.text()).slice(0, 300)}`;
+    if (r.status !== 429 && r.status < 500) break;
+    await new Promise((res) => setTimeout(res, 1200 * tentative));
+  }
+  throw new Error(derniere);
 }
 
 export async function lireTable(tableId: string, formule?: string): Promise<Rec[]> {

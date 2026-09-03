@@ -181,12 +181,16 @@ async function rappelsLocatairesJ1(menages: Rec[], aujourdhui: string, opts: { l
         ],
         signataire: sgn,
       });
-      const res = await envoyerEmailLocataire({
+      // Un seul passage par jour : un relais n8n qui tousse ne doit pas faire perdre le
+      // rappel. Seconde tentative après 8 s avant de déclarer l'échec.
+      const envoi = () => envoyerEmailLocataire({
         usrEmail: sgn.email, mailTo: opts.test ? "vincent@move-in-paris.com" : email, mailReplyTo: sgn.email,
         mailSubject: `${opts.test ? "[TEST] " : ""}Your weekly cleaning is tomorrow · ${nomCourt}`,
         mailHtml: html,
         origine: "menages-relance/rappel-j1",
       });
+      let res = await envoi();
+      if (!res.ok) { await new Promise((r) => setTimeout(r, 8000)); res = await envoi(); }
       if (!res.ok) { echecs.push(`${libelle} — ${res.erreur}`); continue; }
       if (!opts.test) {
         await airtable("PATCH", T_MENAGES, { records: [{ id: m.id, fields: { [CHAMP_RAPPEL]: new Date().toISOString() } }], typecast: true });
@@ -217,12 +221,24 @@ export async function GET(request: Request) {
 
   try {
     const menages = await lireTable(T_MENAGES);
+    const aujourdhui = jourParis(new Date());
+
+    // Recette du rappel J-1 (`?ligne=recXXX&test=1`) : on ne fait QUE ça. Les étapes 1
+    // et 2 (bascule des ménages du jour, relance Slack, Monitoring) sont réservées au
+    // passage planifié du matin — un essai l'après-midi ne doit rien écrire ni republier.
+    const urlReq = new URL(request.url);
+    const ligneRecette = urlReq.searchParams.get("ligne") || undefined;
+    const testRecette = urlReq.searchParams.get("test") === "1";
+    if (ligneRecette || testRecette) {
+      if (!testRecette) return NextResponse.json({ ok: false, erreur: "?ligne= n'est accepté qu'avec &test=1 (un envoi réel passe par le cron du matin)" }, { status: 400 });
+      const rappels = await rappelsLocatairesJ1(menages, aujourdhui, { ligne: ligneRecette, test: true });
+      return NextResponse.json({ ok: true, test: true, rappels });
+    }
 
     // ── 1. Les ménages du jour passent en « En cours » ────────────────────────
     // On compare des jours civils à Paris, pas des instants : « Date prévue » est un
     // dateTime dont l'heure ne veut rien dire ici (2h du matin pour la plupart), et
     // raisonner en UTC ferait basculer les ménages un jour trop tôt ou trop tard.
-    const aujourdhui = jourParis(new Date());
     const duJour = menages.filter(
       (m) => texte(m.fields["Statut"]) === "Planifié" && jourParis(m.fields["Date prévue"]) === aujourdhui,
     );
@@ -253,11 +269,7 @@ export async function GET(request: Request) {
     // envoyé avec l'email d'arrivée, le rappel dit seulement où le retrouver. Jamais
     // pour un départ.
     // Idempotence : « Rappel locataire envoyé le » sur le ménage.
-    const urlReq = new URL(request.url);
-    const rappels = await rappelsLocatairesJ1(menages, aujourdhui, {
-      ligne: urlReq.searchParams.get("ligne") || undefined,
-      test: urlReq.searchParams.get("test") === "1",
-    });
+    const rappels = await rappelsLocatairesJ1(menages, aujourdhui);
 
     if (!enRetard.length) {
       await monitoring("OK",
