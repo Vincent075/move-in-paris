@@ -61,7 +61,7 @@ export const MAX_ECHECS_EMAIL = 6;
 const NUITS_DOUBLES_ADMISES = new Set(["RES-2026-0124"]);
 
 export type Langue = "en_GB" | "fr_FR";
-export type FactureA = "Occupant" | "Client final" | "Agence" | "Propriétaire";
+export type FactureA = "Occupant" | "Client final" | "Agence" | "Propriétaire" | "Contact";
 export type Chemin = "auto16" | "direct";
 
 // Qui est facturé, selon « Facturer à ». `personne` décide de l'endpoint Pennylane
@@ -91,6 +91,14 @@ const DESTINATAIRES: Record<string, ConfDest> = {
     cle: "Propriétaire", champLien: "Propriétaire lié", table: "tblnUwaeTFk79O0dS", personne: true, langue: "fr_FR",
     nom: (f) => texte(f["Nom"]), prenom: (f) => texte(f["Prénom"]), email: (f) => texte(f["Email"]),
     adresse: (f) => texte(f["Adresse fiscale"]), tel: (f) => texte(f["Téléphone"]),
+  },
+  // Facturer une personne qui n'est ni occupant, ni propriétaire, ni société (ex. honoraires
+  // de recherche à un particulier) : le payeur EST le contact du champ « Destinataire email »,
+  // pas de second champ à remplir. Son adresse vient de « Adresse de facturation » (Contacts).
+  Contact: {
+    cle: "Contact", champLien: "Destinataire email", table: "tblCvwLYdXYiZg6pY", personne: true, langue: "fr_FR",
+    nom: (f) => texte(f["Nom"]), prenom: (f) => texte(f["Prénom"]), email: (f) => texte(f["Email"]),
+    adresse: (f) => texte(f["Adresse de facturation"]), tel: (f) => texte(f["Téléphone"]),
   },
 };
 // « Facturation à » de la réservation → « Facturer à » de la facture.
@@ -275,7 +283,13 @@ const prenomContact = (c: Rec | null, repli = "") => (texte(c?.fields["Prénom"]
 const adresseAppartement = (ctx: Contexte) =>
   texte(ctx.appartement?.fields["adresse complète"]) || premier(ctx.v["Adresse appartement (récap)"]) || premier(ctx.resa?.fields["Adresse appartement"]) || texte(ctx.appartement?.fields["Adresse"]);
 const codeResa = (ctx: Contexte) => texte(ctx.resa?.fields["Code réservation"]).split(" · ")[0].trim() || premier(ctx.v["Code réservation (récap)"]).split(" · ")[0].trim();
-export const langueDe = (ctx: Contexte): Langue => ctx.conf?.langue ?? "fr_FR";
+export const langueDe = (ctx: Contexte): Langue => {
+  // « Langue du document » sur la facture l'emporte ; vide = déduit du type de payeur.
+  const choisie = texte(ctx.v?.["Langue du document"]);
+  if (choisie === "Français") return "fr_FR";
+  if (choisie === "Anglais") return "en_GB";
+  return ctx.conf?.langue ?? "fr_FR";
+};
 
 // ── Vérification ────────────────────────────────────────────────────────────
 export type ClientPl = { id: number | null; aCreer: boolean; adresse?: PlAdresse; detail: string };
@@ -328,6 +342,10 @@ async function resoudreClientPennylane(ctx: Contexte, blocages: string[]): Promi
     const a = ctx.appartement?.fields ?? {};
     brut = [texte(a["Adresse"]), texte(a["Code postal"]), texte(a["Ville"])].filter(Boolean).join(" ") || adresseAppartement(ctx);
     if (!brut) { blocages.push("occupant sans adresse : lier la réservation (l'adresse de l'appartement sert d'adresse de facturation) ou renseigner « Pennylane customer ID » sur sa fiche"); return { id: null, aCreer: true, detail: "" }; }
+  }
+  if (!brut && ctx.conf.cle === "Contact") {
+    blocages.push(`le contact « ${ctx.conf.nom(cf)} » n'a pas d'adresse : renseignez « Adresse de facturation » sur sa fiche Contacts (ex. « 12 rue de la Paix, 75002 Paris »)`);
+    return { id: null, aCreer: true, detail: "" };
   }
   const adr = lireAdresse(brut);
   if (!adr.ok || !adr.adresse) {
