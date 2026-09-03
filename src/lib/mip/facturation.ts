@@ -478,6 +478,9 @@ export async function verifier(ctx: Contexte, pourEmission = false): Promise<Ver
     if (t && tvaCode(t, tva) === null) blocages.push(`${n} de détail : TVA « ${t} » inconnue (Pas de TVA ou 20 %)`);
   });
   if (ctx.lignes.length && cat === "Loyer") blocages.push("un loyer se facture en nuits : retirez les lignes de détail ou changez la catégorie");
+  // Saisie simple ET lignes de détail : les lignes gagnent, on le dit au lieu de l'ignorer en silence.
+  if (ctx.lignes.length && (texte(v["Libellé"]).trim() || nombre(v["Prix unitaire HT"]) > 0 || nombre(v["Quantité"]) > 1))
+    avertissements.push(`la facture a ${ctx.lignes.length} ligne(s) de détail : « Libellé », « Quantité » et « Prix unitaire HT » de la facture ne sont pas imprimés (ce sont les lignes qui font foi)`);
   const lignes = detail.length ? detail : [ligne];
   const montantTTC = Math.round(lignes.reduce((t, l) => t + Number(l.raw_currency_unit_price) * l.quantity * (l.vat_rate === "FR_200" ? 1.2 : 1), 0) * 100) / 100;
   const emailTo = emailContact(ctx.contact);
@@ -1001,7 +1004,11 @@ export async function preparerAvoir(ctx: Contexte): Promise<PlanAvoir> {
   let origine: PlFacture;
   try { origine = await getFacture(plId); } catch (e) { blocages.push(`lecture Pennylane impossible : ${e instanceof Error ? e.message : e}`); plan.journal = blocages.join("\n"); return plan; }
   plan.origine = origine;
-  plan.langue = origine.language === "en_GB" || origine.language === "fr_FR" ? origine.language : langueDe(ctx);
+  // « Langue du document » choisie à la main l'emporte, y compris sur l'avoir ; sinon on
+  // reprend la langue de la facture Pennylane d'origine, sinon la déduction par payeur.
+  const langueChoisie = texte(ctx.v["Langue du document"]);
+  plan.langue = langueChoisie ? langueDe(ctx)
+    : origine.language === "en_GB" || origine.language === "fr_FR" ? origine.language : langueDe(ctx);
   const montantPL = nombre(origine.currency_amount_before_tax);
   const montantAT = nombre(f["Montant total HT"]);
   const notes: string[] = [];
