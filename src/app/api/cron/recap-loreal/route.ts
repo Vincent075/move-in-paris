@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import ExcelJS from "exceljs";
 import JSZip from "jszip";
 import { lireBlocLoreal, manquants, type BlocLoreal } from "@/lib/loreal-notes";
+import { lienS3 } from "@/lib/mip/courrier";
 
 // Récap mensuel de facturation L'Oréal — dernier jour calendaire de chaque mois.
 //
@@ -252,6 +253,16 @@ export async function GET(request: Request) {
 // retourner la chercher une par une. On prend notre copie S3 — c'est celle qui a
 // réellement été envoyée. Un PDF introuvable ne bloque jamais l'envoi : il est
 // nommément signalé dans l'email.
+// Clé de l'objet dans une URL signée : https://<hôte>/<bucket>/<clé>?X-Amz-...
+const cleDepuisLien = (url: string): string => {
+  if (!url) return "";
+  try {
+    const chemin = decodeURIComponent(new URL(url).pathname).replace(/^\/+/, "");
+    const i = chemin.indexOf("/");
+    return i > 0 ? chemin.slice(i + 1) : "";
+  } catch { return ""; }
+};
+
 async function archivePdf(lignes: Ligne[], libelle: string) {
   const zip = new JSZip();
   const absents: string[] = [];
@@ -260,16 +271,24 @@ async function archivePdf(lignes: Ligne[], libelle: string) {
     const f = l.facture; const num = txt(f.fields["Numéro facture"]) || f.id;
     if (vus.has(num)) continue;
     vus.add(num);
+    // Le « Lien S3 » rangé dans la fiche est signé pour 7 jours : passé ce délai il
+    // répond 403 et le zip se vide. Constaté le 04/09/2026 : 65 des 103 liens de la base
+    // étaient déjà morts. L'objet S3, lui, est toujours là — on resigne une URL fraîche à
+    // partir de sa clé, celle du lien quand elle est lisible, sinon celle de la convention.
     const s3 = txt(f.fields["Lien S3"]);
+    const cleConvention = `factures/${f.id}_${num}.pdf`;
+    const cles = [cleDepuisLien(s3), cleConvention].filter((c, i, a) => c && a.indexOf(c) === i);
+    const urls = [s3, ...cles.map((c) => lienS3(c))].filter(Boolean);
     let ok = false;
-    if (s3) {
+    for (const u of urls) {
+      if (ok) break;
       try {
-        const r = await fetch(s3, { cache: "no-store" });
+        const r = await fetch(u, { cache: "no-store" });
         if (r.ok) {
           const b = Buffer.from(await r.arrayBuffer());
           if (b.length > 1000) { zip.file(`${num} - ${l.nom}.pdf`, b); ok = true; }
         }
-      } catch { /* signalé plus bas */ }
+      } catch { /* on essaie l'URL suivante, échec signalé plus bas */ }
     }
     if (!ok) absents.push(`${num} — ${l.nom}`);
   }
