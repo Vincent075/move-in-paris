@@ -32,7 +32,7 @@ import {
 import {
   chercherClientParEmail, chercherParReference, creerClientParticulier, creerClientSociete, creerFacture,
   finaliser, getFacture, getLignes, idDepuisLien, lienPennylane, lierAvoir, listerFacturesClientDepuis, supprimerBrouillon,
-  telechargerPdf, urlPdf, TEMPLATE_DEFAUT, TEMPLATE_IBAN, type PlAdresse, type PlFacture, type PlLigneEntree,
+  telechargerPdf, urlPdf, TEMPLATE_DEFAUT, TEMPLATE_IBAN, type PlAdresse, type PlClient, type PlFacture, type PlLigneEntree,
 } from "@/lib/mip/pennylane";
 
 // ── Tables et constantes ────────────────────────────────────────────────────
@@ -113,8 +113,12 @@ const liens = (v: unknown): string[] => (Array.isArray(v) ? v.map((x) => texte(x
 const vide = (v: unknown) => v == null || v === "" || v === false || (Array.isArray(v) && v.length === 0);
 const nombre = (v: unknown) => { const n = Number(v ?? 0); return Number.isFinite(n) ? n : 0; };
 const memesLiens = (a: unknown, b: unknown) => liens(a).slice().sort().join(",") === liens(b).slice().sort().join(",");
-const aujourdhui = () => new Date().toISOString().slice(0, 10);
-const echeance = () => new Date(Date.now() + ECHEANCE_JOURS * 86400000).toISOString().slice(0, 10);
+// Dates du document en heure de PARIS : en UTC, une émission entre minuit et 2 h
+// (cron toutes les 10 min) datait la facture de la veille — et du mois précédent le 1er.
+const jourParis = (d = new Date()) =>
+  new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
+const aujourdhui = () => jourParis();
+const echeance = () => jourParis(new Date(Date.now() + ECHEANCE_JOURS * 86400000));
 const cle = (rec: Rec, numero: string) => `factures/${rec.id}_${numero}.pdf`; // convention S3 d'AUTO-16
 const echapper = (s: string) => s.replace(/'/g, "\\'");
 
@@ -229,7 +233,8 @@ export function deduireDepuisReservation(f: Dict, resa: Rec | null): Dict {
   const rf = resa?.fields ?? {};
   const cat = texte(f["Catégorie"]);
   if (vide(f["Type"])) d["Type"] = "Facture";
-  if (vide(f["TVA"])) d["TVA"] = cat === "Loyer" ? "Pas de TVA" : "20 %";
+  // Un dépôt de garantie est un encaissement, pas une prestation : hors champ de TVA.
+  if (vide(f["TVA"])) d["TVA"] = cat === "Loyer" || cat === "Deposit" ? "Pas de TVA" : "20 %";
   if (vide(f["Mode facturation"])) d["Mode facturation"] = texte(rf["Mode facturation"]) || "Classique";
   if (vide(f["Modèle IBAN"])) d["Modèle IBAN"] = TEMPLATE_IBAN[texte(rf["Modèle facture (IBAN)"])] ? texte(rf["Modèle facture (IBAN)"]) : "IBAN 1";
   // Détail saisi (prix unitaire × quantité) : le total en découle et est écrit dans la fiche.
@@ -282,7 +287,12 @@ export async function chargerContexte(fac: Rec): Promise<Contexte> {
   // Lignes de détail. Elles font foi quand il y en a : le total de la facture en découle
   // (une facture sans ligne garde son détail simple : Libellé / Quantité / Prix unitaire).
   const lignes: Rec[] = [];
-  for (const id of liens(v["Lignes de facture"])) { const l = await lireEnregistrement(T_LIGNES, id); if (l) lignes.push(l); }
+  const idsLignes = liens(v["Lignes de facture"]);
+  for (const id of idsLignes) { const l = await lireEnregistrement(T_LIGNES, id); if (l) lignes.push(l); }
+  // Une ligne illisible (404, réseau) ferait une facture amputée ET un « Montant total HT »
+  // réécrit plus bas : on arrête net, le cron reprendra au passage suivant.
+  if (lignes.length !== idsLignes.length)
+    throw new Error(`${idsLignes.length - lignes.length} ligne(s) de détail illisible(s) sur ${numero} : émission suspendue, reprise au passage suivant`);
   lignes.sort((a, b) => (nombre(a.fields["Ordre"]) || 9999) - (nombre(b.fields["Ordre"]) || 9999));
   if (lignes.length) {
     const total = Math.round(lignes.reduce((t, l) => t + totalLigne(l), 0) * 100) / 100;
@@ -349,6 +359,22 @@ async function nuitsDejaFacturees(ctx: Contexte, debut: string, fin: string): Pr
 // (adopté et rangé au moment de l'émission) ; sinon à créer, avec une adresse complète.
 // Un occupant n'a pas de champ adresse : c'est l'adresse de l'appartement de sa
 // réservation qui le domicilie (il y habite), jamais une adresse par défaut.
+// Deux entités peuvent partager une adresse email : la société et la personne qui écrit
+// pour elle. Adopter le client sur le seul email émettait la facture au nom de l'autre
+// entité, et rangeait son identifiant dans la fiche pour toujours. On compare donc le
+// type (société / particulier) et le nom avant d'adopter.
+const sansAccents = (v: string) => v.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+export function ecartClientPennylane(c: PlClient, conf: ConfDest, cf: Dict): string {
+  const societe = String(c.customer_type ?? "").toLowerCase() === "company" || (!c.first_name && !c.last_name);
+  if (societe === !!conf.personne)
+    return `le client Pennylane ${c.id} « ${c.name} » est ${societe ? "une société" : "un particulier"}, or la fiche ${conf.cle} « ${conf.nom(cf)} » est ${conf.personne ? "une personne" : "une société"}`;
+  const attendu = sansAccents(conf.nom(cf));
+  const chezPl = sansAccents([c.name, c.last_name, c.first_name].filter(Boolean).join(" "));
+  if (attendu && chezPl && !chezPl.includes(attendu) && !attendu.includes(sansAccents(c.name || "")))
+    return `le client Pennylane ${c.id} porte le nom « ${c.name} », or la fiche ${conf.cle} est « ${conf.nom(cf)} »`;
+  return "";
+}
+
 async function resoudreClientPennylane(ctx: Contexte, blocages: string[]): Promise<ClientPl> {
   if (!ctx.conf || !ctx.fiche) return { id: null, aCreer: false, detail: "" };
   const cf = ctx.fiche.fields;
@@ -356,9 +382,13 @@ async function resoudreClientPennylane(ctx: Contexte, blocages: string[]): Promi
   if (existant > 0) return { id: existant, aCreer: false, detail: `client Pennylane ${existant} existant` };
   const email = emailClient(ctx);
   if (!email) { blocages.push(`la fiche ${ctx.conf.cle} « ${ctx.conf.nom(cf)} » n'a pas d'email${ctx.conf.personne ? "" : " (ni le contact destinataire)"} : impossible de retrouver ou créer le client Pennylane`); return { id: null, aCreer: true, detail: "" }; }
-  let trouve: number | null = null;
-  try { trouve = (await chercherClientParEmail(email))?.id ?? null; } catch (e) { blocages.push(`recherche du client Pennylane impossible : ${e instanceof Error ? e.message : e}`); }
-  if (trouve) return { id: trouve, aCreer: false, detail: `client Pennylane ${trouve} retrouvé par email (${email}), sera rangé dans la fiche` };
+  let candidat: PlClient | null = null;
+  try { candidat = await chercherClientParEmail(email); } catch (e) { blocages.push(`recherche du client Pennylane impossible : ${e instanceof Error ? e.message : e}`); }
+  if (candidat) {
+    const ecart = ecartClientPennylane(candidat, ctx.conf, cf);
+    if (ecart) { blocages.push(`${ecart}. Vérifiez le destinataire, ou renseignez « Pennylane customer ID » à la main sur la fiche.`); return { id: null, aCreer: false, detail: "" }; }
+    return { id: candidat.id, aCreer: false, detail: `client Pennylane ${candidat.id} « ${candidat.name} » retrouvé par email (${email}), sera rangé dans la fiche` };
+  }
   let brut = ctx.conf.adresse(cf);
   if (ctx.conf.cle === "Occupant") {
     const a = ctx.appartement?.fields ?? {};
@@ -477,6 +507,10 @@ export async function verifier(ctx: Contexte, pourEmission = false): Promise<Ver
     const n = `ligne ${i + 1}`;
     if (!texte(l.fields["Libellé"]).trim()) blocages.push(`${n} de détail : « Libellé » est vide`);
     if (!(puLigne(l) > 0)) blocages.push(`${n} de détail « ${texte(l.fields["Libellé"]) || l.id} » : « Prix unitaire HT » doit être supérieur à 0`);
+    // Quantité saisie négative ou nulle : sans ce contrôle elle était ramenée à 1 et une
+    // remise se serait transformée en surfacturation. Vide = 1, comme la formule Airtable.
+    const q = l.fields["Quantité"];
+    if (q != null && q !== "" && !(nombre(q) > 0)) blocages.push(`${n} de détail « ${texte(l.fields["Libellé"]) || l.id} » : « Quantité » doit être supérieure à 0`);
     const t = texte(l.fields["TVA"]);
     if (t && tvaCode(t, tva) === null) blocages.push(`${n} de détail : TVA « ${t} » inconnue (Pas de TVA ou 20 %)`);
   });
@@ -574,7 +608,9 @@ export function emailPourFacture(ctx: Contexte, doc: Doc, langue: Langue = langu
   let titre = "";
   let encadre: { titre: string; corps: string } | undefined;
   const numAff = doc.numeroPennylane ? `${doc.numeroPennylane} (${doc.numero})` : doc.numero;
-  const ttc = doc.tva === "FR_200";
+  // Une facture « Pas de TVA » peut porter une ligne à 20 % : c'est l'écart réel entre HT
+  // et TTC qui décide, jamais le champ « TVA » de la fiche.
+  const ttc = Math.abs(Math.abs(doc.montantTTC) - Math.abs(doc.montantHT)) > 0.004;
 
   if (doc.type === "avoir" && doc.origine) {
     const o = doc.origine;
@@ -610,11 +646,21 @@ export function emailPourFacture(ctx: Contexte, doc: Doc, langue: Langue = langu
       cartes.push({ label: fr ? "Nuits" : "Nights", valeur: String(nuits) });
     } else {
       const quoi = cat === "Dommage" ? (fr ? "les dommages constatés" : "the damages observed") : cat === "Honoraires" ? (fr ? "nos honoraires" : "our fees") : (fr ? "la prestation suivante" : "the following service");
+      const detail = ctx.lignes;
       intro.push(fr
-        ? `Veuillez trouver ci-joint la ${nomDoc} <strong>${numAff}</strong> concernant ${quoi}${adresse ? ` (${adresse})` : ""} : <strong>${libelle}</strong>.`
-        : `Please find attached ${nomDoc} <strong>${numAff}</strong> regarding ${quoi}${adresse ? ` (${adresse})` : ""}: <strong>${libelle}</strong>.`);
+        ? `Veuillez trouver ci-joint la ${nomDoc} <strong>${numAff}</strong> concernant ${quoi}${adresse ? ` (${adresse})` : ""}${detail.length ? " :" : libelle ? ` : <strong>${libelle}</strong>.` : "."}`
+        : `Please find attached ${nomDoc} <strong>${numAff}</strong> regarding ${quoi}${adresse ? ` (${adresse})` : ""}${detail.length ? ":" : libelle ? `: <strong>${libelle}</strong>.` : "."}`);
+      // Facture détaillée : ce sont les lignes qui sont imprimées sur le PDF, l'email dit
+      // donc la même chose qu'elles, ligne par ligne.
+      for (const l of detail) {
+        const lib = texte(l.fields["Libellé"]).trim();
+        const desc = texte(l.fields["Description (imprimée)"]).trim();
+        const q = quantiteLigne(l);
+        intro.push(`&bull; <strong>${lib}</strong>${desc ? ` — ${desc}` : ""} · ${q} × ${eur(puLigne(l), langue)} = ${eur(totalLigne(l), langue)}`);
+      }
       cartes.push({ label: fr ? "Facture" : "Invoice", valeur: numAff, gras: true });
-      cartes.push({ label: fr ? "Objet" : "Description", valeur: libelle });
+      if (!ctx.lignes.length && libelle) cartes.push({ label: fr ? "Objet" : "Description", valeur: libelle });
+      if (ctx.lignes.length) cartes.push({ label: fr ? "Lignes" : "Line items", valeur: String(ctx.lignes.length) });
       if (adresse) cartes.push({ label: fr ? "Appartement" : "Apartment", valeur: adresse });
     }
     if (societe) cartes.push({ label: fr ? "Facturé à" : "Billed to", valeur: societe });
@@ -717,7 +763,11 @@ async function assurerClientPennylane(ctx: Contexte, verif: Verification): Promi
   let cree = false;
   if (!id) {
     const trouve = await chercherClientParEmail(email);
-    if (trouve) id = trouve.id;
+    if (trouve) {
+      const ecart = ecartClientPennylane(trouve, ctx.conf, cf);
+      if (ecart) throw new Error(`${ecart} : refus d'adopter ce client Pennylane`);
+      id = trouve.id;
+    }
   }
   if (!id) {
     if (!verif.client.adresse) throw new Error("adresse de facturation manquante : refus de créer un client Pennylane sans adresse");
@@ -913,8 +963,11 @@ async function emettreDirect(ctx: Contexte, verif: Verification, journal: Journa
     "Vérification demandée": false, Journal: journal.texte(), ...ctx.deductions,
   });
   // 4. PDF, S3, email — tolérants.
+  // Le TTC annoncé dans l'email vient du document Pennylane : le recalcul HT × 1,2 était
+  // faux dès que les lignes mélangeaient les taux.
+  const ttcPl = Math.abs(nombre(pl.currency_amount));
   const doc: Doc = {
-    type: "facture", numero: ctx.numero, numeroPennylane: texte(pl.invoice_number), montantHT: verif.montantHT, montantTTC: verif.montantTTC,
+    type: "facture", numero: ctx.numero, numeroPennylane: texte(pl.invoice_number), montantHT: verif.montantHT, montantTTC: ttcPl > 0 ? ttcPl : verif.montantTTC,
     tva: verif.tva, mode: verif.mode, echeance: texte(pl.deadline) || echeance(), pdfNom: `${verif.mode === "Proforma" ? "Proforma" : "Facture"}-${ctx.numero}.pdf`,
   };
   const suite = await archiverEtEnvoyer(ctx, rec, plId, pl, doc, verif.envoyerEmail, journal, langue);
@@ -971,7 +1024,7 @@ export async function renvoyerEmail(ctx: Contexte): Promise<Resultat> {
   const langue: Langue = pl?.language === "en_GB" || pl?.language === "fr_FR" ? pl.language : langueDe(ctx);
   const doc: Doc = {
     type: estAvoir ? "avoir" : "facture", numero: ctx.numero, numeroPennylane: texte(pl?.invoice_number), montantHT,
-    montantTTC: Math.round(montantHT * (tva === "FR_200" ? 1.2 : 1) * 100) / 100, tva, mode, echeance: texte(pl?.deadline) || echeance(),
+    montantTTC: Math.abs(nombre(pl?.currency_amount)) || Math.round(montantHT * (tva === "FR_200" ? 1.2 : 1) * 100) / 100, tva, mode, echeance: texte(pl?.deadline) || echeance(),
     pdfNom: `${estAvoir ? "Avoir" : mode === "Proforma" ? "Proforma" : "Facture"}-${ctx.numero}.pdf`, origine,
   };
   journal.ajouter(`${horodatageParis()} — Renvoi de l'email demandé`);
@@ -1036,7 +1089,18 @@ export async function preparerAvoir(ctx: Contexte): Promise<PlanAvoir> {
     let dejaCredite = 0;
     for (const id of partielsExistants) dejaCredite += Math.abs(nombre((await lireEnregistrement(T_FACTURES, id))?.fields["Montant total HT"]));
     plan.dejaCredite = dejaCredite;
-    const reste = Math.round((montantPL - dejaCredite) * 100) / 100;
+    let reste = Math.round((montantPL - dejaCredite) * 100) / 100;
+    // Un avoir posé à la main dans Pennylane n'a pas de ligne Airtable : sans ce plafond,
+    // le reste calculé depuis Airtable seul autorisait un sur-crédit.
+    const ttcOrig = Math.abs(nombre(origine.currency_amount));
+    const resteTTC = origine.remaining_amount_with_tax != null ? Math.abs(nombre(origine.remaining_amount_with_tax)) : null;
+    if (resteTTC != null && ttcOrig > 0) {
+      const restePL = Math.round((resteTTC * (montantPL / ttcOrig)) * 100) / 100;
+      if (restePL < reste - 0.005) {
+        notes.push(`Pennylane ne doit plus que ${eur(restePL)} HT sur cette facture (Airtable en calculait ${eur(reste)}) : un avoir a sans doute été posé hors de la route — c'est le montant Pennylane qui plafonne`);
+        reste = restePL;
+      }
+    }
     if (demande < 0) blocages.push("« Montant avoir HT » doit être positif (le signe est posé par la route)");
     else if (demande > 0 && demande > reste + 0.005) blocages.push(`« Montant avoir HT » (${eur(demande)}) dépasse ce qui reste à créditer (${eur(reste)} HT)`);
     // Partiel : montant renseigné et inférieur au reste ; après un premier partiel, tout
@@ -1160,7 +1224,13 @@ export async function creerAvoir(ctx: Contexte, plan: PlanAvoir): Promise<Result
 
   // 3. Lien puis finalisation (séquence prouvée en production les 28-29/08).
   if (!avoir.credited_invoice) { await lierAvoir(plId, avoir.id); journal.ajouter(`${horodatageParis()} — Avoir lié à la facture ${numOrig}`); }
-  if (avoir.draft) { avoir = await finaliser(avoirId); journal.ajouter(`${horodatageParis()} — Avoir finalisé · ${avoir.invoice_number}`); }
+  if (avoir.draft) {
+    const finalise = await finaliser(avoirId);
+    // Relecture : l'objet rendu par finalize peut encore porter le PDF du brouillon
+    // (sans numéro) quand l'avoir a séjourné en brouillon entre deux passages.
+    avoir = (await getFacture(avoirId).catch(() => null)) ?? finalise;
+    journal.ajouter(`${horodatageParis()} — Avoir finalisé · ${avoir.invoice_number}`);
+  }
 
   // 4. Relecture de l'origine : le résultat attendu dépend du type d'avoir.
   const apres = await getFacture(plId);
@@ -1184,10 +1254,19 @@ export async function creerAvoir(ctx: Contexte, plan: PlanAvoir): Promise<Result
   // entier. Lot séparé à ouvrir sur finance-mensuelle ; en attendant, on le dit partout.
   const alerteFinance = "non pris en compte dans Finance mensuelle (lot séparé à venir) : corriger le CA du mois à la main";
   if (plan.partiel) {
-    journal.ajouter(`${horodatageParis()} — Avoir partiel ${numeroAvoir} (${avoir.invoice_number}) posé · origine « ${apres.status} », reste dû ${resteDu != null ? eur(resteDu) : "?"} TTC · Statut inchangé`);
-    journal.ajouter(`${horodatageParis()} — ATTENTION : avoir partiel ${alerteFinance}`);
-    accrocs.push(`avoir partiel ${alerteFinance}`);
-    await ecrireFacture(rec.id, { "Créer un avoir": false, "Motif avoir": "", "Montant avoir HT": null, "Notifier le client de l'avoir": false, "Émission en cours depuis": null, Journal: journal.texte() });
+    // Les partiels successifs peuvent solder la facture : Pennylane la passe alors en
+    // « cancelled » (reste dû nul). Sans cette branche, Airtable la laissait « Envoyée »
+    // et pleine, et Finance mensuelle continuait de la compter en entier.
+    const soldee = apres.status === "cancelled" || (resteDu != null && Math.abs(resteDu) < 0.005);
+    journal.ajouter(`${horodatageParis()} — Avoir partiel ${numeroAvoir} (${avoir.invoice_number}) posé · origine « ${apres.status} », reste dû ${resteDu != null ? eur(resteDu) : "?"} TTC · Statut ${soldee ? "passé à « Avoir » (facture soldée par les partiels)" : "inchangé"}`);
+    if (soldee) {
+      await ecrireFacture(ligneAvoir.id, { "Avoir associé": [rec.id] }).catch(() => undefined);
+      accrocs.push("les avoirs partiels soldent la facture : origine passée en Statut « Avoir »");
+    } else {
+      journal.ajouter(`${horodatageParis()} — ATTENTION : avoir partiel ${alerteFinance}`);
+      accrocs.push(`avoir partiel ${alerteFinance}`);
+    }
+    await ecrireFacture(rec.id, { ...(soldee ? { Statut: "Avoir" } : {}), "Créer un avoir": false, "Motif avoir": "", "Montant avoir HT": null, "Notifier le client de l'avoir": false, "Émission en cours depuis": null, Journal: journal.texte() });
   } else {
     journal.ajouter(`${horodatageParis()} — Annulée par l'avoir ${numeroAvoir} (${avoir.invoice_number}) · origine « ${apres.status} », reste dû ${resteDu != null ? eur(resteDu) : "?"}`);
     await ecrireFacture(rec.id, { Statut: "Avoir", "Créer un avoir": false, "Émission en cours depuis": null, Journal: journal.texte() });
@@ -1199,7 +1278,7 @@ export async function creerAvoir(ctx: Contexte, plan: PlanAvoir): Promise<Result
   const journalAvoir = new Journal(ctxAvoir.f["Journal"]);
   const doc: Doc = {
     type: "avoir", numero: numeroAvoir, numeroPennylane: texte(avoir.invoice_number), montantHT: -plan.montantAvoirHT,
-    montantTTC: -Math.round(plan.montantAvoirHT * (tvaOrig === "FR_200" ? 1.2 : 1) * 100) / 100, tva: tvaOrig, mode: "Classique",
+    montantTTC: -(Math.abs(nombre(avoir.currency_amount)) || Math.round(plan.montantAvoirHT * (tvaOrig === "FR_200" ? 1.2 : 1) * 100) / 100), tva: tvaOrig, mode: "Classique",
     echeance: texte(avoir.deadline) || echeance(), pdfNom: `Avoir-${numeroAvoir}.pdf`,
     origine: { numero: ctx.numero, numeroPennylane: numOrig, montantHT: nombre(origine.currency_amount_before_tax), resteDu, partiel: plan.partiel, motif },
   };

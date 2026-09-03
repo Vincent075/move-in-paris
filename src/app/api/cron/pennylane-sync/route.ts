@@ -262,13 +262,16 @@ async function identifier(inv: Dict): Promise<{ champs: Dict; trouve: string[] }
   //    séjours recouvre la période facturée. Deux séjours qui se chevauchent :
   //    on ne tranche pas à sa place.
   if (occupant && debut && fin) {
-    const resas = await toutesLesLignes(T_RESAS, ["Code réservation", "Date d'arrivée", "Date de départ", "Occupant"]);
+    // Noms réels des champs sur Réservations : « Date d'arrivée »/« Date de départ »
+    // n'existent pas et faisaient répondre 422 à Airtable — toute l'identification
+    // automatique du séjour était perdue.
+    const resas = await toutesLesLignes(T_RESAS, ["Code réservation", "Date d'entrée", "Date de sortie", "Occupant"]);
     const oid = texte(occupant.id);
     const candidates = resas.filter((r) => {
       const f = r.fields as Dict;
       const lien = (f["Occupant"] as string[] | undefined) ?? [];
       if (!lien.includes(oid)) return false;
-      const a = texte(f["Date d'arrivée"]).slice(0, 10), d = texte(f["Date de départ"]).slice(0, 10);
+      const a = texte(f["Date d'entrée"]).slice(0, 10), d = texte(f["Date de sortie"]).slice(0, 10);
       return !!a && !!d && a <= fin && d >= debut;
     });
     const resa = unique(candidates);

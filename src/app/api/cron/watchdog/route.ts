@@ -492,8 +492,25 @@ async function controleFacturesSansPennylane(now: Date): Promise<Resultat> {
     return cree > 0 && (now.getTime() - cree) / 3.6e6 >= GRACE_FACTURE_H;
   });
 
-  if (!orphelines.length) {
+  // Symétrique : une ligne « A envoyer » qui a DÉJÀ son lien Pennylane est un état mort.
+  // La route ne traite en émission que « À préparer » et « A envoyer » SANS lien : celle-ci
+  // n'est reprise par rien et personne ne le voit.
+  const bloquees = factures.filter((r) =>
+    String(r.fields["Statut"] ?? "") === "A envoyer"
+    && !!idPennylane(String(r.fields["Lien Pennylane"] ?? ""))
+    && r.createdTime && (now.getTime() - new Date(r.createdTime).getTime()) / 3.6e6 >= GRACE_FACTURE_H);
+
+  if (!orphelines.length && !bloquees.length) {
     return { nom, statut: "OK", detail: `Les ${factures.length} factures ont bien leur contrepartie Pennylane.` };
+  }
+
+  if (!orphelines.length) {
+    return {
+      nom, statut: "ALERTE",
+      detail: `${bloquees.length} facture(s) restées au statut « A envoyer » alors qu'elles existent déjà chez Pennylane :\n`
+        + bloquees.slice(0, MAX_FACTURES_LISTEES).map((r) => `• *${r.fields["Numéro facture"] ?? r.id}* — ${r.fields["Montant total HT"] ?? "?"} € HT · créée le ${jour(r.createdTime)}`).join("\n")
+        + "\nAucune route ne les reprend : passer le statut à « Envoyée » après contrôle dans Pennylane.",
+    };
   }
 
   const lignes = orphelines
@@ -515,7 +532,8 @@ async function controleFacturesSansPennylane(now: Date): Promise<Resultat> {
       `${orphelines.length} facture(s) existent dans Airtable sans facture Pennylane :\n` +
       lignes.join("\n") +
       (reste > 0 ? `\n…et ${reste} autre(s).` : "") +
-      "\nElles n'ont donc jamais été émises côté comptabilité : à recréer, ou à supprimer si elles n'ont pas lieu d'être.",
+      "\nElles n'ont donc jamais été émises côté comptabilité : à recréer, ou à supprimer si elles n'ont pas lieu d'être."
+      + (bloquees.length ? `\nEt ${bloquees.length} facture(s) « A envoyer » ont déjà un lien Pennylane : aucune route ne les reprend, passer le statut à « Envoyée » après contrôle.` : ""),
   };
 }
 
