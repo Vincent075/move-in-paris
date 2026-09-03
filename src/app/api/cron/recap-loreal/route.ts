@@ -244,6 +244,17 @@ export async function GET(request: Request) {
     rapports.push({ ...resume, envoye: true, marquees: ids.length });
   }
 
+  // Garde-fou ajouté le 04/09/2026 : quand aucune agence n'a de ligne, la boucle
+  // ci-dessus passe son tour et AUCUN email ne part — alors que le contrôle de complétude
+  // a justement calculé ses alertes. Simulation du 04/09 sur NOVEMBER 2026 : 0 ligne et
+  // 18 anomalies (52 995 € de nuits sans proforma) qui partaient à la poubelle. Le silence
+  // est exactement ce qu'une garantie anti-oubli ne doit jamais produire.
+  if (!simulation && !finales.length && alertes.length) {
+    const envoye = await alerterSansRecap(M2.libelle, alertes);
+    rapports.push({ agence: "—", lignes: 0, envoye, raison: "aucune facture : email d'alerte de complétude seul" });
+    if (!envoye) toutOk = false;
+  }
+
   return NextResponse.json({ ok: toutOk, simulation, mois: M2.libelle,
     lignesTotal: finales.length, controle: alertes, rapports }, { status: toutOk ? 200 : 500 });
 }
@@ -455,6 +466,31 @@ async function construire(lignes: Ligne[], libelle: string) {
   ws.views = [{ state: "frozen", ySplit: 1 }];
   ws.autoFilter = { from: { row: 1, column: 1 }, to: { row: fin, column: ENTETES.length } };
   return wb;
+}
+
+// Email d'alerte seul : pas de tableau à envoyer, mais des nuits non couvertes à traiter.
+async function alerterSansRecap(libelle: string, alertes: { resa: string; occupant: string; type: string; detail: string; montant: number }[]) {
+  if (!RESEND) return false;
+  const total = alertes.reduce((s2, a) => s2 + (Number(a.montant) || 0), 0);
+  const html = `
+    <p>Bonjour Vincent,</p>
+    <p style="font-size:16px"><strong>Récap ${libelle} : aucune facture à transmettre.</strong></p>
+    <p>Aucune proforma n'attend d'être envoyée à Santa Fe ni à Dwellworks pour ${libelle}. Il n'y a donc pas de tableau ce mois-ci.</p>
+    <p style="margin-top:18px;color:#B02A00"><strong>Mais le contrôle de complétude relève ${alertes.length} anomalie(s), ${total.toLocaleString("fr-FR")} € au total.</strong><br>
+      <span style="font-size:13px">Vérification nuit par nuit de chaque séjour L'Oréal. Ces nuits sont occupées et aucune facture ne les couvre : sans proforma, pas de DED, donc pas de règlement.</span></p>
+    <table cellpadding="0" style="border-collapse:collapse;font-family:system-ui,sans-serif;font-size:13px">
+      ${alertes.map((a) => `<tr><td style="border-bottom:1px solid #eee;padding:4px 10px">${a.occupant}</td><td style="border-bottom:1px solid #eee;padding:4px 10px">${a.resa}</td><td style="border-bottom:1px solid #eee;padding:4px 10px">${a.type}</td><td style="border-bottom:1px solid #eee;padding:4px 10px">${a.detail}</td><td style="border-bottom:1px solid #eee;padding:4px 10px;text-align:right">${a.montant.toLocaleString("fr-FR")} €</td></tr>`).join("")}
+      <tr><td colspan="4" style="padding:6px 10px"><strong>Total</strong></td><td style="padding:6px 10px;text-align:right"><strong>${total.toLocaleString("fr-FR")} €</strong></td></tr>
+    </table>
+    <p style="color:#888;font-size:12px">Envoyé automatiquement le dernier jour du mois, même quand il n'y a pas de tableau.</p>`;
+  try {
+    const r = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${RESEND}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ from: EXPEDITEUR, to: [DESTINATAIRE], subject: `Récap L'Oréal ${libelle} — aucune facture, ${alertes.length} anomalie(s) de complétude`, html }),
+    });
+    return r.ok;
+  } catch { return false; }
 }
 
 async function envoyer(nom: string, buf: Buffer, resume: Dict, libelle: string,
