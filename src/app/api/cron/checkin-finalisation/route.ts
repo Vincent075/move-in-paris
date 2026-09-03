@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { construirePdf, type PhotoLue, type Polices } from "@/lib/mip/rapport-checkin";
 import {
   airtable, lireTable, lireEnregistrement, signataire, htmlEmailLocataire, envoyerEmailLocataire,
   deposerS3, lienS3, slack, texte, premier, dateEN, type Rec,
@@ -56,10 +56,7 @@ async function lireImage(url: string, headers?: Record<string, string>): Promise
     return null;
   } catch { return null; }
 }
-const OR = rgb(0.72, 0.545, 0.345);
-const NOIR = rgb(0.05, 0.05, 0.05);
-const GRIS = rgb(0.42, 0.42, 0.42);
-const A4 = { w: 595.28, h: 841.89 };
+const SITE = "https://move-in-paris.vercel.app";
 
 async function logoPng(): Promise<Uint8Array | null> {
   try {
@@ -70,86 +67,47 @@ async function logoPng(): Promise<Uint8Array | null> {
   } catch { return null; }
 }
 
-async function construirePdf(args: {
-  code: string; date: string; adresse: string; occupant: string; hc: string; hp: string; cles: string;
-  photos: Photo[]; logo: Uint8Array | null;
-}): Promise<{ pdf: Buffer; nbPhotos: number; ignorees: string[]; reduites: number }> {
-  const doc = await PDFDocument.create();
-  doc.setTitle(`Check-in ${args.code} — Move In Paris`);
-  const serif = await doc.embedFont(StandardFonts.TimesRoman);
-  const serifGras = await doc.embedFont(StandardFonts.TimesRomanBold);
-  const sans = await doc.embedFont(StandardFonts.Helvetica);
-  const logo = args.logo ? await doc.embedPng(args.logo).catch(() => null) : null;
-
-  const entete = (page: ReturnType<typeof doc.addPage>) => {
-    page.drawRectangle({ x: 0, y: A4.h - 54, width: A4.w, height: 54, color: NOIR });
-    if (logo) {
-      const l = logo.scale(46 / logo.height);
-      page.drawImage(logo, { x: (A4.w - l.width) / 2, y: A4.h - 50, width: l.width, height: l.height });
-    }
-    page.drawRectangle({ x: 0, y: A4.h - 56, width: A4.w, height: 2, color: OR });
-    page.drawText("Move In Paris · 26 rue de l'Étoile, 75017 Paris · +33 1 45 20 06 03", {
-      x: 40, y: 24, size: 8, font: sans, color: GRIS,
-    });
-  };
-
-  // Page 1 : le relevé.
-  const p1 = doc.addPage([A4.w, A4.h]);
-  entete(p1);
-  let y = A4.h - 100;
-  p1.drawText("CHECK-IN REPORT", { x: 40, y, size: 10, font: sans, color: OR });
-  y -= 30;
-  p1.drawText("Inventory of fixtures — arrival", { x: 40, y, size: 24, font: serif, color: NOIR });
-  y -= 18;
-  p1.drawText(`Reference ${args.code}`, { x: 40, y, size: 11, font: sans, color: GRIS });
-  y -= 36;
-  const ligne = (label: string, valeur: string) => {
-    p1.drawText(label.toUpperCase(), { x: 40, y, size: 8.5, font: sans, color: GRIS });
-    p1.drawText(valeur || "—", { x: 210, y, size: 12, font: serifGras, color: NOIR, maxWidth: 340 });
-    p1.drawLine({ start: { x: 40, y: y - 8 }, end: { x: A4.w - 40, y: y - 8 }, thickness: 0.5, color: rgb(0.91, 0.89, 0.87) });
-    y -= 30;
-  };
-  ligne("Date of check-in", args.date);
-  ligne("Apartment", args.adresse);
-  ligne("Occupant", args.occupant);
-  ligne("Keys handed over", args.cles);
-  ligne("Electricity meter · off-peak", args.hc ? `${args.hc} kWh` : "");
-  ligne("Electricity meter · peak", args.hp ? `${args.hp} kWh` : "");
-  y -= 6;
-  p1.drawText(`${args.photos.length} photographs taken at check-in follow. They document the condition of the`, { x: 40, y, size: 10.5, font: serif, color: NOIR });
-  y -= 15;
-  p1.drawText("apartment on the day of arrival and will serve as reference at check-out.", { x: 40, y, size: 10.5, font: serif, color: NOIR });
-
-  // Pages suivantes : les photos, deux par page, réduites.
-  let nb = 0;
-  let reduites = 0; // photos passées par l'optimiseur ; 0 sur un lot = optimiseur en panne, PDF lourd
-  const ignorees: string[] = [];
-  let page = null as ReturnType<typeof doc.addPage> | null;
-  let slot = 0;
-  for (const ph of args.photos) {
+// Polices du site (Playfair Display + Inter, TTF dans public/fonts), gardées en
+// mémoire tant que la fonction reste chaude. Une police absente = repli sur les
+// polices standard, jamais un échec.
+const POLICES: Array<[keyof Polices, string]> = [
+  ["playfairRegular", "PlayfairDisplay-400.ttf"], ["playfairSemiBold", "PlayfairDisplay-600.ttf"], ["playfairBold", "PlayfairDisplay-700.ttf"],
+  ["interRegular", "Inter-400.ttf"], ["interMedium", "Inter-500.ttf"], ["interSemiBold", "Inter-600.ttf"],
+];
+let policesCache: Polices | null = null;
+async function polices(): Promise<Polices> {
+  if (policesCache) return policesCache;
+  const p: Polices = {};
+  await Promise.all(POLICES.map(async ([cle, fichier]) => {
     try {
-      // Réduction par l'optimiseur d'images de Vercel, à LARGEUR_PHOTO de large, sans
-      // binaire natif dans la fonction. S'il refuse (format inattendu, image trop lourde),
-      // on prend la vignette « full » d'Airtable, puis l'original tel quel. Une photo
-      // qui n'est ni JPEG ni PNG au bout de la chaîne est ignorée et signalée.
-      const opt = new URLSearchParams({ url: ph.url, w: String(LARGEUR_PHOTO), q: String(QUALITE) });
-      let lue = await lireImage(`https://move-in-paris.vercel.app/_next/image?${opt}`, { Accept: "image/jpeg" });
-      if (lue) reduites++;
-      else lue = (ph.thumbnails?.full?.url ? await lireImage(ph.thumbnails.full.url) : null) ?? (await lireImage(ph.url));
-      if (!lue) { ignorees.push(ph.filename || "sans nom"); continue; }
-      const img = lue.type === "jpg" ? await doc.embedJpg(lue.data) : await doc.embedPng(lue.data);
-      if (!page || slot === 2) { page = doc.addPage([A4.w, A4.h]); entete(page); slot = 0; }
-      const boxW = A4.w - 80, boxH = (A4.h - 140) / 2 - 16;
-      const s = Math.min(boxW / img.width, boxH / img.height);
-      const w = img.width * s, h = img.height * s;
-      const top = slot === 0 ? A4.h - 80 : A4.h - 80 - boxH - 24;
-      page.drawImage(img, { x: (A4.w - w) / 2, y: top - h, width: w, height: h });
-      page.drawText(`${nb + 1}${ph.filename ? " · " + ph.filename.slice(0, 60) : ""}`, { x: 40, y: top - h - 12, size: 8, font: sans, color: GRIS });
-      slot++; nb++;
-    } catch { ignorees.push(ph.filename || "sans nom"); /* une photo illisible ne bloque pas le rapport */ }
+      const r = await fetch(`${SITE}/fonts/${fichier}`, { cache: "no-store" });
+      if (r.ok) p[cle] = new Uint8Array(await r.arrayBuffer());
+    } catch { /* repli sur les polices standard */ }
+  }));
+  if (Object.keys(p).length === POLICES.length) policesCache = p;
+  return p;
+}
+
+// Lit toutes les photos d'une fiche, réduites par l'optimiseur d'images de Vercel
+// (sans binaire natif dans la fonction). S'il refuse une image (format inattendu,
+// trop lourde), on prend la vignette « full » d'Airtable, puis l'original tel quel.
+// Une photo qui n'est ni JPEG ni PNG au bout de la chaîne est ignorée et signalée.
+// Au-delà de 40 photos la largeur descend à 1200 px : sur une grille dense, c'est
+// encore net, et le PDF reste envoyable en pièce jointe.
+async function lirePhotos(photos: Photo[]): Promise<{ lues: PhotoLue[]; ignorees: string[]; reduites: number }> {
+  const largeur = photos.length > 40 ? 1200 : LARGEUR_PHOTO;
+  const lues: PhotoLue[] = [];
+  const ignorees: string[] = [];
+  let reduites = 0; // 0 sur un lot = optimiseur en panne, PDF lourd → alerte Slack
+  for (const ph of photos) {
+    const opt = new URLSearchParams({ url: ph.url, w: String(largeur), q: String(QUALITE) });
+    let lue = await lireImage(`${SITE}/_next/image?${opt}`, { Accept: "image/jpeg" });
+    if (lue) reduites++;
+    else lue = (ph.thumbnails?.full?.url ? await lireImage(ph.thumbnails.full.url) : null) ?? (await lireImage(ph.url));
+    if (!lue) { ignorees.push(ph.filename || "sans nom"); continue; }
+    lues.push({ data: lue.data, type: lue.type, nom: ph.filename });
   }
-  const pdf = Buffer.from(await doc.save());
-  return { pdf, nbPhotos: nb, ignorees, reduites };
+  return { lues, ignorees, reduites };
 }
 
 export async function GET(request: Request) {
@@ -175,6 +133,7 @@ export async function GET(request: Request) {
     }
 
     const logo = candidats.length ? await logoPng() : null;
+    const ttf = candidats.length ? await polices() : {};
     for (const ch of candidats) {
       const f = ch.fields;
       const code = texte(f["Code check-in"]) || ch.id;
@@ -199,10 +158,14 @@ export async function GET(request: Request) {
         const cc = [texte(contact?.fields["Email"]).trim(), GUILLAUME].filter((x, i, a) => x && a.indexOf(x) === i && x !== emailOcc).join(",");
         const dateCheckin = dateEN(f["Date du check-in"]) || dateEN(new Date().toISOString());
 
-        const { pdf, nbPhotos, ignorees, reduites } = await construirePdf({
-          code, date: dateCheckin, adresse, occupant: nomComplet,
-          hc: texte(f[CHAMP_HC]), hp: texte(f[CHAMP_HP]), cles: texte(f["Nb de clés remises"]), photos, logo,
+        const { lues, ignorees, reduites } = await lirePhotos(photos);
+        const { pdf: pdfOctets, nbPhotos } = await construirePdf({
+          code, date: dateCheckin, adresse, nomCourt, occupant: nomComplet,
+          agence: premier(f["Nom agence"]) || texte(contact?.fields["Société"]),
+          hc: texte(f[CHAMP_HC]), hp: texte(f[CHAMP_HP]), cles: texte(f["Nb de clés remises"]),
+          logo, polices: ttf, photos: lues,
         });
+        const pdf = Buffer.from(pdfOctets);
         if (!nbPhotos) throw new Error("aucune photo n'a pu être lue");
 
         // Archivage S3 + dossier Documents (même convention que les documents post-signature).
