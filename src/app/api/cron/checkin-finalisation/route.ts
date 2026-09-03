@@ -35,6 +35,8 @@ const CHAMP_PHOTOS = "Photos du check-in";
 const CHAMP_HC = "Relevé compteur heures creuses";
 const CHAMP_HP = "Relevé compteur heures pleines";
 const CHAMP_ENVOYE = "Email check-in envoyé le";
+const CHAMP_RAPPORT_RESA = "Rapport de check-in";   // pièce jointe sur Réservations, comme « PDF contrat signé »
+const DOSSIER_S3 = "check-in-inspection";           // dossier S3 voulu par Vincent (03/09/2026)
 const PIECE_JOINTE_MAX = 10 * 1024 * 1024;
 const LARGEUR_PHOTO = 1600;  // dans images.deviceSizes (next.config.ts), sinon l'optimiseur répond 400
 const QUALITE = 75;          // la seule qualité admise par défaut par l'optimiseur (images.qualities)
@@ -168,11 +170,12 @@ export async function GET(request: Request) {
         const pdf = Buffer.from(pdfOctets);
         if (!nbPhotos) throw new Error("aucune photo n'a pu être lue");
 
-        // Archivage S3 + dossier Documents (même convention que les documents post-signature).
-        const key = `documents-generes/${resaCode || code}/check-in-${code}.pdf`;
+        // Archivage S3 dans le dossier « check-in-inspection », un sous-dossier par réservation.
+        const key = `${DOSSIER_S3}/${resaCode || code}/check-in-report-${code}.pdf`;
         if (!test) await deposerS3(key, pdf, "application/pdf");
         const lien = lienS3(key);
         const joint = pdf.length <= PIECE_JOINTE_MAX;
+        const nomFichier = `Check-in report ${code} - Move In Paris.pdf`;
 
         const html = htmlEmailLocataire({
           titre: `Your check-in report · ${nomCourt}`,
@@ -204,12 +207,24 @@ export async function GET(request: Request) {
           mailReplyTo: sgn.email,
           mailSubject: `${test ? "[TEST] " : ""}Your check-in report · ${nomCourt}`,
           mailHtml: html,
-          attachments: joint ? [{ name: `Check-in report ${code} - Move In Paris.pdf`, contentType: "application/pdf", base64: pdf.toString("base64") }] : [],
+          attachments: joint ? [{ name: nomFichier, contentType: "application/pdf", base64: pdf.toString("base64") }] : [],
           origine: "checkin-finalisation",
         });
         if (!res.ok) throw new Error(`envoi refusé : ${res.erreur}`);
 
+        let rangement = "";
         if (!test) {
+          // Le PDF est rangé SUR la réservation (pièce jointe « Rapport de check-in »), comme le
+          // contrat signé : Airtable va chercher le fichier par le lien S3 (valide 7 jours) et le
+          // garde ensuite pour toujours — au check-out, des mois plus tard, il sera là sans lien
+          // expiré. Ajout aux pièces existantes, jamais remplacement. Un échec ici ne bloque pas
+          // (l'email est parti, un doublon serait pire) : il est crié dans Slack pour rattrapage.
+          try {
+            const existants = (Array.isArray(resa.fields[CHAMP_RAPPORT_RESA]) ? (resa.fields[CHAMP_RAPPORT_RESA] as Array<{ id: string }>) : []).map((a) => ({ id: a.id }));
+            await airtable("PATCH", T_RESERVATIONS, { records: [{ id: resa.id, fields: { [CHAMP_RAPPORT_RESA]: [...existants, { url: lien, filename: nomFichier }] } }] });
+          } catch (e) {
+            rangement = ` · :warning: PDF NON rangé sur la réservation (${e instanceof Error ? e.message.slice(0, 140) : e})`;
+          }
           await airtable("POST", T_DOCUMENTS, { records: [{ fields: {
             "Nom document": `Check-in report · ${code}`,
             Type: "Check-in",
@@ -223,14 +238,14 @@ export async function GET(request: Request) {
           // L'envoi a réussi : les photos quittent Airtable, la fiche est horodatée.
           await airtable("PATCH", T_CHECKIN, { records: [{ id: ch.id, fields: { [CHAMP_PHOTOS]: [], [CHAMP_ENVOYE]: new Date().toISOString() } }] });
         }
-        faits.push(`• ${code} — ${nomComplet}, ${nomCourt} · ${nbPhotos} photos · ${(pdf.length / 1048576).toFixed(1)} Mo ${joint ? "en pièce jointe" : "par lien"} → ${test ? "vincent@ (test)" : emailOcc}${cc && !test ? ` (cc ${cc})` : ""}${ignorees.length ? ` · ${ignorees.length} photo(s) illisible(s) ignorée(s) : ${ignorees.slice(0, 5).join(", ")}` : ""}${reduites < nbPhotos ? ` · :warning: ${nbPhotos - reduites}/${nbPhotos} photos NON réduites (optimiseur d'images en défaut)` : ""}`);
+        faits.push(`• ${code} — ${nomComplet}, ${nomCourt} · ${nbPhotos} photos · ${(pdf.length / 1048576).toFixed(1)} Mo ${joint ? "en pièce jointe" : "par lien"} → ${test ? "vincent@ (test)" : emailOcc}${cc && !test ? ` (cc ${cc})` : ""}${ignorees.length ? ` · ${ignorees.length} photo(s) illisible(s) ignorée(s) : ${ignorees.slice(0, 5).join(", ")}` : ""}${reduites < nbPhotos ? ` · :warning: ${nbPhotos - reduites}/${nbPhotos} photos NON réduites (optimiseur d'images en défaut)` : ""}${rangement}`);
       } catch (e) {
         refus.push(`• ${code} — ${e instanceof Error ? e.message : e}`);
       }
     }
     if (!test && (faits.length || refus.length)) {
       await slack(CANAL_CHECKIN, [
-        faits.length ? `:clipboard: *Rapport de check-in envoyé au locataire*\n${faits.join("\n")}\n_PDF archivé dans Documents, photos retirées de la fiche._` : "",
+        faits.length ? `:clipboard: *Rapport de check-in envoyé au locataire*\n${faits.join("\n")}\n_PDF rangé sur la réservation (S3 check-in-inspection + pièce jointe) et dans Documents, photos retirées de la fiche._` : "",
         refus.length ? `:warning: *Rapport de check-in non envoyé — à corriger*\n${refus.join("\n")}` : "",
       ].filter(Boolean).join("\n\n"));
     }
