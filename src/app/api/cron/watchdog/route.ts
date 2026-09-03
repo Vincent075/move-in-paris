@@ -49,9 +49,16 @@ const CHECKS: Check[] = [
   // 02/09/2026 : une demande L'Oréal transférée à 00h34 n'est ressortie qu'à 8h46, après 41 h
   // de gel, alors que le watchdog avait crié trois fois. Une fausse alerte de week-end coûte
   // un coup d'œil ; une demande d'agence qui dort coûte l'affaire.
-  { nom: "Demandes entrantes · request@ (AUTO-00)", workflowId: "FrnZPqeYoZzG67MJ", silenceHours: 12 },
-  // assistance@ : les locataires signalent quand ils ont un souci. Une semaine sans rien est plausible.
-  { nom: "Interventions · assistance@ (AUTO-11)", workflowId: "gedYOrIn44VBTMUo", silenceHours: 168 },
+  // Depuis la bascule Postmark du 03/09/2026, AUTO-00 et AUTO-11 ne sont plus des points
+  // d'entrée : ils sont appelés par AUTO-40. On surveille leurs ERREURS, plus leur silence —
+  // c'est AUTO-40 qui porte le silence du courrier entrant.
+  { nom: "Demandes entrantes · request@ (AUTO-00)", workflowId: "FrnZPqeYoZzG67MJ" },
+  { nom: "Interventions · assistance@ (AUTO-11)", workflowId: "gedYOrIn44VBTMUo" },
+  // AUTO-40 reçoit les DEUX boîtes depuis Postmark : entrée unique du courrier entrant. Le
+  // seuil de 12 h criait chaque nuit et chaque week-end sur des boîtes simplement vides ;
+  // 36 h couvre un week-end. La vraie détection d'une panne Postmark → n8n est le contrôle
+  // « Courrier Postmark non traité » ci-dessous, qui lit le résultat et non le silence.
+  { nom: "Réception Postmark · request@ + assistance@ (AUTO-40)", workflowId: "IfBxkqvm9HyXNQzr", silenceHours: 36 },
   { nom: "Facturation quotidienne (AUTO-16)", workflowId: "wIprQ1tdkkXrMFNx", dailyByHourParis: 9 },
   { nom: "Paiements Pennylane (AUTO-17)", workflowId: "H2UffqEU4CFsT3No", dailyByHourParis: 8 },
 ];
@@ -369,10 +376,12 @@ async function controleWebhooksTempsReel(): Promise<Resultat> {
 // c'est le redémarrage manuel du workspace à 8h46 qui l'a débloqué. On garde la
 // reconnexion — elle a servi le 24/08 et elle ne coûte rien — mais elle n'est pas le
 // remède, et le contrôle de silence ci-dessus dit maintenant explicitement de redémarrer.
-const IMAP_WORKFLOWS = [
-  { nom: "request@ (AUTO-00)", id: "FrnZPqeYoZzG67MJ" },
-  { nom: "assistance@ (AUTO-11)", id: "gedYOrIn44VBTMUo" },
-];
+// BASCULE DU 03/09/2026 : request@ et assistance@ n'entrent plus par l'IMAP mais par
+// Postmark (redirection OVH → serveur Postmark → webhook AUTO-40 → AUTO-00 / AUTO-11).
+// Les deux déclencheurs IMAP sont désactivés dans n8n. Il n'y a donc plus de connexion
+// à « rafraîchir » : la liste est vide et la reconnexion horaire ne fait plus rien. On
+// garde le mécanisme au cas où une boîte repasserait un jour en IMAP.
+const IMAP_WORKFLOWS: { nom: string; id: string }[] = [];
 // Toutes les heures depuis le 31/08/2026. Le rythme de six heures (4h/10h/16h/22h) n'a pas
 // suffi : entre le 26 et le 29/08, des demandes sont restées jusqu'à 44 h dans la boîte sans
 // que rien ne le signale. Une demande d'agence qui dort deux jours est une affaire perdue,
@@ -394,6 +403,9 @@ async function n8nPost(path: string) {
 }
 
 async function reconnecterImap(heureParis: number): Promise<Resultat | null> {
+  // Plus rien à reconnecter depuis la bascule Postmark : on sort avant même de
+  // vérifier la clé, sinon une clé absente ferait crier un contrôle devenu vide.
+  if (!IMAP_WORKFLOWS.length) return null;
   if (!HEURES_RECONNEXION_PARIS.includes(heureParis)) return null;
   const nom = "Reconnexion IMAP (request@ · assistance@)";
   if (!N8N_WRITE_KEY) {
@@ -637,6 +649,48 @@ async function controlesResultat(paris: { date: string; hour: number }): Promise
   ];
 }
 
+// ── Courrier Postmark non traité ─────────────────────────────────────────────
+// Depuis le 03/09/2026, request@ et assistance@ entrent par Postmark. Le silence
+// d'AUTO-40 ne dit rien d'une panne Postmark → n8n : si le webhook répond 5xx ou si
+// le JSON dépasse la taille acceptée par n8n (16 Mo, pièces jointes en base64
+// comprises — des photos de dégât suffisent), Postmark réessaie puis classe le mail
+// « failed », et aucune exécution n'existe pour alerter. On lit donc le résultat
+// chez Postmark, lecture seule : tout mail « failed » ou « blocked » des dernières
+// 24 h est une alerte immédiate, avec la consigne de rejeu.
+const POSTMARK_SERVEURS = [
+  { nom: "MIP request", boite: "request@", token: process.env.POSTMARK_REQUEST_TOKEN || "" },
+  { nom: "MIP assistance", boite: "assistance@", token: process.env.POSTMARK_ASSISTANCE_TOKEN || "" },
+];
+async function controlePostmark(): Promise<Resultat> {
+  const nom = "Courrier Postmark non traité (request@ · assistance@)";
+  const manquants = POSTMARK_SERVEURS.filter((s) => !s.token).map((s) => s.nom);
+  if (manquants.length) {
+    return { nom, statut: "ALERTE", detail: `Jeton Postmark absent pour ${manquants.join(", ")} : le courrier non traité n'est plus surveillé.` };
+  }
+  const depuis = Date.now() - 24 * 3600 * 1000;
+  const problemes: string[] = [];
+  const vus: string[] = [];
+  for (const s of POSTMARK_SERVEURS) {
+    for (const status of ["failed", "blocked"]) {
+      const r = await fetch(`https://api.postmarkapp.com/messages/inbound?count=50&offset=0&status=${status}`, {
+        headers: { "X-Postmark-Server-Token": s.token, Accept: "application/json" }, cache: "no-store",
+      });
+      if (!r.ok) { problemes.push(`• ${s.nom} : Postmark répond ${r.status} sur status=${status}`); continue; }
+      const j = await r.json() as { InboundMessages?: { MessageID: string; From: string; Subject: string; ReceivedAt: string; Status: string }[] };
+      for (const m of j.InboundMessages ?? []) {
+        const t = Date.parse(m.ReceivedAt);
+        if (!(t >= depuis)) continue;
+        problemes.push(`• ${s.boite} · ${m.ReceivedAt.slice(0, 16)} · ${m.Status} · de ${m.From} · « ${(m.Subject || "").slice(0, 70)} » — ${status === "failed" ? "rejouer depuis Postmark (Retry)" : "bloqué par Postmark, lire dans la boîte OVH"}`);
+      }
+    }
+    vus.push(s.boite);
+  }
+  if (problemes.length) {
+    return { nom, statut: "ALERTE", detail: `Mail(s) reçu(s) par Postmark mais jamais poussé(s) dans n8n (24 h) :\n${problemes.join("\n")}` };
+  }
+  return { nom, statut: "OK", detail: `Aucun mail en échec ni bloqué chez Postmark sur 24 h (${vus.join(", ")}).` };
+}
+
 export async function GET(request: Request) {
   const auth = request.headers.get("authorization");
   if (process.env.CRON_SECRET && auth !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -705,7 +759,12 @@ export async function GET(request: Request) {
             (reste > 0 ? `\n…et ${reste} autre(s) plus ancienne(s).` : "");
         } else {
           // ── 2. Rythme attendu ─────────────────────────────────────────
-          const triggers = execs.filter((e) => e.mode === "trigger");
+          // Depuis la bascule Postmark du 03/09/2026, une réception n'est plus une exécution
+          // « trigger » : AUTO-40 démarre en « webhook », et AUTO-00 / AUTO-11 démarrent en
+          // « integrated » (appelés en sous-workflow). Ne compter que « trigger » rendait le
+          // contrôle AUTO-40 aveugle et faisait crier request@ à tort. Seuls les lancements à
+          // la main et les rejeux sont exclus : ce ne sont pas des réceptions.
+          const triggers = execs.filter((e) => e.mode && !["manual", "retry"].includes(String(e.mode)));
           const last = check.dailyByHourParis
             ? (execs[0] ? new Date(execs[0].startedAt) : null)
             : (triggers[0] ? new Date(triggers[0].startedAt) : null);
@@ -729,11 +788,19 @@ export async function GET(request: Request) {
                 // Le message dit quoi FAIRE. L'ancienne formulation — « c'est peut-être normal,
                 // mais à vérifier » — a été criée trois fois les 01 et 02/09/2026 sans que
                 // personne ne bouge : une alerte qui doute d'elle-même se lit comme du bruit.
+                // Depuis la bascule du 03/09/2026, les mails entrent par Postmark : plus de
+                // trigger IMAP à geler, plus de workspace à redémarrer. Un silence se lit
+                // désormais dans l'ordre : Postmark a-t-il reçu (Activity › Inbound du serveur
+                // MIP request / MIP assistance) ? le webhook a-t-il répondu ? AUTO-40 a-t-il
+                // appelé le routeur ? Un mail reçu par Postmark mais jamais traité se rejoue
+                // depuis Postmark (Retry), il n'est jamais perdu.
                 detail = `Aucune réception depuis ${ageH.toFixed(0)} h (seuil ${check.silenceHours} h). ` +
-                  "Boîte vide ou trigger IMAP figé : de l'extérieur, rien ne permet de trancher. " +
-                  "Ce qu'on sait depuis le 02/09/2026 : la reconnexion automatique par l'API " +
-                  "(désactivation puis réactivation) NE débloque PAS ce gel — seul un REDÉMARRAGE " +
-                  "DU WORKSPACE n8n le débloque. Au moindre doute, redémarre : " + N8N_URL;
+                  "Depuis le 03/09/2026 les mails entrent par Postmark, pas par l'IMAP : ne PAS redémarrer le workspace. " +
+                  "Vérifier dans l'ordre : (1) Postmark › serveur MIP request / MIP assistance › Activity › Inbound — " +
+                  "si les mails y sont, regarder la colonne webhook ; (2) les exécutions d'AUTO-40 — Réception Postmark ; " +
+                  "(3) si Postmark montre le mail en « Failed », le rejouer depuis Postmark (Retry) ; si une exécution AUTO-40 " +
+                  "est en erreur, la rejouer depuis n8n (Retry, sous 7 jours) — mais jamais si AUTO-00 / AUTO-11 a déjà traité ce message. " +
+                  "Si Postmark n'a rien reçu non plus, c'est la redirection OVH ou simplement une boîte vide. " + N8N_URL;
               }
             }
           }
@@ -773,6 +840,14 @@ export async function GET(request: Request) {
   } catch (e) {
     await rapporter("Reconnexion IMAP (request@ · assistance@)", "ALERTE",
       `Reconnexion impossible : ${e instanceof Error ? e.message : e}`);
+  }
+
+  try {
+    const pm = await controlePostmark();
+    await rapporter(pm.nom, pm.statut, pm.detail);
+  } catch (e) {
+    await rapporter("Courrier Postmark non traité (request@ · assistance@)", "ALERTE",
+      `Lecture Postmark impossible : ${e instanceof Error ? e.message : e}`);
   }
 
   return NextResponse.json({ ok: true, paris, results });
