@@ -62,6 +62,9 @@ export const MAX_ECHECS_EMAIL = 6;
 const NUITS_DOUBLES_ADMISES = new Set(["RES-2026-0124"]);
 
 export type Langue = "en_GB" | "fr_FR";
+// Règle de Vincent (04/09/2026) : le PDF Pennylane est TOUJOURS en français, facture comme
+// avoir. Le champ « Langue de l'email » ne pilote que la langue de l'EMAIL.
+export const LANGUE_DOCUMENT: Langue = "fr_FR";
 export type FactureA = "Occupant" | "Client final" | "Agence" | "Propriétaire" | "Contact";
 export type Chemin = "auto16" | "direct";
 
@@ -522,7 +525,7 @@ export async function verifier(ctx: Contexte, pourEmission = false): Promise<Ver
       // dit ce qui sera réellement appliqué, pas ce que la route aurait calculé.
       ...(chemin === "auto16"
         ? [`Email et PDF produits par la chaîne AUTO-16 : email anglais générique de la chaîne à ${emailTo}${emailCc ? ` (CC ${emailCc})` : ""}, PDF dans la langue par défaut de l'entreprise Pennylane`]
-        : [`Email à : ${emailTo}${emailCc ? ` · CC : ${emailCc}` : ""} · langue ${langue === "fr_FR" ? "français" : "anglais"}`]),
+        : [`Email à : ${emailTo}${emailCc ? ` · CC : ${emailCc}` : ""} · email en ${langue === "fr_FR" ? "français" : "anglais"} · PDF en français`]),
       ...(detail.length ? [`${detail.length} ligne(s) de détail :`] : [`Ligne : ${ligne.label}`]),
       ...(detail.length
         ? detail.flatMap((l, i) => [
@@ -887,14 +890,15 @@ async function emettreDirect(ctx: Contexte, verif: Verification, journal: Journa
   let pl = await chercherParReference(ctx.numero);
   let adoptee = !!pl;
   if (!pl) {
-    const sujet = texte(ctx.v["Catégorie"]) === "Loyer" ? (langue === "fr_FR" ? "Facture de loyer" : "Rent invoice")
-      : texte(ctx.v["Catégorie"]) === "Dommage" ? (langue === "fr_FR" ? "Facture de dommages" : "Invoice for damages")
-      : texte(ctx.v["Catégorie"]) === "Honoraires" ? (langue === "fr_FR" ? "Facture d'honoraires" : "Invoice for fees")
-      : (langue === "fr_FR" ? "Facture" : "Invoice");
+    const cat_ = texte(ctx.v["Catégorie"]);
+    const sujet = cat_ === "Loyer" ? "Facture de loyer"
+      : cat_ === "Dommage" ? "Facture de dommages"
+      : cat_ === "Honoraires" ? "Facture d'honoraires"
+      : "Facture";
     pl = await creerFacture({
       customer_id: client.id, date: aujourdhui(), deadline: echeance(), draft: verif.mode === "Proforma", currency: "EUR",
       customer_invoice_template_id: verif.template, ...(verif.mention ? { special_mention: verif.mention } : {}),
-      external_reference: ctx.numero, pdf_invoice_subject: verif.mode === "Proforma" ? `Pro forma — ${sujet}` : sujet, language: langue,
+      external_reference: ctx.numero, pdf_invoice_subject: verif.mode === "Proforma" ? `Pro forma — ${sujet}` : sujet, language: LANGUE_DOCUMENT,
       invoice_lines: verif.lignes,
     });
     adoptee = false;
@@ -1108,7 +1112,7 @@ export async function creerAvoir(ctx: Contexte, plan: PlanAvoir): Promise<Result
       pdf_invoice_subject: plan.langue === "fr_FR" ? `Avoir${plan.partiel ? " partiel" : ""} sur facture ${numOrig}` : `Credit note${plan.partiel ? " (partial)" : ""} on invoice ${numOrig}`,
       // Format lu par AUTO-17 pour rattacher un avoir à sa facture.
       special_mention: `Avoir ${plan.partiel ? "partiel sur" : "annulant"} la facture ${numOrig} (${ctx.numero}) — ${motif}`,
-      language: plan.langue, invoice_lines: plan.lignes,
+      language: LANGUE_DOCUMENT, invoice_lines: plan.lignes,
     });
   }
   if (!avoir.id) throw new Error("Pennylane n'a pas renvoyé d'identifiant d'avoir");

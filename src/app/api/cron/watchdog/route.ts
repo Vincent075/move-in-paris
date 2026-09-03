@@ -332,7 +332,7 @@ async function controlesMenageHebdo(paris: { date: string; hour: number }): Prom
 // Le jeton du watchdog n'a pas le scope webhook : on utilise celui qui les a
 // créés (AIRTABLE_WEBHOOK_PAT = claude-lecture-mip).
 const WEBHOOK_PAT = process.env.AIRTABLE_WEBHOOK_PAT || "";
-const WEBHOOKS_ATTENDUS = 6;
+const WEBHOOKS_ATTENDUS = 9; // 04/09/2026 : Réservations, Appartements, Check-in, Factures, Interventions, Ménages, Leads, Occupants, Transferts
 
 async function controleWebhooksTempsReel(): Promise<Resultat> {
   const nom = "Webhooks temps réel Airtable";
