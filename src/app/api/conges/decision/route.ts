@@ -20,7 +20,9 @@ export const maxDuration = 120;
 // prise », jamais une seconde écriture.
 
 const SITE = "https://www.move-in-paris.com";
-const SLACK_MENAGES = "C0BCH7FRDC2";
+// Les congés ne vont PAS dans #ménages : ils n'ont rien à y faire et noient le suivi
+// terrain. Channel dédiée #administration, créée le 04/09/2026 à la demande de Vincent.
+const SLACK_ADMIN = "C0BUW51AU77";
 
 const page = (titre: string, corps: string, couleur = "#0D0D0D") => new NextResponse(
   `<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8">
@@ -151,7 +153,7 @@ export async function POST(request: Request) {
     envoye = res.ok === true;
   }
 
-  await slack(SLACK_MENAGES, `${accepte ? ":white_check_mark:" : ":x:"} *${nom}* — ${libelleType(type)} du ${jjmmaaaa(abs.fields["Date de debut"])} au ${jjmmaaaa(abs.fields["Date de fin"])} : *${accepte ? "acceptée" : "refusée"}*`
+  await slack(SLACK_ADMIN, `${accepte ? ":white_check_mark:" : ":x:"} *${nom}* — ${libelleType(type)} du ${jjmmaaaa(abs.fields["Date de debut"])} au ${jjmmaaaa(abs.fields["Date de fin"])} : *${accepte ? "acceptée" : "refusée"}*`
     + `${motif ? ` — ${motif}` : ""}${envoye ? "" : " · :warning: email NON envoyé au salarié, le prévenir à la main"}${rattachement && !rattachement.startsWith("rattachée") ? ` · ${rattachement}` : ""}`).catch(() => undefined);
 
   const suite = [

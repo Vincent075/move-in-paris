@@ -21,8 +21,12 @@ export const maxDuration = 180;
 
 const SITE = "https://www.move-in-paris.com";
 const VINCENT = "vincent@move-in-paris.com";
-const SLACK_MENAGES = "C0BCH7FRDC2";
+// Les congés ne vont PAS dans #ménages : ils n'ont rien à y faire et noient le suivi
+// terrain. Channel dédiée #administration, créée le 04/09/2026 à la demande de Vincent.
+const SLACK_ADMIN = "C0BUW51AU77";
 const MAX_PAR_PASSAGE = 10;
+// Mise en service du circuit de validation : rien de plus ancien n'est une demande.
+const MISE_EN_SERVICE = "2026-09-04T10:35:00.000Z";
 
 const bouton = (url: string, txt: string, fond: string) =>
   `<a href="${url}" style="display:inline-block;background:${fond};color:#FFFFFF;`
@@ -46,8 +50,13 @@ export async function GET(request: Request) {
     // on prend donc aussi les demandes SANS statut, et c'est cette route qui l'écrit. Une
     // absence saisie à la main par Vincent, déjà décidée, n'est jamais reprise puisqu'elle
     // porte « Acceptée » ou « Refusée ». Le garde-fou reste « Demandé le » vide.
+    // Barrière de date : les absences saisies AVANT la mise en service du circuit sont de
+    // l'historique déjà vécu, pas des demandes. Sans elle, le premier passage a envoyé à
+    // Vincent trois validations pour des congés d'août déjà pris (04/09/2026). Une ligne
+    // ancienne ne redeviendra jamais candidate, quel que soit son statut.
     const aEnvoyer = (await lireTable(T_ABSENCES,
-      `AND(OR({${CHAMP_STATUT}} = 'En attente', {${CHAMP_STATUT}} = BLANK()), {${CHAMP_DEMANDE}} = BLANK(), {Date de debut} != BLANK())`)).slice(0, MAX_PAR_PASSAGE);
+      `AND(OR({${CHAMP_STATUT}} = 'En attente', {${CHAMP_STATUT}} = BLANK()), {${CHAMP_DEMANDE}} = BLANK(), `
+      + `{Date de debut} != BLANK(), IS_AFTER(CREATED_TIME(), '${MISE_EN_SERVICE}'))`)).slice(0, MAX_PAR_PASSAGE);
 
     for (const abs of aEnvoyer) {
       const f = abs.fields;
@@ -116,7 +125,7 @@ export async function GET(request: Request) {
       if (res.ok) faits.push(`• ${nom} — ${libelleType(type)} du ${jjmmaaaa(d1)} au ${jjmmaaaa(d2)} · ${jours} j · email de validation envoyé`);
       else {
         refus.push(`• ${nom} — email de validation NON envoyé (${("erreur" in res && res.erreur) || "refus du relais"}) : décider depuis Airtable`);
-        await slack(SLACK_MENAGES, `:warning: *Demande de congé de ${nom}* : l'email de validation n'a pas pu être envoyé. La demande est enregistrée, à trancher depuis Airtable.`).catch(() => undefined);
+        await slack(SLACK_ADMIN, `:warning: *Demande de congé de ${nom}* : l'email de validation n'a pas pu être envoyé. La demande est enregistrée, à trancher depuis Airtable.`).catch(() => undefined);
       }
     }
 
@@ -133,7 +142,7 @@ export async function GET(request: Request) {
     }
 
     if (!simulation && (faits.length || refus.length)) {
-      await slack(SLACK_MENAGES,
+      await slack(SLACK_ADMIN,
         `:palm_tree: *Demandes de congé*\n${[...faits, ...refus].join("\n")}`).catch(() => undefined);
     }
     return NextResponse.json({ ok: !refus.length, simulation, envoyees: faits.length, faits, refus, rattrapages });
