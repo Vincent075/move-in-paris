@@ -169,6 +169,20 @@ async function deverrouiller(verrouId: string) {
   await airtable("DELETE", `${T_MONITORING}/${verrouId}`).catch(() => undefined);
 }
 
+// Le verrou se pose en trois temps (POST, pause, relecture) et le POST peut être retardé
+// jusqu'à 3,6 s par les reprises sur 429 d'airtable(), alors que son jeton porte l'heure
+// d'AVANT ces reprises. Deux passages peuvent donc se croire chacun gagnant : celui qui a
+// posé vite ne voit pas encore la ligne de l'autre, et l'autre, plus ancien, gagne aussi
+// à sa relecture. On revérifie donc juste avant l'email — le PDF prend une quarantaine de
+// secondes à construire, la vérification de la pose est trop vieille pour faire foi.
+async function verrouToujoursANous(ficheId: string, monId: string): Promise<boolean> {
+  const lignes = await lireTable(T_MONITORING, `{Contrôle}='verrou:checkin:${ficheId}'`);
+  const horodatage = (r: Rec) => Number(texte(r.fields["Détail"]).split("-")[0]) || 0;
+  const vivantes = lignes.filter((r) => Date.now() - horodatage(r) < VERROU_PERIME_MS);
+  vivantes.sort((a, b) => (horodatage(a) - horodatage(b)) || a.id.localeCompare(b.id));
+  return !vivantes.length || vivantes[0].id === monId;
+}
+
 export async function GET(request: Request) {
   const auth = request.headers.get("authorization");
   if (process.env.CRON_SECRET && auth !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -293,6 +307,15 @@ export async function GET(request: Request) {
           fin: ["We hope you will feel at home right away.", "Enjoy your stay in Paris."],
           signataire: sgn,
         });
+        // DERNIER CONTRÔLE, à la seconde de l'envoi. Les deux garde-fous posés plus haut
+        // datent d'avant la construction du PDF : entre eux et ici, un autre passage a pu
+        // envoyer ce même rapport. Le 03/09/2026 à 15:25:45 et 15:25:48, Caterina BEDUSCHI
+        // a reçu deux fois le sien, pour cette raison exactement.
+        if (!test && verrou) {
+          const relu = await lireEnregistrement(T_CHECKIN, ch.id);
+          if (relu && texte(relu.fields[CHAMP_ENVOYE])) throw new Error("rapport déjà envoyé par un autre passage pendant la construction du PDF : envoi abandonné");
+          if (!(await verrouToujoursANous(ch.id, verrou))) throw new Error("un autre passage détient le verrou de cette fiche : envoi abandonné (aucun doublon)");
+        }
         const res = await envoyerEmailLocataire({
           usrEmail: sgn.email,
           mailTo: test ? "vincent@move-in-paris.com" : emailOcc,
