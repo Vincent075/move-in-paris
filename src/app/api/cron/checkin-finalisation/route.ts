@@ -229,7 +229,12 @@ export async function GET(request: Request) {
         const appt = await lireEnregistrement(T_APPARTEMENTS, premier(resa.fields["Appartement"]) || premier(f["Appartement"]));
         const adresse = texte(appt?.fields["adresse complète"]) || texte(appt?.fields["Adresse"]) || premier(f["Adresse appartement"]);
         const nomCourt = texte(appt?.fields["Nom / Référence"]) || adresse;
-        const prenom = texte(occ.fields["Prénom"]).trim().split(/\s+/)[0] || "Guest";
+        const prenomSeul = texte(occ.fields["Prénom"]).trim().split(/\s+/)[0];
+        const prenom = prenomSeul || "Guest";
+        // Objet de l'email : 1er prénom + NOM de l'occupant (demande de Vincent, 04/09/2026).
+        // Les copies (contact agence, Guillaume) doivent savoir de quel séjour il s'agit sans
+        // ouvrir l'email. Le PDF, lui, garde le nom complet : sa mise en page est validée.
+        const nomOccupant = [prenomSeul, texte(occ.fields["Nom"]).toUpperCase()].filter(Boolean).join(" ");
         const nomComplet = [texte(occ.fields["Prénom"]), texte(occ.fields["Nom"]).toUpperCase()].filter(Boolean).join(" ");
         const sgn = await signataire(resa.fields["Collaborateur"]);
         const resaCode = texte(resa.fields["Code réservation"]).split(" · ")[0].trim();
@@ -266,6 +271,9 @@ export async function GET(request: Request) {
               : `The report is available here: <a href="${lien}" style="color:#B88B58;">download your check-in report (PDF)</a>. The link is valid for 7 days, so please save the file. It will serve as the reference at check-out.`,
           ],
           cartes: [
+            // Référence de réservation en tête : c'est la clé que l'occupant et l'agence
+            // citent dans tous leurs échanges (demande de Vincent, 04/09/2026).
+            { label: "Booking reference", valeur: resaCode || "—" },
             { label: "Apartment", valeur: nomCourt },
             { label: "Check-in date", valeur: dateCheckin, gras: true },
             { label: "Keys handed over", valeur: texte(f["Nb de clés remises"]) || "—" },
@@ -284,7 +292,7 @@ export async function GET(request: Request) {
           mailTo: test ? "vincent@move-in-paris.com" : emailOcc,
           mailCc: test ? "" : cc,
           mailReplyTo: sgn.email,
-          mailSubject: `${test ? "[TEST] " : ""}Your check-in report · ${nomCourt}`,
+          mailSubject: `${test ? "[TEST] " : ""}Your check-in report · ${[nomOccupant, nomCourt].filter(Boolean).join(" · ")}`,
           mailHtml: html,
           attachments: joint ? [{ name: nomFichier, contentType: "application/pdf", base64: pdf.toString("base64") }] : [],
           origine: "checkin-finalisation",
