@@ -4,7 +4,7 @@ import {
 } from "@/lib/mip/courrier";
 import {
   T_ABSENCES, CHAMP_STATUT, CHAMP_JETON, CHAMP_DEMANDE, CHAMP_CALCUL, CHAMP_COMMENTAIRE,
-  texte, nombre, liens, jjmmaaaa, dateLongue, libelleType, estConge, joursOuvrables, jeton,
+  texte, nombre, liens, jjmmaaaa, jourParis, dateLongue, libelleType, estConge, joursOuvrables, jeton,
   rattacherAuMois, utilisateurDe, soldeDe,
 } from "@/lib/mip/conges";
 
@@ -60,8 +60,8 @@ export async function GET(request: Request) {
 
     for (const abs of aEnvoyer) {
       const f = abs.fields;
-      const d1 = texte(f["Date de debut"]).slice(0, 10);
-      const d2 = texte(f["Date de fin"]).slice(0, 10) || d1;
+      const d1 = jourParis(f["Date de debut"]);
+      const d2 = jourParis(f["Date de fin"]) || d1;
       const type = texte(f["Type d'absence"]);
       const user = await utilisateurDe(abs);
       const nom = texte(user?.fields["Nom complet"]) || texte(f["Salarié"]);

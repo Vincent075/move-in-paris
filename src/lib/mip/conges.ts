@@ -71,14 +71,26 @@ export function joursOuvrables(debut: string, fin: string): number {
   return n;
 }
 
+// Une date Airtable est un instant UTC : « 2026-08-02T23:46Z » est le 3 août à Paris.
+// Couper la chaîne aux 10 premiers caractères perd un jour sur toute saisie faite en
+// soirée — c'est ce qui a envoyé à la comptable des congés décalés d'un jour le 04/09/2026.
+// Tout le décompte et tout l'affichage passent désormais par le jour VÉCU à Paris.
+export const jourParis = (v: unknown): string => {
+  const s = texte(v);
+  if (!s) return "";
+  const d = new Date(s);
+  if (Number.isNaN(d.getTime())) return s.slice(0, 10);
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
+};
+
 export const jjmmaaaa = (v: unknown) => {
-  const s = texte(v).slice(0, 10);
+  const s = jourParis(v);
   return s ? `${s.slice(8, 10)}/${s.slice(5, 7)}/${s.slice(0, 4)}` : "";
 };
 export const MOIS_FR = ["janvier", "février", "mars", "avril", "mai", "juin",
   "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
 export const dateLongue = (v: unknown) => {
-  const s = texte(v).slice(0, 10);
+  const s = jourParis(v);
   if (!s) return "";
   return `${Number(s.slice(8, 10))} ${MOIS_FR[Number(s.slice(5, 7)) - 1]} ${s.slice(0, 4)}`;
 };
@@ -95,7 +107,7 @@ export const libelleType = (type: string) => (estConge(type) ? "congés payés" 
 // dans la table Congés. Dans ce cas on ne fabrique rien — les compteurs de paie ne
 // s'inventent pas — et le cron réessaie à chaque passage jusqu'à ce que le mois existe.
 export async function rattacherAuMois(abs: Rec): Promise<{ fait: boolean; detail: string }> {
-  const debut = texte(abs.fields["Date de debut"]).slice(0, 7);
+  const debut = jourParis(abs.fields["Date de debut"]).slice(0, 7);
   const employe = liens(abs.fields["Employé liée"])[0];
   if (!debut || !employe) return { fait: false, detail: "absence sans date de début ou sans salarié" };
   if (liens(abs.fields["Congé mensuel lié"]).length) return { fait: true, detail: "déjà rattachée" };
