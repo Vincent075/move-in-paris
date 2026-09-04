@@ -51,6 +51,7 @@ const TABLE_LEADS = "tblUxEm8sB4eHyNG1";
 const TABLE_FACTURES = "tblC97ei6ZPWhWUwe";
 const TABLE_INTERVENTIONS = "tblUjK6taP6ti0kGa";
 const TABLE_CHECKIN = "tbl8SktZKbyopdQ7l";
+const TABLE_ABSENCES = "tblsR6InB8ou1O6y1";
 
 // Les SEULS champs dont le changement peut modifier le planning des ménages.
 // C'est une liste blanche, et c'est volontaire : le 29/08/2026, relancer la
@@ -175,6 +176,11 @@ export async function POST(request: Request) {
   // Check-in terminé + compteurs saisis + photos : le rapport part au locataire dans la
   // minute (03/09/2026). Le cron horaire rattrape ce que ce réveil aurait manqué.
   if (conf.table === TABLE_CHECKIN) travaux.push(lance("/api/cron/checkin-finalisation"));
+  // Demande de congé posée depuis l'interface Équipe Terrain : le salarié doit voir sa
+  // ligne apparaître et Vincent recevoir l'email de validation tout de suite, pas au
+  // prochain quart d'heure. C'est aussi ce réveil qui rattache la demande à sa fiche
+  // salarié à partir du compte connecté. Le cron */15 reste le filet.
+  if (conf.table === TABLE_ABSENCES) travaux.push(lance("/api/cron/conges"));
   // Facturation depuis Airtable (rebranchée le 03/09/2026, GO de Vincent) : les boutons
   // « Vérifier », « Émettre la facture », « Renvoyer l'email » et « Créer un avoir » de la
   // fiche facture ne font que cocher une case ou changer le Statut ; c'est ce réveil-ci
