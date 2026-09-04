@@ -123,6 +123,27 @@ export async function utilisateurDe(abs: Rec): Promise<Rec | null> {
   return id ? lireEnregistrement(T_UTILISATEURS, id) : null;
 }
 
+// Le formulaire ne demande plus QUI fait la demande : Airtable sait déjà qui est connecté
+// et l'écrit dans « Créé par ». On retrouve la fiche salarié à partir de ce compte, par son
+// champ « Collaborateur », et à défaut par l'email. Sans correspondance, la demande est
+// refusée en clair plutôt que rattachée au hasard.
+export async function rattacherLeSalarie(abs: Rec): Promise<{ ok: boolean; detail: string; user: Rec | null }> {
+  const deja = liens(abs.fields["Employé liée"])[0];
+  if (deja) return { ok: true, detail: "", user: await lireEnregistrement(T_UTILISATEURS, deja) };
+  const auteur = abs.fields["Créé par"] as { email?: string; name?: string } | undefined;
+  const email = texte(auteur?.email).trim().toLowerCase();
+  if (!email) return { ok: false, detail: "demande sans auteur identifiable (« Créé par » vide)", user: null };
+  const users = await lireTable(T_UTILISATEURS);
+  const trouve = users.find((u) => {
+    const c = u.fields["Collaborateur"] as { email?: string } | undefined;
+    return texte(c?.email).trim().toLowerCase() === email || texte(u.fields["Email"]).trim().toLowerCase() === email;
+  });
+  if (!trouve) return { ok: false, detail: `aucune fiche salarié pour le compte ${email} : renseigner « Collaborateur » sur sa fiche Utilisateurs`, user: null };
+  await airtable("PATCH", T_ABSENCES, { records: [{ id: abs.id, fields: { "Employé liée": [trouve.id] } }] });
+  abs.fields["Employé liée"] = [trouve.id];
+  return { ok: true, detail: `rattachée à ${texte(trouve.fields["Nom complet"])}`, user: trouve };
+}
+
 // Solde de congés le plus récent connu pour ce salarié : il éclaire la décision de Vincent.
 export async function soldeDe(employeId: string): Promise<{ solde: number | null; mois: string }> {
   if (!employeId) return { solde: null, mois: "" };

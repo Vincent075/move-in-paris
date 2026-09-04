@@ -2,10 +2,11 @@ import { NextResponse } from "next/server";
 import {
   airtable, lireTable, lireEnregistrement, signataire, htmlEmailLocataire, envoyerEmailLocataire, slack,
 } from "@/lib/mip/courrier";
+import { T_UTILISATEURS } from "@/lib/mip/conges";
 import {
   T_ABSENCES, CHAMP_STATUT, CHAMP_JETON, CHAMP_DEMANDE, CHAMP_CALCUL, CHAMP_COMMENTAIRE,
   texte, nombre, liens, jjmmaaaa, jourParis, dateLongue, libelleType, estConge, joursOuvrables, jeton,
-  rattacherAuMois, utilisateurDe, soldeDe,
+  rattacherAuMois, rattacherLeSalarie, soldeDe,
 } from "@/lib/mip/conges";
 
 export const dynamic = "force-dynamic";
@@ -63,8 +64,11 @@ export async function GET(request: Request) {
       const d1 = jourParis(f["Date de debut"]);
       const d2 = jourParis(f["Date de fin"]) || d1;
       const type = texte(f["Type d'absence"]);
-      const user = await utilisateurDe(abs);
+      // Le salarié n'est plus saisi dans le formulaire : on le déduit du compte connecté.
+      const rat = await rattacherLeSalarie(abs);
+      const user = rat.user;
       const nom = texte(user?.fields["Nom complet"]) || texte(f["Salarié"]);
+      if (!rat.ok) { refus.push(`• ${texte(f["Code absences"]) || abs.id} — ${rat.detail}`); continue; }
       if (!d1 || !nom) {
         refus.push(`• ${abs.id} — demande incomplète (dates ou salarié manquants) : ignorée`);
         continue;
@@ -135,7 +139,7 @@ export async function GET(request: Request) {
         `AND({${CHAMP_STATUT}} = 'Acceptée', COUNTA({Congé mensuel lié}) = 0)`);
       for (const abs of orphelines) {
         const r = await rattacherAuMois(abs);
-        const user = await utilisateurDe(abs);
+        const user = liens(abs.fields["Employé liée"])[0] ? await lireEnregistrement(T_UTILISATEURS, liens(abs.fields["Employé liée"])[0]) : null;
         const nom = texte(user?.fields["Nom complet"]) || abs.id;
         if (r.fait) rattrapages.push(`• ${nom} — ${r.detail}`);
       }
