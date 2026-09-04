@@ -513,6 +513,37 @@ async function controleFacturesEnDouble(): Promise<Resultat> {
 const GRACE_CHECKIN_H = 2;
 const EN_COURS_MAX_MIN = 30;
 
+// ── Contrôle : le tarif du kWh a-t-il vieilli ? ─────────────────────────────
+// Le tarif réglementé EDF bouge deux fois par an, au 1er février et au 1er août. Le
+// décompte d'électricité des ménages de départ s'appuie dessus pour chiffrer une
+// surconsommation : un tarif périmé, c'est une refacturation fausse, et personne ne s'en
+// aperçoit. Un mois après chaque révision, le watchdog demande de vérifier la grille.
+const SOURCE_TARIF = "https://particulier.edf.fr/content/dam/2-Actifs/Documents/Offres/Grille_prix_Tarif_Bleu.pdf";
+
+function controleTarifKwh(now: Date): Resultat {
+  const nom = "Tarif du kWh (décompte d'électricité)";
+  const hc = Number(process.env.PRIX_KWH_HEURES_CREUSES || 0);
+  const hp = Number(process.env.PRIX_KWH_HEURES_PLEINES || 0);
+  const grille = String(process.env.PRIX_KWH_DATE_GRILLE || "");
+  if (!hc || !hp) {
+    return { nom, statut: "ALERTE", detail: "Aucun prix du kWh renseigné : les comptes rendus de départ ne peuvent pas chiffrer une surconsommation.\n"
+      + `Relever la grille sur ${SOURCE_TARIF} puis poser PRIX_KWH_HEURES_CREUSES, PRIX_KWH_HEURES_PLEINES et PRIX_KWH_DATE_GRILLE dans Vercel.` };
+  }
+  // Dernière révision tarifaire passée : 1er février ou 1er août de l'année en cours.
+  const a = now.getUTCFullYear(), m = now.getUTCMonth() + 1;
+  const derniere = m >= 8 ? `${a}-08-01` : m >= 2 ? `${a}-02-01` : `${a - 1}-08-01`;
+  const perime = grille < derniere;
+  const moisDepuis = (now.getTime() - Date.parse(`${derniere}T00:00:00Z`)) / 2.6e9;
+  if (perime && moisDepuis >= 1) {
+    return { nom, statut: "ALERTE", detail:
+      `Le tarif utilisé date de la grille du ${grille}, or une révision est intervenue le ${derniere}.\n`
+      + `Relever les nouveaux prix sur ${SOURCE_TARIF} (option Heures Creuses, colonne Heures Pleines et Heures Creuses) `
+      + "puis mettre à jour PRIX_KWH_HEURES_CREUSES, PRIX_KWH_HEURES_PLEINES et PRIX_KWH_DATE_GRILLE dans Vercel.\n"
+      + "Sans ça, les surconsommations refacturées aux locataires sortants sont calculées au mauvais prix." };
+  }
+  return { nom, statut: "OK", detail: `Tarif réglementé EDF du ${grille} : ${(hc * 100).toFixed(2)} cts en heures creuses, ${(hp * 100).toFixed(2)} cts en heures pleines. Prochaine révision au 1er février ou au 1er août.` };
+}
+
 async function controleRapportsCheckin(now: Date): Promise<Resultat> {
   const nom = "Rapports de check-in bloqués";
   const fiches = await airtableAll(AT_CHECKIN, [
@@ -992,6 +1023,8 @@ export async function GET(request: Request) {
     await rapporter(enDouble.nom, enDouble.statut, enDouble.detail);
     const chk = await controleRapportsCheckin(now);
     await rapporter(chk.nom, chk.statut, chk.detail);
+    const tarif = controleTarifKwh(now);
+    await rapporter(tarif.nom, tarif.statut, tarif.detail);
     for (const r of await controlesMenageHebdo(paris)) await rapporter(r.nom, r.statut, r.detail);
     const dbl = await controleNuitsDoubles();
     await rapporter(dbl.nom, dbl.statut, dbl.detail);

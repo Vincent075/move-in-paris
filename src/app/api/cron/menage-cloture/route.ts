@@ -33,11 +33,16 @@ const MAX_PAR_PASSAGE = 5;
 const MISE_EN_SERVICE = "2026-09-04T12:00:00.000Z";
 const PIECE_JOINTE_MAX = 8 * 1024 * 1024;
 
-// Prix du kWh : il n'existe nulle part dans Airtable. Tant qu'il n'est pas renseigné, le
-// compte rendu donne les kWh et la provision, et dit franchement qu'il ne peut pas chiffrer
-// l'écart en euros — plutôt que d'inventer un tarif.
+// Prix du kWh : tarif réglementé EDF « Tarif Bleu », option Heures Creuses, identique de
+// 3 à 36 kVA. Relevé le 04/09/2026 sur la grille officielle
+// https://particulier.edf.fr/content/dam/2-Actifs/Documents/Offres/Grille_prix_Tarif_Bleu.pdf
+// applicable au 1er août 2026 : 21,42 cts TTC en heures pleines, 15,89 en heures creuses.
+// Les valeurs vivent dans Vercel pour être changées sans redéployer. Le tarif bouge deux
+// fois par an, au 1er février et au 1er août : le watchdog le rappelle (voir contrôle
+// « Tarif du kWh »). Sans valeur, le compte rendu donne les kWh et dit qu'il ne chiffre pas.
 const PRIX_HC = Number(process.env.PRIX_KWH_HEURES_CREUSES || 0);
 const PRIX_HP = Number(process.env.PRIX_KWH_HEURES_PLEINES || 0);
+const DATE_GRILLE = process.env.PRIX_KWH_DATE_GRILLE || "";
 
 const eur = (v: number) => `${v.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`;
 const kwh = (v: number) => `${v.toLocaleString("fr-FR", { maximumFractionDigits: 0 })} kWh`;
@@ -108,7 +113,8 @@ async function electricite(men: { fields: Record<string, unknown> }): Promise<{ 
     { label: "Provision de l'appartement", valeur: provisionMois ? `${eur(provisionMois)} par mois` : "non renseignée" },
     { label: "Provision due au prorata", valeur: provisionDue ? eur(provisionDue) : "—", gras: true },
     ...(chiffrable
-      ? [{ label: "Coût réel estimé", valeur: eur(cout) },
+      ? [{ label: "Tarif appliqué", valeur: `${(PRIX_HC * 100).toFixed(2).replace(".", ",")} cts creuses · ${(PRIX_HP * 100).toFixed(2).replace(".", ",")} cts pleines${DATE_GRILLE ? ` (grille EDF du ${jjmmaaaa(DATE_GRILLE)})` : ""}` },
+         { label: "Coût réel estimé", valeur: eur(cout) },
          { label: ecart > 0 ? "SURCONSOMMATION" : "Écart", valeur: eur(ecart), gras: true }]
       : []),
   ];
