@@ -97,7 +97,9 @@ export async function signataire(collaborateur: unknown): Promise<Signataire> {
     return {
       prenom: texte(u["Prénom"]) || defaut.prenom,
       nom: texte(u["Nom"]) || defaut.nom,
-      fonction: texte(u["Rôle"]) || defaut.fonction,
+      // « Gérant » ne doit apparaître dans AUCUN email (demande de Vincent, 04/09/2026) :
+      // sa signature est son nom, rien d'autre.
+      fonction: texte(u["Rôle"]) === "Gérant" ? "" : texte(u["Rôle"]) || defaut.fonction,
       email,
       tel: texte(u["Téléphone"]) || defaut.tel,
     };
@@ -145,7 +147,7 @@ export function htmlEmailLocataire(e: EmailLocataire): string {
 <tr><td class="pad-x-lg text-dark body-text" style="padding:36px 40px 8px 40px;font-family:Georgia,'Times New Roman',serif;font-size:16px;line-height:1.75;color:#0D0D0D;">${p(`Dear ${esc(e.prenom || "Guest")},`)}${e.intro.map(p).join("")}</td></tr>
 ${cartes}${encadre}
 <tr><td class="pad-x-lg text-dark body-text" style="padding:32px 40px 8px 40px;font-family:Georgia,'Times New Roman',serif;font-size:16px;line-height:1.75;color:#0D0D0D;">${e.fin.map(p).join("")}<p style="margin:0;">Kind regards,</p></td></tr>
-<tr><td class="pad-x-lg text-dark" style="padding:8px 40px 40px 40px;font-family:Georgia,'Times New Roman',serif;font-size:15px;color:#0D0D0D;line-height:1.5;"><p style="margin:0;font-weight:bold;">${esc(e.signataire.prenom)} ${esc(e.signataire.nom)}</p><p class="text-mid" style="margin:4px 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#6B6B6B;">${esc(e.signataire.fonction)}</p><p class="text-mid" style="margin:8px 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#6B6B6B;"><a href="mailto:${esc(e.signataire.email)}" style="color:#6B6B6B;text-decoration:none;">${esc(e.signataire.email)}</a> &nbsp;·&nbsp; ${esc(e.signataire.tel)}</p></td></tr>
+<tr><td class="pad-x-lg text-dark" style="padding:8px 40px 40px 40px;font-family:Georgia,'Times New Roman',serif;font-size:15px;color:#0D0D0D;line-height:1.5;"><p style="margin:0;font-weight:bold;">${esc(e.signataire.prenom)} ${esc(e.signataire.nom)}</p>${e.signataire.fonction ? `<p class="text-mid" style="margin:4px 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#6B6B6B;">${esc(e.signataire.fonction)}</p>` : ""}<p class="text-mid" style="margin:8px 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#6B6B6B;"><a href="mailto:${esc(e.signataire.email)}" style="color:#6B6B6B;text-decoration:none;">${esc(e.signataire.email)}</a> &nbsp;·&nbsp; ${esc(e.signataire.tel)}</p></td></tr>
 <tr><td align="center" class="card-bg pad-x-lg border-soft" style="background-color:#F5F0EB;padding:18px 40px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:1px;color:#6B6B6B;line-height:1.7;border-top:1px solid #E8E4DF;"><div class="text-gold" style="color:#B88B58;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:12px;letter-spacing:0.5px;">The art of Parisian living</div><div style="margin-top:6px;">Move In Paris · 26 rue de l'Étoile, 75017 Paris · +33 1 45 20 06 03</div></td></tr>
 <tr><td class="gold-bar" style="background-color:#B88B58;height:2px;line-height:2px;font-size:0;">&nbsp;</td></tr>
 </table></td></tr></table></body></html>`;
