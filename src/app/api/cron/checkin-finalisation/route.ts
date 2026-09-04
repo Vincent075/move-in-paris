@@ -259,7 +259,13 @@ export async function GET(request: Request) {
         const lien = lienS3(key);
         // En test rien n'est déposé sur S3 : on joint toujours, sinon le lien serait mort.
         const joint = test || pdf.length <= PIECE_JOINTE_MAX;
-        const nomFichier = `Check-in report ${code} - Move In Paris.pdf`;
+        // Nom du fichier joint : l'occupant y figure aussi (demande de Vincent, 04/09/2026),
+        // pour qu'un PDF retrouvé dans un dossier de téléchargements se reconnaisse seul.
+        // Les caractères interdits par les systèmes de fichiers sont retirés — un nom comme
+        // « D'AVANZO » passe, « / » ou « : » casserait la pièce jointe. La clé S3, elle,
+        // ne bouge pas : d'autres automatisations en extraient le chemin.
+        const nomFichierSain = (v: string) => v.replace(/[\\/:*?"<>|]+/g, " ").replace(/\s+/g, " ").trim();
+        const nomFichier = `Check-in report ${code}${nomOccupant ? ` - ${nomFichierSain(nomOccupant)}` : ""} - Move In Paris.pdf`;
 
         const html = htmlEmailLocataire({
           titre: `Your check-in report · ${nomCourt}`,
