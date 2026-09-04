@@ -265,7 +265,7 @@ export async function GET(request: Request) {
         // « D'AVANZO » passe, « / » ou « : » casserait la pièce jointe. La clé S3, elle,
         // ne bouge pas : d'autres automatisations en extraient le chemin.
         const nomFichierSain = (v: string) => v.replace(/[\\/:*?"<>|]+/g, " ").replace(/\s+/g, " ").trim();
-        const nomFichier = `Check-in report ${code}${nomOccupant ? ` - ${nomFichierSain(nomOccupant)}` : ""} - Move In Paris.pdf`;
+        const nomFichier = `${["Check-in report", nomOccupant, nomCourt].filter(Boolean).map(nomFichierSain).join(" - ")}.pdf`;
 
         const html = htmlEmailLocataire({
           titre: `Your check-in report · ${nomCourt}`,
