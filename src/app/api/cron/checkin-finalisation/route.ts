@@ -35,6 +35,15 @@ const CHAMP_PHOTOS = "Photos du check-in";
 const CHAMP_HC = "Relevé compteur heures creuses";
 const CHAMP_HP = "Relevé compteur heures pleines";
 const CHAMP_ENVOYE = "Email check-in envoyé le";
+// Marqueur posé JUSTE avant l'envoi et effacé avec l'horodatage. S'il survit, c'est qu'on
+// ignore si l'email est parti : la fiche est mise de côté au lieu d'être renvoyée. Même
+// principe que « Émission en cours depuis » sur les factures. Un blocage visible vaut
+// mieux qu'un second rapport chez l'occupant.
+const CHAMP_EN_COURS = "Envoi en cours depuis";
+// Budget de temps du passage : au-delà, on ne DÉMARRE plus de fiche. Une fiche coûte le
+// téléchargement de ses photos (72 sur CHK-2026-0021), la fabrication du PDF et un POST
+// qui attend le SMTP : commencer à T+290 s, c'est se faire couper au milieu.
+const BUDGET_MS = 210_000;
 const CHAMP_RAPPORT_RESA = "Rapport de check-in";   // pièce jointe sur Réservations, comme « PDF contrat signé »
 const T_MONITORING = "tblDEkjIyKoKJG5Yj";           // porte les verrous « verrou:checkin:<fiche> »
 const VERROU_PERIME_MS = 10 * 60 * 1000;
@@ -210,16 +219,20 @@ export async function GET(request: Request) {
     } else {
       // Toutes les fiches éligibles sont parcourues ; le quota ne compte que les ENVOIS
       // réussis, pour qu'une fiche en refus permanent ne bloque jamais les suivantes.
-      candidats = (await lireTable(T_CHECKIN, `AND({Statut}='Terminé', {${CHAMP_ENVOYE}}=BLANK())`)).filter(eligible);
+      candidats = (await lireTable(T_CHECKIN, `AND({Statut}='Terminé', {${CHAMP_ENVOYE}}=BLANK(), {${CHAMP_EN_COURS}}=BLANK())`)).filter(eligible);
     }
 
     const logo = candidats.length ? await logoPng() : null;
     const ttf = candidats.length ? await polices() : {};
+    const debutPassage = Date.now();
     for (const ch of candidats) {
       if (faits.length >= MAX_PAR_PASSAGE) break;
+      if (Date.now() - debutPassage > BUDGET_MS) { refus.push(`• budget de temps atteint : ${candidats.length - faits.length - refus.length} fiche(s) reportée(s) au passage suivant`); break; }
       const f = ch.fields;
       const code = texte(f["Code check-in"]) || ch.id;
       let verrou: string | null = null;
+      let enCours = false;   // marqueur « Envoi en cours depuis » posé sur la fiche
+      let horodate = false;  // l'envoi est allé jusqu'au bout et la fiche est horodatée
       if (!test) {
         try { verrou = await verrouiller(ch.id); } catch (e) { refus.push(`• ${code} — verrou impossible : ${e instanceof Error ? e.message : e}`); continue; }
         if (!verrou) continue; // un autre passage traite déjà cette fiche
@@ -314,7 +327,13 @@ export async function GET(request: Request) {
         if (!test && verrou) {
           const relu = await lireEnregistrement(T_CHECKIN, ch.id);
           if (relu && texte(relu.fields[CHAMP_ENVOYE])) throw new Error("rapport déjà envoyé par un autre passage pendant la construction du PDF : envoi abandonné");
+          if (relu && texte(relu.fields[CHAMP_EN_COURS])) throw new Error("un envoi de cette fiche est déjà en cours : envoi abandonné");
           if (!(await verrouToujoursANous(ch.id, verrou))) throw new Error("un autre passage détient le verrou de cette fiche : envoi abandonné (aucun doublon)");
+          // Le marqueur est posé AVANT l'appel au relais : si la fonction meurt entre les
+          // deux, ou si la réponse se perd, la fiche sort des candidates et attend une
+          // vérification humaine. C'est le seul moyen de ne jamais renvoyer à l'aveugle.
+          await airtable("PATCH", T_CHECKIN, { records: [{ id: ch.id, fields: { [CHAMP_EN_COURS]: new Date().toISOString() } }] });
+          enCours = true;
         }
         const res = await envoyerEmailLocataire({
           usrEmail: sgn.email,
@@ -335,7 +354,8 @@ export async function GET(request: Request) {
           // écriture échoue malgré les tentatives, on crie fort : c'est le seul cas où un
           // doublon redevient possible au passage suivant, et il faut horodater à la main.
           try {
-            await airtable("PATCH", T_CHECKIN, { records: [{ id: ch.id, fields: { [CHAMP_PHOTOS]: [], [CHAMP_ENVOYE]: new Date().toISOString() } }] });
+            await airtable("PATCH", T_CHECKIN, { records: [{ id: ch.id, fields: { [CHAMP_PHOTOS]: [], [CHAMP_ENVOYE]: new Date().toISOString(), [CHAMP_EN_COURS]: null } }] });
+            horodate = true;
           } catch (e) {
             rangement += ` · :rotating_light: HORODATAGE IMPOSSIBLE (${e instanceof Error ? e.message.slice(0, 120) : e}) — remplir « ${CHAMP_ENVOYE} » À LA MAIN sinon le rapport repartira au prochain passage`;
           }
@@ -371,6 +391,13 @@ export async function GET(request: Request) {
         refus.push(`• ${code} — ${e instanceof Error ? e.message : e}`);
         refusParFiche.set(ch.id, `• ${code} — ${e instanceof Error ? e.message : e}`);
       } finally {
+        // Le marqueur n'est retiré que si l'échec est SÛREMENT survenu avant l'envoi.
+        // Après une tentative d'envoi non horodatée, il reste : la fiche ne repart pas
+        // toute seule, le watchdog le signale, et Vincent tranche après avoir vérifié.
+        if (enCours && !horodate) {
+          refus.push(`• ${code} — :rotating_light: ENVOI INCERTAIN : le rapport est peut-être parti mais la fiche n'a pas pu être horodatée. Elle est mise de côté (« ${CHAMP_EN_COURS} » rempli) et ne repartira pas. Vérifier la boîte de l'occupant, puis remplir « ${CHAMP_ENVOYE} » si l'email est bien parti, ou vider « ${CHAMP_EN_COURS} » pour réessayer.`);
+          refusParFiche.set(ch.id, `• ${code} — ENVOI INCERTAIN, fiche mise de côté (voir « ${CHAMP_EN_COURS} »)`);
+        }
         if (verrou) await deverrouiller(verrou);
       }
     }

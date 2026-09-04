@@ -503,6 +503,55 @@ async function controleFacturesEnDouble(): Promise<Resultat> {
   };
 }
 
+// ── Contrôle : rapport de check-in bloqué ──────────────────────────────────
+// Deux blocages possibles, et aucun ne se voit tout seul :
+//   1. « Envoi en cours depuis » rempli : la route a tenté l'envoi et n'a pas pu horodater.
+//      Elle a délibérément mis la fiche de côté plutôt que de risquer un second rapport
+//      chez l'occupant (Caterina BEDUSCHI l'a reçu deux fois le 03/09/2026). Il faut une
+//      main humaine : vérifier la boîte de l'occupant, puis horodater ou relancer.
+//   2. Fiche terminée, complète, jamais envoyée depuis plus de 2 h : le rapport dort.
+const GRACE_CHECKIN_H = 2;
+const EN_COURS_MAX_MIN = 30;
+
+async function controleRapportsCheckin(now: Date): Promise<Resultat> {
+  const nom = "Rapports de check-in bloqués";
+  const fiches = await airtableAll(AT_CHECKIN, [
+    "Code check-in", "Statut", "Email check-in envoyé le", "Envoi en cours depuis",
+    "Photos du check-in", "Relevé compteur heures creuses", "Relevé compteur heures pleines", "Nom occupant",
+  ]);
+  const qui = (r: { fields: Record<string, unknown> }) => `${r.fields["Code check-in"] ?? "?"}${liste(r.fields["Nom occupant"]) ? ` — ${liste(r.fields["Nom occupant"])}` : ""}`;
+
+  const incertaines = fiches.filter((r) => {
+    const d = Date.parse(String(r.fields["Envoi en cours depuis"] ?? ""));
+    return Number.isFinite(d) && (now.getTime() - d) / 60000 >= EN_COURS_MAX_MIN;
+  });
+  const dormantes = fiches.filter((r) => {
+    if (String(r.fields["Statut"] ?? "") !== "Terminé") return false;
+    if (String(r.fields["Email check-in envoyé le"] ?? "")) return false;
+    if (String(r.fields["Envoi en cours depuis"] ?? "")) return false;
+    const photos = r.fields["Photos du check-in"];
+    if (!Array.isArray(photos) || !photos.length) return false;
+    if (String(r.fields["Relevé compteur heures creuses"] ?? "") === "" || String(r.fields["Relevé compteur heures pleines"] ?? "") === "") return false;
+    const cree = r.createdTime ? new Date(r.createdTime).getTime() : 0;
+    return cree > 0 && (now.getTime() - cree) / 3.6e6 >= GRACE_CHECKIN_H;
+  });
+
+  if (!incertaines.length && !dormantes.length) {
+    return { nom, statut: "OK", detail: `Aucun rapport de check-in bloqué (${fiches.length} fiches).` };
+  }
+  const bouts: string[] = [];
+  if (incertaines.length) {
+    bouts.push(`${incertaines.length} fiche(s) à ENVOI INCERTAIN — le rapport est peut-être parti, la fiche n'a pas pu être horodatée et a été mise de côté pour ne pas partir deux fois :\n`
+      + incertaines.slice(0, MAX_FACTURES_LISTEES).map((r) => `• *${qui(r)}* — en cours depuis le ${jour(String(r.fields["Envoi en cours depuis"]))}`).join("\n")
+      + "\nVérifier la boîte de l'occupant : si l'email est bien parti, remplir « Email check-in envoyé le » ; sinon vider « Envoi en cours depuis » pour réessayer.");
+  }
+  if (dormantes.length) {
+    bouts.push(`${dormantes.length} rapport(s) de check-in complets mais jamais envoyés depuis plus de ${GRACE_CHECKIN_H} h :\n`
+      + dormantes.slice(0, MAX_FACTURES_LISTEES).map((r) => `• *${qui(r)}* — fiche créée le ${jour(r.createdTime)}`).join("\n"));
+  }
+  return { nom, statut: "ALERTE", detail: bouts.join("\n\n") };
+}
+
 async function controleFacturesSansPennylane(now: Date): Promise<Resultat> {
   const nom = "Factures Airtable sans facture Pennylane";
   const factures = await airtableAll(AT_FACTURES, [
@@ -941,6 +990,8 @@ export async function GET(request: Request) {
     await rapporter(fac.nom, fac.statut, fac.detail);
     const enDouble = await controleFacturesEnDouble();
     await rapporter(enDouble.nom, enDouble.statut, enDouble.detail);
+    const chk = await controleRapportsCheckin(now);
+    await rapporter(chk.nom, chk.statut, chk.detail);
     for (const r of await controlesMenageHebdo(paris)) await rapporter(r.nom, r.statut, r.detail);
     const dbl = await controleNuitsDoubles();
     await rapporter(dbl.nom, dbl.statut, dbl.detail);
