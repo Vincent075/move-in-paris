@@ -84,6 +84,10 @@
     {
       "path": "/api/cron/conges",
       "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/menage-cloture",
+      "schedule": "*/15 * * * *"
     }
   ]
 }

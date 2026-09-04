@@ -45,6 +45,7 @@ const T_MONITORING = "tblDEkjIyKoKJG5Yj";
 const TABLES_DISPO = new Set(["tbl5uN32egP4YCvUi", "tbltFlpzQWXjoWg88", "tblUjK6taP6ti0kGa"]);
 // Ménages et Check-in : suivi terrain, aucun impact financier.
 const TABLES_TERRAIN = new Set(["tblVE8HEtnuTeCi8r", "tbl8SktZKbyopdQ7l"]);
+const TABLE_MENAGES = "tblVE8HEtnuTeCi8r";
 // Leads : un passage à « Signé » crée le propriétaire et l'appartement. Aucun
 // impact financier, donc pas de recalcul de finance sur cette table.
 const TABLE_LEADS = "tblUxEm8sB4eHyNG1";
@@ -181,6 +182,9 @@ export async function POST(request: Request) {
   // prochain quart d'heure. C'est aussi ce réveil qui rattache la demande à sa fiche
   // salarié à partir du compte connecté. Le cron */15 reste le filet.
   if (conf.table === TABLE_ABSENCES) travaux.push(lance("/api/cron/conges"));
+  // Ménage passé à « Terminé » : photos et dégâts partent chez Guillaume dans la minute,
+  // et un ménage de départ déclenche le décompte d'électricité. Le cron */15 rattrape.
+  if (conf.table === TABLE_MENAGES) travaux.push(lance("/api/cron/menage-cloture"));
   // Facturation depuis Airtable (rebranchée le 03/09/2026, GO de Vincent) : les boutons
   // « Vérifier », « Émettre la facture », « Renvoyer l'email » et « Créer un avoir » de la
   // fiche facture ne font que cocher une case ou changer le Statut ; c'est ce réveil-ci
