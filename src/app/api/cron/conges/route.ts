@@ -42,8 +42,12 @@ export async function GET(request: Request) {
 
   try {
     // 1. Demandes à soumettre à Vincent.
+    // Une ligne créée par le formulaire de l'interface n'a pas toujours son statut posé :
+    // on prend donc aussi les demandes SANS statut, et c'est cette route qui l'écrit. Une
+    // absence saisie à la main par Vincent, déjà décidée, n'est jamais reprise puisqu'elle
+    // porte « Acceptée » ou « Refusée ». Le garde-fou reste « Demandé le » vide.
     const aEnvoyer = (await lireTable(T_ABSENCES,
-      `AND({${CHAMP_STATUT}} = 'En attente', {${CHAMP_DEMANDE}} = BLANK())`)).slice(0, MAX_PAR_PASSAGE);
+      `AND(OR({${CHAMP_STATUT}} = 'En attente', {${CHAMP_STATUT}} = BLANK()), {${CHAMP_DEMANDE}} = BLANK(), {Date de debut} != BLANK())`)).slice(0, MAX_PAR_PASSAGE);
 
     for (const abs of aEnvoyer) {
       const f = abs.fields;
@@ -68,7 +72,7 @@ export async function GET(request: Request) {
 
       // Horodatage AVANT l'envoi : la demande sort des candidates tout de suite.
       await airtable("PATCH", T_ABSENCES, { records: [{ id: abs.id, fields: {
-        [CHAMP_DEMANDE]: new Date().toISOString(), [CHAMP_JETON]: jt, [CHAMP_CALCUL]: jours,
+        [CHAMP_STATUT]: "En attente", [CHAMP_DEMANDE]: new Date().toISOString(), [CHAMP_JETON]: jt, [CHAMP_CALCUL]: jours,
       } }], typecast: true });
 
       const lien = (action: string) =>
