@@ -80,6 +80,10 @@
     {
       "path": "/api/cron/facture-emettre",
       "schedule": "*/10 * * * *"
+    },
+    {
+      "path": "/api/cron/conges",
+      "schedule": "*/15 * * * *"
     }
   ]
 }
