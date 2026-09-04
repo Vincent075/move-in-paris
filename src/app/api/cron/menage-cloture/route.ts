@@ -127,6 +127,101 @@ async function electricite(men: { fields: Record<string, unknown> }): Promise<{ 
   return { lignes, resume, manque };
 }
 
+type Contenu = {
+  depart: boolean; code: string; type: string; adresse: string; occupant: string;
+  photos: number; piecesJointes: number; ignorees: number; degats: string;
+  elec: { lignes: { label: string; valeur: string; gras?: boolean }[]; manque: string[] };
+};
+
+// Un seul constructeur d'email, utilisé par la production ET par la démonstration.
+function construireEmail(c: Contenu, sgn: Awaited<ReturnType<typeof signataire>>) {
+  const titre = c.depart ? `Compte rendu de départ · ${c.adresse || c.code}` : `Dommages constatés · ${c.adresse || c.code}`;
+  const intro: string[] = [];
+  if (c.depart) {
+    intro.push(`Le ménage de départ de <strong>${c.adresse || "l'appartement"}</strong> est terminé${c.occupant ? `, après le séjour de <strong>${c.occupant}</strong>` : ""}.`);
+    if (c.photos || c.degats) intro.push(`<strong style="color:#B02A00;">Des dommages ont été constatés.</strong>`);
+    else intro.push("Aucun dommage n'a été signalé par l'équipe.");
+  } else {
+    intro.push(`Pendant le ménage de <strong>${c.adresse || "l'appartement"}</strong>${c.occupant ? ` (séjour de ${c.occupant})` : ""}, l'équipe a pris ${c.photos} photo(s) : c'est le signe d'un dommage.`);
+  }
+  if (c.degats) intro.push(`Commentaire de l'équipe : « ${c.degats} »`);
+  if (c.photos) intro.push(c.piecesJointes ? `Les ${c.piecesJointes} photo(s) sont jointes à cet email.` : "Les photos n'ont pas pu être jointes : les ouvrir depuis la fiche du ménage.");
+  if (c.ignorees) intro.push(`<span style="color:#6B6B6B;font-size:13px;">${c.ignorees} photo(s) trop lourde(s) pour l'email, à voir sur la fiche.</span>`);
+  if (c.elec.manque.length) intro.push(`<span style="color:#B02A00;font-size:13px;">À compléter : ${c.elec.manque.join(" · ")}.</span>`);
+  const html = htmlEmailLocataire({
+    titre, prenom: "Guillaume", intro,
+    cartes: [
+      { label: "Ménage", valeur: `${c.code} · ${c.type}` },
+      { label: "Appartement", valeur: c.adresse || "—" },
+      ...(c.occupant ? [{ label: "Occupant sortant", valeur: c.occupant }] : []),
+      { label: "Terminé le", valeur: dateLongue(new Date().toISOString()) },
+      ...c.elec.lignes,
+    ],
+    encadre: c.depart
+      ? { titre: "À quoi ça sert", corps: "Ce décompte compare la consommation réelle du locataire sortant à la provision prévue au contrat, au prorata de son séjour. Il donne les éléments pour facturer une surconsommation sans rouvrir les fiches." }
+      : undefined,
+    fin: [c.depart ? "Le détail reste consultable sur la fiche du ménage." : "À traiter avant la prochaine entrée."],
+    signataire: sgn,
+  });
+  const objet = `${c.depart ? "Compte rendu de départ" : "Dommages constatés"} · ${c.adresse || c.code}${c.occupant ? ` · ${c.occupant}` : ""}`;
+  return { objet, html };
+}
+
+// Quatre cas de démonstration, envoyés à Vincent seul, sans rien écrire dans Airtable.
+async function demonstration(): Promise<string[]> {
+  const sgn = await signataire(null);
+  const faits: string[] = [];
+  const grille = DATE_GRILLE ? ` (grille EDF du ${jjmmaaaa(DATE_GRILLE)})` : "";
+  const tarif = { label: "Tarif appliqué", valeur: `${(PRIX_HC * 100).toFixed(2).replace(".", ",")} cts creuses · ${(PRIX_HP * 100).toFixed(2).replace(".", ",")} cts pleines${grille}` };
+  const decompte = (hcA: number, hcD: number, hpA: number, hpD: number, prov: number, jours: number) => {
+    const cHC = hcD - hcA, cHP = hpD - hpA;
+    const due = Math.round((prov * 12 / 365) * jours * 100) / 100;
+    const cout = Math.round((cHC * PRIX_HC + cHP * PRIX_HP) * 100) / 100;
+    const ecart = Math.round((cout - due) * 100) / 100;
+    return { lignes: [
+      { label: "Séjour", valeur: `01/06/2026 → 31/08/2026 (${jours} jours)` },
+      { label: "Heures creuses", valeur: `${hcA} → ${hcD}  =  ${kwh(cHC)}`, gras: true },
+      { label: "Heures pleines", valeur: `${hpA} → ${hpD}  =  ${kwh(cHP)}`, gras: true },
+      { label: "Consommation totale", valeur: kwh(cHC + cHP) },
+      { label: "Provision de l'appartement", valeur: `${eur(prov)} par mois` },
+      { label: "Provision due au prorata", valeur: eur(due), gras: true },
+      tarif,
+      { label: "Coût réel estimé", valeur: eur(cout) },
+      { label: ecart > 0 ? "SURCONSOMMATION" : "Écart", valeur: eur(ecart), gras: true },
+    ], manque: [] };
+  };
+  const cas: Contenu[] = [
+    { depart: true, code: "DEMO-1", type: "Départ", adresse: "2P Pompe, 75116 Paris", occupant: "Anna MUSIKHINA",
+      photos: 0, piecesJointes: 0, ignorees: 0, degats: "",
+      elec: decompte(14200, 15020, 22100, 22740, 130, 92) },
+    { depart: true, code: "DEMO-2", type: "Départ", adresse: "2P Pompe, 75116 Paris", occupant: "Anna MUSIKHINA",
+      photos: 0, piecesJointes: 0, ignorees: 0, degats: "",
+      elec: decompte(14200, 17400, 22100, 25300, 130, 92) },
+    { depart: true, code: "DEMO-3", type: "Départ", adresse: "2P Calais, 75010 Paris", occupant: "Scott DA SILVA",
+      photos: 2, piecesJointes: 0, ignorees: 0, degats: "Chaise de bureau cassée et tache sur le canapé du salon.",
+      elec: decompte(8100, 8640, 11200, 11610, 60, 61) },
+    { depart: false, code: "DEMO-4", type: "Régulier", adresse: "2P Legendre, 75017 Paris", occupant: "Caterina BEDUSCHI",
+      photos: 3, piecesJointes: 0, ignorees: 0, degats: "Porte du placard de la chambre arrachée, poignée cassée.",
+      elec: { lignes: [], manque: [] } },
+  ];
+  const etiquettes = ["départ SANS dommage et SANS surconsommation", "départ SANS dommage AVEC surconsommation",
+                      "départ AVEC dommage et SANS surconsommation", "ménage régulier AVEC dommage"];
+  for (let i = 0; i < cas.length; i++) {
+    const { objet, html } = construireEmail(cas[i], sgn);
+    const banniere = `<div style="background:#FFF4E5;border-left:4px solid #B88B58;padding:12px 16px;margin:0 0 18px 0;`
+      + `font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#5A4520;"><strong>EMAIL DE TEST ${i + 1}/4 — ${etiquettes[i]}</strong>`
+      + ` — données fictives, aucun ménage réel n'est concerné. En production, cet email part à Guillaume.</div>`;
+    const j = html.indexOf(">", html.indexOf("<body")) + 1;
+    const res = await envoyerEmailLocataire({
+      usrEmail: sgn.email, mailTo: "vincent@move-in-paris.com", mailReplyTo: sgn.email,
+      mailSubject: `[TEST ${i + 1}/4] ${objet}`, mailHtml: html.slice(0, j) + banniere + html.slice(j),
+      origine: "menage-cloture-demo",
+    }).catch((e) => ({ ok: false, erreur: e instanceof Error ? e.message : String(e) }));
+    faits.push(`• Test ${i + 1}/4 — ${etiquettes[i]} : ${res.ok ? "envoyé" : `ÉCHEC (${("erreur" in res && res.erreur) || "relais"})`}`);
+  }
+  return faits;
+}
+
 export async function GET(request: Request) {
   const auth = request.headers.get("authorization");
   if (process.env.CRON_SECRET && auth !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -135,6 +230,10 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const simulation = url.searchParams.get("simulation") === "1";
   const ligneTest = url.searchParams.get("ligne") || "";
+  if (url.searchParams.get("demo") === "1") {
+    const faits = await demonstration();
+    return NextResponse.json({ ok: true, demonstration: true, faits });
+  }
   const faits: string[] = [];
   const refus: string[] = [];
 
@@ -173,40 +272,14 @@ export async function GET(request: Request) {
       try {
         const { pieces, ignorees } = photos.length ? await telecharger(photos) : { pieces: [], ignorees: [] };
         const sgn = await signataire(f["Collaborateur"]);
-        const titre = depart
-          ? `Compte rendu de départ · ${adresse || code}`
-          : `Dommages constatés · ${adresse || code}`;
-        const intro: string[] = [];
-        if (depart) {
-          intro.push(`Le ménage de départ de <strong>${adresse || "l'appartement"}</strong> est terminé${occupant ? `, après le séjour de <strong>${occupant}</strong>` : ""}.`);
-          if (photos.length || degats) intro.push(`<strong style="color:#B02A00;">Des dommages ont été constatés.</strong>`);
-        } else {
-          intro.push(`Pendant le ménage de <strong>${adresse || "l'appartement"}</strong>${occupant ? ` (séjour de ${occupant})` : ""}, l'équipe a pris ${photos.length} photo(s) : c'est le signe d'un dommage.`);
-        }
-        if (degats) intro.push(`Commentaire de l'équipe : « ${degats} »`);
-        if (photos.length) intro.push(pieces.length ? `Les ${pieces.length} photo(s) sont jointes à cet email.` : "Les photos n'ont pas pu être jointes : les ouvrir depuis la fiche du ménage.");
-        if (ignorees.length) intro.push(`<span style="color:#6B6B6B;font-size:13px;">${ignorees.length} photo(s) trop lourde(s) pour l'email, à voir sur la fiche.</span>`);
-        if (elec.manque.length) intro.push(`<span style="color:#B02A00;font-size:13px;">À compléter : ${elec.manque.join(" · ")}.</span>`);
-
-        const html = htmlEmailLocataire({
-          titre, prenom: "Guillaume", intro,
-          cartes: [
-            { label: "Ménage", valeur: `${code} · ${type}` },
-            { label: "Appartement", valeur: adresse || "—" },
-            ...(occupant ? [{ label: "Occupant sortant", valeur: occupant }] : []),
-            { label: "Terminé le", valeur: dateLongue(new Date().toISOString()) },
-            ...elec.lignes,
-          ],
-          encadre: depart
-            ? { titre: "À quoi ça sert", corps: "Ce décompte compare la consommation réelle du locataire sortant à la provision prévue au contrat, au prorata de son séjour. Il donne les éléments pour facturer une surconsommation sans rouvrir les fiches." }
-            : undefined,
-          fin: [depart ? "Le détail reste consultable sur la fiche du ménage." : "À traiter avant la prochaine entrée."],
-          signataire: sgn,
-        });
+        const { objet, html } = construireEmail({
+          depart, code, type, adresse, occupant,
+          photos: photos.length, piecesJointes: pieces.length, ignorees: ignorees.length, degats,
+          elec,
+        }, sgn);
         const res = await envoyerEmailLocataire({
           usrEmail: sgn.email, mailTo: GUILLAUME, mailReplyTo: sgn.email,
-          mailSubject: `${depart ? "Compte rendu de départ" : "Dommages constatés"} · ${adresse || code}${occupant ? ` · ${occupant}` : ""}`,
-          mailHtml: html, attachments: pieces, origine: "menage-cloture",
+          mailSubject: objet, mailHtml: html, attachments: pieces, origine: "menage-cloture",
         }).catch((e) => ({ ok: false, erreur: e instanceof Error ? e.message : String(e) }));
         if (!res.ok) throw new Error(`email refusé : ${("erreur" in res && res.erreur) || "relais"}`);
 
