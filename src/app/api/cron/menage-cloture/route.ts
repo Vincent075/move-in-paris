@@ -133,18 +133,32 @@ type Contenu = {
   elec: { lignes: { label: string; valeur: string; gras?: boolean }[]; manque: string[] };
 };
 
+// Les dégâts se lisent en un coup d'œil : un par ligne, précédé d'un tiret, jamais noyés
+// dans une phrase (demande de Vincent, 04/09/2026). L'équipe saisit une ligne par dommage ;
+// si elle écrit tout d'un bloc, on garde son texte tel quel sur une seule ligne plutôt que
+// de découper une phrase au hasard.
+function listeDegats(brut: string): string {
+  const lignes = brut.split(/\r?\n/).map((l) => l.replace(/^[\s\-–—•*]+/, "").trim()).filter(Boolean);
+  if (!lignes.length) return "";
+  const items = lignes.map((l) =>
+    `<tr><td style="padding:3px 10px 3px 0;font-family:Georgia,'Times New Roman',serif;font-size:16px;color:#B02A00;vertical-align:top;line-height:1.5;">&ndash;</td>`
+    + `<td style="padding:3px 0;font-family:Georgia,'Times New Roman',serif;font-size:15px;color:#0D0D0D;line-height:1.5;">${l}</td></tr>`).join("");
+  return `<div style="font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#B02A00;font-weight:bold;margin:0 0 8px 0;">`
+    + `Dommage${lignes.length > 1 ? "s" : ""} constaté${lignes.length > 1 ? "s" : ""}</div>`
+    + `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">${items}</table>`;
+}
+
 // Un seul constructeur d'email, utilisé par la production ET par la démonstration.
 function construireEmail(c: Contenu, sgn: Awaited<ReturnType<typeof signataire>>) {
   const titre = c.depart ? `Compte rendu de départ · ${c.adresse || c.code}` : `Dommages constatés · ${c.adresse || c.code}`;
   const intro: string[] = [];
   if (c.depart) {
     intro.push(`Le ménage de départ de <strong>${c.adresse || "l'appartement"}</strong> est terminé${c.occupant ? `, après le séjour de <strong>${c.occupant}</strong>` : ""}.`);
-    if (c.photos || c.degats) intro.push(`<strong style="color:#B02A00;">Des dommages ont été constatés.</strong>`);
-    else intro.push("Aucun dommage n'a été signalé par l'équipe.");
+    if (!c.photos && !c.degats) intro.push("Aucun dommage n'a été signalé par l'équipe.");
   } else {
     intro.push(`Pendant le ménage de <strong>${c.adresse || "l'appartement"}</strong>${c.occupant ? ` (séjour de ${c.occupant})` : ""}, l'équipe a pris ${c.photos} photo(s) : c'est le signe d'un dommage.`);
   }
-  if (c.degats) intro.push(`Commentaire de l'équipe : « ${c.degats} »`);
+  if (c.degats) intro.push(listeDegats(c.degats));
   if (c.photos) intro.push(c.piecesJointes ? `Les ${c.piecesJointes} photo(s) sont jointes à cet email.` : "Les photos n'ont pas pu être jointes : les ouvrir depuis la fiche du ménage.");
   if (c.ignorees) intro.push(`<span style="color:#6B6B6B;font-size:13px;">${c.ignorees} photo(s) trop lourde(s) pour l'email, à voir sur la fiche.</span>`);
   if (c.elec.manque.length) intro.push(`<span style="color:#B02A00;font-size:13px;">À compléter : ${c.elec.manque.join(" · ")}.</span>`);
@@ -198,10 +212,12 @@ async function demonstration(): Promise<string[]> {
       photos: 0, piecesJointes: 0, ignorees: 0, degats: "",
       elec: decompte(14200, 17400, 22100, 25300, 130, 92) },
     { depart: true, code: "DEMO-3", type: "Départ", adresse: "2P Calais, 75010 Paris", occupant: "Scott DA SILVA",
-      photos: 2, piecesJointes: 0, ignorees: 0, degats: "Chaise de bureau cassée et tache sur le canapé du salon.",
+      photos: 2, piecesJointes: 0, ignorees: 0,
+      degats: "Chaise de bureau cassée, pied arrière\nTache sombre sur le canapé du salon\nJoint de douche décollé",
       elec: decompte(8100, 8640, 11200, 11610, 60, 61) },
     { depart: false, code: "DEMO-4", type: "Régulier", adresse: "2P Legendre, 75017 Paris", occupant: "Caterina BEDUSCHI",
-      photos: 3, piecesJointes: 0, ignorees: 0, degats: "Porte du placard de la chambre arrachée, poignée cassée.",
+      photos: 3, piecesJointes: 0, ignorees: 0,
+      degats: "Porte du placard de la chambre arrachée\nPoignée de la porte d'entrée cassée",
       elec: { lignes: [], manque: [] } },
   ];
   const etiquettes = ["départ SANS dommage et SANS surconsommation", "départ SANS dommage AVEC surconsommation",
