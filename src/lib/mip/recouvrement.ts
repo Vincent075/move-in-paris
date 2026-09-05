@@ -195,7 +195,12 @@ export function rapprocher(c: Credit, ouvertes: FactureOuverte[]): Rapprochement
       if (Math.abs(s - c.montant) < 0.01) return { factures: fs, parts: fs.map((f) => f.reste), methode: "numéro de facture cité dans le libellé", note: "", partiel: false };
       if (fs.length === 1 && c.montant < fs[0].reste) return { factures: fs, parts: [c.montant], methode: "numéro cité, règlement partiel", note: `reste ${eur(arrondi(fs[0].reste - c.montant))}`, partiel: true };
       if (fs.length === 1 && c.montant > fs[0].reste && c.montant <= fs[0].reste * 1.05) return { factures: fs, parts: [fs[0].reste], methode: "numéro cité, montant légèrement supérieur", note: `trop-perçu ${eur(arrondi(c.montant - fs[0].reste))}`, partiel: false };
-      return { factures: fs, parts: fs.map((f) => f.reste), methode: "numéros cités, montant différent", note: `factures ${eur(s)} vs virement ${eur(c.montant)} : à vérifier`, partiel: false };
+      // Plusieurs numéros cités pour un montant différent : on impute dans l'ordre, la
+      // dernière facture reste partielle ; au-delà de 5 % de trop, on ne devine pas.
+      if (c.montant > s * 1.05) return null;
+      let restant = c.montant;
+      const parts = fs.map((f) => { const p = Math.min(f.reste, Math.max(0, restant)); restant = arrondi(restant - p); return arrondi(p); });
+      return { factures: fs, parts, methode: "numéros cités, montant différent", note: `factures ${eur(s)} vs virement ${eur(c.montant)}${c.montant > s ? ` (trop-perçu ${eur(arrondi(c.montant - s))})` : " : imputé dans l'ordre, dernière facture partielle"}`, partiel: c.montant < s - 0.009 };
     }
   }
   // 2) Payeur reconnu par son nom (client final, agence, occupant) + montant exact ou somme exacte.
