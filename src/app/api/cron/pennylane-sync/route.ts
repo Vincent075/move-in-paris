@@ -43,7 +43,11 @@ const CANAL_FACTURATION = "C0BCH7N4W90";
 const CANAL_ERREURS = "C0BC1NZGWRM";
 const T_FACTURES = "tblC97ei6ZPWhWUwe";
 const T_MONITORING = "tblDEkjIyKoKJG5Yj";
-const MISE_EN_SERVICE = "2026-07-01";
+// 05/09/2026 : remontée du 1er juillet au 1er août. Vincent : « on est à 100 % sur la
+// plateforme depuis le 1er août ». Le seuil de juillet laissait revenir, à chaque passage,
+// les factures de juillet issues de l'ancien système (tests Santa Fé, Agence de Djamel) :
+// supprimées à la main, réimportées à l'heure suivante.
+const MISE_EN_SERVICE = "2026-08-01";
 const FENETRE_H = 48;
 const GRACE_MS = 3600_000;
 // Au-delà, on suspend au lieu d'importer : un déversement de masse est un signal, pas une routine.
@@ -342,7 +346,7 @@ export async function GET(request: Request) {
     const depuis = new Date(Date.now() - FENETRE_H * 3600_000).toISOString().slice(0, 19);
     const recentes = await listePennylane(`&created_after=${encodeURIComponent(depuis)}`);
 
-    const ignorees = { brouillons: 0, avoirs: 0, internes: 0, grace: 0, anterieures: 0 };
+    const ignorees = { brouillons: 0, avoirs: 0, internes: 0, grace: 0, anterieures: 0, vides: 0 };
     const aImporter: Dict[] = [];
     for (const inv of recentes) {
       const id = texte(inv.id);
@@ -353,6 +357,10 @@ export async function GET(request: Request) {
       // et son montant peut être POSITIF — le seul test du signe le laissait passer.
       if (texte(inv.status) === "credit_note" || texte(inv.invoice_type) === "credit_note" || montant(inv.currency_amount ?? inv.amount) < 0) { ignorees.avoirs++; continue; }
       if (estInterne(label) || estEmiseParLaRoute(inv)) { ignorees.internes++; continue; }
+      // SANS NUMÉRO ET À 0 € : un artefact de Pennylane, jamais une vraie facture.
+      // Trois d'entre elles (28/08) polluaient la table sans montant ni client ; elles
+      // passent tous les autres filtres parce qu'elles sont récentes et finalisées.
+      if (!texte(inv.invoice_number) && montant(inv.currency_amount ?? inv.amount) === 0) { ignorees.vides++; continue; }
       // ANTÉRIEURES À LA MISE EN SERVICE : jamais. Le paramètre created_after étant
       // ignoré par l'API v2, ce cron balaie en réalité TOUT l'historique Pennylane à
       // chaque passage. Le 28/08 il a donc importé 531 factures de 2025 — un exercice
@@ -425,6 +433,7 @@ export async function GET(request: Request) {
         if (texte(inv.status) === "draft" || inv.draft === true) return false;
         if (texte(inv.status) === "credit_note" || texte(inv.invoice_type) === "credit_note" || montant(inv.currency_amount ?? inv.amount) < 0) return false;
         if (estEmiseParLaRoute(inv)) return false;
+        if (!texte(inv.invoice_number) && montant(inv.currency_amount ?? inv.amount) === 0) return false;
         return texte(inv.date) >= MISE_EN_SERVICE;
       });
       backlog = manquantes.length;
@@ -438,7 +447,8 @@ export async function GET(request: Request) {
     if (backlog <= 0) {
       await monitoring("OK", `Sync horaire OK — ${importees.length} importée(s), ` +
         `${ignorees.brouillons} brouillon(s), ${ignorees.avoirs} avoir(s), ${ignorees.internes} interne(s), ` +
-        `${ignorees.anterieures} antérieure(s) à la mise en service, ${ignorees.grace} en grâce.`);
+        `${ignorees.anterieures} antérieure(s) à la mise en service, ${ignorees.vides} vide(s), `+
+        `${ignorees.grace} en grâce.`);
     }
 
     return NextResponse.json({ ok: true, importees: importees.length, ignorees, backlog });
