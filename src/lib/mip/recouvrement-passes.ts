@@ -7,7 +7,7 @@ import {
   T_FACTURES, T_RELANCES, T_ENCAISSEMENTS, COMPTES, BASE_ID, GUILLAUME, ECHEANCE_JOURS, DELAI_RELANCE_JOURS,
   lireCredits, horsClient, facturesOuvertes, decrire, rapprocher, chargerAnnuaire, reconnaitrePayeur, contactsDuPayeur,
   emailRelance, emailConfirmation, emailDemandeReferences, emailDigestGuillaume, envoyer, signataireGuillaume, slackRecouvrement,
-  relanceDe, ecrireRelance, creerRelance, journalRelance, infoDe, monitoring, enModeTest, eur, dateCourte, plusJours, joursEntre, aujourdhui, sa, mots,
+  relanceDe, ecrireRelance, creerRelance, journalRelance, infoDe, monitoring, enModeTest, pdfFacture, eur, dateCourte, plusJours, joursEntre, aujourdhui, sa, mots,
   nombre, arrondi, echapper, estLoreal,
   chargerContexte, langueDe, horodatageParis, Journal, ecrireFacture, texte, premier, liens, lireTable, lireEnregistrement, airtable,
   type Credit, type FactureOuverte, type Rapprochement, type Annuaire, type LigneDigest, type Rec, type Dict, type Langue,
@@ -193,8 +193,19 @@ export async function passeRelances(opts: { dry?: boolean } = {}): Promise<Rappo
     const f = decrire(rec);
     try {
       if (f.loreal) { R.exclues++; continue; }                       // L'Oréal : hors circuit, à la main
-      if (!texte(rec.fields["Email envoyé le"])) { R.sansEmailEnvoye++; continue; }   // jamais envoyée au client : on ne relance pas
-      if (!f.dateEnvoi) continue;
+      // Les factures d'août sont parties par l'ancienne chaîne n8n, sans horodatage dans
+      // Airtable : l'absence d'« Email envoyé le » est comptée, pas bloquante. Le PDF est
+      // joint à chaque relance, le client a donc toujours la facture sous les yeux.
+      if (!texte(rec.fields["Email envoyé le"])) R.sansEmailEnvoye++;
+      if (!f.dateEnvoi) {
+        // Facture importée de Pennylane sans date d'envoi : la date du document fait foi.
+        const plId0 = idDepuisLien(rec.fields["Lien Pennylane"]);
+        const pl0 = plId0 ? await getFacture(plId0).catch(() => null) : null;
+        const datePl = texte(pl0?.date).slice(0, 10);
+        if (!datePl) continue;
+        f.dateEnvoi = datePl;
+        if (!dry) await ecrireFacture(rec.id, { "Date d'envoi": datePl, Journal: new Journal(rec.fields["Journal"]).ajouter(`${horodatageParis()} — Date d'envoi absente : date de la facture Pennylane (${dateCourte(datePl)}) reprise par le cron relances`).texte() });
+      }
       const echeance = plusJours(f.dateEnvoi, ECHEANCE_JOURS);
       const retard = joursEntre(echeance, today);
       if (retard < 1) { R.nonEchues++; continue; }
@@ -255,12 +266,13 @@ export async function passeRelances(opts: { dry?: boolean } = {}): Promise<Rappo
           ligne = `Relance ${niveau} impossible : aucun destinataire email sur la facture`;
         } else {
           const { objet, html } = emailRelance(ctx, infoDe(ctx, f), niveau, langue, r1);
-          const res = dry && !enModeTest() ? { ok: true } : await envoyer({ de: ctx.sgn.email, to, cc, objet, html, origine: `recouvrement-relance-${niveau}` });
+          const pj = await pdfFacture(rec, f.numeroPl || f.numero);
+          const res = dry && !enModeTest() ? { ok: true } : await envoyer({ de: ctx.sgn.email, to, cc, objet, html, origine: `recouvrement-relance-${niveau}`, attachments: pj ? [pj] : undefined });
           if (res.ok) {
             const quand = new Date().toISOString();
             if (niveau === 1) { champs["Relance 1 envoyée le"] = quand; champs["Étape"] = "J+0 · 1re relance"; champs["Prochaine action"] = `2e relance automatique le ${dateCourte(plusJours(today, DELAI_RELANCE_JOURS))} sans règlement`; R.relance1++; }
             else { champs["Relance 2 envoyée le"] = quand; champs["Étape"] = "J+7 · 2e relance"; champs["Prochaine action"] = `Relance manuelle par Guillaume à partir du ${dateCourte(plusJours(today, DELAI_RELANCE_JOURS))} sans règlement`; R.relance2++; }
-            ligne = `Relance ${niveau} envoyée à ${to}${cc ? ` (CC ${cc})` : ""} depuis ${ctx.sgn.email}, réponses vers ${GUILLAUME} — retard ${retard} j, reste ${eur(f.reste)}`;
+            ligne = `Relance ${niveau} envoyée à ${to}${cc ? ` (CC ${cc})` : ""} depuis ${ctx.sgn.email}, réponses vers ${GUILLAUME}${pj ? ", PDF joint" : ", sans PDF (introuvable)"} — retard ${retard} j, reste ${eur(f.reste)}`;
             R.lignes.push(`R${niveau} ${f.numero} ${f.client || f.agence || f.occupants} → ${to}`);
           } else {
             ligne = `Relance ${niveau} NON envoyée : ${"erreur" in res ? res.erreur : "refus du relais"} (nouvel essai au prochain passage)`;
