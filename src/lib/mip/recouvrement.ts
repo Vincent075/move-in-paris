@@ -426,6 +426,7 @@ export function emailDigestGuillaume(lignes: LigneDigest[], urlPage: string, sgn
 let destinataireTest = "";
 export const definirDestinataireTest = (email: string) => { destinataireTest = email.trim().toLowerCase(); };
 export const enModeTest = () => destinataireTest !== "";
+export const destinataireTestActuel = () => destinataireTest;
 export async function envoyer(args: { de: string; to: string; cc?: string; objet: string; html: string; origine: string; attachments?: PieceJointe[] }): Promise<{ ok: boolean; erreur?: string }> {
   const to = destinataireTest || args.to;
   const cc = destinataireTest ? "" : (args.cc || "");
