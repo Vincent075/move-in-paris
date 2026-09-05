@@ -366,6 +366,7 @@ export async function GET(request: Request) {
     const factParResa = new Map<string, Map<string, Ventil>>();
     const factOrphelines = new Map<string, number>();
     const factRefs = new Map<string, Set<string>>();
+    const globalesACocher: string[] = [];
     // Ce qu'on nous doit : même ventilation que le CA facturé, mais restreinte aux factures
     // non encaissées. « Envoyée » = partie chez le client, pas encore payée.
     const encoursParMois = new Map<string, number>();
@@ -384,7 +385,12 @@ export async function GET(request: Request) {
       if (texte(champs["Type"]) === "Avoir") continue;
       if (texte(champs["Statut"]) === "Avoir") continue;
       if (liens(champs["From field: Avoir associé"]).length) continue;
-      if (estGlobaleLoreal(champs)) continue;
+      if (estGlobaleLoreal(champs)) {
+        // Reconnue par son libellé mais case non cochée : on la coche pour que ce soit
+        // visible sur la facture (automatisé le 06/09/2026 à la demande de Vincent).
+        if (champs["Globale L'Oréal (hors CA)"] !== true) globalesACocher.push(f.id);
+        continue;
+      }
       const montant = nombre(champs["Montant total HT"]);
       const d1 = texte(champs["Période facturée début"]);
       const d2 = texte(champs["Période facturée fin"]);
@@ -1320,6 +1326,9 @@ export async function GET(request: Request) {
     };
     if (aSolder.length) await ecrire(T_INTERVENTIONS, "PATCH", aSolder);
     if (facturesASolder.length) await ecrire(T_FACTURES, "PATCH", facturesASolder);
+    if (globalesACocher.length) {
+      await ecrire(T_FACTURES, "PATCH", globalesACocher.map((id) => ({ id, fields: { "Globale L'Oréal (hors CA)": true } })));
+    }
     if (creerLoyers.length) await ecrire(T_LOYERS, "POST", creerLoyers.map((x) => ({ fields: rattache(x).fields })));
     if (majLoyers.length) await ecrire(T_LOYERS, "PATCH", majLoyers.map((x) => ({ id: x.id, fields: rattache(x).fields })));
 
