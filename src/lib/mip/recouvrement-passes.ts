@@ -7,7 +7,7 @@ import {
   T_FACTURES, T_RELANCES, T_ENCAISSEMENTS, COMPTES, BASE_ID, GUILLAUME, ECHEANCE_JOURS, DELAI_RELANCE_JOURS,
   lireCredits, horsClient, facturesOuvertes, decrire, rapprocher, chargerAnnuaire, reconnaitrePayeur, contactsDuPayeur,
   emailRelance, emailConfirmation, emailDemandeReferences, emailDigestGuillaume, envoyer, signataireGuillaume, slackRecouvrement,
-  relanceDe, ecrireRelance, creerRelance, journalRelance, infoDe, monitoring, eur, dateCourte, plusJours, joursEntre, aujourdhui, sa, mots,
+  relanceDe, ecrireRelance, creerRelance, journalRelance, infoDe, monitoring, enModeTest, eur, dateCourte, plusJours, joursEntre, aujourdhui, sa, mots,
   nombre, arrondi, echapper, estLoreal,
   chargerContexte, langueDe, horodatageParis, Journal, ecrireFacture, texte, premier, liens, lireTable, lireEnregistrement, airtable,
   type Credit, type FactureOuverte, type Rapprochement, type Annuaire, type LigneDigest, type Rec, type Dict, type Langue,
@@ -85,7 +85,7 @@ export async function passeEncaissements(opts: { depuisJours?: number; dry?: boo
         const dest = await contactsDuPayeur(p);
         if (dest.to) {
           const { objet, html } = emailDemandeReferences(p, c, dest.prenom, dest.langue, sgn);
-          const res = dry ? { ok: true } : await envoyer({ de: sgn.email, to: dest.to, cc: dest.cc, objet, html, origine: "recouvrement-references" });
+          const res = dry && !enModeTest() ? { ok: true } : await envoyer({ de: sgn.email, to: dest.to, cc: dest.cc, objet, html, origine: "recouvrement-references" });
           if (res.ok) {
             R.demandes++;
             R.lignes.push(`Demande de références → ${nomPayeur} (${dest.to}) pour ${eur(c.montant)} du ${dateCourte(c.date)}`);
@@ -150,7 +150,7 @@ async function appliquerRapprochement(c: Credit, r: Rapprochement, ouvertes: Fac
           const langue = langueDeRelance(rel.fields["Langue"]);
           if (to) {
             const { objet, html } = emailConfirmation(ctx, { ...infoDe(ctx, f), reste }, { date: c.date, montant: c.montant }, langue);
-            const res = dry ? { ok: true } : await envoyer({ de: ctx.sgn.email, to, cc: texte(rel.fields["Copies"]), objet, html, origine: "recouvrement-confirmation" });
+            const res = dry && !enModeTest() ? { ok: true } : await envoyer({ de: ctx.sgn.email, to, cc: texte(rel.fields["Copies"]), objet, html, origine: "recouvrement-confirmation" });
             if (res.ok) { champs["Confirmation envoyée le"] = new Date().toISOString(); ligne += ` ; confirmation de réception envoyée à ${to}`; R.confirmations++; }
             else ligne += ` ; confirmation NON envoyée (${"erreur" in res ? res.erreur : "refus du relais"})`;
           }
@@ -224,10 +224,12 @@ export async function passeRelances(opts: { dry?: boolean } = {}): Promise<Rappo
         "Date d'échéance": echeance, "Date d'envoi de la facture": f.dateEnvoi, "Facture Pennylane": texte(rec.fields["Lien Pennylane"]) || undefined,
       };
       if (!rel) {
-        if (dry) { R.nouvelles++; R.lignes.push(`[dry] nouvelle relance ${f.numero} (${retard} j)`); }
-        else rel = await creerRelance({ ...base, Statut: "En cours", Journal: `${horodatageParis()} — Facture échue depuis ${retard} j (échéance ${dateCourte(echeance)}) : entrée dans le circuit de relance` });
+        // En dry-run la ligne n'est pas créée : on la simule pour dérouler (et prévisualiser) la suite.
+        rel = dry
+          ? ({ id: "dry", fields: { ...base, Statut: "En cours" } } as Rec)
+          : await creerRelance({ ...base, Statut: "En cours", Journal: `${horodatageParis()} — Facture échue depuis ${retard} j (échéance ${dateCourte(echeance)}) : entrée dans le circuit de relance` });
         R.nouvelles++;
-        if (!rel) continue;
+        if (dry) R.lignes.push(`[dry] nouvelle relance ${f.numero} (${retard} j de retard)`);
       }
       const rf = rel.fields;
       if (rf["Exclure des relances"] === true || texte(rf["Statut"]) !== "En cours") {
@@ -252,7 +254,7 @@ export async function passeRelances(opts: { dry?: boolean } = {}): Promise<Rappo
           ligne = `Relance ${niveau} impossible : aucun destinataire email sur la facture`;
         } else {
           const { objet, html } = emailRelance(ctx, infoDe(ctx, f), niveau, langue, r1);
-          const res = dry ? { ok: true } : await envoyer({ de: ctx.sgn.email, to, cc, objet, html, origine: `recouvrement-relance-${niveau}` });
+          const res = dry && !enModeTest() ? { ok: true } : await envoyer({ de: ctx.sgn.email, to, cc, objet, html, origine: `recouvrement-relance-${niveau}` });
           if (res.ok) {
             const quand = new Date().toISOString();
             if (niveau === 1) { champs["Relance 1 envoyée le"] = quand; champs["Étape"] = "J+0 · 1re relance"; champs["Prochaine action"] = `2e relance automatique le ${dateCourte(plusJours(today, DELAI_RELANCE_JOURS))} sans règlement`; R.relance1++; }
@@ -310,7 +312,7 @@ export async function passeRelances(opts: { dry?: boolean } = {}): Promise<Rappo
       })).sort((a, b) => b.reste - a.reste);
       const sgn = await signataireGuillaume();
       const { objet, html } = emailDigestGuillaume(lignes, URL_PAGE_RELANCES, sgn);
-      const res = dry ? { ok: true } : await envoyer({ de: sgn.email, to: GUILLAUME, objet, html, origine: "recouvrement-digest" });
+      const res = dry && !enModeTest() ? { ok: true } : await envoyer({ de: sgn.email, to: GUILLAUME, objet, html, origine: "recouvrement-digest" });
       if (res.ok) R.digest = true; else R.erreurs.push(`digest Guillaume non envoyé : ${"erreur" in res ? res.erreur : "refus du relais"}`);
     }
   } catch (e) { R.erreurs.push(`digest : ${e instanceof Error ? e.message : e}`); }
