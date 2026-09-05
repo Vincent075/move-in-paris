@@ -31,13 +31,14 @@ const emailContact = (c: Rec | null) => texte(c?.fields["Email"]).trim().toLower
 export type RapportEncaissements = {
   lus: number; nouveaux: number; rapproches: number; partiels: number; demandes: number; aIdentifier: number; horsClient: number;
   confirmations: number; erreurs: string[]; lignes: string[];
+  touchees: Record<string, { encaisse: number; solde: boolean }>;   // factures modifiées (ou qui le seraient, en dry-run)
 };
 
 // ── PASSE 1 : ENCAISSEMENTS ─────────────────────────────────────────────────
 export async function passeEncaissements(opts: { depuisJours?: number; dry?: boolean } = {}): Promise<RapportEncaissements> {
   const depuisJours = opts.depuisJours ?? 10;
   const dry = opts.dry === true;
-  const R: RapportEncaissements = { lus: 0, nouveaux: 0, rapproches: 0, partiels: 0, demandes: 0, aIdentifier: 0, horsClient: 0, confirmations: 0, erreurs: [], lignes: [] };
+  const R: RapportEncaissements = { lus: 0, nouveaux: 0, rapproches: 0, partiels: 0, demandes: 0, aIdentifier: 0, horsClient: 0, confirmations: 0, erreurs: [], lignes: [], touchees: {} };
   const depuis = plusJours(aujourdhui(), -depuisJours);
   const credits = await lireCredits(depuis);
   R.lus = credits.length;
@@ -128,6 +129,7 @@ async function appliquerRapprochement(c: Credit, r: Rapprochement, ouvertes: Fac
       });
     }
     f.encaisse = encaisse; f.reste = reste;
+    R.touchees[f.rec.id] = { encaisse, solde };
     if (solde) { const k = ouvertes.indexOf(f); if (k >= 0) ouvertes.splice(k, 1); }
     ids.push(f.rec.id);
     if (solde) R.rapproches++; else R.partiels++;
@@ -183,14 +185,18 @@ export async function passeRelances(opts: { dry?: boolean } = {}): Promise<Rappo
   const today = aujourdhui();
   const nouvellesJ14 = new Set<string>();
 
-  // 1) Rien n'est relancé sans avoir relu la banque du jour.
-  try { await passeEncaissements({ depuisJours: 4, dry }); } catch (e) { R.erreurs.push(`banque non relue : ${e instanceof Error ? e.message : e}`); }
+  // 1) Rien n'est relancé sans avoir relu la banque du jour. En dry-run, rien n'est écrit :
+  //    on reporte en mémoire ce que la passe aurait écrit, pour que l'aperçu soit fidèle.
+  let touchees: RapportEncaissements["touchees"] = {};
+  try { touchees = (await passeEncaissements({ depuisJours: dry ? 45 : 4, dry })).touchees; } catch (e) { R.erreurs.push(`banque non relue : ${e instanceof Error ? e.message : e}`); }
 
   // 2) Factures « Envoyée » de la plateforme, hors proformas et avoirs.
   const rows = await lireTable(T_FACTURES, `AND({Statut}='Envoyée', {Type}!='Avoir', {Mode facturation}!='Proforma', {Montant total HT}>1, {Sans relance}!=TRUE(), {Date d'envoi}!='')`);
   R.examinees = rows.length;
   for (const rec of rows) {
     const f = decrire(rec);
+    const t = touchees[rec.id];
+    if (t) { f.encaisse = t.encaisse; f.reste = arrondi(f.montant - t.encaisse); }
     try {
       if (f.loreal) { R.exclues++; continue; }                       // L'Oréal : hors circuit, à la main
       // Les factures d'août sont parties par l'ancienne chaîne n8n, sans horodatage dans
@@ -214,7 +220,7 @@ export async function passeRelances(opts: { dry?: boolean } = {}): Promise<Rappo
       if (f.reste <= 0.009) {
         if (!dry) await ecrireFacture(rec.id, { Statut: "Payée", Journal: new Journal(rec.fields["Journal"]).ajouter(`${horodatageParis()} — Montant encaissé ≥ montant : passée « Payée » par le cron relances`).texte() });
         await cloturerRelanceSiOuverte(f, "réglée (montant encaissé complet)", dry);
-        R.regleesAirtable++; continue;
+        R.regleesAirtable++; R.lignes.push(`Réglée (montant encaissé complet) : ${f.numero}`); continue;
       }
       const plId = idDepuisLien(rec.fields["Lien Pennylane"]);
       if (plId) {
@@ -224,7 +230,7 @@ export async function passeRelances(opts: { dry?: boolean } = {}): Promise<Rappo
         if (pl && (plx.paid === true || statut === "paid" || (statut !== "draft" && nombre(pl.remaining_amount_with_tax) === 0 && nombre(plx.amount) > 0))) {
           if (!dry) await ecrireFacture(rec.id, { Statut: "Payée", "Date de paiement": today, "Montant encaissé": f.montant, Journal: new Journal(rec.fields["Journal"]).ajouter(`${horodatageParis()} — Réglée selon Pennylane (lettrage manuel) : passée « Payée », aucune relance`).texte() });
           await cloturerRelanceSiOuverte(f, "réglée selon Pennylane (lettrage manuel)", dry);
-          R.regleesPennylane++; continue;
+          R.regleesPennylane++; R.lignes.push(`Réglée selon Pennylane (lettrage manuel) : ${f.numero} ${f.client || f.agence || f.occupants}`); continue;
         }
         if (statut === "cancelled") { R.exclues++; continue; }
       }
@@ -345,3 +351,33 @@ async function cloturerRelanceSiOuverte(f: FactureOuverte, motif: string, dry: b
 }
 
 export { monitoring, sa, echapper, estLoreal };
+
+// ── Aperçu des gabarits (mode test uniquement) ──────────────────────────────
+// Envoie à l'adresse de test un exemplaire de chaque email du circuit, construit sur une
+// vraie facture ouverte : 1re relance, 2e relance, confirmation de règlement, demande de
+// références, digest Guillaume. Rien n'est écrit.
+export async function apercuGabarits(): Promise<string[]> {
+  const out: string[] = [];
+  const rows = await lireTable(T_FACTURES, `AND({Statut}='Envoyée', {Type}!='Avoir', {Mode facturation}!='Proforma', {Montant total HT}>1, {Date d'envoi}!='')`);
+  const cand = rows.map(decrire).filter((f) => !f.loreal).sort((a, b) => a.dateEnvoi.localeCompare(b.dateEnvoi))[0];
+  if (!cand) return ["aucune facture ouverte pour construire l'aperçu"];
+  const ctx = await chargerContexte(cand.rec);
+  const langue = langueDe(ctx);
+  const info = infoDe(ctx, cand);
+  const pj = await pdfFacture(cand.rec, cand.numeroPl || cand.numero);
+  const to = emailContact(ctx.contact) || "destinataire@exemple.com";
+  const sgn = await signataireGuillaume();
+  const envois: Array<[string, { objet: string; html: string }, string]> = [
+    ["1re relance", emailRelance(ctx, info, 1, langue), to],
+    ["2e relance", emailRelance(ctx, { ...info, retard: info.retard + DELAI_RELANCE_JOURS }, 2, langue, aujourdhui()), to],
+    ["confirmation de règlement", emailConfirmation(ctx, { ...info, reste: 0 }, { date: aujourdhui(), montant: cand.reste }, langue), to],
+    ["demande de références", emailDemandeReferences({ type: "Client final", rec: cand.rec, nom: cand.client || cand.occupants, loreal: false },
+      { id: "apercu", date: aujourdhui(), montant: cand.reste, libelle: "VIR SEPA RECU /FRM EXEMPLE /RNF SANS REFERENCE", compte: "1848853" }, texte(ctx.contact?.fields["Prénom"]).split(/\s+/)[0], langue, sgn), to],
+    ["digest Guillaume", emailDigestGuillaume([{ id: cand.rec.id, reference: cand.numero, client: cand.client || cand.agence, occupant: cand.occupants, reste: cand.reste, echeance: info.echeance, retard: info.retard + 14, destinataire: to, relance1: dateCourte(plusJours(aujourdhui(), -14)), relance2: dateCourte(plusJours(aujourdhui(), -7)), pennylane: texte(cand.rec.fields["Lien Pennylane"]), nouvelle: true }], URL_PAGE_RELANCES, sgn), GUILLAUME],
+  ];
+  for (const [nom, e, dest] of envois) {
+    const res = await envoyer({ de: ctx.sgn.email, to: dest, objet: `[APERÇU ${nom}] ${e.objet}`, html: e.html, origine: "recouvrement-apercu", attachments: nom.includes("relance") && pj ? [pj] : undefined });
+    out.push(`${nom} : ${res.ok ? "envoyé" : `échec (${res.erreur})`} (facture ${cand.numero}, ${langue === "fr_FR" ? "français" : "anglais"})`);
+  }
+  return out;
+}
