@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { passeEncaissements, monitoring } from "@/lib/mip/recouvrement-passes";
+import { definirDestinataireTest } from "@/lib/mip/recouvrement";
 
 // Encaissements — toutes les heures (vercel.json, :25).
 //
@@ -22,6 +23,8 @@ export async function GET(request: Request) {
   }
   const url = new URL(request.url);
   const dry = url.searchParams.get("dry") === "1";
+  // `?test=adresse` : tous les emails partent vers cette adresse (uniquement avec dry=1 : rien n'est écrit).
+  definirDestinataireTest(dry ? url.searchParams.get("test") || "" : "");
   const depuisJours = Math.min(60, Math.max(1, Number(url.searchParams.get("jours") || 10)));
   try {
     const r = await passeEncaissements({ depuisJours, dry });
