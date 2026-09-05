@@ -450,10 +450,12 @@ export async function envoyer(args: { de: string; to: string; cc?: string; objet
   // Copie de test : la boîte de Vincent archive tout objet contenant « facture » (règle de
   // tri OVH, constatée par IMAP le 05/09/2026). Un espace de largeur nulle dans le mot
   // rend la règle aveugle sans rien changer à l'affichage. Jamais sur un vrai envoi.
-  const objet = destinataireTest
-    ? `[TEST → ${args.to}${args.cc ? ` cc ${args.cc}` : ""}] ${args.objet}`.replace(/(fac)(ture)/gi, "$1\u200B$2")
-    : args.objet;
-  return envoyerEmailLocataire({ usrEmail: args.de, mailTo: to, mailCc: cc, mailReplyTo: GUILLAUME, mailSubject: objet, mailHtml: args.html, origine: args.origine, attachments: args.attachments })
+  // Le filtre lit aussi le corps : même traitement sur le texte du HTML (jamais dans les
+  // balises ni les liens), uniquement pour une copie de test.
+  const masquer = (t: string) => t.replace(/(fac)(ture)/gi, "$1\u200B$2");
+  const objet = destinataireTest ? masquer(`[TEST → ${args.to}${args.cc ? ` cc ${args.cc}` : ""}] ${args.objet}`) : args.objet;
+  const html = destinataireTest ? args.html.replace(/>([^<]*)</g, (_m, t: string) => `>${masquer(t)}<`) : args.html;
+  return envoyerEmailLocataire({ usrEmail: args.de, mailTo: to, mailCc: cc, mailReplyTo: GUILLAUME, mailSubject: objet, mailHtml: html, origine: args.origine, attachments: args.attachments })
     .catch((e) => ({ ok: false, erreur: e instanceof Error ? e.message : String(e) }));
 }
 export const signataireGuillaume = () => signataire({ email: GUILLAUME });
