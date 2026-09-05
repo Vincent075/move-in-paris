@@ -17,6 +17,7 @@ import { getFacture, idDepuisLien } from "./pennylane";
 // Page « Relances » de l'interface Opérations (remplie après création de la page).
 export const PAGE_RELANCES = process.env.AIRTABLE_PAGE_RELANCES || "pagS3GPr1tDKdmpZv";
 export const URL_PAGE_RELANCES = `https://airtable.com/${BASE_ID}/${PAGE_RELANCES}`;
+export const DEMANDES_REFERENCES_A_PARTIR_DU = process.env.RECOUVREMENT_DEMANDES_DEPUIS || "2026-10-01";
 
 const langueDeRelance = (v: unknown): Langue => (texte(v) === "Anglais" ? "en_GB" : "fr_FR");
 const libelleLangue = (l: Langue) => (l === "fr_FR" ? "Français" : "Anglais");
@@ -77,7 +78,10 @@ export async function passeEncaissements(opts: { depuisJours?: number; dry?: boo
       const p = reconnaitrePayeur(c, annuaire);
       const nomPayeur = p?.nom || payeurDepuisLibelle(c.libelle);
       const aDesFactures = p ? ouvertes.some((f) => [f.client, f.agence, f.occupants].some((x) => x && [...mots(p.nom)].every((w) => mots(x).has(w)))) : false;
-      if (p && !p.loreal && aDesFactures) {
+      // Période de transition : jusqu'au 30/09/2026, des règlements de factures de l'ancien
+      // système (hors plateforme) arrivent encore. On ne demande ses références à un client
+      // qu'à partir d'octobre — avant, un crédit non reconnu reste « À identifier » (Slack).
+      if (p && !p.loreal && aDesFactures && c.date >= DEMANDES_REFERENCES_A_PARTIR_DU) {
         const dest = await contactsDuPayeur(p);
         if (dest.to) {
           const { objet, html } = emailDemandeReferences(p, c, dest.prenom, dest.langue, sgn);
