@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { passeRelances, monitoring } from "@/lib/mip/recouvrement-passes";
+import { definirDestinataireTest } from "@/lib/mip/recouvrement";
 
 // Relances — chaque matin de semaine à 7h30 (Paris) : vercel.json « 30 5 * * 1-5 » (UTC).
 //
@@ -22,7 +23,9 @@ export async function GET(request: Request) {
   if (process.env.CRON_SECRET && auth !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
-  const dry = new URL(request.url).searchParams.get("dry") === "1";
+  const url = new URL(request.url);
+  const dry = url.searchParams.get("dry") === "1";
+  definirDestinataireTest(dry ? url.searchParams.get("test") || "" : "");
   try {
     const r = await passeRelances({ dry });
     if (!dry) {
