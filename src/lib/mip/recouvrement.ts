@@ -277,7 +277,7 @@ export async function contactsDuPayeur(p: Payeur): Promise<{ to: string; cc: str
   rows.sort((x, y) => texte(y.fields["Date d'envoi"]).localeCompare(texte(x.fields["Date d'envoi"])));
   const derniere = rows[0];
   let to = "", cc = "", prenom = "";
-  let langue: Langue = p.type === "Client final" ? "fr_FR" : "en_GB";
+  let langue: Langue = texte(p.rec.fields["Langue des emails"]) === "Français" ? "fr_FR" : "en_GB";
   if (derniere) {
     const contact = await lireEnregistrement(T_CONTACTS, premier(derniere.fields["Destinataire email"]));
     to = texte(contact?.fields["Email"]).trim().toLowerCase();
@@ -291,6 +291,7 @@ export async function contactsDuPayeur(p: Payeur): Promise<{ to: string; cc: str
     cc = copies.join(",");
     const l = texte(derniere.fields["Langue de l'email"]);
     if (l === "Français") langue = "fr_FR"; else if (l === "Anglais") langue = "en_GB";
+    else if (texte(p.rec.fields["Langue des emails"]) === "Français") langue = "fr_FR";
   }
   if (!to) {
     to = texte(p.rec.fields[p.type === "Client final" ? "Email copie auto" : p.type === "Agence" ? "Email principal" : "Email"]).trim().toLowerCase();
@@ -315,6 +316,19 @@ export function rendre(e: Corps, langue: Langue, sgn: Signataire): string {
   return html;
 }
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+// Langue des emails du circuit : celle de la facture si elle est fixée, sinon celle de la
+// fiche facturée (Client final / Agence, champ « Langue des emails »), sinon l'anglais.
+// Vincent (05/09/2026) : « les seuls emails en français sont à Fresenius, la plupart des
+// autres sont en anglais ».
+export function langueRelance(ctx: Contexte): Langue {
+  const choisie = texte(ctx.v?.["Langue de l'email"]);
+  if (choisie === "Français") return "fr_FR";
+  if (choisie === "Anglais") return "en_GB";
+  const fiche = texte(ctx.fiche?.fields["Langue des emails"]);
+  if (fiche === "Français") return "fr_FR";
+  return "en_GB";
+}
 
 export type InfoFacture = { numero: string; numeroPl: string; montant: number; reste: number; dateEnvoi: string; echeance: string; retard: number; adresse: string; periode: string };
 export function infoDe(ctx: Contexte, f: FactureOuverte): InfoFacture {
