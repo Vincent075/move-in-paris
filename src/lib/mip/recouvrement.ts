@@ -405,8 +405,16 @@ export function emailDigestGuillaume(lignes: LigneDigest[], urlPage: string, sgn
 
 // ── Envoi ───────────────────────────────────────────────────────────────────
 // Toutes les réponses arrivent chez Guillaume (Reply-To), quel que soit l'expéditeur.
+// Mode test (`?test=adresse` sur les routes) : chaque email part vers cette adresse, sans
+// copie, avec l'objet préfixé par le vrai destinataire — rien ne part chez un client.
+let destinataireTest = "";
+export const definirDestinataireTest = (email: string) => { destinataireTest = email.trim().toLowerCase(); };
+export const enModeTest = () => destinataireTest !== "";
 export async function envoyer(args: { de: string; to: string; cc?: string; objet: string; html: string; origine: string }): Promise<{ ok: boolean; erreur?: string }> {
-  return envoyerEmailLocataire({ usrEmail: args.de, mailTo: args.to, mailCc: args.cc || "", mailReplyTo: GUILLAUME, mailSubject: args.objet, mailHtml: args.html, origine: args.origine })
+  const to = destinataireTest || args.to;
+  const cc = destinataireTest ? "" : (args.cc || "");
+  const objet = destinataireTest ? `[TEST → ${args.to}${args.cc ? ` cc ${args.cc}` : ""}] ${args.objet}` : args.objet;
+  return envoyerEmailLocataire({ usrEmail: args.de, mailTo: to, mailCc: cc, mailReplyTo: GUILLAUME, mailSubject: objet, mailHtml: args.html, origine: args.origine })
     .catch((e) => ({ ok: false, erreur: e instanceof Error ? e.message : String(e) }));
 }
 export const signataireGuillaume = () => signataire({ email: GUILLAUME });
