@@ -17,13 +17,13 @@
 // Toutes les réponses aux emails vont à Guillaume (Reply-To).
 import {
   airtable, lireTable, lireEnregistrement, slack, envoyerEmailLocataire, htmlEmailLocataire, signataire,
-  texte, premier, jourParis, type Rec, type Dict, type Carte, type Signataire,
+  telechargerS3, texte, premier, jourParis, type Rec, type Dict, type Carte, type Signataire, type PieceJointe,
 } from "./courrier";
 import {
   T_FACTURES, T_MONITORING, SLACK_FACTURATION, chargerContexte, langueDe, horodatageParis, Journal, ecrireFacture,
   type Contexte, type Langue,
 } from "./facturation";
-import { getFacture, idDepuisLien } from "./pennylane";
+import { getFacture, idDepuisLien, urlPdf, telechargerPdf } from "./pennylane";
 
 export const T_RELANCES = "tblUnPePXu9xzOJX2";
 export const T_ENCAISSEMENTS = "tbl07focU5UDWb57t";
@@ -183,8 +183,14 @@ function sousEnsemble(c: FactureOuverte[], cible: number, k = 3): FactureOuverte
   }
   return null;
 }
-export function rapprocher(c: Credit, ouvertes: FactureOuverte[]): Rapprochement | null {
+export function rapprocher(c: Credit, toutes: FactureOuverte[]): Rapprochement | null {
   const L = sa(c.libelle);
+  // Un règlement ne précède pas sa facture (au-delà de quelques jours d'acompte) : les
+  // factures émises plus de 5 jours après le crédit ne sont pas candidates. Indispensable
+  // pendant la transition, où des virements de l'ancien système côtoient les factures neuves.
+  const limite = plusJours(c.date, 5);
+  const ouvertes = toutes.filter((f) => !f.dateEnvoi || f.dateEnvoi <= limite);
+  if (!ouvertes.length) return null;
   const total = (fs: FactureOuverte[]) => arrondi(fs.reduce((s, f) => s + f.reste, 0));
   // 1) Nos numéros dans le libellé (Fresenius, Vinci, AXA, L'Oréal Corporate, particuliers soigneux).
   const cites = Array.from(new Set((c.libelle.toUpperCase().match(NUMEROS) ?? []).map((x) => x.toUpperCase())));
@@ -419,15 +425,27 @@ export function emailDigestGuillaume(lignes: LigneDigest[], urlPage: string, sgn
 let destinataireTest = "";
 export const definirDestinataireTest = (email: string) => { destinataireTest = email.trim().toLowerCase(); };
 export const enModeTest = () => destinataireTest !== "";
-export async function envoyer(args: { de: string; to: string; cc?: string; objet: string; html: string; origine: string }): Promise<{ ok: boolean; erreur?: string }> {
+export async function envoyer(args: { de: string; to: string; cc?: string; objet: string; html: string; origine: string; attachments?: PieceJointe[] }): Promise<{ ok: boolean; erreur?: string }> {
   const to = destinataireTest || args.to;
   const cc = destinataireTest ? "" : (args.cc || "");
   const objet = destinataireTest ? `[TEST → ${args.to}${args.cc ? ` cc ${args.cc}` : ""}] ${args.objet}` : args.objet;
-  return envoyerEmailLocataire({ usrEmail: args.de, mailTo: to, mailCc: cc, mailReplyTo: GUILLAUME, mailSubject: objet, mailHtml: args.html, origine: args.origine })
+  return envoyerEmailLocataire({ usrEmail: args.de, mailTo: to, mailCc: cc, mailReplyTo: GUILLAUME, mailSubject: objet, mailHtml: args.html, origine: args.origine, attachments: args.attachments })
     .catch((e) => ({ ok: false, erreur: e instanceof Error ? e.message : String(e) }));
 }
 export const signataireGuillaume = () => signataire({ email: GUILLAUME });
 export const slackRecouvrement = (message: string) => slack(SLACK_FACTURATION, message);
+
+// ── PDF de la facture, à joindre aux relances (S3 d'abord, Pennylane ensuite) ───
+export async function pdfFacture(rec: Rec, numero: string): Promise<PieceJointe | null> {
+  try {
+    let pdf = await telechargerS3(`factures/${rec.id}_${numero}.pdf`);
+    if (!pdf) {
+      const id = idDepuisLien(rec.fields["Lien Pennylane"]);
+      if (id) { const url = await urlPdf(id, null, 15_000); pdf = url ? await telechargerPdf(url) : null; }
+    }
+    return pdf ? { name: `${numero}.pdf`, contentType: "application/pdf", base64: pdf.toString("base64") } : null;
+  } catch { return null; }
+}
 
 // ── Relances : lecture / création d'une ligne ───────────────────────────────
 export async function relanceDe(numero: string): Promise<Rec | null> {
