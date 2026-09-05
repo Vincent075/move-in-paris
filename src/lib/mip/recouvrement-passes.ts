@@ -115,6 +115,7 @@ async function appliquerRapprochement(c: Credit, r: Rapprochement, ouvertes: Fac
   for (let i = 0; i < r.factures.length; i++) {
     const f = r.factures[i];
     const part = arrondi(r.parts[i]);
+    if (part <= 0) continue;   // imputation dans l'ordre : le virement était épuisé avant cette facture
     const encaisse = arrondi(f.encaisse + part);
     const reste = arrondi(f.montant - encaisse);
     const solde = reste <= 0.009;
