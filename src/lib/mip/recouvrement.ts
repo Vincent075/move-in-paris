@@ -447,7 +447,12 @@ export const destinataireTestActuel = () => destinataireTest;
 export async function envoyer(args: { de: string; to: string; cc?: string; objet: string; html: string; origine: string; attachments?: PieceJointe[] }): Promise<{ ok: boolean; erreur?: string }> {
   const to = destinataireTest || args.to;
   const cc = destinataireTest ? "" : (args.cc || "");
-  const objet = destinataireTest ? `[TEST → ${args.to}${args.cc ? ` cc ${args.cc}` : ""}] ${args.objet}` : args.objet;
+  // Copie de test : la boîte de Vincent archive tout objet contenant « facture » (règle de
+  // tri OVH, constatée par IMAP le 05/09/2026). Un espace de largeur nulle dans le mot
+  // rend la règle aveugle sans rien changer à l'affichage. Jamais sur un vrai envoi.
+  const objet = destinataireTest
+    ? `[TEST → ${args.to}${args.cc ? ` cc ${args.cc}` : ""}] ${args.objet}`.replace(/(fac)(ture)/gi, "$1\u200B$2")
+    : args.objet;
   return envoyerEmailLocataire({ usrEmail: args.de, mailTo: to, mailCc: cc, mailReplyTo: GUILLAUME, mailSubject: objet, mailHtml: args.html, origine: args.origine, attachments: args.attachments })
     .catch((e) => ({ ok: false, erreur: e instanceof Error ? e.message : String(e) }));
 }
