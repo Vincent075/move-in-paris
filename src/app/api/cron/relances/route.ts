@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { passeRelances, monitoring } from "@/lib/mip/recouvrement-passes";
+import { passeRelances, apercuGabarits, monitoring } from "@/lib/mip/recouvrement-passes";
 import { definirDestinataireTest } from "@/lib/mip/recouvrement";
 
 // Relances — chaque matin de semaine à 7h30 (Paris) : vercel.json « 30 5 * * 1-5 » (UTC).
@@ -27,6 +27,10 @@ export async function GET(request: Request) {
   const dry = url.searchParams.get("dry") === "1";
   definirDestinataireTest(dry ? url.searchParams.get("test") || "" : "");
   try {
+    // `?dry=1&test=adresse&apercu=1` : un exemplaire de chaque gabarit vers l'adresse de test, rien d'autre.
+    if (dry && url.searchParams.get("apercu") === "1" && url.searchParams.get("test")) {
+      return NextResponse.json({ ok: true, dry, apercu: await apercuGabarits() });
+    }
     const r = await passeRelances({ dry });
     if (!dry) {
       await monitoring("Recouvrement · relances", r.erreurs.length ? "ALERTE" : "OK",
