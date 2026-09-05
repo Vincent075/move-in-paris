@@ -291,10 +291,14 @@ export async function contactsDuPayeur(p: Payeur): Promise<{ to: string; cc: str
 type Corps = { titre: string; prenom: string; intro: string[]; cartes?: Carte[]; encadre?: { titre: string; corps: string }; fin: string[] };
 export function rendre(e: Corps, langue: Langue, sgn: Signataire): string {
   let html = htmlEmailLocataire({ ...e, signataire: sgn });
+  // Sans prénom connu (contact comptabilité d'une société), on n'écrit ni « Guest » ni un
+  // prénom inventé : « Madame, Monsieur, » / « Dear Sir or Madam, ».
   if (langue === "fr_FR") {
     html = html.replace('<html lang="en">', '<html lang="fr">')
-      .replace(/<p style="margin:0 0 16px 0;">Dear ([^<]*),<\/p>/, (_m, p: string) => `<p style="margin:0 0 16px 0;">Bonjour${e.prenom ? ` ${p}` : ""},</p>`)
+      .replace(/<p style="margin:0 0 16px 0;">Dear ([^<]*),<\/p>/, (_m, p: string) => `<p style="margin:0 0 16px 0;">${e.prenom ? `Bonjour ${p}` : "Madame, Monsieur"},</p>`)
       .replace("Kind regards,", "Cordialement,");
+  } else if (!e.prenom) {
+    html = html.replace('<p style="margin:0 0 16px 0;">Dear Guest,</p>', '<p style="margin:0 0 16px 0;">Dear Sir or Madam,</p>');
   }
   return html;
 }
