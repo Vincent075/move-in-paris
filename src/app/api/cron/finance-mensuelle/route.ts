@@ -92,6 +92,8 @@ const MOIS_APRES = 3;
 // 5 mois couverts. Ne pas remonter au-delà de janvier 2026 : 2025 relève d'un exercice
 // clos, dont les factures ont été volontairement sorties d'Airtable.
 const MISE_EN_SERVICE = "2026-01";
+// Valeur du champ « Source » de Finance mensuelle portée par les lignes historiques (registre 2025-2026).
+const HISTORIQUE_REGISTRE = "Historique registre 2025-2026";
 
 const NOMS_MOIS = [
   "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
@@ -1246,7 +1248,12 @@ export async function GET(request: Request) {
     // Les mois sortis de la fenêtre (historique d'avant la mise en service, prévisionnel trop
     // lointain) n'ont plus lieu d'être : on les supprime plutôt que de les laisser se figer.
     const clesAttendues = new Set(lignes.map((l) => l.k));
-    const financeObsoletes = financeExistant.filter((r) => !clesAttendues.has(texte(r.fields["Mois"])));
+    // Les lignes « Historique registre 2025-2026 » (champ Source) sont reconstituées depuis le
+    // registre de facturation d'avant la plateforme : hors fenêtre par construction, jamais
+    // recalculées, jamais supprimées (ajouté le 06/09/2026).
+    const financeObsoletes = financeExistant.filter(
+      (r) => !clesAttendues.has(texte(r.fields["Mois"])) && texte(r.fields["Source"]) !== HISTORIQUE_REGISTRE,
+    );
     if (financeObsoletes.length) await supprimer(T_FINANCE, financeObsoletes.map((r) => r.id));
 
     if (aCreer.length) await ecrire(T_FINANCE, "POST", aCreer);
