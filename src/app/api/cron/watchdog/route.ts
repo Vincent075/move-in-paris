@@ -891,6 +891,41 @@ async function controlePostmark(): Promise<Resultat> {
   return { nom, statut: "OK", detail: `Aucun mail en échec ni bloqué chez Postmark sur 24 h (${vus.join(", ")}).` };
 }
 
+
+// ── Recouvrement (crons Vercel encaissements et relances) ────────────────────
+// Les deux passes écrivent elles-mêmes leur état dans Monitoring (« Recouvrement · encaissements »
+// toutes les heures, « Recouvrement · relances » chaque matin de semaine), mais n'alertent pas.
+// Ici on surveille leur SILENCE (cron qui ne tourne plus) et on relaie leurs ALERTE vers Slack
+// (ajouté le 06/09/2026 à la demande de Vincent : « je veux pas de bug »).
+type ResultatControle = { nom: string; statut: string; detail: string };
+function controleRecouvrement(rows: Array<{ fields: Record<string, unknown> }>, now: Date): ResultatControle[] {
+  const s = (v: unknown) => (typeof v === "string" ? v : "");
+  const specs = [
+    { source: "Recouvrement · encaissements", nom: "Recouvrement · cron encaissements", maxHeures: 3, cadence: "toutes les heures à h+25", route: "encaissements", tolereAbsence: false },
+    { source: "Recouvrement · relances", nom: "Recouvrement · cron relances", maxHeures: 80, cadence: "du lundi au vendredi à 07h30", route: "relances", tolereAbsence: true },
+  ];
+  const out: ResultatControle[] = [];
+  for (const sp of specs) {
+    const row = rows.find((r) => s(r.fields["Contrôle"]) === sp.source);
+    if (!row) {
+      out.push(sp.tolereAbsence
+        ? { nom: sp.nom, statut: "OK", detail: `Aucun passage enregistré pour l'instant (premier passage réel prévu ${sp.cadence}).` }
+        : { nom: sp.nom, statut: "ALERTE", detail: `Aucune trace de la passe « ${sp.source} » dans Monitoring : le cron ${sp.cadence} n'a jamais tourné. Vérifier les crons Vercel et /api/cron/${sp.route}.` });
+      continue;
+    }
+    const derniere = s(row.fields["Dernière vérification"]);
+    const age = derniere ? (now.getTime() - new Date(derniere).getTime()) / 3.6e6 : Infinity;
+    if (age > sp.maxHeures) {
+      out.push({ nom: sp.nom, statut: "ALERTE", detail: `Dernier passage il y a ${Math.round(age)} h alors qu'il est attendu ${sp.cadence}. Vérifier les crons Vercel et les journaux de /api/cron/${sp.route}.` });
+    } else if (s(row.fields["Statut"]) === "ALERTE") {
+      out.push({ nom: sp.nom, statut: "ALERTE", detail: `La passe a signalé une erreur : ${s(row.fields["Détail"]).slice(0, 700)}` });
+    } else {
+      out.push({ nom: sp.nom, statut: "OK", detail: `Dernier passage il y a ${Math.round(age * 10) / 10} h, sans erreur.` });
+    }
+  }
+  return out;
+}
+
 export async function GET(request: Request) {
   const auth = request.headers.get("authorization");
   if (process.env.CRON_SECRET && auth !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -1058,6 +1093,12 @@ export async function GET(request: Request) {
   } catch (e) {
     await rapporter("Courrier Postmark non traité (request@ · assistance@)", "ALERTE",
       `Lecture Postmark impossible : ${e instanceof Error ? e.message : e}`);
+  }
+
+  try {
+    for (const r of controleRecouvrement(existing.records || [], now)) await rapporter(r.nom, r.statut, r.detail);
+  } catch (e) {
+    await rapporter("Recouvrement · surveillance des crons", "ALERTE", `Contrôle impossible : ${e instanceof Error ? e.message : e}`);
   }
 
   return NextResponse.json({ ok: true, paris, results });
