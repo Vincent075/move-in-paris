@@ -94,6 +94,10 @@ const MOIS_APRES = 3;
 const MISE_EN_SERVICE = "2026-01";
 // Valeur du champ « Source » de Finance mensuelle portée par les lignes historiques (registre 2025-2026).
 const HISTORIQUE_REGISTRE = "Historique registre 2025-2026";
+// Premier mois entièrement facturé sur la plateforme. Avant, le registre de facturation
+// (table « Historique factures ») fait foi : son CA du mois est écrit dans « CA facturé
+// (registre) » et remplace le calcul plateforme, qui ne voyait qu'une poignée de factures.
+const PLATEFORME_COMPLETE = "2026-09";
 
 const NOMS_MOIS = [
   "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
@@ -436,6 +440,7 @@ export async function GET(request: Request) {
       k: string;
       a: number;
       m: number;
+      registre?: number;
       caFacture: number;
       caHorsPerimetre: number;
       caEstime: number;
@@ -1086,6 +1091,20 @@ export async function GET(request: Request) {
     const parCle = new Map(lignes.map((l) => [l.k, l]));
     const financeParCle = new Map(financeExistant.map((r) => [texte(r.fields["Mois"]), r]));
 
+    // Mois d'avant la plateforme complète : le CA vient du registre de facturation (colonne
+    // « CA facturé (registre) », posée le 06/09/2026 depuis la table Historique factures, où
+    // les doublons registre/plateforme ont été retirés). Rien n'est estimé : le registre est
+    // complet. Aucun loyer propriétaire n'est rattaché à ce CA, il reste hors périmètre de marge.
+    for (const l of lignes) {
+      if (l.k >= PLATEFORME_COMPLETE) continue;
+      const registre = nombre(financeParCle.get(l.k)?.fields["CA facturé (registre)"]);
+      if (registre <= 0) continue;
+      l.registre = registre;
+      l.caFacture = registre;
+      l.caHorsPerimetre = registre;
+      l.caEstime = 0;
+    }
+
     const aCreer: unknown[] = [];
     const aMettreAJour: unknown[] = [];
     const idParMois = new Map<string, string>();
@@ -1106,7 +1125,12 @@ export async function GET(request: Request) {
       // Tant que le N-1 n'est pas fiable, la colonne reste vide.
       const cleN1 = cle(l.a - 1, l.m);
       const n1 = cleN1 >= MISE_EN_SERVICE ? parCle.get(cleN1) : undefined;
-      const n1Total = n1 ? arrondi(n1.caFacture + n1.caEstime) : null;
+      const n1Hist = financeParCle.get(cleN1);
+      const n1Total = n1
+        ? arrondi(n1.caFacture + n1.caEstime)
+        : n1Hist && texte(n1Hist.fields["Source"]) === HISTORIQUE_REGISTRE
+          ? nombre(n1Hist.fields["CA total"])
+          : null;
 
       const passe = l.a < moisCourant.a || (l.a === moisCourant.a && l.m < moisCourant.m);
       const futur = l.a > moisCourant.a || (l.a === moisCourant.a && l.m > moisCourant.m);
@@ -1138,13 +1162,18 @@ export async function GET(request: Request) {
         ? "Marge partielle"
         : avantMiseEnService
         ? "Historique incomplet"
-        : partFacturee >= 0.95
-          ? "Chiffre consolidé"
-          : partFacturee > 0
-            ? "Facturation en cours"
-            : "Estimé sur réservations";
+        : l.registre
+          ? "Marge partielle"
+          : partFacturee >= 0.95
+            ? "Chiffre consolidé"
+            : partFacturee > 0
+              ? "Facturation en cours"
+              : "Estimé sur réservations";
 
       const detail = [
+        l.registre
+          ? `CA du mois repris du registre de facturation (table Historique factures) : ${l.registre.toLocaleString("fr-FR")} €, doublons plateforme retirés. La plateforme ne portait pas encore ces factures ; aucun loyer propriétaire n'est rattaché à ce CA, la marge ci-dessous ne porte que sur les réservations saisies.`
+          : "",
         avantMiseEnService
           ? "⚠️ Mois antérieur à la mise en service d'Airtable : seuls les baux longs y figurent. Le CA réel de ce mois était plus élevé, ne pas lire cette ligne comme une performance."
           : "",
