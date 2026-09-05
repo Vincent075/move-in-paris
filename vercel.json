@@ -88,6 +88,14 @@
     {
       "path": "/api/cron/menage-cloture",
       "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/encaissements",
+      "schedule": "25 * * * *"
+    },
+    {
+      "path": "/api/cron/relances",
+      "schedule": "30 5 * * 1-5"
     }
   ]
 }
