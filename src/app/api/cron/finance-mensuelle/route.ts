@@ -113,6 +113,15 @@ const texte = (v: unknown): string => {
   return typeof x === "string" ? x : "";
 };
 const liens = (v: unknown): string[] => (Array.isArray(v) ? (v as string[]) : []);
+// Facture globale mensuelle L'Oréal (Santa Fe, Dwellworks) : elle récapitule des séjours déjà
+// portés au CA par leurs proformas, la compter doublerait le mois. Reconnue par la case
+// « Globale L'Oréal (hors CA) », ou à défaut par son libellé sur une facture L'Oréal SA
+// classique (ajouté le 06/09/2026).
+const estGlobaleLoreal = (champs: Record<string, unknown>): boolean =>
+  champs["Globale L'Oréal (hors CA)"] === true ||
+  (texte(champs["Mode facturation"]) !== "Proforma" &&
+    /or[ée]al/i.test(texte(champs["Client final"])) &&
+    /^loyers?\s+logements?\s+temporaires?/i.test(texte(champs["Libellé"])));
 const arrondi = (n: number, d = 2) => Math.round(n * 10 ** d) / 10 ** d;
 
 // Date calendaire de Paris : un virement se date au jour de Vincent, jamais en UTC.
@@ -375,6 +384,7 @@ export async function GET(request: Request) {
       if (texte(champs["Type"]) === "Avoir") continue;
       if (texte(champs["Statut"]) === "Avoir") continue;
       if (liens(champs["From field: Avoir associé"]).length) continue;
+      if (estGlobaleLoreal(champs)) continue;
       const montant = nombre(champs["Montant total HT"]);
       const d1 = texte(champs["Période facturée début"]);
       const d2 = texte(champs["Période facturée fin"]);
@@ -441,6 +451,7 @@ export async function GET(request: Request) {
       a: number;
       m: number;
       registre?: number;
+      complement?: number;
       caFacture: number;
       caHorsPerimetre: number;
       caEstime: number;
@@ -1096,13 +1107,21 @@ export async function GET(request: Request) {
     // les doublons registre/plateforme ont été retirés). Rien n'est estimé : le registre est
     // complet. Aucun loyer propriétaire n'est rattaché à ce CA, il reste hors périmètre de marge.
     for (const l of lignes) {
-      if (l.k >= PLATEFORME_COMPLETE) continue;
       const registre = nombre(financeParCle.get(l.k)?.fields["CA facturé (registre)"]);
       if (registre <= 0) continue;
-      l.registre = registre;
-      l.caFacture = registre;
-      l.caHorsPerimetre = registre;
-      l.caEstime = 0;
+      if (l.k < PLATEFORME_COMPLETE) {
+        l.registre = registre;
+        l.caFacture = registre;
+        l.caHorsPerimetre = registre;
+        l.caEstime = 0;
+      } else {
+        // À partir de la plateforme complète, la colonne ne porte que des séjours que la
+        // plateforme ne voit pas (septembre 2026 : séjours facturés d'avance à L'Oréal dans la
+        // globale d'août A650, sans proforma plateforme) : ils S'AJOUTENT au calcul.
+        l.complement = registre;
+        l.caFacture = arrondi(l.caFacture + registre);
+        l.caHorsPerimetre = arrondi(l.caHorsPerimetre + registre);
+      }
     }
 
     const aCreer: unknown[] = [];
@@ -1171,6 +1190,9 @@ export async function GET(request: Request) {
               : "Estimé sur réservations";
 
       const detail = [
+        l.complement
+          ? `+ ${l.complement.toLocaleString("fr-FR")} € de séjours facturés hors plateforme (registre, table Historique factures : séjours L'Oréal facturés d'avance dans la globale d'août A650, sans proforma plateforme).`
+          : "",
         l.registre
           ? `CA du mois repris du registre de facturation (table Historique factures) : ${l.registre.toLocaleString("fr-FR")} €, doublons plateforme retirés. La plateforme ne portait pas encore ces factures ; aucun loyer propriétaire n'est rattaché à ce CA, la marge ci-dessous ne porte que sur les réservations saisies.`
           : "",
