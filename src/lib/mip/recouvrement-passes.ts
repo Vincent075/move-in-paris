@@ -308,7 +308,11 @@ export async function passeRelances(opts: { dry?: boolean } = {}): Promise<Rappo
   try {
     const ouvertes = await lireTable(T_RELANCES, `{Statut}='En cours'`);
     for (const rel of ouvertes) {
-      const fac = await lireEnregistrement(T_FACTURES, premier(rel.fields["Facture"]));
+      // Créance d'avant la plateforme (registre 2025-2026, lien « Facture historique ») : aucune
+      // facture plateforme derrière, elle vit à la main dans la table. On ne touche à rien.
+      const facId = premier(rel.fields["Facture"]);
+      if (!facId) continue;
+      const fac = await lireEnregistrement(T_FACTURES, facId);
       if (fac && texte(fac.fields["Statut"]) === "Payée") {
         const f = decrire(fac);
         await cloturerRelanceSiOuverte(f, "facture passée « Payée » dans Airtable", dry, rel);
