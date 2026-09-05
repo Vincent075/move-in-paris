@@ -312,7 +312,7 @@ export function infoDe(ctx: Contexte, f: FactureOuverte): InfoFacture {
 }
 const refAff = (i: InfoFacture) => (i.numeroPl ? `${i.numeroPl} (${i.numero})` : i.numero);
 
-export function emailRelance(ctx: Contexte, i: InfoFacture, niveau: 1 | 2, langue: Langue): { objet: string; html: string } {
+export function emailRelance(ctx: Contexte, i: InfoFacture, niveau: 1 | 2, langue: Langue, rappelLe = ""): { objet: string; html: string } {
   const fr = langue === "fr_FR";
   const prenom = texte(ctx.contact?.fields["Prénom"]).trim().split(/\s+/)[0] || (ctx.conf && ctx.fiche ? ctx.conf.prenom(ctx.fiche.fields).split(/\s+/)[0] : "");
   const [debut, fin] = i.periode.split("|");
@@ -341,8 +341,8 @@ export function emailRelance(ctx: Contexte, i: InfoFacture, niveau: 1 | 2, langu
   }
   const titre = fr ? `Deuxième rappel · facture ${i.numeroPl || i.numero} en retard de ${i.retard} jours` : `Second reminder · invoice ${i.numeroPl || i.numero} is ${i.retard} days overdue`;
   const intro = [fr
-    ? `Malgré notre rappel du ${dateLongue(plusJours(aujourdhui(), -DELAI_RELANCE_JOURS), langue)}, la facture <strong>${refAff(i)}</strong> reste impayée à ce jour, soit <strong>${i.retard} jours</strong> après son échéance.`
-    : `Despite our reminder of ${dateLongue(plusJours(aujourdhui(), -DELAI_RELANCE_JOURS), langue)}, invoice <strong>${refAff(i)}</strong> remains unpaid to date, <strong>${i.retard} days</strong> after its due date.`];
+    ? `Malgré notre rappel du ${dateLongue(rappelLe || plusJours(aujourdhui(), -DELAI_RELANCE_JOURS), langue)}, la facture <strong>${refAff(i)}</strong> reste impayée à ce jour, soit <strong>${i.retard} jours</strong> après son échéance.`
+    : `Despite our reminder of ${dateLongue(rappelLe || plusJours(aujourdhui(), -DELAI_RELANCE_JOURS), langue)}, invoice <strong>${refAff(i)}</strong> remains unpaid to date, <strong>${i.retard} days</strong> after its due date.`];
   const encadre = { titre: fr ? "Règlement sous 7 jours" : "Payment within 7 days", corps: fr
     ? `Nous vous remercions de régulariser <strong>${eur(i.reste, langue)}</strong> sous sept jours, en rappelant la référence <strong>${i.numeroPl || i.numero}</strong>. Passé ce délai, notre service comptable prendra directement contact avec vous.`
     : `Please settle <strong>${eur(i.reste, langue)}</strong> within seven days, quoting reference <strong>${i.numeroPl || i.numero}</strong>. Beyond that date, our accounts department will contact you directly.` };
