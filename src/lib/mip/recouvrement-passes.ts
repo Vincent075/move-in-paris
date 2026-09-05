@@ -251,7 +251,7 @@ export async function passeRelances(opts: { dry?: boolean } = {}): Promise<Rappo
           champs["Prochaine action"] = "Destinataire email manquant sur la facture : à renseigner, puis la relance partira";
           ligne = `Relance ${niveau} impossible : aucun destinataire email sur la facture`;
         } else {
-          const { objet, html } = emailRelance(ctx, infoDe(ctx, f), niveau, langue);
+          const { objet, html } = emailRelance(ctx, infoDe(ctx, f), niveau, langue, r1);
           const res = dry ? { ok: true } : await envoyer({ de: ctx.sgn.email, to, cc, objet, html, origine: `recouvrement-relance-${niveau}` });
           if (res.ok) {
             const quand = new Date().toISOString();
