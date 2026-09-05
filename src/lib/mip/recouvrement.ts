@@ -355,14 +355,17 @@ export function emailRelance(ctx: Contexte, i: InfoFacture, niveau: 1 | 2, langu
     const fin_ = [preuve, fr ? "Nous restons à votre disposition pour toute question." : "We remain at your disposal for any question."];
     return { objet: `${titre} · Move in Paris`, html: rendre({ titre, prenom, intro, cartes, encadre, fin: fin_ }, langue, ctx.sgn) };
   }
-  const titre = fr ? `Deuxième rappel · facture ${i.numeroPl || i.numero} en retard de ${i.retard} jours` : `Second reminder · invoice ${i.numeroPl || i.numero} is ${i.retard} days overdue`;
+  // Deuxième relance : un rappel du premier message, sur le même ton (B2B, jamais de
+  // menace ni de mention d'un service de recouvrement — demande de Vincent, 05/09/2026).
+  const premier = dateLongue(rappelLe || plusJours(aujourdhui(), -DELAI_RELANCE_JOURS), langue);
+  const titre = fr ? `Rappel · facture ${i.numeroPl || i.numero} · suite à notre message du ${premier}` : `Reminder · invoice ${i.numeroPl || i.numero} · further to our message of ${premier}`;
   const intro = [fr
-    ? `Malgré notre rappel du ${dateLongue(rappelLe || plusJours(aujourdhui(), -DELAI_RELANCE_JOURS), langue)}, la facture <strong>${refAff(i)}</strong> reste impayée à ce jour, soit <strong>${i.retard} jours</strong> après son échéance.`
-    : `Despite our reminder of ${dateLongue(rappelLe || plusJours(aujourdhui(), -DELAI_RELANCE_JOURS), langue)}, invoice <strong>${refAff(i)}</strong> remains unpaid to date, <strong>${i.retard} days</strong> after its due date.`];
-  const encadre = { titre: fr ? "Règlement sous 7 jours" : "Payment within 7 days", corps: fr
-    ? `Nous vous remercions de régulariser <strong>${eur(i.reste, langue)}</strong> sous sept jours, en rappelant la référence <strong>${i.numeroPl || i.numero}</strong>. Passé ce délai, notre service comptable prendra directement contact avec vous.`
-    : `Please settle <strong>${eur(i.reste, langue)}</strong> within seven days, quoting reference <strong>${i.numeroPl || i.numero}</strong>. Beyond that date, our accounts department will contact you directly.` };
-  const fin_ = [preuve, fr ? "Nous vous remercions de votre attention." : "Thank you for your attention."];
+    ? `Nous nous permettons de revenir vers vous au sujet de la facture <strong>${refAff(i)}</strong>, pour laquelle nous vous avons adressé un premier rappel le ${premier}. Sauf erreur de notre part, elle n'a pas encore été réglée (échéance le ${dateLongue(i.echeance, langue)}).`
+    : `We are following up on invoice <strong>${refAff(i)}</strong>, for which we sent you a first reminder on ${premier}. Unless we are mistaken, it has not yet been settled (due on ${dateLongue(i.echeance, langue)}).`];
+  const encadre = { titre: fr ? "Règlement" : "Payment", corps: fr
+    ? `Nous vous remercions de bien vouloir procéder au règlement de <strong>${eur(i.reste, langue)}</strong> par virement, en rappelant la référence <strong>${i.numeroPl || i.numero}</strong>. Si le paiement est déjà en cours de traitement de votre côté, un simple retour de votre part nous suffira.`
+    : `We would be grateful if you could arrange payment of <strong>${eur(i.reste, langue)}</strong> by bank transfer, quoting reference <strong>${i.numeroPl || i.numero}</strong>. If the payment is already being processed on your side, a short reply is all we need.` };
+  const fin_ = [preuve, fr ? "Nous vous remercions et restons à votre disposition." : "Thank you, we remain at your disposal."];
   return { objet: `${titre} · Move in Paris`, html: rendre({ titre, prenom, intro, cartes, encadre, fin: fin_ }, langue, ctx.sgn) };
 }
 
