@@ -376,6 +376,9 @@ export async function apercuGabarits(): Promise<string[]> {
     ["digest Guillaume", emailDigestGuillaume([{ id: cand.rec.id, reference: cand.numero, client: cand.client || cand.agence, occupant: cand.occupants, reste: cand.reste, echeance: info.echeance, retard: info.retard + 14, destinataire: to, relance1: dateCourte(plusJours(aujourdhui(), -14)), relance2: dateCourte(plusJours(aujourdhui(), -7)), pennylane: texte(cand.rec.fields["Lien Pennylane"]), nouvelle: true }], URL_PAGE_RELANCES, sgn), GUILLAUME],
   ];
   for (const [nom, e, dest] of envois) {
+    // Cinq emails d'affilée vers la même boîte : on espace les envois, certains serveurs
+    // entrants écartent une rafale venant du même expéditeur.
+    await new Promise((r) => setTimeout(r, 2000));
     const res = await envoyer({ de: ctx.sgn.email, to: dest, objet: `[APERÇU ${nom}] ${e.objet}`, html: e.html, origine: "recouvrement-apercu", attachments: nom.includes("relance") && pj ? [pj] : undefined });
     out.push(`${nom} : ${res.ok ? "envoyé" : `échec (${res.erreur})`} (facture ${cand.numero}, ${langue === "fr_FR" ? "français" : "anglais"})`);
   }
