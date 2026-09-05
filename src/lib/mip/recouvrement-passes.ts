@@ -7,7 +7,7 @@ import {
   T_FACTURES, T_RELANCES, T_ENCAISSEMENTS, COMPTES, BASE_ID, GUILLAUME, ECHEANCE_JOURS, DELAI_RELANCE_JOURS,
   lireCredits, horsClient, facturesOuvertes, decrire, rapprocher, chargerAnnuaire, reconnaitrePayeur, contactsDuPayeur,
   emailRelance, emailConfirmation, emailDemandeReferences, emailDigestGuillaume, envoyer, signataireGuillaume, slackRecouvrement,
-  relanceDe, ecrireRelance, creerRelance, journalRelance, infoDe, monitoring, enModeTest, pdfFacture, eur, dateCourte, plusJours, joursEntre, aujourdhui, sa, mots,
+  relanceDe, ecrireRelance, creerRelance, journalRelance, infoDe, monitoring, enModeTest, destinataireTestActuel, pdfFacture, eur, dateCourte, plusJours, joursEntre, aujourdhui, sa, mots,
   nombre, arrondi, echapper, estLoreal,
   chargerContexte, langueDe, horodatageParis, Journal, ecrireFacture, texte, premier, liens, lireTable, lireEnregistrement, airtable,
   type Credit, type FactureOuverte, type Rapprochement, type Annuaire, type LigneDigest, type Rec, type Dict, type Langue,
@@ -375,11 +375,15 @@ export async function apercuGabarits(): Promise<string[]> {
       { id: "apercu", date: aujourdhui(), montant: cand.reste, libelle: "VIR SEPA RECU /FRM EXEMPLE /RNF SANS REFERENCE", compte: "1848853" }, texte(ctx.contact?.fields["Prénom"]).split(/\s+/)[0], langue, sgn), to],
     ["digest Guillaume", emailDigestGuillaume([{ id: cand.rec.id, reference: cand.numero, client: cand.client || cand.agence, occupant: cand.occupants, reste: cand.reste, echeance: info.echeance, retard: info.retard + 14, destinataire: to, relance1: dateCourte(plusJours(aujourdhui(), -14)), relance2: dateCourte(plusJours(aujourdhui(), -7)), pennylane: texte(cand.rec.fields["Lien Pennylane"]), nouvelle: true }], URL_PAGE_RELANCES, sgn), GUILLAUME],
   ];
+  // En aperçu, l'expéditeur est toujours une autre boîte que celle qui reçoit : un message
+  // envoyé de soi à soi est parfois filtré ou rangé ailleurs par la messagerie.
+  const test = destinataireTestActuel();
+  const de = test && test === ctx.sgn.email ? (test === GUILLAUME ? "vincent@move-in-paris.com" : GUILLAUME) : ctx.sgn.email;
   for (const [nom, e, dest] of envois) {
     // Cinq emails d'affilée vers la même boîte : on espace les envois, certains serveurs
     // entrants écartent une rafale venant du même expéditeur.
     await new Promise((r) => setTimeout(r, 2000));
-    const res = await envoyer({ de: ctx.sgn.email, to: dest, objet: `[APERÇU ${nom}] ${e.objet}`, html: e.html, origine: "recouvrement-apercu", attachments: nom.includes("relance") && pj ? [pj] : undefined });
+    const res = await envoyer({ de, to: dest, objet: `[APERÇU ${nom}] ${e.objet}`, html: e.html, origine: "recouvrement-apercu", attachments: nom.includes("relance") && pj ? [pj] : undefined });
     out.push(`${nom} : ${res.ok ? "envoyé" : `échec (${res.erreur})`} (facture ${cand.numero}, ${langue === "fr_FR" ? "français" : "anglais"})`);
   }
   return out;
