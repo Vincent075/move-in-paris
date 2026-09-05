@@ -186,9 +186,10 @@ function sousEnsemble(c: FactureOuverte[], cible: number, k = 3): FactureOuverte
 export function rapprocher(c: Credit, toutes: FactureOuverte[]): Rapprochement | null {
   const L = sa(c.libelle);
   // Un règlement ne précède pas sa facture (au-delà de quelques jours d'acompte) : les
-  // factures émises plus de 5 jours après le crédit ne sont pas candidates. Indispensable
+  // factures émises plus de 14 jours après le crédit ne sont pas candidates (l'OCDE paie
+  // son loyer le 20 pour une facture émise le 26 : deux semaines de marge). Indispensable
   // pendant la transition, où des virements de l'ancien système côtoient les factures neuves.
-  const limite = plusJours(c.date, 5);
+  const limite = plusJours(c.date, 14);
   const ouvertes = toutes.filter((f) => !f.dateEnvoi || f.dateEnvoi <= limite);
   if (!ouvertes.length) return null;
   const total = (fs: FactureOuverte[]) => arrondi(fs.reduce((s, f) => s + f.reste, 0));
