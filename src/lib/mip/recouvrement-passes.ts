@@ -9,7 +9,7 @@ import {
   emailRelance, emailConfirmation, emailDemandeReferences, emailDigestGuillaume, envoyer, signataireGuillaume, slackRecouvrement,
   relanceDe, ecrireRelance, creerRelance, journalRelance, infoDe, monitoring, enModeTest, destinataireTestActuel, pdfFacture, eur, dateCourte, plusJours, joursEntre, aujourdhui, sa, mots,
   nombre, arrondi, echapper, estLoreal,
-  chargerContexte, langueDe, horodatageParis, Journal, ecrireFacture, texte, premier, liens, lireTable, lireEnregistrement, airtable,
+  chargerContexte, langueDe, langueRelance, horodatageParis, Journal, ecrireFacture, texte, premier, liens, lireTable, lireEnregistrement, airtable,
   type Credit, type FactureOuverte, type Rapprochement, type Annuaire, type LigneDigest, type Rec, type Dict, type Langue,
 } from "./recouvrement";
 import { getFacture, idDepuisLien } from "./pennylane";
@@ -264,7 +264,7 @@ export async function passeRelances(opts: { dry?: boolean } = {}): Promise<Rappo
         const ctx = await chargerContexte(rec);
         const to = emailContact(ctx.contact);
         const cc = ctx.copies.map(emailContact).filter((x, i, a) => x && x !== to && a.indexOf(x) === i).join(",");
-        const langue = texte(rf["Langue"]) ? langueDeRelance(rf["Langue"]) : langueDe(ctx);
+        const langue = texte(rf["Langue"]) ? langueDeRelance(rf["Langue"]) : langueRelance(ctx);
         Object.assign(champs, { Destinataire: to || undefined, Copies: cc, Langue: libelleLangue(langue) });
         if (!to) {
           R.sansDestinataire++;
@@ -362,7 +362,8 @@ export async function apercuGabarits(): Promise<string[]> {
   const cand = rows.map(decrire).filter((f) => !f.loreal).sort((a, b) => a.dateEnvoi.localeCompare(b.dateEnvoi))[0];
   if (!cand) return ["aucune facture ouverte pour construire l'aperçu"];
   const ctx = await chargerContexte(cand.rec);
-  const langue = langueDe(ctx);
+  const langue = langueRelance(ctx);
+  const autre: Langue = langue === "fr_FR" ? "en_GB" : "fr_FR";
   const info = infoDe(ctx, cand);
   const pj = await pdfFacture(cand.rec, cand.numeroPl || cand.numero);
   const to = emailContact(ctx.contact) || "destinataire@exemple.com";
@@ -373,6 +374,8 @@ export async function apercuGabarits(): Promise<string[]> {
     ["confirmation de règlement", emailConfirmation(ctx, { ...info, reste: 0 }, { date: aujourdhui(), montant: cand.reste }, langue), to],
     ["demande de références", emailDemandeReferences({ type: "Client final", rec: cand.rec, nom: cand.client || cand.occupants, loreal: false },
       { id: "apercu", date: aujourdhui(), montant: cand.reste, libelle: "VIR SEPA RECU /FRM EXEMPLE /RNF SANS REFERENCE", compte: "1848853" }, texte(ctx.contact?.fields["Prénom"]).split(/\s+/)[0], langue, sgn), to],
+    [`1re relance (${autre === "fr_FR" ? "français" : "anglais"})`, emailRelance(ctx, info, 1, autre), to],
+    [`2e relance (${autre === "fr_FR" ? "français" : "anglais"})`, emailRelance(ctx, { ...info, retard: info.retard + DELAI_RELANCE_JOURS }, 2, autre, aujourdhui()), to],
     ["digest Guillaume", emailDigestGuillaume([{ id: cand.rec.id, reference: cand.numero, client: cand.client || cand.agence, occupant: cand.occupants, reste: cand.reste, echeance: info.echeance, retard: info.retard + 14, destinataire: to, relance1: dateCourte(plusJours(aujourdhui(), -14)), relance2: dateCourte(plusJours(aujourdhui(), -7)), pennylane: texte(cand.rec.fields["Lien Pennylane"]), nouvelle: true }], URL_PAGE_RELANCES, sgn), GUILLAUME],
   ];
   // En aperçu, l'expéditeur est toujours une autre boîte que celle qui reçoit : un message
