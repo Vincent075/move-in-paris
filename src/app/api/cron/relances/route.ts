@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { passeRelances, apercuGabarits, monitoring } from "@/lib/mip/recouvrement-passes";
-import { definirDestinataireTest } from "@/lib/mip/recouvrement";
+import { avecDestinataireTest } from "@/lib/mip/recouvrement";
 
 // Relances — chaque matin de semaine à 7h30 (Paris) : vercel.json « 30 5 * * 1-5 » (UTC).
 //
@@ -25,18 +25,20 @@ export async function GET(request: Request) {
   }
   const url = new URL(request.url);
   const dry = url.searchParams.get("dry") === "1";
-  definirDestinataireTest(dry ? url.searchParams.get("test") || "" : "");
+  // Le destinataire de test vit dans le contexte de CETTE requête (jamais une variable partagée
+  // entre requêtes) : un aperçu ne peut plus partir chez un vrai client.
+  const test = dry ? url.searchParams.get("test") || "" : "";
   try {
     // `?dry=1&test=adresse&apercu=1` : un exemplaire de chaque gabarit vers l'adresse de test, rien d'autre.
-    if (dry && url.searchParams.get("apercu") === "1" && url.searchParams.get("test")) {
-      return NextResponse.json({ ok: true, dry, apercu: await apercuGabarits() });
+    if (dry && url.searchParams.get("apercu") === "1" && test) {
+      return NextResponse.json({ ok: true, dry, apercu: await avecDestinataireTest(test, () => apercuGabarits()) });
     }
-    const r = await passeRelances({ dry });
+    const r = await avecDestinataireTest(test, () => passeRelances({ dry }));
     if (!dry) {
-      await monitoring("Recouvrement · relances", r.erreurs.length ? "ALERTE" : "OK",
+      await monitoring("Recouvrement · relances", r.erreurs.length || r.annuleesPennylane ? "ALERTE" : "OK",
         `${r.examinees} facture(s) envoyée(s) examinée(s) : ${r.nonEchues} pas encore échue(s), ${r.nouvelles} entrée(s) en relance, ${r.relance1} 1re relance, ${r.relance2} 2e relance, ` +
-        `${r.passeesJ14} passée(s) en manuel${r.digest ? " (digest envoyé à Guillaume)" : ""}, ${r.regleesPennylane} réglée(s) selon Pennylane, ${r.regleesAirtable} réglée(s) selon Airtable, ` +
-        `${r.exclues} exclue(s) (L'Oréal, annulées, « Sans relance »), ${r.sansEmailEnvoye} jamais envoyée(s) par email, ${r.sansDestinataire} sans destinataire.` +
+        `${r.passeesJ14} passée(s) en manuel${r.digest ? " (digest envoyé à Guillaume)" : ""}, ${r.regleesPennylane} réglée(s) selon Pennylane, ${r.regleesAirtable} réglée(s) selon Airtable, ${r.annuleesPennylane} annulée(s) chez Pennylane mais « Envoyée » ici, ` +
+        `${r.exclues} exclue(s) (L'Oréal, annulées, « Sans relance »), ${r.sansDateEnvoi} sans date d'envoi, ${r.sansEmailEnvoye} jamais envoyée(s) par email, ${r.sansDestinataire} sans destinataire, ${r.enAttenteManuelle} en attente de relance manuelle.` +
         `${r.erreurs.length ? ` Erreurs : ${r.erreurs.join(" · ")}` : ""}`);
     }
     return NextResponse.json({ ok: r.erreurs.length === 0, dry, ...r });
